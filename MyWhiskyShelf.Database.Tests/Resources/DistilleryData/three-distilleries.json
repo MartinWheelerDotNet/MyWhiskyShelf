@@ -1,0 +1,29 @@
+[
+  {
+    "Distillery": "Aberargie",
+    "Location": "Aberargie",
+    "Region": "Lowland",
+    "Founded": 2017,
+    "Owner": "Perth Distilling Co",
+    "DistilleryType": "Malt",
+    "Active": true
+  },
+  {
+    "Distillery": "Aberfeldy",
+    "Location": "Aberfeldy",
+    "Region": "Highland",
+    "Founded": 1896,
+    "Owner": "John Dewar & Sons",
+    "DistilleryType": "Malt",
+    "Active": true
+  },
+  {
+    "Distillery": "Aberlour",
+    "Location": "Aberlour",
+    "Region": "Speyside",
+    "Founded": 1879,
+    "Owner": "Chivas Brothers",
+    "DistilleryType": "Malt",
+    "Active": true
+  }
+]
