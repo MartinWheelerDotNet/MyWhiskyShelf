@@ -30,9 +30,11 @@ jobs:
       matrix: 
         include:
           - name: Database
-            project: MyWhiskyShelf.Database.Tests/MyWhiskyShelf.Database.Tests.csproj
+            path: MyWhiskyShelf.Database.Tests
+            project: MyWhiskyShelf.Database.Tests.csproj
           - name: Integration
-            project: MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj
+            path: MyWhiskyShelf.IntegrationTests
+            project: MyWhiskyShelf.IntegrationTests.csproj
             
     steps:
       - name: Checkout Repository
@@ -44,20 +46,31 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Restore Dependencies
-        run: dotnet restore ${{ matrix.project }}
+        run: dotnet restore ${{ matrix.path }}/${{ matrix.project }}
         
       - name: Build solution
-        run: dotnet build  ${{ matrix.project }} --configuration Release --no-restore
+        run: dotnet build  ${{ matrix.path }}/${{ matrix.project }} --configuration Release --no-restore
         
       - name: Setup Dev Credentials
         run: dotnet dev-certs https --trust
         if: ${{ matrix.name == 'Integration' }}
         
+      - name: pwd
+        run: ls
+        
       - name: Run tests
-        run: dotnet test ${{ matrix.project }} --logger trx --configuration Release --no-build --verbosity normal
+        run: |
+          dotnet test ${{ matrix.path }}/${{ matrix.project }} \
+            --logger xml \
+            --configuration Release \
+            --no-build \
+            --verbosity normal
 
       - name: Test Summary
-        uses: test-summary/action@v2
+        uses: zyborg/dotnet-tests-report@v1
         with:
-          paths: "TestResults/*.trx"
+          project_path: ${{ matrix.path }}
+          report_name: my_project_tests
+          report_title: My Project Tests
+          github_token: ${{ secrets.GITHUB_TOKEN }}
         if: always()
