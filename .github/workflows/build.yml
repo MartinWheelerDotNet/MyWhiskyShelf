@@ -54,4 +54,10 @@ jobs:
         if: ${{ matrix.name == 'Integration' }}
         
       - name: Run tests
-        run: dotnet test  ${{ matrix.project }} --configuration Release --no-build --verbosity normal
+        run: dotnet test ${{ matrix.project }} --logger trx --configuration Release --no-build --verbosity normal
+
+      - name: Test Summary
+        uses: test-summary/action@v2
+        with:
+          paths: "TestResults/*.trx"
+        if: always()
