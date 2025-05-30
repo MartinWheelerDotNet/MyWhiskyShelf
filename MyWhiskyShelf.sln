@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.Database.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.Models", "MyWhiskyShelf.Models\MyWhiskyShelf.Models.csproj", "{8EEAC4CD-94E1-4AF9-968C-ABAD6627988C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.WebApi", "MyWhiskyShelf.WebApi\MyWhiskyShelf.WebApi.csproj", "{C3E699CB-88F4-429B-8E89-0136BA78329D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{8EEAC4CD-94E1-4AF9-968C-ABAD6627988C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EEAC4CD-94E1-4AF9-968C-ABAD6627988C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EEAC4CD-94E1-4AF9-968C-ABAD6627988C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3E699CB-88F4-429B-8E89-0136BA78329D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3E699CB-88F4-429B-8E89-0136BA78329D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3E699CB-88F4-429B-8E89-0136BA78329D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3E699CB-88F4-429B-8E89-0136BA78329D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

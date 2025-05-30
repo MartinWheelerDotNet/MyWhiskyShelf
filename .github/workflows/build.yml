@@ -8,18 +8,48 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet build --configuration Release --no-restore
+  
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        include:
+          - name: Database
+            project: MyWhiskyShelf.Database.Tests/MyWhiskyShelf.Database.Tests.csproj
+          - name: Integration
+            project: MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj
+            
+    steps:
+      - uses: actions/checkout@v4
+        
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+            - 
+      - name: Restore Dependencies
+        run: dotnet restore ${{ matrix.project }}
+        
+      - name: Build solution
+        run: dotnet build  ${{ matrix.project }} --configuration Release --no-restore
+        
+      - name: Setup Dev Credentials
+        run: dotnet dev-certs https --trust
+        if: ${{ matrix.name == 'Integration' }}
+        
+      - name: Run tests
+        run: dotnet test  ${{ matrix.project }} --configuration Release --no-build --verbosity normal
