@@ -1,4 +1,3 @@
-using FluentAssertions;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 
 namespace MyWhiskyShelf.IntegrationTests.StatusTests;
@@ -14,9 +13,9 @@ public class ServiceStatusTests(MyWhiskyShelfFixture myWhiskyShelfFixture) : ICl
         
         var response = await httpClient.GetAsync(endpointName);
         var body = await response.Content.ReadAsStringAsync();
-        
+
         Assert.Multiple(
-            () => response.StatusCode.Should().Be(HttpStatusCode.OK),
-            () => body.Should().Be("Healthy"));
+            () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
+            () => Assert.Equal("Healthy", body));
     }
 }
