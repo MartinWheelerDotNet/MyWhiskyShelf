@@ -6,7 +6,7 @@ public class ServiceStatusTests(MyWhiskyShelfFixture myWhiskyShelfFixture) : ICl
 {
     [Theory]
     [InlineData("WebApi")]
-    public async Task ResourceHealthEndpointReturnsHealthyWhenResourceIsRunning(string resourceName)
+    public async Task When_ResourceIsRunning_Expect_ResourceHealthEndpointReturnsHealthy(string resourceName)
     {
         const string endpointName = "/health";
         using var httpClient = myWhiskyShelfFixture.Application.CreateHttpClient(resourceName);
