@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MyWhiskyShelf.Database\MyWhiskyShelf.Database.csproj" />
+      <ProjectReference Include="..\MyWhiskyShelf.Models\MyWhiskyShelf.Models.csproj" />
     </ItemGroup>
 
     <ItemGroup>

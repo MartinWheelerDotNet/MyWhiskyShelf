@@ -1,6 +1,6 @@
 [
   {
-    "Distillery": "Aberargie",
+    "DistilleryName": "Aberargie",
     "Location": "Aberargie",
     "Region": "Lowland",
     "Founded": 2017,
@@ -9,7 +9,7 @@
     "Active": true
   },
   {
-    "Distillery": "Aberfeldy",
+    "DistilleryName": "Aberfeldy",
     "Location": "Aberfeldy",
     "Region": "Highland",
     "Founded": 1896,
@@ -18,7 +18,7 @@
     "Active": true
   },
   {
-    "Distillery": "Aberlour",
+    "DistilleryName": "Aberlour",
     "Location": "Aberlour",
     "Region": "Speyside",
     "Founded": 1879,

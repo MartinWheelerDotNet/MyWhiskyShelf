@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using MyWhiskyShelf.Models;
 
 namespace MyWhiskyShelf.Database;
 
@@ -6,7 +7,7 @@ public class DataLoader
 {
     private const string DistilleryPrefix = "when loading distillery data.";
 
-    public async Task<List<DistilleryData>> GetDistilleryData(string filePath)
+    public async Task<List<Distillery>> GetDistilleriesFromJson(string filePath)
     {
         if (!File.Exists(filePath))
         {
@@ -21,7 +22,7 @@ public class DataLoader
         try
         {
             await using var fileStream = File.OpenRead(filePath);
-            return await JsonSerializer.DeserializeAsync<List<DistilleryData>>(fileStream) ?? [];
+            return await JsonSerializer.DeserializeAsync<List<Distillery>>(fileStream) ?? [];
 
         }
         catch (JsonException)
@@ -31,15 +32,5 @@ public class DataLoader
     } 
 }
 
-[Serializable]
-public record DistilleryData
-{
-    public required string Distillery { get; init; }
-    public required string Location { get; init; }
-    public required string Region  { get; init; }
-    public required int Founded  { get; init; }
-    public required string Owner  { get; init; }
-    public required string DistilleryType  { get; init; }
-    public required bool Active  { get; init; }
-}
+
     
