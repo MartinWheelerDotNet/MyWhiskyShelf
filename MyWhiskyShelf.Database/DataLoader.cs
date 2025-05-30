@@ -1,12 +1,13 @@
 ﻿using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using MyWhiskyShelf.Models;
 
 namespace MyWhiskyShelf.Database;
 
-public class DataLoader
+public class DataLoader(ILogger<DataLoader> logger)
 {
     private const string DistilleryPrefix = "when loading distillery data.";
-
+    
     public async Task<List<Distillery>> GetDistilleriesFromJson(string filePath)
     {
         if (!File.Exists(filePath))
@@ -22,8 +23,10 @@ public class DataLoader
         try
         {
             await using var fileStream = File.OpenRead(filePath);
-            return await JsonSerializer.DeserializeAsync<List<Distillery>>(fileStream) ?? [];
-
+            var distilleries = await JsonSerializer.DeserializeAsync<List<Distillery>>(fileStream) ?? [];
+            
+            logger.LogInformation("{Count} distilleries loaded", distilleries.Count);
+            return distilleries;
         }
         catch (JsonException)
         {

@@ -1,4 +1,5 @@
-﻿using MyWhiskyShelf.Models;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using MyWhiskyShelf.Models;
 
 namespace MyWhiskyShelf.Database.Tests;
 
@@ -8,8 +9,8 @@ public class DataLoaderTests
     public async Task When_GetDistilleriesFromJson_WithFileNotFound_ExpectExceptionThrown()
     {
         const string filename = "./not-a-valid-file.csv";
-        var dataLoader = new DataLoader();
-
+        
+        var dataLoader = new DataLoader(NullLogger<DataLoader>.Instance);
         var exception = await Assert.ThrowsAsync<FileNotFoundException>(
             () => dataLoader.GetDistilleriesFromJson(filename));
         
@@ -21,7 +22,7 @@ public class DataLoaderTests
     {
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/DistilleryData/empty-file.json");
         
-        var dataLoader = new DataLoader();
+        var dataLoader = new DataLoader(NullLogger<DataLoader>.Instance);
         var exception = await Assert.ThrowsAsync<InvalidDataException>(
             () => dataLoader.GetDistilleriesFromJson(filePath));
         
@@ -33,7 +34,7 @@ public class DataLoaderTests
     {
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/DistilleryData/invalid-format.json");
         
-        var dataLoader = new DataLoader();
+        var dataLoader = new DataLoader(NullLogger<DataLoader>.Instance);
         var exception = await Assert.ThrowsAsync<InvalidDataException>(
             () => dataLoader.GetDistilleriesFromJson(filePath));
         
@@ -45,7 +46,7 @@ public class DataLoaderTests
     {
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/DistilleryData/no-distillery-data.json");
 
-        var dataLoader = new DataLoader();
+        var dataLoader = new DataLoader(NullLogger<DataLoader>.Instance);
         var distilleries = await dataLoader.GetDistilleriesFromJson(filePath);
 
         Assert.Empty(distilleries);
@@ -67,7 +68,7 @@ public class DataLoaderTests
             
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/DistilleryData/single-distillery.json");
         
-        var dataLoader = new DataLoader();
+        var dataLoader = new DataLoader(NullLogger<DataLoader>.Instance);
         var distilleries = await dataLoader.GetDistilleriesFromJson(filePath);
 
         var distillery = Assert.Single(distilleries);
@@ -113,7 +114,7 @@ public class DataLoaderTests
         
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/DistilleryData/three-distilleries.json");
         
-        var dataLoader = new DataLoader();
+        var dataLoader = new DataLoader(NullLogger<DataLoader>.Instance);
         var distilleries = await dataLoader.GetDistilleriesFromJson(filePath);
 
         Assert.Equal(3, expectedDistilleries.Length);
