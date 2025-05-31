@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\MyWhiskyShelf.Database\MyWhiskyShelf.Database.csproj" />
       <ProjectReference Include="..\MyWhiskyShelf.ServiceDefaults\MyWhiskyShelf.ServiceDefaults.csproj" />
     </ItemGroup>
 
