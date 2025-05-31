@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyWhiskyShelf.Database.Contexts;
+using MyWhiskyShelf.Database.Services;
 
 namespace MyWhiskyShelf.Database.Extensions;
 
@@ -15,7 +16,6 @@ public static class HostApplicationBuilderExtensions
         builder.Services.AddDbContext<MyWhiskyShelfDbContext>(options => 
             options.UseNpgsql(builder.Configuration.GetConnectionString("postgresDb") 
                               ?? throw new InvalidOperationException("Connection string not found")));
-
         builder.EnrichNpgsqlDbContext<MyWhiskyShelfDbContext>(settings =>
         {
             settings.DisableRetry = false;
@@ -24,6 +24,8 @@ public static class HostApplicationBuilderExtensions
             settings.DisableMetrics = false;
             settings.DisableTracing = false;
         });
+        
+        builder.Services.AddScoped<DistilleryReadService>();
         
         return builder;
     }
