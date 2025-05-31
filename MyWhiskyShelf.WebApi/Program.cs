@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.Json;
+using MyWhiskyShelf.Database.Contexts;
+using MyWhiskyShelf.Database.Extensions;
 
 namespace MyWhiskyShelf.WebApi;
 
@@ -12,7 +14,7 @@ internal static class Program
         var builder = WebApplication
             .CreateBuilder(args)
             .ConfigureDefaultServices();
-        builder.AddNpgsqlDataSource("postgresDb");
+        builder.UsePostgresDatabase();
 
         var app = builder.Build();
 
@@ -20,6 +22,7 @@ internal static class Program
         {
             app.MapOpenApi();
             app.MapDefaultEndpoints();
+            app.Services.EnsureDatabaseCreated();
         }
 
         app.UseHttpsRedirection();
@@ -35,7 +38,15 @@ internal static class Program
         });
         builder.Services.AddOpenApi();
         builder.AddServiceDefaults();
-        
+
         return builder;
     }
+
+    private static void EnsureDatabaseCreated(this IServiceProvider serviceProvider)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<MyWhiskyShelfDbContext>();
+        dbContext.Database.EnsureCreated();
+    }
+    
 }

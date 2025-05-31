@@ -1,0 +1,30 @@
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using MyWhiskyShelf.Database.Contexts;
+
+namespace MyWhiskyShelf.Database.Extensions;
+
+[ExcludeFromCodeCoverage]
+public static class HostApplicationBuilderExtensions
+{
+    public static IHostApplicationBuilder UsePostgresDatabase(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddDbContext<MyWhiskyShelfDbContext>(options => 
+            options.UseNpgsql(builder.Configuration.GetConnectionString("postgresDb") 
+                              ?? throw new InvalidOperationException("Connection string not found")));
+
+        builder.EnrichNpgsqlDbContext<MyWhiskyShelfDbContext>(settings =>
+        {
+            settings.DisableRetry = false;
+            settings.CommandTimeout = 30;
+            settings.DisableHealthChecks = false;
+            settings.DisableMetrics = false;
+            settings.DisableTracing = false;
+        });
+        
+        return builder;
+    }
+}
