@@ -1,21 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Database.Contexts;
 using MyWhiskyShelf.Database.Models;
+using MyWhiskyShelf.Database.Services;
 using MyWhiskyShelf.Models;
 
-namespace MyWhiskyShelf.Database.Tests.Contexts;
+namespace MyWhiskyShelf.Database.Tests.Services;
 
-public class MyWhiskyShelfDbContextTests
+public class DistilleryReadServiceTests
 {
     [Fact]
     public async Task When_GetAllDistilleriesAndNoDistilleriesAreFound_Expect_EmptyList()
     {
-        var options = new DbContextOptionsBuilder<MyWhiskyShelfDbContext>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-            .Options;
-        
-        await using var dbContext = new MyWhiskyShelfDbContext(options);
-        var distilleries = await dbContext.GetAllDistilleriesAsync();
+        await using var dbContext = CreateDbContext; 
+        var distilleryReadService = new DistilleryReadService(dbContext);
+        var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
         
         Assert.Empty(distilleries);
     }
@@ -47,11 +45,7 @@ public class MyWhiskyShelfDbContextTests
             }
         }; 
         
-        var options = new DbContextOptionsBuilder<MyWhiskyShelfDbContext>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-            .Options;
-        
-        await using var dbContext = new MyWhiskyShelfDbContext(options);
+        await using var dbContext = CreateDbContext; 
         await dbContext.Set<DistilleryEntity>().AddRangeAsync(
             new DistilleryEntity 
             { 
@@ -74,9 +68,17 @@ public class MyWhiskyShelfDbContextTests
                 Active = false
             });
         await dbContext.SaveChangesAsync();
+
         
-        var distilleries = await dbContext.GetAllDistilleriesAsync();
+        var distilleryReadService = new DistilleryReadService(dbContext);
+        var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
         
         Assert.Equal(expectedDistilleries.Count, distilleries.Count);
     }
+    
+    private static MyWhiskyShelfDbContext CreateDbContext => new(
+        new DbContextOptionsBuilder<MyWhiskyShelfDbContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options);
+
 }
