@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.Json;
 using MyWhiskyShelf.Database.Contexts;
 using MyWhiskyShelf.Database.Extensions;
+using MyWhiskyShelf.Database.Services;
 
 namespace MyWhiskyShelf.WebApi;
 
@@ -26,6 +27,9 @@ internal static class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.MapGet("/distilleries/", async (DistilleryReadService distilleryReadService) =>
+            await distilleryReadService.GetAllDistilleriesAsync());
 
         app.Run();
     }
