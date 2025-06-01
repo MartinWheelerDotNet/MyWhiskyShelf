@@ -55,3 +55,26 @@ jobs:
         
       - name: Run tests
         run: dotnet test  ${{ matrix.project }} --configuration Release --no-build --verbosity normal
+        
+  code-inspection:
+    name: Code Inspection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Setup .NET
+        id: setup-dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+          
+      - name: Restore
+        run: dotnet restore
+        
+      - name: Inspect code
+        uses: muno92/resharper_inspectcode@v1
+        with:
+          solutionPath: ./MyWhiskyShelf.sln
+          dotnetVersion: ${{ steps.setup-dotnet.outputs.dotnet-version }}
+        
