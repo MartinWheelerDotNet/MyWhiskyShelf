@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.Json;
 using MyWhiskyShelf.Database.Contexts;
 using MyWhiskyShelf.Database.Extensions;
 using MyWhiskyShelf.Database.Services;
+using MyWhiskyShelf.ServiceDefaults;
 
 namespace MyWhiskyShelf.WebApi;
 
@@ -18,11 +19,12 @@ internal static class Program
         builder.UsePostgresDatabase();
 
         var app = builder.Build();
+        
+        app.MapDefaultEndpoints();
 
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            app.MapDefaultEndpoints();
             app.Services.EnsureDatabaseCreated();
         }
 

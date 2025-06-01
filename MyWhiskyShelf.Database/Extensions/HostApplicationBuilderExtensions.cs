@@ -11,7 +11,7 @@ namespace MyWhiskyShelf.Database.Extensions;
 [ExcludeFromCodeCoverage]
 public static class HostApplicationBuilderExtensions
 {
-    public static IHostApplicationBuilder UsePostgresDatabase(this IHostApplicationBuilder builder)
+    public static void UsePostgresDatabase(this IHostApplicationBuilder builder)
     {
         builder.Services.AddDbContext<MyWhiskyShelfDbContext>(options => 
             options.UseNpgsql(builder.Configuration.GetConnectionString("postgresDb") 
@@ -26,7 +26,5 @@ public static class HostApplicationBuilderExtensions
         });
         
         builder.Services.AddScoped<DistilleryReadService>();
-        
-        return builder;
     }
 }
