@@ -20,4 +20,9 @@ public class DistilleryReadService(MyWhiskyShelfDbContext dbContext)
                 Active = distilleryEntity.Active
             })
             .ToListAsync();
+
+    public async Task<List<string>> GetDistilleryNamesAsync() 
+        => await dbContext.Distilleries
+            .Select(distilleryEntity => distilleryEntity.DistilleryName)
+            .ToListAsync();
 }

@@ -8,6 +8,30 @@ namespace MyWhiskyShelf.Database.Tests.Services;
 
 public class DistilleryReadServiceTests
 {
+    private static readonly DistilleryEntity FirstDistilleryEntity = new()
+    { 
+        Id = Guid.NewGuid(),
+        DistilleryName = "Aberargie",
+        Location = "Aberargie",
+        Region = "Lowland",
+        Founded = 2017,
+        Owner = "Perth Distilling Co",
+        DistilleryType = "Single Malt",
+        Active = true
+    };
+    
+    private static readonly DistilleryEntity SecondDistilleryEntity = new()
+    { 
+        Id = Guid.NewGuid(),
+        DistilleryName = "Aberfeldy",
+        Location = "Aberfeldy",
+        Region = "Highland",
+        Founded = 1896,
+        Owner = "John Dewar & Sons",
+        DistilleryType = "Single Malt",
+        Active = true
+    };
+
     [Fact]
     public async Task When_GetAllDistilleriesAndNoDistilleriesAreFound_Expect_EmptyList()
     {
@@ -25,55 +49,63 @@ public class DistilleryReadServiceTests
         {
             new()
             { 
-                DistilleryName = "testDistilleryName1",
-                Location = "testLocation1",
-                Region = "testRegion1",
-                Founded = 2024,
-                Owner = "testOwner1",
-                DistilleryType = "testDistilleryType1",
+                DistilleryName = "Aberargie",
+                Location = "Aberargie",
+                Region = "Lowland",
+                Founded = 2017,
+                Owner = "Perth Distilling Co",
+                DistilleryType = "Single Malt",
                 Active = true
             }, 
             new() 
             {
-                DistilleryName = "testDistilleryName2",
-                Location = "testLocation2",
-                Region = "testRegion2",
-                Founded = 2025,
-                Owner = "testOwner2",
-                DistilleryType = "testDistilleryType2",
-                Active = false
+                DistilleryName = "Aberfeldy",
+                Location = "Aberfeldy",
+                Region = "Highland",
+                Founded = 1896,
+                Owner = "John Dewar & Sons",
+                DistilleryType = "Single Malt",
+                Active = true
             }
         }; 
         
         await using var dbContext = CreateDbContext; 
-        await dbContext.Set<DistilleryEntity>().AddRangeAsync(
-            new DistilleryEntity 
-            { 
-                DistilleryName = "testDistilleryName1",
-                Location = "testLocation1",
-                Region = "testRegion1",
-                Founded = 2024,
-                Owner = "testOwner1",
-                DistilleryType = "testDistilleryType1",
-                Active = true
-            }, 
-            new DistilleryEntity 
-            {
-                DistilleryName = "testDistilleryName2",
-                Location = "testLocation2",
-                Region = "testRegion2",
-                Founded = 2025,
-                Owner = "testOwner2",
-                DistilleryType = "testDistilleryType2",
-                Active = false
-            });
+        await dbContext.Set<DistilleryEntity>().AddRangeAsync(FirstDistilleryEntity, SecondDistilleryEntity);
         await dbContext.SaveChangesAsync();
 
         
         var distilleryReadService = new DistilleryReadService(dbContext);
         var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
         
-        Assert.Equal(expectedDistilleries.Count, distilleries.Count);
+        Assert.True(expectedDistilleries.ToHashSet().SetEquals(distilleries));
+    }
+
+    [Fact]
+    public async Task When_GetDistilleryNamesAndNoDistilleriesAreFound_Expect_EmptyList()
+    {
+        await using var dbContext = CreateDbContext; 
+        
+        var distilleryReadService = new DistilleryReadService(dbContext);
+        var distilleryNames = await distilleryReadService.GetAllDistilleriesAsync();
+
+        Assert.Empty(distilleryNames);
+    }
+    
+    [Fact]
+    public async Task When_GetDistilleryNamesAndDistilleriesAreFound_Expect_ListContainsDistilleryNames()
+    {
+        List<string> expectedDistilleryNames = ["Aberargie", "Aberfeldy"];
+        
+        await using var dbContext = CreateDbContext;
+        await dbContext.Set<DistilleryEntity>().AddRangeAsync(
+            FirstDistilleryEntity, SecondDistilleryEntity);
+        await dbContext.SaveChangesAsync();
+
+        
+        var distilleryReadService = new DistilleryReadService(dbContext);
+        var distilleryNames = await distilleryReadService.GetDistilleryNamesAsync();
+
+        Assert.True(expectedDistilleryNames.ToHashSet().SetEquals(distilleryNames));
     }
     
     private static MyWhiskyShelfDbContext CreateDbContext => new(
