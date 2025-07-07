@@ -1,4 +1,4 @@
-﻿namespace MyWhiskyShelf.Models;
+﻿namespace MyWhiskyShelf.Core.Models;
 
 [Serializable]
 public record Distillery
@@ -9,5 +9,6 @@ public record Distillery
     public required int Founded  { get; init; }
     public required string Owner  { get; init; }
     public required string DistilleryType  { get; init; }
+    public FlavourProfile FlavourProfile { get; init; } = new();
     public required bool Active  { get; init; }
 }

@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyWhiskyShelf.Database.Contexts;
+using MyWhiskyShelf.Database.Interfaces;
+using MyWhiskyShelf.Database.Mappers;
 using MyWhiskyShelf.Database.Services;
 
 namespace MyWhiskyShelf.Database.Extensions;
@@ -16,15 +18,19 @@ public static class HostApplicationBuilderExtensions
         builder.Services.AddDbContext<MyWhiskyShelfDbContext>(options => 
             options.UseNpgsql(builder.Configuration.GetConnectionString("postgresDb") 
                               ?? throw new InvalidOperationException("Connection string not found")));
-        builder.EnrichNpgsqlDbContext<MyWhiskyShelfDbContext>(settings =>
-        {
-            settings.DisableRetry = false;
-            settings.CommandTimeout = 30;
-            settings.DisableHealthChecks = false;
-            settings.DisableMetrics = false;
-            settings.DisableTracing = false;
-        });
         
-        builder.Services.AddScoped<DistilleryReadService>();
+        builder.EnrichNpgsqlDbContext<MyWhiskyShelfDbContext>(settings =>
+            {
+                settings.DisableRetry = false;
+                settings.CommandTimeout = 30;
+                settings.DisableHealthChecks = false;
+                settings.DisableMetrics = false;
+                settings.DisableTracing = false;
+            });
+
+        builder.Services.AddSingleton<IDistilleryMapper, DistilleryMapper>();
+        builder.Services.AddSingleton<IDistilleryNameCacheService, DistilleryNameCacheService>();
+        builder.Services.AddScoped<IDistilleryReadService, DistilleryReadService>();
+        builder.Services.AddScoped<IDistilleryWriteService, DistilleryWriteService>();
     }
 }
