@@ -18,7 +18,7 @@ public static class HostApplicationBuilderExtensions
         builder.Services.AddDbContext<MyWhiskyShelfDbContext>(options => 
             options.UseNpgsql(builder.Configuration.GetConnectionString("postgresDb") 
                               ?? throw new InvalidOperationException("Connection string not found")));
-        
+
         builder.EnrichNpgsqlDbContext<MyWhiskyShelfDbContext>(settings =>
             {
                 settings.DisableRetry = false;

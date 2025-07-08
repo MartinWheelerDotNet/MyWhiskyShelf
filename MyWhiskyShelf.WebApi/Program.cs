@@ -36,12 +36,14 @@ internal static class Program
         }
 
         var app = builder.Build();
+
         app.MapDefaultEndpoints();
 
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
             await EnsureDatabaseCreated(app.Services, useDataSeeding);
+            app.Services.EnsureDatabaseCreated();
         }
         
         app.UseHttpsRedirection();

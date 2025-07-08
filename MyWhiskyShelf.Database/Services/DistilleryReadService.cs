@@ -24,8 +24,4 @@ public class DistilleryReadService(
     }
 
     public List<string> GetDistilleryNames() => distilleryNameCacheService.GetAll();
-
-    
-    
-    
 }
