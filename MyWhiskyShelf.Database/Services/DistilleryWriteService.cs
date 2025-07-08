@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Contexts;
 using MyWhiskyShelf.Database.Interfaces;
-using MyWhiskyShelf.Database.Mappers;
 
 namespace MyWhiskyShelf.Database.Services;
 

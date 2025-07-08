@@ -87,6 +87,38 @@ public class DistilleryReadServiceTests
 
         Assert.Equal(expectedDistilleryNames, distilleryNames);
     }
+
+    [Fact]
+    public async Task When_GetDistilleryByNameAndDistilleryIsNotFound_Expect_NoDistilleryReturned()
+    {
+        await using var dbContext = await CreateDbContextAsync(); 
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            new Mock<IDistilleryNameCacheService>().Object,
+            new DistilleryMapper());
+        
+        var distillery = await distilleryReadService
+            .GetDistilleryByNameAsync(DistilleryTestData.Aberfeldy.DistilleryName);
+        
+        Assert.Null(distillery);
+    }
+    
+    [Fact]
+    public async Task When_GetDistilleryByNameAndDistilleryIsFound_Expect_DistilleryReturned()
+    {
+        await using var dbContext = await CreateDbContextAsync(
+            DistilleryEntityTestData.Aberargie,
+            DistilleryEntityTestData.Aberfeldy);
+        
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            new Mock<IDistilleryNameCacheService>().Object,
+            new DistilleryMapper());
+        var distillery = await distilleryReadService
+            .GetDistilleryByNameAsync(DistilleryTestData.Aberfeldy.DistilleryName);
+        
+        Assert.Equal(DistilleryTestData.Aberfeldy, distillery);
+    }
     
     private static async Task<MyWhiskyShelfDbContext> CreateDbContextAsync(params DistilleryEntity[] distilleryEntities)
     {

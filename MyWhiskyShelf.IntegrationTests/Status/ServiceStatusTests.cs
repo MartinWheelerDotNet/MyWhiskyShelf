@@ -1,15 +1,16 @@
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 
-namespace MyWhiskyShelf.IntegrationTests.StatusTests;
+namespace MyWhiskyShelf.IntegrationTests.Status;
 
-public class ServiceStatusTests(MyWhiskyShelfFixture myWhiskyShelfFixture) : IClassFixture<MyWhiskyShelfFixture>
+public class ServiceStatusTests(MyWhiskyShelfBaseFixtureSeededDb myWhiskyShelfBaseFixtureSeededDb) 
+    : IClassFixture<MyWhiskyShelfBaseFixtureSeededDb>
 {
     [Theory]
     [InlineData("WebApi")]
     public async Task When_ResourceIsRunning_Expect_ResourceHealthEndpointReturnsHealthy(string resourceName)
     {
         const string endpointName = "/health";
-        using var httpClient = myWhiskyShelfFixture.Application.CreateHttpClient(resourceName);
+        using var httpClient = myWhiskyShelfBaseFixtureSeededDb.Application.CreateHttpClient(resourceName);
         
         var response = await httpClient.GetAsync(endpointName);
         var body = await response.Content.ReadAsStringAsync();

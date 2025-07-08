@@ -5,7 +5,7 @@
     "Region": "Lowland",
     "Founded": 2017,
     "Owner": "Perth Distilling Co",
-    "DistilleryType": "Single Malt",
+    "DistilleryType": "Malt",
     "FlavourProfile": {
       "Fruit": 1,
       "Malt": 2,
@@ -28,7 +28,7 @@
       "Medicinal": 0,
       "Tobacco": 0,
       "Honey": 2,
-      "Spicy": 1,
+      "Spice": 1,
       "Wine": 2,
       "Nut": 2,
       "Malt": 2,

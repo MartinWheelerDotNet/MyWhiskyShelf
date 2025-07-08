@@ -4,9 +4,8 @@ namespace MyWhiskyShelf.Database.Tests.Resources.TestData;
 
 public static class DistilleryEntityTestData
 {
-    public static DistilleryEntity Aberargie = new()
+    public static readonly DistilleryEntity Aberargie = new()
     { 
-        Id = 1,
         DistilleryName = "Aberargie",
         Location = "Aberargie",
         Region = "Lowland",
@@ -16,9 +15,8 @@ public static class DistilleryEntityTestData
         EncodedFlavourProfile = 2449473544ul,
         Active = true
     };
-    public static DistilleryEntity Aberfeldy = new()
+    public static readonly DistilleryEntity Aberfeldy = new()
     {
-        Id = 2,
         DistilleryName = "Aberfeldy",
         Location = "Aberfeldy",
         Region = "Highland",
@@ -29,9 +27,8 @@ public static class DistilleryEntityTestData
         Active = true
     };
 
-    public static DistilleryEntity AbhainnDearg = new()
+    public static readonly DistilleryEntity AbhainnDearg = new()
     {
-        Id = 3,
         DistilleryName = "Abhainn Dearg",
         Location = "Isle of Lewis",
         Region = "Island",
@@ -42,9 +39,8 @@ public static class DistilleryEntityTestData
         Active = true
     };
 
-    public static DistilleryEntity Balbalir = new()
+    public static readonly DistilleryEntity Balbalir = new()
     {
-        Id = 4,
         DistilleryName = "Balblair",
         Location = "Edderton",
         Region = "Highland",
@@ -55,9 +51,8 @@ public static class DistilleryEntityTestData
         Active = true
     };
 
-    public static DistilleryEntity Bunnahabhain = new()
+    public static readonly DistilleryEntity Bunnahabhain = new()
     {
-        Id = 5,
         DistilleryName = "Bunnahabhain",
         Location = "Port Askaig",
         Region = "Islay",

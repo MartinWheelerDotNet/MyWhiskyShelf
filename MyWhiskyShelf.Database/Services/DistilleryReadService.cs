@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using MyWhiskyShelf.Core;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Contexts;
 using MyWhiskyShelf.Database.Interfaces;
-using MyWhiskyShelf.Database.Mappers;
 
 namespace MyWhiskyShelf.Database.Services;
 
@@ -16,6 +14,18 @@ public class DistilleryReadService(
         => await dbContext.Distilleries
             .Select(entity => distilleryMapper.MapToDomain(entity))
             .ToListAsync();
+    
+    public async Task<Distillery?> GetDistilleryByNameAsync(string distilleryName)
+    {
+        var distillery = await dbContext.Distilleries.FindAsync(distilleryName);
+        return distillery is null 
+            ? null
+            : distilleryMapper.MapToDomain(distillery);
+    }
 
     public List<string> GetDistilleryNames() => distilleryNameCacheService.GetAll();
+
+    
+    
+    
 }

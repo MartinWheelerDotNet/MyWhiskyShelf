@@ -1,4 +1,3 @@
-using MyWhiskyShelf.Core;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Encoders;
 using MyWhiskyShelf.Database.Entities;

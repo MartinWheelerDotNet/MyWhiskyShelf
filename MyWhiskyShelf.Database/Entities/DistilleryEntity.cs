@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace MyWhiskyShelf.Database.Entities;
@@ -10,11 +9,7 @@ namespace MyWhiskyShelf.Database.Entities;
 [Index(nameof(Active), IsUnique = false)]
 public record DistilleryEntity
 {
-
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; init; }
-    
-    [Key]
+ [Key]
     public required string DistilleryName { get; init; }
     public required string Location { get; init; }
     public required string Region  { get; init; }

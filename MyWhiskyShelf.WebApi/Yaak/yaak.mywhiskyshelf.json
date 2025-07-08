@@ -1,0 +1,322 @@
+{
+  "yaakVersion": "2025.4.0",
+  "yaakSchema": 4,
+  "timestamp": "2025-07-08T16:55:07.612984100",
+  "resources": {
+    "workspaces": [
+      {
+        "model": "workspace",
+        "id": "wk_E9kD4NLtfq",
+        "createdAt": "2025-07-08T15:40:47.315477300",
+        "updatedAt": "2025-07-08T15:40:47.315478",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "MyWhiskyShelf",
+        "encryptionKeyChallenge": null,
+        "settingValidateCertificates": true,
+        "settingFollowRedirects": true,
+        "settingRequestTimeout": 0
+      }
+    ],
+    "environments": [
+      {
+        "model": "environment",
+        "id": "ev_4qY6kSvw9X",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "createdAt": "2025-07-08T15:44:44.664097800",
+        "updatedAt": "2025-07-08T16:07:13.474976800",
+        "name": "Development",
+        "public": true,
+        "base": false,
+        "variables": [
+          {
+            "enabled": true,
+            "name": "host",
+            "value": "localhost:5016",
+            "id": "AafgWtiKcW"
+          }
+        ],
+        "color": null
+      },
+      {
+        "model": "environment",
+        "id": "ev_25iagTNvEn",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "createdAt": "2025-07-08T15:40:47.358468100",
+        "updatedAt": "2025-07-08T15:40:47.358468400",
+        "name": "Global Variables",
+        "public": false,
+        "base": true,
+        "variables": [],
+        "color": null
+      }
+    ],
+    "folders": [
+      {
+        "model": "folder",
+        "id": "fl_xh8vqFgM6E",
+        "createdAt": "2025-07-08T15:54:23.574607300",
+        "updatedAt": "2025-07-08T16:46:52.606031500",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_Zi75WXkdYA",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "Add New Distillery",
+        "sortPriority": 1000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_QHZ4oMTp6u",
+        "createdAt": "2025-07-08T15:53:57.116170300",
+        "updatedAt": "2025-07-08T16:49:05.241161900",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_vr5hv9qtjH",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "Add New Distillery",
+        "sortPriority": 1000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_Zi75WXkdYA",
+        "createdAt": "2025-07-08T15:44:27.472382600",
+        "updatedAt": "2025-07-08T16:48:14.022762900",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_xRp9JC6bVY",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "Unhappy Path",
+        "sortPriority": 1000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_vr5hv9qtjH",
+        "createdAt": "2025-07-08T15:44:21.497776900",
+        "updatedAt": "2025-07-08T16:48:19.332771800",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_xRp9JC6bVY",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "Happy Path",
+        "sortPriority": 500.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_xRp9JC6bVY",
+        "createdAt": "2025-07-08T15:43:54.707700",
+        "updatedAt": "2025-07-08T15:43:54.707700500",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": null,
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "Distilleries",
+        "sortPriority": -1751989500000.0
+      }
+    ],
+    "httpRequests": [
+      {
+        "model": "http_request",
+        "id": "rq_XxDobBn495",
+        "createdAt": "2025-07-08T16:47:47.456726100",
+        "updatedAt": "2025-07-08T16:47:50.799579200",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_QHZ4oMTp6u",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get distillery by name",
+        "sortPriority": 2000.0,
+        "url": "${[ host ]}/distilleries/NewDistillery",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_zR6gA6bbjn",
+        "createdAt": "2025-07-08T16:47:26.140824600",
+        "updatedAt": "2025-07-08T16:47:50.780105400",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_QHZ4oMTp6u",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get distillery by name",
+        "sortPriority": 0.0,
+        "url": "${[ host ]}/distilleries/NewDistillery",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_AiAhdqvUab",
+        "createdAt": "2025-07-08T16:46:49.541230200",
+        "updatedAt": "2025-07-08T16:47:05.052690600",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_xh8vqFgM6E",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get distillery by name",
+        "sortPriority": 0.0,
+        "url": "${[ host ]}/distilleries/Aberargie",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_DwDMFwz4sZ",
+        "createdAt": "2025-07-08T16:45:38.042172100",
+        "updatedAt": "2025-07-08T16:48:08.570381100",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_Zi75WXkdYA",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get distillery by name",
+        "sortPriority": 500.0,
+        "url": "${[ host ]}/distilleries/MadeUpName",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_uxuXpUTUvt",
+        "createdAt": "2025-07-08T16:43:12.060270900",
+        "updatedAt": "2025-07-08T16:49:14.939700800",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_vr5hv9qtjH",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get distillery by name",
+        "sortPriority": 750.0,
+        "url": "${[ host ]}/distilleries/Aberfeldy",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_GKWfi2bTkD",
+        "createdAt": "2025-07-08T15:53:21.071337100",
+        "updatedAt": "2025-07-08T16:46:56.659179900",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_xh8vqFgM6E",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n    \"distilleryName\": \"Aberargie\",\n    \"location\": \"Aberargie\",\n    \"region\": \"Lowland\",\n    \"founded\": 2017,\n    \"owner\": \"Perth Distilling Co\",\n    \"distilleryType\": \"Malt\",\n    \"flavourProfile\": {\n      \"sweet\": 0,\n      \"fruit\": 1,\n      \"floral\": 0,\n      \"body\": 0,\n      \"smoke\": 0,\n      \"tobacco\": 0,\n      \"medicinal\": 0,\n      \"wine\": 0,\n      \"spice\": 2,\n      \"malt\": 2,\n      \"nut\": 2,\n      \"honey\": 0\n    },\n    \"active\": true\n  }"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "4fQdDrbnSr"
+          }
+        ],
+        "method": "POST",
+        "name": "Try to add new distillery",
+        "sortPriority": 1000.0,
+        "url": "${[ host ]}/distilleries/add",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_fpZae9M5ou",
+        "createdAt": "2025-07-08T15:48:09.499217700",
+        "updatedAt": "2025-07-08T16:47:50.794415900",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_QHZ4oMTp6u",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "  {\n    \"distilleryName\": \"NewDistillery\",\n    \"location\": \"Location\",\n    \"region\": \"Region\",\n    \"founded\": 2025,\n    \"owner\": \"MyWhiskyShelf\",\n    \"distilleryType\": \"Malt\",\n    \"flavourProfile\": {\n      \"sweet\": 4,\n      \"fruit\": 4,\n      \"floral\": 4,\n      \"body\": 4,\n      \"smoke\": 4,\n      \"tobacco\": 4,\n      \"medicinal\": 4,\n      \"wine\": 4,\n      \"spice\": 4,\n      \"malt\": 4,\n      \"nut\": 4,\n      \"honey\": 4\n    },\n    \"active\": true\n  }"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "4fQdDrbnSr"
+          }
+        ],
+        "method": "POST",
+        "name": "Add new distillery",
+        "sortPriority": 1000.0,
+        "url": "${[ host ]}/distilleries/add",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_d6JbX9rTAu",
+        "createdAt": "2025-07-08T15:47:41.179728",
+        "updatedAt": "2025-07-08T16:49:17.855788700",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_vr5hv9qtjH",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get all distillery names",
+        "sortPriority": 625.0,
+        "url": "${[ host ]}/distilleries/names",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_Af6bdNoBJ8",
+        "createdAt": "2025-07-08T15:47:04.039089800",
+        "updatedAt": "2025-07-08T16:49:09.899678200",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_vr5hv9qtjH",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get all distilleries",
+        "sortPriority": 500.0,
+        "url": "${[ host ]}/distilleries",
+        "urlParameters": []
+      }
+    ],
+    "grpcRequests": [],
+    "websocketRequests": []
+  }
+}
