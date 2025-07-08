@@ -13,7 +13,18 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MyWhiskyShelf.Database\MyWhiskyShelf.Database.csproj" />
+      <ProjectReference Include="..\MyWhiskyShelf.DataLoader\MyWhiskyShelf.DataLoader.csproj" />
       <ProjectReference Include="..\MyWhiskyShelf.ServiceDefaults\MyWhiskyShelf.ServiceDefaults.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="Resources\distilleries.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Yaak\" />
     </ItemGroup>
 
 </Project>

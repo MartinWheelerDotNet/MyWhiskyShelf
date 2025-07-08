@@ -1,27 +1,27 @@
 using Microsoft.EntityFrameworkCore;
+using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Contexts;
-using MyWhiskyShelf.Models;
+using MyWhiskyShelf.Database.Interfaces;
 
 namespace MyWhiskyShelf.Database.Services;
 
-public class DistilleryReadService(MyWhiskyShelfDbContext dbContext)
+public class DistilleryReadService(
+    MyWhiskyShelfDbContext dbContext,
+    IDistilleryNameCacheService distilleryNameCacheService,
+    IDistilleryMapper distilleryMapper) : IDistilleryReadService
 {
     public async Task<List<Distillery>> GetAllDistilleriesAsync()
         => await dbContext.Distilleries
-            .Select(distilleryEntity => new Distillery
-            {
-                DistilleryName = distilleryEntity.DistilleryName,
-                Location = distilleryEntity.Location,
-                Region = distilleryEntity.Region,
-                Founded = distilleryEntity.Founded,
-                Owner = distilleryEntity.Owner,
-                DistilleryType = distilleryEntity.DistilleryType,
-                Active = distilleryEntity.Active
-            })
+            .Select(entity => distilleryMapper.MapToDomain(entity))
             .ToListAsync();
+    
+    public async Task<Distillery?> GetDistilleryByNameAsync(string distilleryName)
+    {
+        var distillery = await dbContext.Distilleries.FindAsync(distilleryName);
+        return distillery is null 
+            ? null
+            : distilleryMapper.MapToDomain(distillery);
+    }
 
-    public async Task<List<string>> GetDistilleryNamesAsync() 
-        => await dbContext.Distilleries
-            .Select(distilleryEntity => distilleryEntity.DistilleryName)
-            .ToListAsync();
+    public List<string> GetDistilleryNames() => distilleryNameCacheService.GetAll();
 }

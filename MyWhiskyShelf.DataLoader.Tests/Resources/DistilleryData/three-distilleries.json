@@ -6,6 +6,12 @@
     "Founded": 2017,
     "Owner": "Perth Distilling Co",
     "DistilleryType": "Malt",
+    "FlavourProfile": {
+      "Fruit": 1,
+      "Malt": 2,
+      "Nut": 2,
+      "Spice": 2
+    },
     "Active": true
   },
   {
@@ -15,6 +21,7 @@
     "Founded": 1896,
     "Owner": "John Dewar & Sons",
     "DistilleryType": "Malt",
+    "FlavourProfile": {},
     "Active": true
   },
   {

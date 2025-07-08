@@ -1,42 +1,25 @@
 using Microsoft.EntityFrameworkCore;
+using Moq;
+using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Contexts;
-using MyWhiskyShelf.Database.Models;
+using MyWhiskyShelf.Database.Entities;
+using MyWhiskyShelf.Database.Interfaces;
+using MyWhiskyShelf.Database.Mappers;
 using MyWhiskyShelf.Database.Services;
-using MyWhiskyShelf.Models;
+using MyWhiskyShelf.Database.Tests.Resources.TestData;
 
 namespace MyWhiskyShelf.Database.Tests.Services;
 
 public class DistilleryReadServiceTests
 {
-    private static readonly DistilleryEntity FirstDistilleryEntity = new()
-    { 
-        Id = Guid.NewGuid(),
-        DistilleryName = "Aberargie",
-        Location = "Aberargie",
-        Region = "Lowland",
-        Founded = 2017,
-        Owner = "Perth Distilling Co",
-        DistilleryType = "Single Malt",
-        Active = true
-    };
-    
-    private static readonly DistilleryEntity SecondDistilleryEntity = new()
-    { 
-        Id = Guid.NewGuid(),
-        DistilleryName = "Aberfeldy",
-        Location = "Aberfeldy",
-        Region = "Highland",
-        Founded = 1896,
-        Owner = "John Dewar & Sons",
-        DistilleryType = "Single Malt",
-        Active = true
-    };
-
     [Fact]
     public async Task When_GetAllDistilleriesAndNoDistilleriesAreFound_Expect_EmptyList()
     {
-        await using var dbContext = CreateDbContext; 
-        var distilleryReadService = new DistilleryReadService(dbContext);
+        await using var dbContext = await CreateDbContextAsync(); 
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            new Mock<IDistilleryNameCacheService>().Object,
+            new DistilleryMapper());
         var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
         
         Assert.Empty(distilleries);
@@ -45,72 +28,109 @@ public class DistilleryReadServiceTests
     [Fact]
     public async Task When_GetAllDistilleriesAndDistilleriesAreFound_Expect_ListContainsMappedData()
     {
-        var expectedDistilleries = new List<Distillery>
-        {
-            new()
-            { 
-                DistilleryName = "Aberargie",
-                Location = "Aberargie",
-                Region = "Lowland",
-                Founded = 2017,
-                Owner = "Perth Distilling Co",
-                DistilleryType = "Single Malt",
-                Active = true
-            }, 
-            new() 
-            {
-                DistilleryName = "Aberfeldy",
-                Location = "Aberfeldy",
-                Region = "Highland",
-                Founded = 1896,
-                Owner = "John Dewar & Sons",
-                DistilleryType = "Single Malt",
-                Active = true
-            }
-        }; 
+        List<Distillery> expectedDistilleries = [DistilleryTestData.Aberargie, DistilleryTestData.Aberfeldy];
         
-        await using var dbContext = CreateDbContext; 
-        await dbContext.Set<DistilleryEntity>().AddRangeAsync(FirstDistilleryEntity, SecondDistilleryEntity);
-        await dbContext.SaveChangesAsync();
-
+        await using var dbContext = await CreateDbContextAsync(
+                DistilleryEntityTestData.Aberargie, 
+                DistilleryEntityTestData.Aberfeldy);
         
-        var distilleryReadService = new DistilleryReadService(dbContext);
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            new Mock<IDistilleryNameCacheService>().Object,
+            new DistilleryMapper());
         var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
         
-        Assert.True(expectedDistilleries.ToHashSet().SetEquals(distilleries));
+        Assert.All(expectedDistilleries, distillery => Assert.Contains(distillery, distilleries));
     }
 
     [Fact]
     public async Task When_GetDistilleryNamesAndNoDistilleriesAreFound_Expect_EmptyList()
     {
-        await using var dbContext = CreateDbContext; 
+        await using var dbContext = await CreateDbContextAsync(); 
+        var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
+        mockDistilleryNameCacheService
+            .Setup(cacheService => cacheService.GetAll())
+            .Returns([]);
         
-        var distilleryReadService = new DistilleryReadService(dbContext);
-        var distilleryNames = await distilleryReadService.GetAllDistilleriesAsync();
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            mockDistilleryNameCacheService.Object,
+            new DistilleryMapper());
+        var distilleryNames = distilleryReadService.GetDistilleryNames();
 
         Assert.Empty(distilleryNames);
     }
     
     [Fact]
     public async Task When_GetDistilleryNamesAndDistilleriesAreFound_Expect_ListContainsDistilleryNames()
+    { 
+        List<string> expectedDistilleryNames =
+        [
+            DistilleryEntityTestData.Aberargie.DistilleryName,
+            DistilleryEntityTestData.Aberfeldy.DistilleryName
+        ];
+        
+        var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
+        mockDistilleryNameCacheService
+            .Setup(cacheService => cacheService.GetAll())
+            .Returns(expectedDistilleryNames);
+        
+        await using var dbContext = await CreateDbContextAsync(
+            DistilleryEntityTestData.Aberargie,
+            DistilleryEntityTestData.Aberfeldy);
+        
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            mockDistilleryNameCacheService.Object,
+            new DistilleryMapper());
+        var distilleryNames = distilleryReadService.GetDistilleryNames();
+
+        Assert.Equal(expectedDistilleryNames, distilleryNames);
+    }
+
+    [Fact]
+    public async Task When_GetDistilleryByNameAndDistilleryIsNotFound_Expect_NoDistilleryReturned()
     {
-        List<string> expectedDistilleryNames = ["Aberargie", "Aberfeldy"];
+        await using var dbContext = await CreateDbContextAsync(); 
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            new Mock<IDistilleryNameCacheService>().Object,
+            new DistilleryMapper());
         
-        await using var dbContext = CreateDbContext;
-        await dbContext.Set<DistilleryEntity>().AddRangeAsync(
-            FirstDistilleryEntity, SecondDistilleryEntity);
-        await dbContext.SaveChangesAsync();
-
+        var distillery = await distilleryReadService
+            .GetDistilleryByNameAsync(DistilleryTestData.Aberfeldy.DistilleryName);
         
-        var distilleryReadService = new DistilleryReadService(dbContext);
-        var distilleryNames = await distilleryReadService.GetDistilleryNamesAsync();
-
-        Assert.True(expectedDistilleryNames.ToHashSet().SetEquals(distilleryNames));
+        Assert.Null(distillery);
     }
     
-    private static MyWhiskyShelfDbContext CreateDbContext => new(
-        new DbContextOptionsBuilder<MyWhiskyShelfDbContext>()
+    [Fact]
+    public async Task When_GetDistilleryByNameAndDistilleryIsFound_Expect_DistilleryReturned()
+    {
+        await using var dbContext = await CreateDbContextAsync(
+            DistilleryEntityTestData.Aberargie,
+            DistilleryEntityTestData.Aberfeldy);
+        
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            new Mock<IDistilleryNameCacheService>().Object,
+            new DistilleryMapper());
+        var distillery = await distilleryReadService
+            .GetDistilleryByNameAsync(DistilleryTestData.Aberfeldy.DistilleryName);
+        
+        Assert.Equal(DistilleryTestData.Aberfeldy, distillery);
+    }
+    
+    private static async Task<MyWhiskyShelfDbContext> CreateDbContextAsync(params DistilleryEntity[] distilleryEntities)
+    {
+        var options = new DbContextOptionsBuilder<MyWhiskyShelfDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-            .Options);
-
+            .Options;
+        
+        var dbContext = new MyWhiskyShelfDbContext(options);
+        
+        dbContext.Set<DistilleryEntity>().AddRange(distilleryEntities);
+        await dbContext.SaveChangesAsync();
+        
+        return dbContext;
+    }
 }

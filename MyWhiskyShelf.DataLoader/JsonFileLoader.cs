@@ -1,14 +1,14 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Logging;
-using MyWhiskyShelf.Models;
+using MyWhiskyShelf.Core.Models;
 
-namespace MyWhiskyShelf.Database;
+namespace MyWhiskyShelf.DataLoader;
 
-public class DataLoader(ILogger<DataLoader> logger)
+public class JsonFileLoader(ILogger<JsonFileLoader> logger) : IJsonFileLoader
 {
     private const string DistilleryPrefix = "when loading distillery data.";
     
-    public async Task<List<Distillery>> GetDistilleriesFromJson(string filePath)
+    public async Task<List<Distillery>> GetDistilleriesFromJsonAsync(string filePath)
     {
         if (!File.Exists(filePath))
         {
@@ -28,7 +28,7 @@ public class DataLoader(ILogger<DataLoader> logger)
             logger.LogInformation("{Count} distilleries loaded", distilleries.Count);
             return distilleries;
         }
-        catch (JsonException)
+        catch (Exception)
         {
             throw new InvalidDataException($"'{filePath}' is found, but contains invalid data, {DistilleryPrefix}");
         }
