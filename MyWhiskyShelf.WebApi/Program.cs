@@ -43,7 +43,6 @@ internal static class Program
         {
             app.MapOpenApi();
             await EnsureDatabaseCreated(app.Services, useDataSeeding);
-            app.Services.EnsureDatabaseCreated();
         }
         
         app.UseHttpsRedirection();
