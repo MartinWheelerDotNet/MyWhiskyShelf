@@ -31,6 +31,8 @@ jobs:
         include:
           - name: Database
             project: MyWhiskyShelf.Database.Tests/MyWhiskyShelf.Database.Tests.csproj
+          - name: DataLoader
+            project: MyWhiskyShelf.DataLoader.Tests/MyWhiskyShelf.DataLoader.Tests.csproj
           - name: Integration
             project: MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj
             
