@@ -17,7 +17,8 @@ public class DistilleryReadService(
     
     public async Task<Distillery?> GetDistilleryByNameAsync(string distilleryName)
     {
-        var distillery = await dbContext.Distilleries.FindAsync(distilleryName);
+        var distillery = await dbContext.Distilleries.
+            FirstOrDefaultAsync(d => d.DistilleryName == distilleryName);
         return distillery is null 
             ? null
             : distilleryMapper.MapToDomain(distillery);
