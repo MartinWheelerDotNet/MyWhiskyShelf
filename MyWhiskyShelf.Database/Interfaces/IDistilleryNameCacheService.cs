@@ -7,6 +7,6 @@ public interface IDistilleryNameCacheService
     Task LoadCacheFromDbAsync(MyWhiskyShelfDbContext dbContext);
     List<string> GetAll();
     void Add(string distilleryName);
-    List<string> Search(string queryString);
+    //List<string> Search(string queryString);
     
 }
