@@ -23,5 +23,9 @@ public class DistilleryReadService(
             : distilleryMapper.MapToDomain(distillery);
     }
 
-    public List<string> GetDistilleryNames() => distilleryNameCacheService.GetAll();
+    public List<string> GetDistilleryNames() 
+        => distilleryNameCacheService.GetAll();
+
+    public List<string> SearchByName(string query)
+        => distilleryNameCacheService.Search(query);
 }

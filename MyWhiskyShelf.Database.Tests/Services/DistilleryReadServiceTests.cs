@@ -119,6 +119,55 @@ public class DistilleryReadServiceTests
         
         Assert.Equal(DistilleryTestData.Aberfeldy, distillery);
     }
+
+    [Fact]
+    public async Task When_SearchAndDistilleryNamesFound_Expect_ListContainsDistilleryNames()
+    {
+        const string searchPattern = "aber";
+        List<string> expectedDistilleryNames =
+        [
+            DistilleryEntityTestData.Aberargie.DistilleryName,
+            DistilleryEntityTestData.Aberfeldy.DistilleryName
+        ];
+        
+        var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
+        mockDistilleryNameCacheService
+            .Setup(cacheService => cacheService.Search(searchPattern))
+            .Returns(expectedDistilleryNames);
+
+        await using var dbContext = await CreateDbContextAsync();
+        
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            mockDistilleryNameCacheService.Object,
+            new DistilleryMapper());
+
+        var distilleryNames = distilleryReadService.SearchByName(searchPattern);
+
+        Assert.Equal(expectedDistilleryNames, distilleryNames);
+    }
+    
+    [Fact]
+    public async Task When_SearchAndNoDistilleryNamesFound_Expect_EmptyListReturned()
+    {
+        const string searchPattern = "aber";
+        
+        var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
+        mockDistilleryNameCacheService
+            .Setup(cacheService => cacheService.Search(searchPattern))
+            .Returns([]);
+
+        await using var dbContext = await CreateDbContextAsync();
+        
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            mockDistilleryNameCacheService.Object,
+            new DistilleryMapper());
+
+        var distilleryNames = distilleryReadService.SearchByName(searchPattern);
+
+        Assert.Empty(distilleryNames);
+    }
     
     private static async Task<MyWhiskyShelfDbContext> CreateDbContextAsync(params DistilleryEntity[] distilleryEntities)
     {
@@ -133,4 +182,6 @@ public class DistilleryReadServiceTests
         
         return dbContext;
     }
+    
+    
 }

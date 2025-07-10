@@ -28,6 +28,11 @@ public class DistilleryNameCacheService : IDistilleryNameCacheService
         _distilleryNames.Add(distilleryName);
     }
 
+    public void Remove(string distilleryName)
+    {
+        _distilleryNames.Remove(distilleryName);
+    }
+
     public List<string> GetAll() => _distilleryNames.ToList();
 
     public List<string> Search(string queryString)

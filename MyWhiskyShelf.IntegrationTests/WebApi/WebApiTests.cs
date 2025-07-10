@@ -1,4 +1,6 @@
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 using MyWhiskyShelf.IntegrationTests.Resources.TestData;
@@ -64,6 +66,148 @@ public static class WebApiTests
                 () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
                 () => Assert.Equal(DistilleryTestData.Aberfeldy, distillery));
         }
+        
+        [Fact]
+        public async Task When_SearchingAndNoMatchesFound_Expect_EmptyList()
+        {
+            const string endpoint = "/distilleries/name/search?pattern=anything";
+            
+            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+            var response = await httpClient.GetAsync(endpoint);
+            var distilleryNames = await response.Content.ReadFromJsonAsync<List<string>>();
+
+
+            Assert.Multiple(
+                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
+                () => Assert.Empty(distilleryNames!));
+        }
+        
+        [Fact]
+        public async Task When_SearchingExactMatchFound_Expect_ListWithJustThatDistilleryName()
+        {
+            var endpoint = $"/distilleries/name/search?pattern={DistilleryTestData.Aberfeldy.DistilleryName}";
+            
+            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+            var response = await httpClient.GetAsync(endpoint);
+            var distilleryNames = await response.Content.ReadFromJsonAsync<List<string>>();
+
+            Assert.Multiple(
+                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
+                () => Assert.Equal([DistilleryTestData.Aberfeldy.DistilleryName], distilleryNames));
+        }
+        
+        [Fact]
+        public async Task When_SearchingAndPatternIsNotProvided_Expect_BadRequestWithProblemDetails()
+        {
+            const string endpoint = "/distilleries/name/search";
+
+            var expectedProblem = new ProblemDetails
+            {
+                Type = "urn:mywhiskyshelf:errors:missing-or-invalid-query-pattern",
+                Title = "Missing or invalid query parameter",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = "Query parameter 'pattern' is required and cannot be empty.",
+                Instance = endpoint
+            };
+            
+            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+            var response = await httpClient.GetAsync(endpoint);
+            var problemResponse = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            
+            Assert.Multiple(
+                () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
+                () => Assert.Equivalent(expectedProblem, problemResponse));
+        }
+        
+        [Theory]
+        [InlineData(" ")]
+        [InlineData("   ")]
+        [InlineData("    ")]
+        [InlineData("\t \n")]
+        public async Task When_SearchingAndPatternIsEmptyOrWhiteSpace_Expect_BadRequestProblemResponse(string queryPattern)
+        {
+            var endpoint = $"/distilleries/name/search?pattern={queryPattern}";
+            
+            var expectedProblem = new ProblemDetails
+            {
+                Type = "urn:mywhiskyshelf:errors:missing-or-invalid-query-pattern",
+                Title = "Missing or invalid query parameter",
+                Status = StatusCodes.Status400BadRequest,
+                Detail = "Query parameter 'pattern' is required and cannot be empty.",
+                Instance = "/distilleries/name/search"
+            };
+            
+            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+            var response = await httpClient.GetAsync(endpoint);
+            var problemResponse = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            
+            Assert.Multiple(
+                () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
+                () => Assert.Equivalent(expectedProblem, problemResponse));
+        }
+        
+        [Fact]
+        public async Task When_AddingDistilleryAndDistilleryDoesNotExist_Expect_CreatedWithLocationHeaderSet()
+        {
+            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+            var response = await httpClient.PostAsJsonAsync(
+                "/distilleries/add", 
+                DistilleryTestData.Aberargie with {DistilleryName = "NewDistillery"});
+            await httpClient.DeleteAsync("/distilleries/remove/NewDistillery");
+            
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal("/distilleries/NewDistillery", response.Headers.Location!.ToString());
+        }
+
+        [Fact]
+        public async Task When_RemovingDistilleryAndDistilleryExists_Expect_OkResponse()
+        {
+            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+            var response = await httpClient.DeleteAsync("/distilleries/remove/Aberargie");
+            
+            await httpClient.PostAsJsonAsync("/distilleries/add/", DistilleryTestData.Aberargie);
+            
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+        
+        [Fact]
+        public async Task When_RemovingDistilleryAndDistilleryDoesNotExist_Expect_NotFoundProblemResponse()
+        {
+            var expectedProblem = new ProblemDetails
+            {
+                Type = "urn:mywhiskyshelf:errors:distillery-does-not-exist",
+                Title = "Distillery does not exist.",
+                Status = StatusCodes.Status404NotFound,
+                Detail = "Cannot remove distillery 'FakeDistillery' as it does not exist.",
+                Instance = "/distilleries/remove/FakeDistillery"
+            };
+            
+            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+            var response = await httpClient.DeleteAsync("/distilleries/remove/FakeDistillery");
+            var problemResponse = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            
+            Assert.Multiple(
+                () => Assert.Equal(HttpStatusCode.NotFound, response.StatusCode),
+                () => Assert.Equivalent(expectedProblem, problemResponse));
+        }
+        
+        [Fact]
+        public async Task When_AddingDistilleryAndNameContainsSpecialCharacters_Expect_CreatedWithUrlEncodedLocationHeaderSet()
+        {
+            const string endpoint = "/distilleries/add";
+            
+            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+            var response = await httpClient.PostAsJsonAsync(
+                endpoint, 
+                DistilleryTestData.Aberargie with {DistilleryName = "Burn O'Bennie"});
+            
+                        
+            await httpClient.DeleteAsync("/distilleries/remove/Burn%20O%27Bennie");
+        
+            Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal("/distilleries/Burn%20O%27Bennie", response.Headers.Location!.ToString());
+
+        }
     }
     
     [Collection("AspireTests")]
@@ -107,6 +251,20 @@ public static class WebApiTests
             var response = await httpClient.GetAsync(endpoint);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task When_Searching_Expect_EmptyListIsReturned()
+        {
+            const string endpoint = "/distilleries/name/search?pattern=anything";
+            
+            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+            var response = await httpClient.GetAsync(endpoint);
+            var distilleryNames = await response.Content.ReadFromJsonAsync<List<string>>();
+
+            Assert.Multiple(
+                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
+                () => Assert.Empty(distilleryNames!));
         }
     }
 }
