@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Contexts;
 using MyWhiskyShelf.Database.Entities;
 using MyWhiskyShelf.Database.Interfaces;
@@ -36,6 +37,12 @@ public class DistilleryWriteServiceTests
     [Fact]
     public async Task When_AddDistilleryAndDistilleryExists_Expect_DatabaseIsNotUpdated()
     {
+        var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
+        DistilleryNameDetails? distilleryDetails;
+        mockDistilleryNameCacheService
+            .Setup(service => service.TryGet(DistilleryEntityTestData.Aberargie.DistilleryName, out distilleryDetails))
+            .Returns(true);
+        
         await using var dbContext = await CreateDbContextAsync();
         await dbContext
             .Set<DistilleryEntity>()
@@ -46,15 +53,14 @@ public class DistilleryWriteServiceTests
         
         var distilleryWriteService = new DistilleryWriteService(
             dbContext, 
-            new Mock<IDistilleryNameCacheService>().Object,
+            mockDistilleryNameCacheService.Object,
             new DistilleryMapper());
         var result = await distilleryWriteService.TryAddDistilleryAsync(modifiedAberargieDistillery);
 
         var distilleryEntity = await dbContext
             .Set<DistilleryEntity>()
             .FirstAsync(entity => entity.DistilleryName == modifiedAberargieDistillery.DistilleryName);
-
-
+        
         Assert.Multiple(
             () => Assert.False(result, "'result' should be false"),
             () => Assert.Equal(distilleryEntity, DistilleryEntityTestData.Aberargie));
@@ -66,7 +72,8 @@ public class DistilleryWriteServiceTests
         await using var dbContext = await CreateDbContextAsync(DistilleryEntityTestData.Aberargie);
         var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
         mockDistilleryNameCacheService
-            .Setup(nameCacheService => nameCacheService.Add(DistilleryTestData.Aberargie.DistilleryName))
+            .Setup(nameCacheService => 
+                nameCacheService.Add(DistilleryTestData.Aberargie.DistilleryName, Guid.NewGuid()))
             .Verifiable(Times.Never);
         
         var distilleryWriteService = new DistilleryWriteService(
@@ -84,7 +91,8 @@ public class DistilleryWriteServiceTests
         await using var dbContext = await CreateDbContextAsync();
         var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
         mockDistilleryNameCacheService
-            .Setup(nameCacheService => nameCacheService.Add(DistilleryTestData.Aberargie.DistilleryName))
+            .Setup(nameCacheService => 
+                nameCacheService.Add(DistilleryTestData.Aberargie.DistilleryName, It.IsAny<Guid>()))
             .Verifiable(Times.Once);
         
         var distilleryWriteService = new DistilleryWriteService(
@@ -103,7 +111,8 @@ public class DistilleryWriteServiceTests
         
         var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
         mockDistilleryNameCacheService
-            .Setup(nameCacheService => nameCacheService.Add(DistilleryTestData.Aberargie.DistilleryName))
+            .Setup(nameCacheService => 
+                nameCacheService.Add(DistilleryTestData.Aberargie.DistilleryName, Guid.NewGuid()))
             .Verifiable(Times.Once);
         
         var distilleryWriteService = new DistilleryWriteService(

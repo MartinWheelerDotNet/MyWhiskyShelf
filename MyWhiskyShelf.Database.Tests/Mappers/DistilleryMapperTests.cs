@@ -12,7 +12,8 @@ public class DistilleryMapperTests
 
         var mappedDistilleryEntity = distilleryMapper.MapToEntity(DistilleryTestData.Aberargie);
         
-        Assert.Equal(DistilleryEntityTestData.Aberargie, mappedDistilleryEntity);
+        //the mapped entity has not been added to the database so will not yet have generated an entityId
+        Assert.Equal(DistilleryEntityTestData.Aberargie with { Id = Guid.Empty }, mappedDistilleryEntity); 
     }
 
     [Fact]
@@ -44,7 +45,7 @@ public class DistilleryMapperTests
         var mappedDistillery = distilleryMapper.MapToDomain(DistilleryEntityTestData.Aberargie);
         var mappedDistilleryEntity = distilleryMapper.MapToEntity(mappedDistillery);
         
-        
-        Assert.Equal(DistilleryEntityTestData.Aberargie, mappedDistilleryEntity); 
+        //the mapped entity has not been added to the database so will not yet have generated an entityId
+        Assert.Equal(DistilleryEntityTestData.Aberargie with { Id = Guid.Empty }, mappedDistilleryEntity); 
     }
 }

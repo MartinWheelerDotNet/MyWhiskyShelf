@@ -12,14 +12,12 @@ public class DistilleryWriteService(
 {
     public async Task<bool> TryAddDistilleryAsync(Distillery distillery)
     {
-        if (await dbContext.Distilleries.AnyAsync(entity => distillery.DistilleryName == entity.DistilleryName))
-        {
+        if (distilleryNameCacheService.TryGet(distillery.DistilleryName, out _))
             return false;
-        }
-
+        
         var entity = distilleryMapper.MapToEntity(distillery);
         dbContext.Distilleries.Add(entity);
-        distilleryNameCacheService.Add(distillery.DistilleryName);
+        distilleryNameCacheService.Add(entity.DistilleryName, entity.Id);
         await dbContext.SaveChangesAsync();
 
         return true;

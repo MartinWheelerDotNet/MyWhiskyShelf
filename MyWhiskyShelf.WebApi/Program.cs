@@ -175,6 +175,6 @@ internal static class Program
         }
         
         var cacheService = scope.ServiceProvider.GetRequiredService<IDistilleryNameCacheService>();
-        await cacheService.LoadCacheFromDbAsync(dbContext);
+        await cacheService.InitializeFromDatabaseAsync(dbContext);
     }
 }

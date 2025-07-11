@@ -1,5 +1,8 @@
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using FuzzySharp;
 using Microsoft.EntityFrameworkCore;
+using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Contexts;
 using MyWhiskyShelf.Database.Entities;
 using MyWhiskyShelf.Database.Interfaces;
@@ -8,43 +11,55 @@ namespace MyWhiskyShelf.Database.Services;
 
 public class DistilleryNameCacheService : IDistilleryNameCacheService
 {
-    private readonly SortedSet<string> _distilleryNames = [];
+    private ConcurrentDictionary<string, DistilleryNameDetails> _distilleryDetails = 
+        new(StringComparer.OrdinalIgnoreCase);
+    
     private const int CutoffRatioForFuzzySearch = 60;
     
-    public async Task LoadCacheFromDbAsync(MyWhiskyShelfDbContext dbContext)
+    public async Task InitializeFromDatabaseAsync(MyWhiskyShelfDbContext dbContext)
     {
-        var distilleryNames = await dbContext.Set<DistilleryEntity>()
-            .Select(distillery => distillery.DistilleryName)
+        var distilleryDetails = await dbContext.Set<DistilleryEntity>()
+            .OrderBy(entity => entity.DistilleryName)
+            .Select(entity => new DistilleryNameDetails(entity.DistilleryName, entity.Id))
             .ToListAsync();
         
-        _distilleryNames.Clear();
-        
-        foreach(var distilleryName in distilleryNames)
-            _distilleryNames.Add(distilleryName);
+        var dictionaryForExchange = new ConcurrentDictionary<string, DistilleryNameDetails>(
+            distilleryDetails.ToDictionary(details => details.DistilleryName, details => details),
+            StringComparer.OrdinalIgnoreCase);
+
+        Interlocked.Exchange(ref _distilleryDetails, dictionaryForExchange);
     }
 
-    public void Add(string distilleryName)
-    {
-        _distilleryNames.Add(distilleryName);
-    }
-
+    public void Add(string distilleryName, Guid identifier) 
+        => _distilleryDetails
+            .TryAdd(distilleryName, new DistilleryNameDetails(distilleryName, identifier));
+    
     public void Remove(string distilleryName)
-    {
-        _distilleryNames.Remove(distilleryName);
-    }
+        => _distilleryDetails.TryRemove(distilleryName, out _);
 
-    public List<string> GetAll() => _distilleryNames.ToList();
+    public IReadOnlyList<DistilleryNameDetails> GetAll()
+        => _distilleryDetails
+            .OrderBy(details => details.Key)
+            .Select(details => details.Value)
+            .ToList()
+            .AsReadOnly();
 
-    public List<string> Search(string queryString)
+    public bool TryGet(string distilleryName, [NotNullWhen(true)] out DistilleryNameDetails? distilleryNameDetails)
+        => _distilleryDetails
+            .TryGetValue(distilleryName, out distilleryNameDetails);
+    
+    public IReadOnlyList<DistilleryNameDetails> Search(string queryString)
     {
         if (queryString.Length < 3 || string.IsNullOrWhiteSpace(queryString)) return [];
 
         var rankedResults = Process.ExtractSorted(
             queryString,
-            _distilleryNames,
-            distilleryName => distilleryName,
+            _distilleryDetails.Keys.OrderBy(key => key, StringComparer.OrdinalIgnoreCase),
             cutoff: CutoffRatioForFuzzySearch);
 
-        return rankedResults.Select(result => result.Value).ToList();
+        return rankedResults
+            .Select(rankedResult => _distilleryDetails[rankedResult.Value])
+            .ToList()
+            .AsReadOnly();
     }
 }

@@ -18,16 +18,19 @@ public class DistilleryReadService(
     
     public async Task<Distillery?> GetDistilleryByNameAsync(string distilleryName)
     {
-        var distillery = await dbContext.Distilleries.
-            FirstOrDefaultAsync(d => d.DistilleryName == distilleryName);
+        if (!distilleryNameCacheService.TryGet(distilleryName, out var distilleryDetails))
+            return null;
+        
+        var distillery = await dbContext.Distilleries.FindAsync(distilleryDetails.Identifier);
+        
         return distillery is null 
             ? null
             : distilleryMapper.MapToDomain(distillery);
     }
 
     public List<string> GetDistilleryNames() 
-        => distilleryNameCacheService.GetAll();
+        => distilleryNameCacheService.GetAll().Select(details => details.DistilleryName).ToList();
 
     public List<string> SearchByName(string query)
-        => distilleryNameCacheService.Search(query);
+        => distilleryNameCacheService.Search(query).Select(details => details.DistilleryName).ToList();
 }

@@ -6,6 +6,7 @@ public static class DistilleryEntityTestData
 {
     public static readonly DistilleryEntity Aberargie = new()
     { 
+        Id = Guid.Parse("00e2b45f-4632-40e4-a29c-8a948fbe85e3"),
         DistilleryName = "Aberargie",
         Location = "Aberargie",
         Region = "Lowland",
@@ -17,6 +18,7 @@ public static class DistilleryEntityTestData
     };
     public static readonly DistilleryEntity Aberfeldy = new()
     {
+        Id = Guid.Parse("9bba2d8b-7c08-4006-a8ef-d858ba7afd78"),
         DistilleryName = "Aberfeldy",
         Location = "Aberfeldy",
         Region = "Highland",
@@ -29,6 +31,7 @@ public static class DistilleryEntityTestData
 
     public static readonly DistilleryEntity AbhainnDearg = new()
     {
+        Id = Guid.Parse("99046c20-c9e4-426e-b019-97de021964d9"),
         DistilleryName = "Abhainn Dearg",
         Location = "Isle of Lewis",
         Region = "Island",
@@ -41,6 +44,7 @@ public static class DistilleryEntityTestData
 
     public static readonly DistilleryEntity Balbalir = new()
     {
+        Id = Guid.Parse("3cbd562f-217f-483d-b9a8-17b155fade08"),
         DistilleryName = "Balblair",
         Location = "Edderton",
         Region = "Highland",
@@ -53,6 +57,7 @@ public static class DistilleryEntityTestData
 
     public static readonly DistilleryEntity Bunnahabhain = new()
     {
+        Id = Guid.Parse("ea5602a4-91be-4b87-a9aa-1ec0758642f6"),
         DistilleryName = "Bunnahabhain",
         Location = "Port Askaig",
         Region = "Islay",
