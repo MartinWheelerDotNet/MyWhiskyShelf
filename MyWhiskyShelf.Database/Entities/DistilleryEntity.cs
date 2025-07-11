@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MyWhiskyShelf.Database.Entities;
 
-[Index(nameof(DistilleryName), isUnique = true)]
+[Index(nameof(DistilleryName), IsUnique = true)]
 [Index(nameof(Region), IsUnique = false)]
 [Index(nameof(Owner), IsUnique = false)]
 [Index(nameof(DistilleryType), IsUnique = false)]
