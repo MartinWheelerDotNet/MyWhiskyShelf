@@ -8,7 +8,7 @@ namespace MyWhiskyShelf.Database.Services;
 
 public class DistilleryNameCacheService : IDistilleryNameCacheService
 {
-    private readonly List<string> _distilleryNames = [];
+    private readonly SortedSet<string> _distilleryNames = [];
     private const int CutoffRatioForFuzzySearch = 60;
     
     public async Task LoadCacheFromDbAsync(MyWhiskyShelfDbContext dbContext)
@@ -18,13 +18,19 @@ public class DistilleryNameCacheService : IDistilleryNameCacheService
             .ToListAsync();
         
         _distilleryNames.Clear();
-        _distilleryNames.AddRange(distilleryNames);
+        
+        foreach(var distilleryName in distilleryNames)
+            _distilleryNames.Add(distilleryName);
     }
 
     public void Add(string distilleryName)
     {
-        if (_distilleryNames.Contains(distilleryName)) return;
         _distilleryNames.Add(distilleryName);
+    }
+
+    public void Remove(string distilleryName)
+    {
+        _distilleryNames.Remove(distilleryName);
     }
 
     public List<string> GetAll() => _distilleryNames.ToList();

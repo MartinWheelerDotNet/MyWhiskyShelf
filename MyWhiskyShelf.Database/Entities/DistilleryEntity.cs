@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MyWhiskyShelf.Database.Entities;
 
+[Index(nameof(DistilleryName), isUnique = true)]
 [Index(nameof(Region), IsUnique = false)]
 [Index(nameof(Owner), IsUnique = false)]
 [Index(nameof(DistilleryType), IsUnique = false)]
 [Index(nameof(Active), IsUnique = false)]
 public record DistilleryEntity
 {
-    [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; init; }
     public required string DistilleryName { get; init; }

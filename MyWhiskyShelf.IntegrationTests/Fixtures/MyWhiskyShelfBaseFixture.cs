@@ -6,18 +6,19 @@ namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 public class MyWhiskyShelfBaseFixture : IAsyncLifetime
 {
     protected bool UseDataSeeding { get; init; }
-
+    
     public DistributedApplication Application { get; private set; } = null!;
 
     public async Task InitializeAsync()
     {
+        
         var appHost = await CreateDefaultAppHost();
         Application = await appHost.BuildAsync();
         Application.Start();
-
+        
         await WaitForRunningState(Application, "WebApi");
     }
-
+    
     private async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
     {
         var appHost = await DistributedApplicationTestingBuilder.CreateAsync<Projects.MyWhiskyShelf_AppHost>(
@@ -37,5 +38,8 @@ public class MyWhiskyShelfBaseFixture : IAsyncLifetime
             .WaitForResourceAsync(serviceName, KnownResourceStates.Running)
             .WaitAsync(timeout ?? TimeSpan.FromSeconds(30));
     
-    public async Task DisposeAsync() => await Application.DisposeAsync();
+    public async Task DisposeAsync()
+    {
+        await Application.DisposeAsync();
+    }
 }

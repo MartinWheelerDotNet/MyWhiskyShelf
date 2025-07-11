@@ -24,4 +24,18 @@ public class DistilleryWriteService(
 
         return true;
     }
+
+    public async Task<bool> TryRemoveDistilleryAsync(string distilleryName)
+    {
+        var distilleryEntity = await dbContext.Distilleries
+            .FirstOrDefaultAsync(entity => entity.DistilleryName == distilleryName);
+
+        if (distilleryEntity == null) return false;
+
+        distilleryNameCacheService.Remove(distilleryEntity.DistilleryName);
+        dbContext.Distilleries.Remove(distilleryEntity);
+        await dbContext.SaveChangesAsync();
+
+        return true;
+    }
 }
