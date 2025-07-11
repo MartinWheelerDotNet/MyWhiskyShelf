@@ -42,6 +42,29 @@ public class DistilleryReadServiceTests
         
         Assert.All(expectedDistilleries, distillery => Assert.Contains(distillery, distilleries));
     }
+    
+    [Fact]
+    public async Task When_GetAllDistilleriesAndDistilleriesAreFound_Expect_ListIsOrderedByDistilleryName()
+    {
+        List<Distillery> expectedDistilleries = [
+            DistilleryTestData.Aberargie, 
+            DistilleryTestData.Aberfeldy,
+            DistilleryTestData.Bunnahabhain
+        ];
+        
+        await using var dbContext = await CreateDbContextAsync(
+            DistilleryEntityTestData.Bunnahabhain,
+            DistilleryEntityTestData.Aberargie, 
+            DistilleryEntityTestData.Aberfeldy);
+        
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            new Mock<IDistilleryNameCacheService>().Object,
+            new DistilleryMapper());
+        var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
+        
+        Assert.All(expectedDistilleries, distillery => Assert.Contains(distillery, distilleries));
+    }
 
     [Fact]
     public async Task When_GetDistilleryNamesAndNoDistilleriesAreFound_Expect_EmptyList()

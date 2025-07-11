@@ -12,6 +12,7 @@ public class DistilleryReadService(
 {
     public async Task<List<Distillery>> GetAllDistilleriesAsync()
         => await dbContext.Distilleries
+            .OrderBy(entity => entity.DistilleryName)
             .Select(entity => distilleryMapper.MapToDomain(entity))
             .ToListAsync();
     
