@@ -25,10 +25,12 @@ public class DistilleryWriteServiceTests
         var distilleryEntity = await dbContext
             .Set<DistilleryEntity>()
             .FirstAsync(entity => entity.DistilleryName == DistilleryEntityTestData.Aberargie.DistilleryName);
-
+        
         Assert.Multiple(
             () => Assert.True(result, "'result' should be true"),
-            () => Assert.Equal(DistilleryEntityTestData.Aberargie, distilleryEntity));
+            () => Assert.Equal(
+                DistilleryEntityTestData.Aberargie with { Id = distilleryEntity.Id }, 
+                distilleryEntity));
     }
     
     [Fact]

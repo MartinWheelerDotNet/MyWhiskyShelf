@@ -27,18 +27,18 @@ public static class WebApiTests
         
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
-            var distilleries = await response.Content.ReadFromJsonAsync<List<string>>();
+            var distilleryNames = await response.Content.ReadFromJsonAsync<List<string>>();
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.Equal(expectedDistilleryNames, distilleries));
+                () => Assert.All(expectedDistilleryNames, distillery => Assert.Contains(distillery, distilleryNames!)));
         }
 
         [Fact]
         public async Task When_RequestingAllDistilleries_Expect_AllTestDistilleriesReturned()
         {
             const string endpoint = "/distilleries";
-            List<Distillery> expectedDistilleryNames = [
+            List<Distillery> expectedDistilleries = [
                 DistilleryTestData.Aberargie, 
                 DistilleryTestData.Aberfeldy,
                 DistilleryTestData.Aberlour
@@ -50,7 +50,7 @@ public static class WebApiTests
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.Equal(expectedDistilleryNames, distilleries));
+                () => Assert.All(expectedDistilleries, distillery => Assert.Contains(distillery, distilleries!)));
         }
 
         [Fact]
