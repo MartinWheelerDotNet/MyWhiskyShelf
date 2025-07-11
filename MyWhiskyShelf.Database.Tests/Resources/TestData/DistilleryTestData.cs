@@ -33,4 +33,15 @@ public static class DistilleryTestData
         FlavourProfile = new FlavourProfile(),
         Active = true
     };
+    
+    public static readonly Distillery Bunnahabhain = new()
+    {
+        DistilleryName = "Bunnahabhain",
+        Location = "Port Askaig",
+        Region = "Islay",
+        Founded = 1881,
+        Owner = "Distell",
+        DistilleryType = "Malt",
+        Active = true
+    };
 }
