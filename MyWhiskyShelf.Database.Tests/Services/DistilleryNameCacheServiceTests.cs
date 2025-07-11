@@ -12,9 +12,9 @@ public class DistilleryNameCacheServiceTests
     [Fact]
     public void When_GetAllAsyncAndCacheIsNotLoaded_Expect_EmptyList()
     {
-        var distilleryNameClassService = new DistilleryNameCacheService();
+        var distilleryNameCacheService = new DistilleryNameCacheService();
 
-        var distilleryNames = distilleryNameClassService.GetAll();
+        var distilleryNames = distilleryNameCacheService.GetAll();
 
         Assert.Empty(distilleryNames);
     }
@@ -23,10 +23,10 @@ public class DistilleryNameCacheServiceTests
     public async Task When_GetAllAsyncAndCacheIsLoaded_Expect_AllDistilleryNames()
     {
         var dbContext = await CreateDbContext(DistilleryEntityTestData.Aberargie, DistilleryEntityTestData.Aberfeldy);
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
 
-        var distilleryNames = distilleryNameClassService.GetAll();
+        var distilleryNames = distilleryNameCacheService.GetAll();
 
         Assert.Equal(
             [
@@ -45,10 +45,10 @@ public class DistilleryNameCacheServiceTests
             DistilleryEntityTestData.Bunnahabhain,
             DistilleryEntityTestData.AbhainnDearg);
         
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
 
-        var distilleryNames = distilleryNameClassService.GetAll();
+        var distilleryNames = distilleryNameCacheService.GetAll();
 
         Assert.Equal(
             [
@@ -63,9 +63,9 @@ public class DistilleryNameCacheServiceTests
     [Fact]
     public void When_SearchAsyncAndCacheIsNotLoaded_Expect_EmptyList()
     {
-        var distilleryNameClassService = new DistilleryNameCacheService();
+        var distilleryNameCacheService = new DistilleryNameCacheService();
 
-        var distilleryNames = distilleryNameClassService.Search(DistilleryEntityTestData.Aberargie.DistilleryName);
+        var distilleryNames = distilleryNameCacheService.Search(DistilleryEntityTestData.Aberargie.DistilleryName);
 
         Assert.Empty(distilleryNames);
     }
@@ -77,10 +77,10 @@ public class DistilleryNameCacheServiceTests
         var dbContext = await CreateDbContext(
             DistilleryEntityTestData.Aberargie,
             DistilleryEntityTestData.Bunnahabhain);
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
 
-        var distilleryNames = distilleryNameClassService.Search(queryString);
+        var distilleryNames = distilleryNameCacheService.Search(queryString);
 
         Assert.Empty(distilleryNames);
     }
@@ -92,10 +92,10 @@ public class DistilleryNameCacheServiceTests
         var dbContext = await CreateDbContext(
             DistilleryEntityTestData.Aberargie,
             DistilleryEntityTestData.Bunnahabhain);
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
 
-        var distilleryNames = distilleryNameClassService.Search(queryString);
+        var distilleryNames = distilleryNameCacheService.Search(queryString);
 
         Assert.Empty(distilleryNames);
     }
@@ -110,10 +110,10 @@ public class DistilleryNameCacheServiceTests
         var dbContext = await CreateDbContext(
             DistilleryEntityTestData.Aberargie,
             DistilleryEntityTestData.AbhainnDearg);
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
 
-        var distilleryNames = distilleryNameClassService.Search(queryString);
+        var distilleryNames = distilleryNameCacheService.Search(queryString);
 
         Assert.Empty(distilleryNames);
     }
@@ -126,10 +126,10 @@ public class DistilleryNameCacheServiceTests
             DistilleryEntityTestData.Aberfeldy,
             DistilleryEntityTestData.Balbalir,
             DistilleryEntityTestData.Bunnahabhain);
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
 
-        var distilleryNames = distilleryNameClassService.Search(DistilleryEntityTestData.Aberfeldy.DistilleryName);
+        var distilleryNames = distilleryNameCacheService.Search(DistilleryEntityTestData.Aberfeldy.DistilleryName);
 
         Assert.Multiple(
             () => Assert.Single(distilleryNames),
@@ -145,10 +145,10 @@ public class DistilleryNameCacheServiceTests
             DistilleryEntityTestData.Aberfeldy,
             DistilleryEntityTestData.Balbalir,
             DistilleryEntityTestData.Bunnahabhain);
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
 
-        var distilleryNames = distilleryNameClassService.Search(queryString);
+        var distilleryNames = distilleryNameCacheService.Search(queryString);
 
         Assert.Equal([
                 DistilleryEntityTestData.Aberargie.DistilleryName, 
@@ -165,10 +165,10 @@ public class DistilleryNameCacheServiceTests
             DistilleryEntityTestData.Aberargie,
             DistilleryEntityTestData.AbhainnDearg,
             DistilleryEntityTestData.Bunnahabhain);
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
 
-        var distilleryNames = distilleryNameClassService
+        var distilleryNames = distilleryNameCacheService
             .Search(queryString);
 
         Assert.Equal(
@@ -187,10 +187,10 @@ public class DistilleryNameCacheServiceTests
             DistilleryEntityTestData.Bunnahabhain,
             DistilleryEntityTestData.Aberargie,
             DistilleryEntityTestData.AbhainnDearg);
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
 
-        var distilleryNames = distilleryNameClassService
+        var distilleryNames = distilleryNameCacheService
             .Search(queryString);
 
         Assert.Equal(
@@ -209,10 +209,10 @@ public class DistilleryNameCacheServiceTests
             DistilleryEntityTestData.Aberargie,
             DistilleryEntityTestData.AbhainnDearg,
             DistilleryEntityTestData.Bunnahabhain);
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
 
-        var distilleryNames = distilleryNameClassService.Search(queryString);
+        var distilleryNames = distilleryNameCacheService.Search(queryString);
 
         Assert.Single(distilleryNames);
         Assert.Equal([DistilleryEntityTestData.Aberargie.DistilleryName], distilleryNames);
@@ -229,10 +229,10 @@ public class DistilleryNameCacheServiceTests
             DistilleryEntityTestData.Aberargie,
             DistilleryEntityTestData.AbhainnDearg
             );
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
 
-        var distilleryNames = distilleryNameClassService.Search(queryString);
+        var distilleryNames = distilleryNameCacheService.Search(queryString);
 
         Assert.Equal(
             [
@@ -245,11 +245,11 @@ public class DistilleryNameCacheServiceTests
     [Fact]
     public void When_AddAndNameIsNotInCache_Expect_NameAddedToCache()
     {
-        var distilleryNameClassService = new DistilleryNameCacheService();
+        var distilleryNameCacheService = new DistilleryNameCacheService();
 
-        distilleryNameClassService.Add(DistilleryEntityTestData.Aberargie.DistilleryName);
+        distilleryNameCacheService.Add(DistilleryEntityTestData.Aberargie.DistilleryName);
         
-        var result = distilleryNameClassService.Search(DistilleryTestData.Aberargie.DistilleryName);
+        var result = distilleryNameCacheService.Search(DistilleryTestData.Aberargie.DistilleryName);
         
         Assert.Equal(DistilleryEntityTestData.Aberargie.DistilleryName, result.First());
     }
@@ -261,12 +261,12 @@ public class DistilleryNameCacheServiceTests
             DistilleryEntityTestData.Aberargie,
             DistilleryEntityTestData.AbhainnDearg,
             DistilleryEntityTestData.Bunnahabhain);
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
         
-        distilleryNameClassService.Add(DistilleryEntityTestData.Aberargie.DistilleryName);
+        distilleryNameCacheService.Add(DistilleryEntityTestData.Aberargie.DistilleryName);
         
-        var result = distilleryNameClassService.Search(DistilleryTestData.Aberargie.DistilleryName);
+        var result = distilleryNameCacheService.Search(DistilleryTestData.Aberargie.DistilleryName);
 
         Assert.Multiple(
             () => Assert.Single(result),
@@ -280,11 +280,11 @@ public class DistilleryNameCacheServiceTests
             DistilleryEntityTestData.Aberargie,
             DistilleryEntityTestData.AbhainnDearg);
         
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
         
-        distilleryNameClassService.Remove(DistilleryEntityTestData.Aberargie.DistilleryName);
-        var distilleryNames = distilleryNameClassService.GetAll();
+        distilleryNameCacheService.Remove(DistilleryEntityTestData.Aberargie.DistilleryName);
+        var distilleryNames = distilleryNameCacheService.GetAll();
         
         Assert.Multiple(
             () => Assert.Single(distilleryNames),
@@ -298,11 +298,11 @@ public class DistilleryNameCacheServiceTests
         
         var dbContext = await CreateDbContext(DistilleryEntityTestData.Aberargie);
         
-        var distilleryNameClassService = new DistilleryNameCacheService();
-        await distilleryNameClassService.LoadCacheFromDbAsync(dbContext);
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+        await distilleryNameCacheService.LoadCacheFromDbAsync(dbContext);
         
-        distilleryNameClassService.Remove(DistilleryEntityTestData.Bunnahabhain.DistilleryName);
-        var distilleryNames = distilleryNameClassService.GetAll();
+        distilleryNameCacheService.Remove(DistilleryEntityTestData.Bunnahabhain.DistilleryName);
+        var distilleryNames = distilleryNameCacheService.GetAll();
 
         Assert.Equal(expectedDistilleryNames, distilleryNames);
     }
