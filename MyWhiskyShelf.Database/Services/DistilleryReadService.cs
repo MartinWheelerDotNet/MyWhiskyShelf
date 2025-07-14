@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Contexts;
+using MyWhiskyShelf.Database.Entities;
 using MyWhiskyShelf.Database.Interfaces;
 
 namespace MyWhiskyShelf.Database.Services;
@@ -8,7 +9,7 @@ namespace MyWhiskyShelf.Database.Services;
 public class DistilleryReadService(
     MyWhiskyShelfDbContext dbContext,
     IDistilleryNameCacheService distilleryNameCacheService,
-    IDistilleryMapper distilleryMapper) : IDistilleryReadService
+    IMapper<Distillery, DistilleryEntity> distilleryMapper) : IDistilleryReadService
 {
     public async Task<List<Distillery>> GetAllDistilleriesAsync()
         => await dbContext.Distilleries

@@ -1,6 +1,6 @@
 using MyWhiskyShelf.Core.Models;
 
-namespace MyWhiskyShelf.Database.Services;
+namespace MyWhiskyShelf.Database.Interfaces;
 
 public interface IDistilleryWriteService
 {
