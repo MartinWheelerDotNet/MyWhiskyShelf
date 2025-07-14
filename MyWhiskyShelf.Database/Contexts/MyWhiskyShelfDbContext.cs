@@ -10,4 +10,5 @@ public class MyWhiskyShelfDbContext(
    DbContextOptions<MyWhiskyShelfDbContext> options) : DbContext(options)
 {
     internal DbSet<DistilleryEntity> Distilleries { get; set; }
+    internal DbSet<WhiskyBottleEntity> WhiskyBottles { get; set; }
 }

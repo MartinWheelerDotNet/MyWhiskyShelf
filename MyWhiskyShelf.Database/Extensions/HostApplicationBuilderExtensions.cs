@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Contexts;
+using MyWhiskyShelf.Database.Entities;
 using MyWhiskyShelf.Database.Interfaces;
 using MyWhiskyShelf.Database.Mappers;
 using MyWhiskyShelf.Database.Services;
@@ -28,7 +30,8 @@ public static class HostApplicationBuilderExtensions
                 settings.DisableTracing = false;
             });
 
-        builder.Services.AddSingleton<IDistilleryMapper, DistilleryMapper>();
+        builder.Services.AddSingleton<IMapper<Distillery, DistilleryEntity>, DistilleryMapper>();
+        builder.Services.AddSingleton<IMapper<WhiskyBottle, WhiskyBottleEntity>, WhiskyBottleMapper>();
         builder.Services.AddSingleton<IDistilleryNameCacheService, DistilleryNameCacheService>();
         builder.Services.AddScoped<IDistilleryReadService, DistilleryReadService>();
         builder.Services.AddScoped<IDistilleryWriteService, DistilleryWriteService>();

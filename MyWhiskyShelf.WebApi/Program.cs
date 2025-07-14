@@ -7,7 +7,6 @@ using MyWhiskyShelf.Database.Contexts;
 using MyWhiskyShelf.Database.Entities;
 using MyWhiskyShelf.Database.Extensions;
 using MyWhiskyShelf.Database.Interfaces;
-using MyWhiskyShelf.Database.Services;
 using MyWhiskyShelf.DataLoader;
 using MyWhiskyShelf.DataLoader.Extensions;
 using MyWhiskyShelf.ServiceDefaults;
@@ -90,7 +89,6 @@ internal static class Program
                             Instance = httpContext.Request.Path
                         });
                 
-
                 var names = distilleryReadService.SearchByName(pattern);
                 
                 return Results.Ok(names);
@@ -156,7 +154,7 @@ internal static class Program
         
         var dbContext = scope.ServiceProvider.GetRequiredService<MyWhiskyShelfDbContext>();
         var dataLoader = scope.ServiceProvider.GetRequiredService<IJsonFileLoader>();
-        var mapper = scope.ServiceProvider.GetRequiredService<IDistilleryMapper>();
+        var mapper = scope.ServiceProvider.GetRequiredService<IMapper<Distillery, DistilleryEntity>>();
         
         await dbContext.Database.EnsureCreatedAsync();
 
