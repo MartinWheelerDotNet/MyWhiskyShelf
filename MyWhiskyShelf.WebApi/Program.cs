@@ -101,8 +101,7 @@ internal static class Program
             {
                 if (await distilleryWriteService.TryAddDistilleryAsync(distillery))
                     return Results.Created(
-                        $"/distilleries/{Uri.EscapeDataString(distillery.DistilleryName)}",
-                        distillery);
+                        $"/distilleries/{Uri.EscapeDataString(distillery.DistilleryName)}", null);
 
                 return Results.Problem(
                     new ProblemDetails
@@ -131,6 +130,13 @@ internal static class Program
                         Detail = $"Cannot remove distillery '{distilleryName}' as it does not exist.",
                         Instance = httpContext.Request.Path
                     });
+            });
+
+        app.MapPost(
+            "/whiskyBottle/add",
+            async (WhiskyBottle whiskyBottle,IWhiskyBottleWriteService whiskyBottleWriteService) => {
+                await whiskyBottleWriteService.TryAddAsync(whiskyBottle);
+                return Results.Created($"/whiskyBottle/{Uri.EscapeDataString(whiskyBottle.Name)}", null);
             });
         
         await app.RunAsync();

@@ -5,6 +5,7 @@ using MyWhiskyShelf.Database.Entities;
 using MyWhiskyShelf.Database.Interfaces;
 using MyWhiskyShelf.Database.Services;
 using MyWhiskyShelf.Database.Tests.Resources.TestData;
+using MyWhiskyShelf.TestData;
 
 namespace MyWhiskyShelf.Database.Tests.Services;
 
@@ -23,7 +24,7 @@ public class WhiskyBottleWriteServiceTests
             .Verifiable(Times.Once);            
             
         var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
-        var bottleAdded = await whiskyBottleService.TryAdd(WhiskyBottleTestData.AllValuesPopulated);
+        var bottleAdded = await whiskyBottleService.TryAddAsync(WhiskyBottleTestData.AllValuesPopulated);
 
         Assert.Multiple(
             () => Assert.True(bottleAdded),
@@ -42,7 +43,7 @@ public class WhiskyBottleWriteServiceTests
             .Returns(WhiskyBottleEntityTestData.AllValuesPopulated);
             
         var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
-        await whiskyBottleService.TryAdd(WhiskyBottleTestData.AllValuesPopulated);
+        await whiskyBottleService.TryAddAsync(WhiskyBottleTestData.AllValuesPopulated);
 
         var whiskyBottleEntity = dbContext
             .Set<WhiskyBottleEntity>()
@@ -66,7 +67,7 @@ public class WhiskyBottleWriteServiceTests
             .Returns(WhiskyBottleEntityTestData.AllValuesPopulated);
             
         var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
-        var tryAddResult = await whiskyBottleService.TryAdd(WhiskyBottleTestData.AllValuesPopulated);
+        var tryAddResult = await whiskyBottleService.TryAddAsync(WhiskyBottleTestData.AllValuesPopulated);
 
         Assert.False(tryAddResult);
     }

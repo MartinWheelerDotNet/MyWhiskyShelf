@@ -4,7 +4,7 @@ namespace MyWhiskyShelf.Database.Tests.Resources.TestData;
 
 public static class WhiskyBottleEntityTestData
 {
-    public static readonly WhiskyBottleEntity AllValuesPopulated = new()
+    public static WhiskyBottleEntity AllValuesPopulated => new()
     {
         Name = "All Values Populated",
         DistilleryName = "A Distillery Name",
@@ -21,5 +21,4 @@ public static class WhiskyBottleEntityTestData
         ChillFiltered = false,
         EncodedFlavourProfile = 9718268425ul
     };
-
 }
