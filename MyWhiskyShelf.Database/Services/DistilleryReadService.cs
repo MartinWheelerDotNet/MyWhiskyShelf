@@ -12,26 +12,32 @@ public class DistilleryReadService(
     IMapper<Distillery, DistilleryEntity> distilleryMapper) : IDistilleryReadService
 {
     public async Task<List<Distillery>> GetAllDistilleriesAsync()
-        => await dbContext.Distilleries
+    {
+        return await dbContext.Distilleries
             .OrderBy(entity => entity.DistilleryName)
             .Select(entity => distilleryMapper.MapToDomain(entity))
             .ToListAsync();
-    
+    }
+
     public async Task<Distillery?> GetDistilleryByNameAsync(string distilleryName)
     {
         if (!distilleryNameCacheService.TryGet(distilleryName, out var distilleryDetails))
             return null;
-        
+
         var distillery = await dbContext.Distilleries.FindAsync(distilleryDetails.Identifier);
-        
-        return distillery is null 
+
+        return distillery is null
             ? null
             : distilleryMapper.MapToDomain(distillery);
     }
 
-    public List<string> GetDistilleryNames() 
-        => distilleryNameCacheService.GetAll().Select(details => details.DistilleryName).ToList();
+    public List<string> GetDistilleryNames()
+    {
+        return distilleryNameCacheService.GetAll().Select(details => details.DistilleryName).ToList();
+    }
 
     public List<string> SearchByName(string query)
-        => distilleryNameCacheService.Search(query).Select(details => details.DistilleryName).ToList();
+    {
+        return distilleryNameCacheService.Search(query).Select(details => details.DistilleryName).ToList();
+    }
 }

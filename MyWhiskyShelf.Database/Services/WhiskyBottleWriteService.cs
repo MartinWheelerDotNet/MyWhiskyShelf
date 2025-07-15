@@ -20,10 +20,9 @@ public class WhiskyBottleWriteService(
         }
         catch
         {
-            
             return false;
         }
-        
+
         return true;
     }
 }
