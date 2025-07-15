@@ -2,7 +2,7 @@ using MyWhiskyShelf.IntegrationTests.Fixtures;
 
 namespace MyWhiskyShelf.IntegrationTests.Status;
 
-public class ServiceStatusTests(MyWhiskyShelfBaseFixtureSeededDb myWhiskyShelfBaseFixtureSeededDb) 
+public class ServiceStatusTests(MyWhiskyShelfBaseFixtureSeededDb myWhiskyShelfBaseFixtureSeededDb)
     : IClassFixture<MyWhiskyShelfBaseFixtureSeededDb>
 {
     [Theory]
@@ -11,7 +11,7 @@ public class ServiceStatusTests(MyWhiskyShelfBaseFixtureSeededDb myWhiskyShelfBa
     {
         const string endpointName = "/health";
         using var httpClient = myWhiskyShelfBaseFixtureSeededDb.Application.CreateHttpClient(resourceName);
-        
+
         var response = await httpClient.GetAsync(endpointName);
         var body = await response.Content.ReadAsStringAsync();
 

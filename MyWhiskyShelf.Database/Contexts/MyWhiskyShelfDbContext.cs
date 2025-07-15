@@ -7,7 +7,7 @@ namespace MyWhiskyShelf.Database.Contexts;
 // are required by to be present by Entity Framework.
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 public class MyWhiskyShelfDbContext(
-   DbContextOptions<MyWhiskyShelfDbContext> options) : DbContext(options)
+    DbContextOptions<MyWhiskyShelfDbContext> options) : DbContext(options)
 {
     internal DbSet<DistilleryEntity> Distilleries { get; set; }
     internal DbSet<WhiskyBottleEntity> WhiskyBottles { get; set; }

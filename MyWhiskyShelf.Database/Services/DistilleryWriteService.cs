@@ -15,7 +15,7 @@ public class DistilleryWriteService(
     {
         if (distilleryNameCacheService.TryGet(distillery.DistilleryName, out _))
             return false;
-        
+
         var entity = distilleryMapper.MapToEntity(distillery);
         dbContext.Distilleries.Add(entity);
         distilleryNameCacheService.Add(entity.DistilleryName, entity.Id);

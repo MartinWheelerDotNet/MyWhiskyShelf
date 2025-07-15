@@ -5,7 +5,7 @@ namespace MyWhiskyShelf.Database.Tests.Resources;
 public static class DistilleryEntityTestData
 {
     public static DistilleryEntity Aberargie => new()
-    { 
+    {
         Id = Guid.Parse("00e2b45f-4632-40e4-a29c-8a948fbe85e3"),
         DistilleryName = "Aberargie",
         Location = "Aberargie",
@@ -16,7 +16,7 @@ public static class DistilleryEntityTestData
         EncodedFlavourProfile = 2449473544ul,
         Active = true
     };
-    
+
     public static DistilleryEntity Aberfeldy => new()
     {
         Id = Guid.Parse("9bba2d8b-7c08-4006-a8ef-d858ba7afd78"),

@@ -17,18 +17,18 @@ public static class HostApplicationBuilderExtensions
 {
     public static void UsePostgresDatabase(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddDbContext<MyWhiskyShelfDbContext>(options => 
-            options.UseNpgsql(builder.Configuration.GetConnectionString("postgresDb") 
+        builder.Services.AddDbContext<MyWhiskyShelfDbContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("postgresDb")
                               ?? throw new InvalidOperationException("Connection string not found")));
 
         builder.EnrichNpgsqlDbContext<MyWhiskyShelfDbContext>(settings =>
-            {
-                settings.DisableRetry = false;
-                settings.CommandTimeout = 30;
-                settings.DisableHealthChecks = false;
-                settings.DisableMetrics = false;
-                settings.DisableTracing = false;
-            });
+        {
+            settings.DisableRetry = false;
+            settings.CommandTimeout = 30;
+            settings.DisableHealthChecks = false;
+            settings.DisableMetrics = false;
+            settings.DisableTracing = false;
+        });
 
         builder.Services.AddSingleton<IMapper<Distillery, DistilleryEntity>, DistilleryMapper>();
         builder.Services.AddSingleton<IMapper<WhiskyBottle, WhiskyBottleEntity>, WhiskyBottleMapper>();

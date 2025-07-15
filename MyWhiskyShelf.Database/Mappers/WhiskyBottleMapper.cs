@@ -6,7 +6,7 @@ using MyWhiskyShelf.Database.Interfaces;
 
 namespace MyWhiskyShelf.Database.Mappers;
 
-public class WhiskyBottleMapper(IDistilleryNameCacheService distilleryNameCacheService) 
+public class WhiskyBottleMapper(IDistilleryNameCacheService distilleryNameCacheService)
     : IMapper<WhiskyBottle, WhiskyBottleEntity>
 {
     public WhiskyBottle MapToDomain(WhiskyBottleEntity whiskyBottleEntity)
@@ -32,9 +32,8 @@ public class WhiskyBottleMapper(IDistilleryNameCacheService distilleryNameCacheS
 
     public WhiskyBottleEntity MapToEntity(WhiskyBottle whiskyBottle)
     {
-        
         distilleryNameCacheService.TryGet(whiskyBottle.DistilleryName, out var distilleryNameDetails);
-            
+
         return new WhiskyBottleEntity
         {
             Name = whiskyBottle.Name,

@@ -5,7 +5,7 @@ namespace MyWhiskyShelf.TestHelpers.Data;
 public static class DistilleryTestData
 {
     public static Distillery Aberargie => new()
-    { 
+    {
         DistilleryName = "Aberargie",
         Location = "Aberargie",
         Region = "Lowland",
@@ -47,7 +47,7 @@ public static class DistilleryTestData
         },
         Active = true
     };
-    
+
     public static Distillery Bunnahabhain => new()
     {
         DistilleryName = "Bunnahabhain",
@@ -58,9 +58,9 @@ public static class DistilleryTestData
         DistilleryType = "Malt",
         Active = true
     };
-    
+
     public static Distillery Aberlour => new()
-    { 
+    {
         DistilleryName = "Aberlour",
         Location = "Aberlour",
         Region = "Speyside",

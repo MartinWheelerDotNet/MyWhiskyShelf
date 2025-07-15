@@ -21,34 +21,35 @@ public static class FlavourProfileEncoder
         for (var index = 0; index < AmountOfFlavours; index++)
         {
             var value = flavourProfileValues[index].Value;
-            
+
             if (value is < 0 or > 4)
                 throw new ArgumentOutOfRangeException(
                     flavourProfileValues[index].ProfileName,
                     "Flavour profile values cannot be lower than 0 or greater than 4");
-            
-            encodedFlavourProfile |= (ulong) value << (index * BitsPerFlavour);
+
+            encodedFlavourProfile |= (ulong)value << (index * BitsPerFlavour);
         }
-            
+
         return encodedFlavourProfile;
     }
 
     private static (string ProfileName, int Value)[] ExtractFlavourProfileValues(FlavourProfile flavourProfile)
     {
-        return [
-            (nameof(FlavourProfile.Sweet), flavourProfile.Sweet), 
-            (nameof(FlavourProfile.Fruit), flavourProfile.Fruit), 
-            (nameof(FlavourProfile.Floral), flavourProfile.Floral), 
+        return
+        [
+            (nameof(FlavourProfile.Sweet), flavourProfile.Sweet),
+            (nameof(FlavourProfile.Fruit), flavourProfile.Fruit),
+            (nameof(FlavourProfile.Floral), flavourProfile.Floral),
             (nameof(FlavourProfile.Body), flavourProfile.Body),
             (nameof(FlavourProfile.Smoke), flavourProfile.Smoke),
             (nameof(FlavourProfile.Tobacco), flavourProfile.Tobacco),
             (nameof(FlavourProfile.Medicinal), flavourProfile.Medicinal),
-            (nameof(FlavourProfile.Wine), flavourProfile.Wine), 
+            (nameof(FlavourProfile.Wine), flavourProfile.Wine),
             (nameof(FlavourProfile.Spice), flavourProfile.Spice),
             (nameof(FlavourProfile.Malt), flavourProfile.Malt),
             (nameof(FlavourProfile.Nut), flavourProfile.Nut),
             (nameof(FlavourProfile.Honey), flavourProfile.Honey)
-        ]; 
+        ];
     }
 
     public static FlavourProfile Decode(ulong encodedFlavourProfile)
@@ -57,13 +58,11 @@ public static class FlavourProfileEncoder
             throw new ArgumentOutOfRangeException(
                 nameof(encodedFlavourProfile),
                 $"Value cannot be greater than '{MaximumEncodedFlavourProfile}'");
-        
+
         var values = new int[12];
 
         for (var index = 0; index < AmountOfFlavours; index++)
-        {
-            values[index] = (int) (encodedFlavourProfile >> (index * BitsPerFlavour) & MaxValuePerFlavour);
-        }
+            values[index] = (int)((encodedFlavourProfile >> (index * BitsPerFlavour)) & MaxValuePerFlavour);
 
         return new FlavourProfile
         {

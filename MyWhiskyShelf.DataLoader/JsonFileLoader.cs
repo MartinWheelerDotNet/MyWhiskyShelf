@@ -7,24 +7,19 @@ namespace MyWhiskyShelf.DataLoader;
 public class JsonFileLoader(ILogger<JsonFileLoader> logger) : IJsonFileLoader
 {
     private const string DistilleryPrefix = "when loading distillery data.";
-    
+
     public async Task<List<Distillery>> GetDistilleriesFromJsonAsync(string filePath)
     {
-        if (!File.Exists(filePath))
-        {
-            throw new FileNotFoundException($"'{filePath}' not found {DistilleryPrefix}");
-        }
+        if (!File.Exists(filePath)) throw new FileNotFoundException($"'{filePath}' not found {DistilleryPrefix}");
 
         if (new FileInfo(filePath).Length == 0)
-        {
-            throw new InvalidDataException($"'{filePath}' is found, but empty, {DistilleryPrefix}");    
-        }
+            throw new InvalidDataException($"'{filePath}' is found, but empty, {DistilleryPrefix}");
 
         try
         {
             await using var fileStream = File.OpenRead(filePath);
             var distilleries = await JsonSerializer.DeserializeAsync<List<Distillery>>(fileStream) ?? [];
-            
+
             logger.LogInformation("{Count} distilleries loaded", distilleries.Count);
             return distilleries;
         }
@@ -32,8 +27,5 @@ public class JsonFileLoader(ILogger<JsonFileLoader> logger) : IJsonFileLoader
         {
             throw new InvalidDataException($"'{filePath}' is found, but contains invalid data, {DistilleryPrefix}");
         }
-    } 
+    }
 }
-
-
-    

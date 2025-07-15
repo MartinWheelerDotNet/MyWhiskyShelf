@@ -30,10 +30,7 @@ internal static class Program
         // used provide this value.
         var useDataSeeding = builder.Configuration.GetValue("MYWHISKYSHELF_DATA_SEEDING_ENABLED", false);
 
-        if (builder.Environment.IsDevelopment())
-        {
-            builder.UseDataLoader();
-        }
+        if (builder.Environment.IsDevelopment()) builder.UseDataLoader();
 
         var app = builder.Build();
 
@@ -44,7 +41,7 @@ internal static class Program
             app.MapOpenApi();
             await EnsureDatabaseCreated(app.Services, useDataSeeding);
         }
-        
+
         app.UseHttpsRedirection();
 
         app.MapGet(
@@ -52,14 +49,14 @@ internal static class Program
             async (IDistilleryReadService distilleryReadService, string distilleryName) =>
             {
                 var distillery = await distilleryReadService.GetDistilleryByNameAsync(distilleryName);
-                
-                return distillery is null 
+
+                return distillery is null
                     ? Results.NotFound()
                     : Results.Ok(distillery);
             });
-        
+
         app.MapGet(
-            "/distilleries", 
+            "/distilleries",
             async (IDistilleryReadService distilleryReadService) =>
             {
                 var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
@@ -73,7 +70,7 @@ internal static class Program
                 var distilleryNames = distilleryReadService.GetDistilleryNames();
                 return Results.Ok(distilleryNames);
             });
-        
+
         app.MapGet(
             "/distilleries/name/search",
             (IDistilleryReadService distilleryReadService, string? pattern, HttpContext httpContext) =>
@@ -88,9 +85,9 @@ internal static class Program
                             Detail = "Query parameter 'pattern' is required and cannot be empty.",
                             Instance = httpContext.Request.Path
                         });
-                
+
                 var names = distilleryReadService.SearchByName(pattern);
-                
+
                 return Results.Ok(names);
             }
         );
@@ -107,7 +104,7 @@ internal static class Program
                     new ProblemDetails
                     {
                         Type = "urn:mywhiskyshelf:errors:distillery-already-exists",
-                        Title = "Distillery already exists.", 
+                        Title = "Distillery already exists.",
                         Status = StatusCodes.Status409Conflict,
                         Detail = $"Cannot add distillery '{distillery.DistilleryName} as it already exists.",
                         Instance = httpContext.Request.Path
@@ -119,13 +116,13 @@ internal static class Program
             async (IDistilleryWriteService distilleryWriteService, string distilleryName, HttpContext httpContext) =>
             {
                 if (await distilleryWriteService.TryRemoveDistilleryAsync(Uri.UnescapeDataString(distilleryName)))
-                    return Results.Ok(); 
-                
+                    return Results.Ok();
+
                 return Results.Problem(
                     new ProblemDetails
                     {
                         Type = "urn:mywhiskyshelf:errors:distillery-does-not-exist",
-                        Title = "Distillery does not exist.", 
+                        Title = "Distillery does not exist.",
                         Status = StatusCodes.Status404NotFound,
                         Detail = $"Cannot remove distillery '{distilleryName}' as it does not exist.",
                         Instance = httpContext.Request.Path
@@ -134,14 +131,15 @@ internal static class Program
 
         app.MapPost(
             "/whiskyBottle/add",
-            async (WhiskyBottle whiskyBottle,IWhiskyBottleWriteService whiskyBottleWriteService) => {
+            async (WhiskyBottle whiskyBottle, IWhiskyBottleWriteService whiskyBottleWriteService) =>
+            {
                 await whiskyBottleWriteService.TryAddAsync(whiskyBottle);
                 return Results.Created($"/whiskyBottle/{Uri.EscapeDataString(whiskyBottle.Name)}", null);
             });
-        
+
         await app.RunAsync();
     }
-    
+
     private static WebApplicationBuilder ConfigureDefaultServices(this WebApplicationBuilder builder)
     {
         builder.Services.Configure<JsonOptions>(options =>
@@ -157,27 +155,25 @@ internal static class Program
     private static async Task EnsureDatabaseCreated(IServiceProvider serviceProvider, bool useDataSeeding)
     {
         using var scope = serviceProvider.CreateScope();
-        
+
         var dbContext = scope.ServiceProvider.GetRequiredService<MyWhiskyShelfDbContext>();
         var dataLoader = scope.ServiceProvider.GetRequiredService<IJsonFileLoader>();
         var mapper = scope.ServiceProvider.GetRequiredService<IMapper<Distillery, DistilleryEntity>>();
-        
+
         await dbContext.Database.EnsureCreatedAsync();
 
         if (await dbContext.Set<DistilleryEntity>().AnyAsync())
-        {
             dbContext.Set<DistilleryEntity>().RemoveRange(dbContext.Set<DistilleryEntity>());
-        }
 
         if (useDataSeeding)
         {
             var distilleries = await dataLoader.GetDistilleriesFromJsonAsync("Resources/distilleries.json");
             var mappedDistilleries = distilleries.Select(distillery => mapper.MapToEntity(distillery));
-        
+
             dbContext.Set<DistilleryEntity>().AddRange(mappedDistilleries);
-            await dbContext.SaveChangesAsync();    
+            await dbContext.SaveChangesAsync();
         }
-        
+
         var cacheService = scope.ServiceProvider.GetRequiredService<IDistilleryNameCacheService>();
         await cacheService.InitializeFromDatabaseAsync(dbContext);
     }
