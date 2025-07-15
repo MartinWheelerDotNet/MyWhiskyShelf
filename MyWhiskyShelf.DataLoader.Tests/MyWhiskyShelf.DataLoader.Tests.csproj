@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MyWhiskyShelf.DataLoader\MyWhiskyShelf.DataLoader.csproj" />
+      <ProjectReference Include="..\MyWhiskyShelf.TestHelpers\MyWhiskyShelf.TestHelpers.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -38,6 +39,10 @@
       <None Update="Resources\DistilleryData\three-distilleries.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources\TestData\" />
     </ItemGroup>
 
 </Project>

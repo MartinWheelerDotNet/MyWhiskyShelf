@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.DataLoader.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.DataLoader", "MyWhiskyShelf.DataLoader\MyWhiskyShelf.DataLoader.csproj", "{EA611A79-E198-4A82-B33C-6DE0F67A099C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.TestData", "MyWhiskyShelf.TestData\MyWhiskyShelf.TestData.csproj", "{97F90BEA-EE8F-4C92-9591-70ED01C23F80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.TestHelpers", "MyWhiskyShelf.TestHelpers\MyWhiskyShelf.TestHelpers.csproj", "{97F90BEA-EE8F-4C92-9591-70ED01C23F80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

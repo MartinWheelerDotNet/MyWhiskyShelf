@@ -3,7 +3,8 @@ using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Contexts;
 using MyWhiskyShelf.Database.Entities;
 using MyWhiskyShelf.Database.Services;
-using MyWhiskyShelf.Database.Tests.Resources.TestData;
+using MyWhiskyShelf.Database.Tests.Resources;
+using MyWhiskyShelf.TestHelpers.Data;
 
 namespace MyWhiskyShelf.Database.Tests.Services;
 

@@ -3,8 +3,8 @@ using MyWhiskyShelf.Core.Enums;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Interfaces;
 using MyWhiskyShelf.Database.Mappers;
-using MyWhiskyShelf.Database.Tests.Resources.TestData;
-using MyWhiskyShelf.TestData;
+using MyWhiskyShelf.Database.Tests.Resources;
+using MyWhiskyShelf.TestHelpers.Data;
 
 namespace MyWhiskyShelf.Database.Tests.Mappers;
 
