@@ -1,10 +1,10 @@
 using MyWhiskyShelf.Core.Models;
 
-namespace MyWhiskyShelf.DataLoader.Tests.Resources.TestData;
+namespace MyWhiskyShelf.TestHelpers.Data;
 
 public static class DistilleryTestData
 {
-    public static readonly Distillery Aberargie = new()
+    public static Distillery Aberargie => new()
     { 
         DistilleryName = "Aberargie",
         Location = "Aberargie",
@@ -21,28 +21,52 @@ public static class DistilleryTestData
         },
         Active = true
     };
-    
-    public static readonly Distillery Aberfeldy = new()
-    { 
+
+    public static Distillery Aberfeldy => new()
+    {
         DistilleryName = "Aberfeldy",
         Location = "Aberfeldy",
         Region = "Highland",
         Founded = 1896,
         Owner = "John Dewar & Sons",
         DistilleryType = "Malt",
-        FlavourProfile = new FlavourProfile(),
+        FlavourProfile = new FlavourProfile
+        {
+            Body = 2,
+            Sweet = 2,
+            Smoke = 2,
+            Medicinal = 0,
+            Tobacco = 0,
+            Honey = 2,
+            Spice = 1,
+            Wine = 2,
+            Nut = 2,
+            Malt = 2,
+            Fruit = 2,
+            Floral = 2
+        },
         Active = true
     };
-
-    public static readonly Distillery Aberlour = new()
+    
+    public static Distillery Bunnahabhain => new()
     {
+        DistilleryName = "Bunnahabhain",
+        Location = "Port Askaig",
+        Region = "Islay",
+        Founded = 1881,
+        Owner = "Distell",
+        DistilleryType = "Malt",
+        Active = true
+    };
+    
+    public static Distillery Aberlour => new()
+    { 
         DistilleryName = "Aberlour",
         Location = "Aberlour",
         Region = "Speyside",
         Founded = 1879,
         Owner = "Chivas Brothers",
         DistilleryType = "Malt",
-        FlavourProfile = new FlavourProfile(),
         Active = true
     };
 }

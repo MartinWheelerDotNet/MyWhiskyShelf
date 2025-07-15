@@ -1,11 +1,11 @@
 using MyWhiskyShelf.Core.Enums;
 using MyWhiskyShelf.Core.Models;
 
-namespace MyWhiskyShelf.TestData;
+namespace MyWhiskyShelf.TestHelpers.Data;
 
 public static class WhiskyBottleTestData
 {
-    public static readonly WhiskyBottle AllValuesPopulated = new()
+    public static WhiskyBottle AllValuesPopulated => new()
     {
         Name = "All Values Populated",
         DistilleryName = "A Distillery Name",

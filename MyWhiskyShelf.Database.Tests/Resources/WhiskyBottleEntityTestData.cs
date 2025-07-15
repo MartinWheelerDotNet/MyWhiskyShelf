@@ -1,6 +1,6 @@
 using MyWhiskyShelf.Database.Entities;
 
-namespace MyWhiskyShelf.Database.Tests.Resources.TestData;
+namespace MyWhiskyShelf.Database.Tests.Resources;
 
 public static class WhiskyBottleEntityTestData
 {

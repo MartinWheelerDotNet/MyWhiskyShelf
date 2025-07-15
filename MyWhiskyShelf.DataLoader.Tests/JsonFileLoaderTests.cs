@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
 using MyWhiskyShelf.Core.Models;
-using MyWhiskyShelf.DataLoader.Tests.Resources.TestData;
+using MyWhiskyShelf.TestHelpers.Data;
 
 namespace MyWhiskyShelf.DataLoader.Tests;
 
