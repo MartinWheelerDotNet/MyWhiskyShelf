@@ -4,6 +4,7 @@ using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Interfaces;
 using MyWhiskyShelf.Database.Mappers;
 using MyWhiskyShelf.Database.Tests.Resources.TestData;
+using MyWhiskyShelf.TestData;
 
 namespace MyWhiskyShelf.Database.Tests.Mappers;
 

@@ -30,6 +30,7 @@
       <ProjectReference Include="..\MyWhiskyShelf.Core\MyWhiskyShelf.Core.csproj" />
       <ProjectReference Include="..\MyWhiskyShelf.Database\MyWhiskyShelf.Database.csproj" />
       <ProjectReference Include="..\MyWhiskyShelf.DataLoader\MyWhiskyShelf.DataLoader.csproj" />
+      <ProjectReference Include="..\MyWhiskyShelf.TestData\MyWhiskyShelf.TestData.csproj" />
     </ItemGroup>
 
     <ItemGroup>

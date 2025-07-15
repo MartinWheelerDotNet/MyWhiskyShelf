@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 using MyWhiskyShelf.IntegrationTests.Resources.TestData;
+using MyWhiskyShelf.TestData;
 
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
@@ -206,7 +207,19 @@ public static class WebApiTests
         
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal("/distilleries/Burn%20O%27Bennie", response.Headers.Location!.ToString());
+        }
+        
+        [Fact]
+        public async Task When_AddWhiskyBottle_Expect_CreatedWithLocationHeaderSet()
+        {
+            const string endpoint = "/whiskyBottle/add";
+                
+            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+            var response = await httpClient.PostAsJsonAsync(endpoint, WhiskyBottleTestData.AllValuesPopulated);
 
+            Assert.Multiple(
+                () => Assert.Equal(HttpStatusCode.Created, response.StatusCode),
+                () => Assert.Equal("/whiskyBottle/All%20Values%20Populated", response.Headers.Location!.ToString()));
         }
     }
     

@@ -7,9 +7,9 @@ namespace MyWhiskyShelf.Database.Services;
 
 public class WhiskyBottleWriteService(
     MyWhiskyShelfDbContext dbContext,
-    IMapper<WhiskyBottle, WhiskyBottleEntity> mapper)
+    IMapper<WhiskyBottle, WhiskyBottleEntity> mapper) : IWhiskyBottleWriteService
 {
-    public async Task<bool> TryAdd(WhiskyBottle whiskyBottle)
+    public async Task<bool> TryAddAsync(WhiskyBottle whiskyBottle)
     {
         var whiskyBottleEntity = mapper.MapToEntity(whiskyBottle);
 

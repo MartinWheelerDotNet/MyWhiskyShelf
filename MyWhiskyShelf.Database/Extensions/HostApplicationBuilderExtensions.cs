@@ -35,5 +35,6 @@ public static class HostApplicationBuilderExtensions
         builder.Services.AddSingleton<IDistilleryNameCacheService, DistilleryNameCacheService>();
         builder.Services.AddScoped<IDistilleryReadService, DistilleryReadService>();
         builder.Services.AddScoped<IDistilleryWriteService, DistilleryWriteService>();
+        builder.Services.AddScoped<IWhiskyBottleWriteService, WhiskyBottleWriteService>();
     }
 }

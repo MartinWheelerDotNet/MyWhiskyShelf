@@ -1,7 +1,7 @@
 using MyWhiskyShelf.Core.Enums;
 using MyWhiskyShelf.Core.Models;
 
-namespace MyWhiskyShelf.Database.Tests.Resources.TestData;
+namespace MyWhiskyShelf.TestData;
 
 public static class WhiskyBottleTestData
 {
