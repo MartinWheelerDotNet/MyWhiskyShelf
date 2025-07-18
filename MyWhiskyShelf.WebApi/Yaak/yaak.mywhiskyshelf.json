@@ -1,7 +1,7 @@
 {
   "yaakVersion": "2025.4.0",
   "yaakSchema": 4,
-  "timestamp": "2025-07-10T20:18:05.030722200",
+  "timestamp": "2025-07-17T21:14:57.105441400",
   "resources": {
     "workspaces": [
       {
@@ -39,9 +39,77 @@
           }
         ],
         "color": null
+      },
+      {
+        "model": "environment",
+        "id": "ev_25iagTNvEn",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "createdAt": "2025-07-08T15:40:47.358468100",
+        "updatedAt": "2025-07-08T15:40:47.358468400",
+        "name": "Global Variables",
+        "public": false,
+        "base": true,
+        "variables": [],
+        "color": null
       }
     ],
     "folders": [
+      {
+        "model": "folder",
+        "id": "fl_LEgTwPMdsP",
+        "createdAt": "2025-07-17T20:54:06.669954",
+        "updatedAt": "2025-07-17T20:54:06.669954700",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_WBpgkDXQi2",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "Add new whisky bottle - Distillery known",
+        "sortPriority": -1752785600000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_ZNqELPbX8Z",
+        "createdAt": "2025-07-17T20:52:55.805731400",
+        "updatedAt": "2025-07-17T20:52:55.805731900",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_Zf75h7fUgq",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "Unhappy Path",
+        "sortPriority": -1752785600000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_WBpgkDXQi2",
+        "createdAt": "2025-07-17T20:52:48.084722300",
+        "updatedAt": "2025-07-17T20:52:48.084722900",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_Zf75h7fUgq",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "Happy Path",
+        "sortPriority": -1752785600000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_Zf75h7fUgq",
+        "createdAt": "2025-07-17T20:52:37.277769500",
+        "updatedAt": "2025-07-17T20:52:37.277770200",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": null,
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "WhiskyBottle",
+        "sortPriority": -1752785600000.0
+      },
       {
         "model": "folder",
         "id": "fl_D89PqEYwQg",
@@ -142,6 +210,34 @@
       }
     ],
     "httpRequests": [
+      {
+        "model": "http_request",
+        "id": "rq_RRCzkfssCq",
+        "createdAt": "2025-07-17T20:54:12.775640600",
+        "updatedAt": "2025-07-17T21:08:57.602585800",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_LEgTwPMdsP",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n        \"name\": \"New Whisky Bottle\",\n        \"distilleryName\": \"Aberfeldy\",\n        \"status\": \"Unknown\",\n        \"bottler\":\"Indie Bottler Number 1\",\n        \"dateBottled\": \"2022-01-01\",\n        \"yearBottled\": 2022,\n        \"batchNumber\": 1000,\n        \"caskNumber\": 1,\n        \"abvPercentage\": 50.8,\n        \"volumeCl\": 70,\n        \"volumeRemainingCl\": 70,\n        \"addedColouring\": false,\n        \"chillFiltered\": false,\n        \"flavourProfile\": \n        {\n            \"sweet\": 1,\n            \"fruit\": 1,\n            \"body\": 1,\n            \"tobacco\": 2,\n            \"wine\": 2,\n            \"spice\": 3,\n            \"nut\": 1,\n            \"honey\": 1\n        }\n    }"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "cCcrswy2YJ"
+          }
+        ],
+        "method": "POST",
+        "name": "Add new whisky bottle - distillery known",
+        "sortPriority": 1999.9999,
+        "url": "${[ host ]}/whiskyBottle/add",
+        "urlParameters": []
+      },
       {
         "model": "http_request",
         "id": "rq_LLHh8ivYgK",

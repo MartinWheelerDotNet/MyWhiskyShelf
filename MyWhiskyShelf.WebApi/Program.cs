@@ -145,6 +145,7 @@ internal static class Program
         builder.Services.Configure<JsonOptions>(options =>
         {
             options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
         builder.Services.AddOpenApi();
         builder.AddServiceDefaults();
