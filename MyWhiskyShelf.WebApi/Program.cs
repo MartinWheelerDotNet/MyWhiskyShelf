@@ -131,10 +131,23 @@ internal static class Program
 
         app.MapPost(
             "/whiskyBottle/add",
-            async (WhiskyBottle whiskyBottle, IWhiskyBottleWriteService whiskyBottleWriteService) =>
+            async (
+                WhiskyBottle whiskyBottle,
+                IWhiskyBottleWriteService whiskyBottleWriteService) =>
             {
-                await whiskyBottleWriteService.TryAddAsync(whiskyBottle);
-                return Results.Created($"/whiskyBottle/{Uri.EscapeDataString(whiskyBottle.Name)}", null);
+                if (await whiskyBottleWriteService.TryAddAsync(whiskyBottle))
+                    return Results.Created($"/whiskyBottle/{Uri.EscapeDataString(whiskyBottle.Name)}", null);
+
+                return Results.ValidationProblem(new Dictionary<string, string[]>
+                {
+                    [nameof(WhiskyBottle)] =
+                    [
+                        """
+                        An error occurred trying to add the whisky bottle to the database.
+                        Ensure all required fields have been set.
+                        """
+                    ]
+                });
             });
 
         await app.RunAsync();

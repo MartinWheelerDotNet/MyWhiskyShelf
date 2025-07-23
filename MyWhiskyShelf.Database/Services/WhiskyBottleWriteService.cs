@@ -12,10 +12,10 @@ public class WhiskyBottleWriteService(
     public async Task<bool> TryAddAsync(WhiskyBottle whiskyBottle)
     {
         var whiskyBottleEntity = mapper.MapToEntity(whiskyBottle);
-
-        dbContext.WhiskyBottles.Add(whiskyBottleEntity);
+        
         try
         {
+            dbContext.WhiskyBottles.Add(whiskyBottleEntity);
             await dbContext.SaveChangesAsync();
         }
         catch
