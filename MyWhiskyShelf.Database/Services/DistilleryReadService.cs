@@ -31,6 +31,15 @@ public class DistilleryReadService(
             : distilleryMapper.MapToDomain(distillery);
     }
 
+    public async Task<Distillery?> GetDistilleryByIdAsync(Guid distilleryId)
+    {
+        var distillery = await dbContext.Distilleries.FindAsync(distilleryId);
+        
+        return distillery is null
+            ? null
+            : distilleryMapper.MapToDomain(distillery);
+    }
+
     public List<string> GetDistilleryNames()
     {
         return distilleryNameCacheService.GetAll().Select(details => details.DistilleryName).ToList();
