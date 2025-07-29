@@ -156,6 +156,62 @@ public class DistilleryReadServiceTests
     }
 
     [Fact]
+    public async Task When_GetDistilleryByIdAndDistilleryIsNotFound_Expect_NoDistilleryReturned()
+    {
+        await using var dbContext = await CreateDbContextAsync();
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            new Mock<IDistilleryNameCacheService>().Object,
+            new DistilleryMapper());
+
+        var distillery = await distilleryReadService
+            .GetDistilleryByNameAsync(DistilleryTestData.Aberfeldy.DistilleryName);
+
+        Assert.Null(distillery);
+    }
+
+    [Fact]
+    public async Task When_GetDistilleryByIdAndDistilleryIsFound_Expect_DistilleryReturned()
+    {
+        var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
+        
+        await using var dbContext = await CreateDbContextAsync(
+            DistilleryEntityTestData.Aberargie,
+            DistilleryEntityTestData.Aberfeldy);
+
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            mockDistilleryNameCacheService.Object,
+            new DistilleryMapper());
+        var distillery = await distilleryReadService
+            .GetDistilleryByIdAsync(DistilleryEntityTestData.Aberfeldy.Id);
+
+        Assert.Equal(DistilleryTestData.Aberfeldy, distillery);
+    }
+    
+    [Fact]
+    public async Task When_GetDistilleryById_Expect_DistilleryNameCacheServiceIsNotCalled()
+    {
+        var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
+
+        mockDistilleryNameCacheService.Verify(
+                service => service.TryGet(It.IsAny<string>(), out It.Ref<DistilleryNameDetails?>.IsAny),
+                Times.Never);
+        
+        await using var dbContext = await CreateDbContextAsync(
+            DistilleryEntityTestData.Aberargie,
+            DistilleryEntityTestData.Aberfeldy);
+
+        var distilleryReadService = new DistilleryReadService(
+            dbContext,
+            mockDistilleryNameCacheService.Object,
+            new DistilleryMapper());
+        await distilleryReadService.GetDistilleryByIdAsync(DistilleryEntityTestData.Aberfeldy.Id);
+
+        mockDistilleryNameCacheService.Verify();
+    }
+    
+    [Fact]
     public async Task When_SearchAndDistilleryNamesFound_Expect_ListContainsDistilleryNames()
     {
         const string searchPattern = "aber";
