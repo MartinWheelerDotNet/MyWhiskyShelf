@@ -10,7 +10,7 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfBaseFixtureEmptyDb fixture)
     : IClassFixture<MyWhiskyShelfBaseFixtureEmptyDb>
 {
     private const string WebApiResourceName = "WebApi";
-    
+
     [Fact]
     public async Task When_AddWhiskyBottle_Expect_CreatedWithLocationHeaderSet()
     {
@@ -28,11 +28,11 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfBaseFixtureEmptyDb fixture)
     public async Task When_AddWhiskyBottleAndBottleCannotBeAddedToDatabase_Expect_ValidationProblemDetails()
     {
         const string endpoint = "/whiskyBottle/add";
-        
+
         // we are deliberately breaking the model constraints here to so that the database will attempt to insert
         // an invalid entity, which will cause it to fail.
         var whiskyBottleWithoutName = WhiskyBottleTestData.AllValuesPopulated with { Name = null! };
-        
+
         var expectedValidationProblem = new ValidationProblemDetails
         {
             Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",

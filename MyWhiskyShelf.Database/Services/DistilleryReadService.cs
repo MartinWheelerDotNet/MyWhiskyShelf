@@ -31,13 +31,13 @@ public class DistilleryReadService(
             : distilleryMapper.MapToDomain(distillery);
     }
 
-    public List<string> GetDistilleryNames()
+    public IReadOnlyList<DistilleryNameDetails> GetDistilleryNames()
     {
-        return distilleryNameCacheService.GetAll().Select(details => details.DistilleryName).ToList();
+        return distilleryNameCacheService.GetAll();
     }
 
-    public List<string> SearchByName(string query)
+    public IReadOnlyList<DistilleryNameDetails> SearchByName(string queryPattern)
     {
-        return distilleryNameCacheService.Search(query).Select(details => details.DistilleryName).ToList();
+        return distilleryNameCacheService.Search(queryPattern);
     }
 }

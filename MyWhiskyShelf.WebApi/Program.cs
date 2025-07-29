@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Contexts;
@@ -10,6 +9,7 @@ using MyWhiskyShelf.Database.Interfaces;
 using MyWhiskyShelf.DataLoader;
 using MyWhiskyShelf.DataLoader.Extensions;
 using MyWhiskyShelf.ServiceDefaults;
+using MyWhiskyShelf.WebApi.Endpoints;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 namespace MyWhiskyShelf.WebApi;
@@ -44,111 +44,8 @@ internal static class Program
 
         app.UseHttpsRedirection();
 
-        app.MapGet(
-            "/distilleries/{distilleryName}",
-            async (IDistilleryReadService distilleryReadService, string distilleryName) =>
-            {
-                var distillery = await distilleryReadService.GetDistilleryByNameAsync(distilleryName);
-
-                return distillery is null
-                    ? Results.NotFound()
-                    : Results.Ok(distillery);
-            });
-
-        app.MapGet(
-            "/distilleries",
-            async (IDistilleryReadService distilleryReadService) =>
-            {
-                var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
-                return Results.Ok(distilleries);
-            });
-
-        app.MapGet(
-            "/distilleries/names",
-            (IDistilleryReadService distilleryReadService) =>
-            {
-                var distilleryNames = distilleryReadService.GetDistilleryNames();
-                return Results.Ok(distilleryNames);
-            });
-
-        app.MapGet(
-            "/distilleries/name/search",
-            (IDistilleryReadService distilleryReadService, string? pattern, HttpContext httpContext) =>
-            {
-                if (string.IsNullOrWhiteSpace(pattern))
-                    return Results.Problem(
-                        new ProblemDetails
-                        {
-                            Type = "urn:mywhiskyshelf:errors:missing-or-invalid-query-pattern",
-                            Title = "Missing or invalid query parameter",
-                            Status = StatusCodes.Status400BadRequest,
-                            Detail = "Query parameter 'pattern' is required and cannot be empty.",
-                            Instance = httpContext.Request.Path
-                        });
-
-                var names = distilleryReadService.SearchByName(pattern);
-
-                return Results.Ok(names);
-            }
-        );
-
-        app.MapPost(
-            "/distilleries/add",
-            async (IDistilleryWriteService distilleryWriteService, Distillery distillery, HttpContext httpContext) =>
-            {
-                if (await distilleryWriteService.TryAddDistilleryAsync(distillery))
-                    return Results.Created(
-                        $"/distilleries/{Uri.EscapeDataString(distillery.DistilleryName)}", null);
-
-                return Results.Problem(
-                    new ProblemDetails
-                    {
-                        Type = "urn:mywhiskyshelf:errors:distillery-already-exists",
-                        Title = "Distillery already exists.",
-                        Status = StatusCodes.Status409Conflict,
-                        Detail = $"Cannot add distillery '{distillery.DistilleryName} as it already exists.",
-                        Instance = httpContext.Request.Path
-                    });
-            });
-
-        app.MapDelete(
-            "/distilleries/remove/{distilleryName}",
-            async (IDistilleryWriteService distilleryWriteService, string distilleryName, HttpContext httpContext) =>
-            {
-                if (await distilleryWriteService.TryRemoveDistilleryAsync(Uri.UnescapeDataString(distilleryName)))
-                    return Results.Ok();
-
-                return Results.Problem(
-                    new ProblemDetails
-                    {
-                        Type = "urn:mywhiskyshelf:errors:distillery-does-not-exist",
-                        Title = "Distillery does not exist.",
-                        Status = StatusCodes.Status404NotFound,
-                        Detail = $"Cannot remove distillery '{distilleryName}' as it does not exist.",
-                        Instance = httpContext.Request.Path
-                    });
-            });
-
-        app.MapPost(
-            "/whiskyBottle/add",
-            async (
-                WhiskyBottle whiskyBottle,
-                IWhiskyBottleWriteService whiskyBottleWriteService) =>
-            {
-                if (await whiskyBottleWriteService.TryAddAsync(whiskyBottle))
-                    return Results.Created($"/whiskyBottle/{Uri.EscapeDataString(whiskyBottle.Name)}", null);
-
-                return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    [nameof(WhiskyBottle)] =
-                    [
-                        """
-                        An error occurred trying to add the whisky bottle to the database.
-                        Ensure all required fields have been set.
-                        """
-                    ]
-                });
-            });
+        app.MapDistilleryEndpoints();
+        app.MapWhiskyBottleEndpoints();
 
         await app.RunAsync();
     }

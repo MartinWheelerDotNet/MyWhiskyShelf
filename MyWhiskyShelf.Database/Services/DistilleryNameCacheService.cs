@@ -56,14 +56,15 @@ public class DistilleryNameCacheService : IDistilleryNameCacheService
             .TryGetValue(distilleryName, out distilleryNameDetails);
     }
 
-    public IReadOnlyList<DistilleryNameDetails> Search(string queryString)
+    public IReadOnlyList<DistilleryNameDetails> Search(string queryPattern)
     {
-        if (queryString.Length < 3 || string.IsNullOrWhiteSpace(queryString)) return [];
+        if (queryPattern.Length < 3 || string.IsNullOrWhiteSpace(queryPattern)) return [];
 
-        var rankedResults = Process.ExtractSorted(
-            queryString,
-            _distilleryDetails.Keys.OrderBy(key => key, StringComparer.OrdinalIgnoreCase),
-            cutoff: CutoffRatioForFuzzySearch);
+        var rankedResults = Process
+            .ExtractSorted(
+                queryPattern,
+                _distilleryDetails.Keys.OrderBy(key => key, StringComparer.OrdinalIgnoreCase),
+                cutoff: CutoffRatioForFuzzySearch);
 
         return rankedResults
             .Select(rankedResult => _distilleryDetails[rankedResult.Value])

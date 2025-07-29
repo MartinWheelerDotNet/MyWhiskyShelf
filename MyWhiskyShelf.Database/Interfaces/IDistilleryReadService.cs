@@ -6,6 +6,6 @@ public interface IDistilleryReadService
 {
     Task<List<Distillery>> GetAllDistilleriesAsync();
     Task<Distillery?> GetDistilleryByNameAsync(string distilleryName);
-    List<string> GetDistilleryNames();
-    List<string> SearchByName(string query);
+    IReadOnlyList<DistilleryNameDetails> GetDistilleryNames();
+    IReadOnlyList<DistilleryNameDetails> SearchByName(string queryPattern);
 }

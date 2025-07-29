@@ -89,19 +89,16 @@ public class DistilleryReadServiceTests
     [Fact]
     public async Task When_GetDistilleryNamesAndDistilleriesAreFound_Expect_ListContainsDistilleryNames()
     {
-        List<string> expectedDistilleryNames =
+        List<DistilleryNameDetails> expectedDistilleryNames =
         [
-            DistilleryEntityTestData.Aberargie.DistilleryName,
-            DistilleryEntityTestData.Aberfeldy.DistilleryName
+            new(DistilleryEntityTestData.Aberargie.DistilleryName, DistilleryEntityTestData.Aberargie.Id),
+            new(DistilleryEntityTestData.Aberfeldy.DistilleryName, DistilleryEntityTestData.Aberfeldy.Id)
         ];
 
         var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
         mockDistilleryNameCacheService
             .Setup(cacheService => cacheService.GetAll())
-            .Returns([
-                new DistilleryNameDetails(DistilleryEntityTestData.Aberargie.DistilleryName, Guid.NewGuid()),
-                new DistilleryNameDetails(DistilleryEntityTestData.Aberfeldy.DistilleryName, Guid.NewGuid())
-            ]);
+            .Returns(expectedDistilleryNames);
 
         await using var dbContext = await CreateDbContextAsync(
             DistilleryEntityTestData.Aberargie,
@@ -162,19 +159,16 @@ public class DistilleryReadServiceTests
     public async Task When_SearchAndDistilleryNamesFound_Expect_ListContainsDistilleryNames()
     {
         const string searchPattern = "aber";
-        List<string> expectedDistilleryNames =
+        List<DistilleryNameDetails> expectedDistilleryDetails =
         [
-            DistilleryEntityTestData.Aberargie.DistilleryName,
-            DistilleryEntityTestData.Aberfeldy.DistilleryName
+            new(DistilleryEntityTestData.Aberargie.DistilleryName, DistilleryEntityTestData.Aberargie.Id),
+            new(DistilleryEntityTestData.Aberfeldy.DistilleryName, DistilleryEntityTestData.Aberfeldy.Id)
         ];
 
         var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
         mockDistilleryNameCacheService
             .Setup(cacheService => cacheService.Search(searchPattern))
-            .Returns([
-                new DistilleryNameDetails(DistilleryEntityTestData.Aberargie.DistilleryName, Guid.NewGuid()),
-                new DistilleryNameDetails(DistilleryEntityTestData.Aberfeldy.DistilleryName, Guid.NewGuid())
-            ]);
+            .Returns(expectedDistilleryDetails);
 
         await using var dbContext = await CreateDbContextAsync();
 
@@ -185,7 +179,7 @@ public class DistilleryReadServiceTests
 
         var distilleryNames = distilleryReadService.SearchByName(searchPattern);
 
-        Assert.Equal(expectedDistilleryNames, distilleryNames);
+        Assert.Equal(expectedDistilleryDetails, distilleryNames);
     }
 
     [Fact]

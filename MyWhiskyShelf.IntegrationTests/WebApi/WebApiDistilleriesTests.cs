@@ -28,11 +28,16 @@ public static class WebApiDistilleriesTests
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
-            var distilleryNames = await response.Content.ReadFromJsonAsync<List<string>>();
+            var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.All(expectedDistilleryNames, distillery => Assert.Contains(distillery, distilleryNames!)));
+                () => Assert.All(distilleryNames!, details =>
+                {
+                    var (distilleryName, identifier) = details;
+                    Assert.Contains(distilleryName, expectedDistilleryNames);
+                    Assert.IsType<Guid>(identifier);
+                }));
         }
 
         [Fact]
@@ -76,7 +81,7 @@ public static class WebApiDistilleriesTests
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
-            var distilleryNames = await response.Content.ReadFromJsonAsync<List<string>>();
+            var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
 
 
             Assert.Multiple(
@@ -85,36 +90,40 @@ public static class WebApiDistilleriesTests
         }
 
         [Fact]
-        public async Task When_SearchingExactMatchFound_Expect_ListWithJustThatDistilleryName()
+        public async Task When_SearchingExactMatchFound_Expect_ListWithJustThatDistilleryNameDetails()
         {
             var endpoint = $"/distilleries/name/search?pattern={DistilleryTestData.Aberfeldy.DistilleryName}";
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
-            var distilleryNames = await response.Content.ReadFromJsonAsync<List<string>>();
+            var distilleryNameDetails = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.Equal([DistilleryTestData.Aberfeldy.DistilleryName], distilleryNames));
+                () => Assert.Single(distilleryNameDetails!),
+                () => Assert.Equal(DistilleryTestData.Aberfeldy.DistilleryName,
+                    distilleryNameDetails!.First().DistilleryName),
+                () => Assert.IsType<Guid>(distilleryNameDetails!.First().Identifier));
         }
 
         [Fact]
-        public async Task When_SearchingAndPatternIsNotProvided_Expect_BadRequestWithProblemDetails()
+        public async Task When_SearchingAndPatternIsNotProvided_Expect_BadRequestWithValidationProblemDetails()
         {
             const string endpoint = "/distilleries/name/search";
 
-            var expectedProblem = new ProblemDetails
+            var expectedProblem = new ValidationProblemDetails
             {
-                Type = "urn:mywhiskyshelf:errors:missing-or-invalid-query-pattern",
-                Title = "Missing or invalid query parameter",
+                Errors = new Dictionary<string, string[]>
+                {
+                    { "pattern", ["Query parameter 'pattern' is required and cannot be empty."] }
+                },
                 Status = StatusCodes.Status400BadRequest,
-                Detail = "Query parameter 'pattern' is required and cannot be empty.",
-                Instance = endpoint
+                Type = "urn:mywhiskyshelf:errors:request-validation-error"
             };
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
-            var problemResponse = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            var problemResponse = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
@@ -127,22 +136,23 @@ public static class WebApiDistilleriesTests
         [InlineData("    ")]
         [InlineData("\t \n")]
         public async Task When_SearchingAndPatternIsEmptyOrWhiteSpace_Expect_BadRequestProblemResponse(
-            string queryPattern)
+            string pattern)
         {
-            var endpoint = $"/distilleries/name/search?pattern={queryPattern}";
+            var endpoint = $"/distilleries/name/search?pattern={pattern}";
 
-            var expectedProblem = new ProblemDetails
+            var expectedProblem = new ValidationProblemDetails
             {
-                Type = "urn:mywhiskyshelf:errors:missing-or-invalid-query-pattern",
-                Title = "Missing or invalid query parameter",
+                Errors = new Dictionary<string, string[]>
+                {
+                    { "pattern", ["Query parameter 'pattern' is required and cannot be empty."] }
+                },
                 Status = StatusCodes.Status400BadRequest,
-                Detail = "Query parameter 'pattern' is required and cannot be empty.",
-                Instance = "/distilleries/name/search"
+                Type = "urn:mywhiskyshelf:errors:request-validation-error"
             };
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
-            var problemResponse = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+            var problemResponse = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
@@ -263,7 +273,7 @@ public static class WebApiDistilleriesTests
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
-            var distilleryNames = await response.Content.ReadFromJsonAsync<List<string>>();
+            var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
