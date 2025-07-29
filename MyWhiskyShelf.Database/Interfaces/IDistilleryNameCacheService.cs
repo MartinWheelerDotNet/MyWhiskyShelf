@@ -11,5 +11,5 @@ public interface IDistilleryNameCacheService
     bool TryGet(string distilleryName, [NotNullWhen(true)] out DistilleryNameDetails? distilleryNameDetails);
     void Add(string distilleryName, Guid identifier);
     void Remove(string distilleryName);
-    IReadOnlyList<DistilleryNameDetails> Search(string queryString);
+    IReadOnlyList<DistilleryNameDetails> Search(string queryPattern);
 }
