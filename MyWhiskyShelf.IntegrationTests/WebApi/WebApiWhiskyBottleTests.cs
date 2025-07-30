@@ -35,19 +35,12 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfBaseFixtureEmptyDb fixture)
 
         var expectedValidationProblem = new ValidationProblemDetails
         {
-            Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
             Title = "One or more validation errors occurred.",
+            Type = "urn:mywhiskyshelf:validation-errors:whisky-bottle",
             Status = 400,
-            Instance = null,
             Errors = new Dictionary<string, string[]>
             {
-                ["WhiskyBottle"] =
-                [
-                    """
-                    An error occurred trying to add the whisky bottle to the database.
-                    Ensure all required fields have been set.
-                    """
-                ]
+                ["WhiskyBottle"] = ["An error occurred trying to add the whisky bottle to the database."]
             }
         };
 

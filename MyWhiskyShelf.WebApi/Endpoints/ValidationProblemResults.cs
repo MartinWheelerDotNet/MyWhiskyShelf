@@ -9,15 +9,11 @@ public static class ValidationProblemResults
     public static IResult WhiskyBottleValidationProblemResults()
     {
         return Results.ValidationProblem(
-            title: "A validation error occurred when trying to add a whisky bottle.",
+            title: "One or more validation errors occurred.",
             type: "urn:mywhiskyshelf:validation-errors:whisky-bottle",
             errors: new Dictionary<string, string[]>
             {
-                [nameof(WhiskyBottle)] =
-                [
-                    "An error occurred trying to add the whisky bottle to the database. "
-                    + "Ensure all required fields have been set."
-                ]
+                [nameof(WhiskyBottle)] = ["An error occurred trying to add the whisky bottle to the database."]
             });
     }
 
