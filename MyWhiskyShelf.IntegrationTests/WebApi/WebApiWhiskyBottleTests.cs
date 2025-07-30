@@ -14,20 +14,20 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfBaseFixtureEmptyDb fixture)
     [Fact]
     public async Task When_AddWhiskyBottle_Expect_CreatedWithLocationHeaderSet()
     {
-        const string endpoint = "/whiskyBottle/add";
+        const string endpoint = "/whisky-bottle/add";
 
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
         var response = await httpClient.PostAsJsonAsync(endpoint, WhiskyBottleTestData.AllValuesPopulated);
 
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.Created, response.StatusCode),
-            () => Assert.Equal("/whiskyBottle/All%20Values%20Populated", response.Headers.Location!.ToString()));
+            () => Assert.Equal("/whisky-bottle/All%20Values%20Populated", response.Headers.Location!.ToString()));
     }
 
     [Fact]
     public async Task When_AddWhiskyBottleAndBottleCannotBeAddedToDatabase_Expect_ValidationProblemDetails()
     {
-        const string endpoint = "/whiskyBottle/add";
+        const string endpoint = "/whisky-bottle/add";
 
         // we are deliberately breaking the model constraints here to so that the database will attempt to insert
         // an invalid entity, which will cause it to fail.

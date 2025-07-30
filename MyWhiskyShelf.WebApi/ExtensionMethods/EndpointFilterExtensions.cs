@@ -1,4 +1,4 @@
-using MyWhiskyShelf.WebApi.Filters;
+using MyWhiskyShelf.WebApi.Validation;
 
 namespace MyWhiskyShelf.WebApi.ExtensionMethods;
 

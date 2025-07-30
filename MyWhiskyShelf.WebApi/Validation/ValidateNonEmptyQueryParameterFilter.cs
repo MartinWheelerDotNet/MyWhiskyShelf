@@ -1,6 +1,6 @@
 using MyWhiskyShelf.WebApi.Endpoints;
 
-namespace MyWhiskyShelf.WebApi.Filters;
+namespace MyWhiskyShelf.WebApi.Validation;
 
 public class ValidateNonEmptyQueryParameterFilter(string parameterName) : IEndpointFilter
 {
@@ -9,6 +9,6 @@ public class ValidateNonEmptyQueryParameterFilter(string parameterName) : IEndpo
         return context.HttpContext.Request.Query.TryGetValue(parameterName, out var value)
                && !string.IsNullOrWhiteSpace(value)
             ? await next(context)
-            : ProblemResults.MissingOrEmptyQueryParameter(parameterName);
+            : ValidationProblemResults.MissingOrEmptyQueryParameter(parameterName);
     }
 }

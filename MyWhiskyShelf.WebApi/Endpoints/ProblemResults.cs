@@ -4,6 +4,8 @@ namespace MyWhiskyShelf.WebApi.Endpoints;
 
 internal static class ProblemResults
 {
+    #region Distillery Problem Results
+
     public static IResult DistilleryAlreadyExists(string distilleryName, HttpContext httpContext)
     {
         return Results.Problem(
@@ -31,14 +33,5 @@ internal static class ProblemResults
             });
     }
 
-
-    public static IResult MissingOrEmptyQueryParameter(string parameterName)
-    {
-        return Results.ValidationProblem(
-            new Dictionary<string, string[]>
-            {
-                { parameterName, [$"Query parameter '{parameterName}' is required and cannot be empty."] }
-            },
-            type: "urn:mywhiskyshelf:errors:request-validation-error");
-    }
+    #endregion
 }
