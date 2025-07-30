@@ -1,5 +1,4 @@
 using System.Net.Mime;
-using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Interfaces;
 using MyWhiskyShelf.WebApi.ExtensionMethods;
@@ -22,10 +21,10 @@ internal static class EndpointMappings
                         : Results.Ok(distillery);
                 })
             .WithName("Get Distillery By Name")
+            .WithTags("Distilleries")
             .RequiresNonEmptyRouteParameter("distilleryName")
             .Produces<Distillery>(StatusCodes.Status201Created)
-            .Produces(StatusCodes.Status404NotFound)
-            .WithTags("Distilleries");
+            .Produces(StatusCodes.Status404NotFound);
 
         app.MapGet(
                 "/distilleries",
@@ -35,24 +34,26 @@ internal static class EndpointMappings
                     return Results.Ok(distilleries);
                 })
             .WithName("Get All Distilleries")
-            .Produces<List<Distillery>>()
-            .WithTags("Distilleries");
+            .WithTags("Distilleries")
+            .Produces<List<Distillery>>();
 
         app.MapGet(
                 "/distilleries/names",
                 (IDistilleryReadService distilleryReadService)
                     => Results.Ok(distilleryReadService.GetDistilleryNames()))
             .WithName("Get All Distillery Name Details").Produces<List<DistilleryNameDetails>>()
-            .WithTags("Distilleries");
+            .WithTags("Distilleries")
+            .Produces<List<Distillery>>();
 
         app.MapGet(
                 "/distilleries/name/search",
                 (IDistilleryReadService distilleryReadService, string? pattern)
                     => Results.Ok(distilleryReadService.SearchByName(pattern!)))
             .WithName("Search by Query Pattern")
+            .WithTags("Distilleries")
             .RequiresNonEmptyQueryParameter("pattern")
             .Produces<List<DistilleryNameDetails>>()
-            .Produces<ValidationProblemDetails>(StatusCodes.Status400BadRequest);
+            .ProducesValidationProblem();
 
         app.MapPost(
                 "/distilleries/add",
@@ -61,10 +62,10 @@ internal static class EndpointMappings
                         ? Results.Created($"/distilleries/{Uri.EscapeDataString(distillery.DistilleryName)}", null)
                         : ProblemResults.DistilleryAlreadyExists(distillery.DistilleryName, httpContext))
             .WithName("Add Distillery")
+            .WithTags("Distilleries")
             .Accepts<Distillery>(MediaTypeNames.Application.Json)
             .Produces(StatusCodes.Status201Created)
-            .Produces<ProblemDetails>(StatusCodes.Status409Conflict)
-            .WithTags("Distilleries");
+            .ProducesProblem(StatusCodes.Status409Conflict);
 
         app.MapDelete(
                 "/distilleries/remove/{distilleryName}",
@@ -73,10 +74,10 @@ internal static class EndpointMappings
                         ? Results.Ok()
                         : ProblemResults.DistilleryNotFound(distilleryName, httpContext))
             .WithName("Remove Distillery")
+            .WithTags("Distilleries")
             .RequiresNonEmptyRouteParameter("distilleryName")
             .Produces(StatusCodes.Status200OK)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
-            .WithTags("Distilleries");
+            .ProducesProblem(StatusCodes.Status404NotFound);
     }
 
     #endregion
@@ -86,25 +87,15 @@ internal static class EndpointMappings
     public static void MapWhiskyBottleEndpoints(this WebApplication app)
     {
         app.MapPost(
-            "/whiskyBottle/add",
-            async (
-                WhiskyBottle whiskyBottle,
-                IWhiskyBottleWriteService whiskyBottleWriteService) =>
-            {
-                if (await whiskyBottleWriteService.TryAddAsync(whiskyBottle))
-                    return Results.Created($"/whiskyBottle/{Uri.EscapeDataString(whiskyBottle.Name)}", null);
-
-                return Results.ValidationProblem(new Dictionary<string, string[]>
-                {
-                    [nameof(WhiskyBottle)] =
-                    [
-                        """
-                        An error occurred trying to add the whisky bottle to the database.
-                        Ensure all required fields have been set.
-                        """
-                    ]
-                });
-            });
+                "/whisky-bottle/add",
+                async (WhiskyBottle whiskyBottle, IWhiskyBottleWriteService whiskyBottleWriteService)
+                    => await whiskyBottleWriteService.TryAddAsync(whiskyBottle)
+                        ? Results.Created($"/whisky-bottle/{Uri.EscapeDataString(whiskyBottle.Name)}", null)
+                        : ValidationProblemResults.WhiskyBottleValidationProblemResults())
+            .WithName("Add Whisky Bottle")
+            .WithTags("WhiskyBottle")
+            .Produces(StatusCodes.Status201Created)
+            .ProducesValidationProblem();
     }
 
     #endregion

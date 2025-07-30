@@ -113,12 +113,13 @@ public static class WebApiDistilleriesTests
 
             var expectedProblem = new ValidationProblemDetails
             {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Missing or empty query parameters",
+                Type = "urn:mywhiskyshelf:validation-errors:query-parameter",
                 Errors = new Dictionary<string, string[]>
                 {
                     { "pattern", ["Query parameter 'pattern' is required and cannot be empty."] }
-                },
-                Status = StatusCodes.Status400BadRequest,
-                Type = "urn:mywhiskyshelf:errors:request-validation-error"
+                }
             };
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
@@ -142,12 +143,13 @@ public static class WebApiDistilleriesTests
 
             var expectedProblem = new ValidationProblemDetails
             {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Missing or empty query parameters",
+                Type = "urn:mywhiskyshelf:validation-errors:query-parameter",
                 Errors = new Dictionary<string, string[]>
                 {
                     { "pattern", ["Query parameter 'pattern' is required and cannot be empty."] }
-                },
-                Status = StatusCodes.Status400BadRequest,
-                Type = "urn:mywhiskyshelf:errors:request-validation-error"
+                }
             };
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);

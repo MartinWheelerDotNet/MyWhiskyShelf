@@ -30,16 +30,7 @@ public class DistilleryReadService(
             ? null
             : distilleryMapper.MapToDomain(distillery);
     }
-    
-    public async Task<Distillery?> GetDistilleryByIdAsync(Guid distilleryId)
-    {
-        var distillery = await dbContext.Distilleries.FindAsync(distilleryId);
-        
-        return distillery is null
-            ? null
-            : distilleryMapper.MapToDomain(distillery);
-    }
-    
+
 
     public IReadOnlyList<DistilleryNameDetails> GetDistilleryNames()
     {
@@ -49,5 +40,14 @@ public class DistilleryReadService(
     public IReadOnlyList<DistilleryNameDetails> SearchByName(string queryPattern)
     {
         return distilleryNameCacheService.Search(queryPattern);
+    }
+
+    public async Task<Distillery?> GetDistilleryByIdAsync(Guid distilleryId)
+    {
+        var distillery = await dbContext.Distilleries.FindAsync(distilleryId);
+
+        return distillery is null
+            ? null
+            : distilleryMapper.MapToDomain(distillery);
     }
 }

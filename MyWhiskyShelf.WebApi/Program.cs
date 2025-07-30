@@ -30,7 +30,11 @@ internal static class Program
         // used provide this value.
         var useDataSeeding = builder.Configuration.GetValue("MYWHISKYSHELF_DATA_SEEDING_ENABLED", false);
 
-        if (builder.Environment.IsDevelopment()) builder.UseDataLoader();
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.UseDataLoader();
+            builder.Services.AddOpenApi();
+        }
 
         var app = builder.Build();
 
@@ -57,7 +61,6 @@ internal static class Program
             options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
-        builder.Services.AddOpenApi();
         builder.AddServiceDefaults();
 
         return builder;

@@ -174,7 +174,7 @@ public class DistilleryReadServiceTests
     public async Task When_GetDistilleryByIdAndDistilleryIsFound_Expect_DistilleryReturned()
     {
         var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
-        
+
         await using var dbContext = await CreateDbContextAsync(
             DistilleryEntityTestData.Aberargie,
             DistilleryEntityTestData.Aberfeldy);
@@ -188,16 +188,16 @@ public class DistilleryReadServiceTests
 
         Assert.Equal(DistilleryTestData.Aberfeldy, distillery);
     }
-    
+
     [Fact]
     public async Task When_GetDistilleryById_Expect_DistilleryNameCacheServiceIsNotCalled()
     {
         var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
 
         mockDistilleryNameCacheService.Verify(
-                service => service.TryGet(It.IsAny<string>(), out It.Ref<DistilleryNameDetails?>.IsAny),
-                Times.Never);
-        
+            service => service.TryGet(It.IsAny<string>(), out It.Ref<DistilleryNameDetails?>.IsAny),
+            Times.Never);
+
         await using var dbContext = await CreateDbContextAsync(
             DistilleryEntityTestData.Aberargie,
             DistilleryEntityTestData.Aberfeldy);
@@ -210,7 +210,7 @@ public class DistilleryReadServiceTests
 
         mockDistilleryNameCacheService.Verify();
     }
-    
+
     [Fact]
     public async Task When_SearchAndDistilleryNamesFound_Expect_ListContainsDistilleryNames()
     {
