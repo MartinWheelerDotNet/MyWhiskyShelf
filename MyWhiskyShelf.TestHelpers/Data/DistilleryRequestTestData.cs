@@ -2,9 +2,9 @@ using MyWhiskyShelf.Core.Models;
 
 namespace MyWhiskyShelf.TestHelpers.Data;
 
-public static class DistilleryTestData
+public static class DistilleryRequestTestData
 {
-    public static Distillery Aberargie => new()
+    public static DistilleryRequest Aberargie => new()
     {
         DistilleryName = "Aberargie",
         Location = "Aberargie",
@@ -22,7 +22,7 @@ public static class DistilleryTestData
         Active = true
     };
 
-    public static Distillery Aberfeldy => new()
+    public static DistilleryRequest Aberfeldy => new()
     {
         DistilleryName = "Aberfeldy",
         Location = "Aberfeldy",
@@ -48,18 +48,7 @@ public static class DistilleryTestData
         Active = true
     };
 
-    public static Distillery Bunnahabhain => new()
-    {
-        DistilleryName = "Bunnahabhain",
-        Location = "Port Askaig",
-        Region = "Islay",
-        Founded = 1881,
-        Owner = "Distell",
-        DistilleryType = "Malt",
-        Active = true
-    };
-
-    public static Distillery Aberlour => new()
+    public static DistilleryRequest Aberlour => new()
     {
         DistilleryName = "Aberlour",
         Location = "Aberlour",

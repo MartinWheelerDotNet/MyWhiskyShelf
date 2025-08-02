@@ -7,11 +7,11 @@ namespace MyWhiskyShelf.Database.Services;
 
 public class WhiskyBottleWriteService(
     MyWhiskyShelfDbContext dbContext,
-    IMapper<WhiskyBottle, WhiskyBottleEntity> mapper) : IWhiskyBottleWriteService
+    IMapper<WhiskyBottleRequest, WhiskyBottleEntity> mapper) : IWhiskyBottleWriteService
 {
-    public async Task<bool> TryAddAsync(WhiskyBottle whiskyBottle)
+    public async Task<(bool hasBeenAdded, Guid? identifier)> TryAddAsync(WhiskyBottleRequest whiskyBottleRequest)
     {
-        var whiskyBottleEntity = mapper.MapToEntity(whiskyBottle);
+        var whiskyBottleEntity = mapper.Map(whiskyBottleRequest);
 
         try
         {
@@ -20,9 +20,9 @@ public class WhiskyBottleWriteService(
         }
         catch
         {
-            return false;
+            return (false, null);
         }
 
-        return true;
+        return (true, whiskyBottleEntity.Id);
     }
 }

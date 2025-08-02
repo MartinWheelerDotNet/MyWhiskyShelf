@@ -20,7 +20,7 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             new Mock<IDistilleryNameCacheService>().Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
         var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
 
         Assert.Empty(distilleries);
@@ -29,7 +29,11 @@ public class DistilleryReadServiceTests
     [Fact]
     public async Task When_GetAllDistilleriesAndDistilleriesAreFound_Expect_ListContainsMappedData()
     {
-        List<Distillery> expectedDistilleries = [DistilleryTestData.Aberargie, DistilleryTestData.Aberfeldy];
+        List<DistilleryResponse> expectedDistilleryResponses =
+        [
+            DistilleryResponseTestData.Aberargie,
+            DistilleryResponseTestData.Aberfeldy
+        ];
 
         await using var dbContext = await CreateDbContextAsync(
             DistilleryEntityTestData.Aberargie,
@@ -38,20 +42,20 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             new Mock<IDistilleryNameCacheService>().Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
         var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
 
-        Assert.All(expectedDistilleries, distillery => Assert.Contains(distillery, distilleries));
+        Assert.All(expectedDistilleryResponses, distillery => Assert.Contains(distillery, distilleries));
     }
 
     [Fact]
     public async Task When_GetAllDistilleriesAndDistilleriesAreFound_Expect_ListIsOrderedByDistilleryName()
     {
-        List<Distillery> expectedDistilleries =
+        List<DistilleryResponse> expectedDistilleryResponses =
         [
-            DistilleryTestData.Aberargie,
-            DistilleryTestData.Aberfeldy,
-            DistilleryTestData.Bunnahabhain
+            DistilleryResponseTestData.Aberargie,
+            DistilleryResponseTestData.Aberfeldy,
+            DistilleryResponseTestData.Bunnahabhain
         ];
 
         await using var dbContext = await CreateDbContextAsync(
@@ -62,10 +66,10 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             new Mock<IDistilleryNameCacheService>().Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
         var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
 
-        Assert.All(expectedDistilleries, distillery => Assert.Contains(distillery, distilleries));
+        Assert.All(expectedDistilleryResponses, distillery => Assert.Contains(distillery, distilleries));
     }
 
     [Fact]
@@ -80,7 +84,7 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             mockDistilleryNameCacheService.Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
         var distilleryNames = distilleryReadService.GetDistilleryNames();
 
         Assert.Empty(distilleryNames);
@@ -107,7 +111,7 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             mockDistilleryNameCacheService.Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
         var distilleryNames = distilleryReadService.GetDistilleryNames();
 
         Assert.Equal(expectedDistilleryNames, distilleryNames);
@@ -120,10 +124,10 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             new Mock<IDistilleryNameCacheService>().Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
 
         var distillery = await distilleryReadService
-            .GetDistilleryByNameAsync(DistilleryTestData.Aberfeldy.DistilleryName);
+            .GetDistilleryByNameAsync(DistilleryRequestTestData.Aberfeldy.DistilleryName);
 
         Assert.Null(distillery);
     }
@@ -148,11 +152,11 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             mockDistilleryNameCacheService.Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
         var distillery = await distilleryReadService
-            .GetDistilleryByNameAsync(DistilleryTestData.Aberfeldy.DistilleryName);
+            .GetDistilleryByNameAsync(DistilleryRequestTestData.Aberfeldy.DistilleryName);
 
-        Assert.Equal(DistilleryTestData.Aberfeldy, distillery);
+        Assert.Equal(DistilleryResponseTestData.Aberfeldy, distillery);
     }
 
     [Fact]
@@ -162,10 +166,10 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             new Mock<IDistilleryNameCacheService>().Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
 
         var distillery = await distilleryReadService
-            .GetDistilleryByNameAsync(DistilleryTestData.Aberfeldy.DistilleryName);
+            .GetDistilleryByNameAsync(DistilleryRequestTestData.Aberfeldy.DistilleryName);
 
         Assert.Null(distillery);
     }
@@ -182,11 +186,11 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             mockDistilleryNameCacheService.Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
         var distillery = await distilleryReadService
             .GetDistilleryByIdAsync(DistilleryEntityTestData.Aberfeldy.Id);
 
-        Assert.Equal(DistilleryTestData.Aberfeldy, distillery);
+        Assert.Equal(DistilleryResponseTestData.Aberfeldy, distillery);
     }
 
     [Fact]
@@ -205,7 +209,7 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             mockDistilleryNameCacheService.Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
         await distilleryReadService.GetDistilleryByIdAsync(DistilleryEntityTestData.Aberfeldy.Id);
 
         mockDistilleryNameCacheService.Verify();
@@ -231,7 +235,7 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             mockDistilleryNameCacheService.Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
 
         var distilleryNames = distilleryReadService.SearchByName(searchPattern);
 
@@ -253,7 +257,7 @@ public class DistilleryReadServiceTests
         var distilleryReadService = new DistilleryReadService(
             dbContext,
             mockDistilleryNameCacheService.Object,
-            new DistilleryMapper());
+            new DistilleryEntityToResponseMapper());
 
         var distilleryNames = distilleryReadService.SearchByName(searchPattern);
 

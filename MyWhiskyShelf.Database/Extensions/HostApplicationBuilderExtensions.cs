@@ -30,11 +30,29 @@ public static class HostApplicationBuilderExtensions
             settings.DisableTracing = false;
         });
 
-        builder.Services.AddSingleton<IMapper<Distillery, DistilleryEntity>, DistilleryMapper>();
-        builder.Services.AddSingleton<IMapper<WhiskyBottle, WhiskyBottleEntity>, WhiskyBottleMapper>();
-        builder.Services.AddSingleton<IDistilleryNameCacheService, DistilleryNameCacheService>();
-        builder.Services.AddScoped<IDistilleryReadService, DistilleryReadService>();
-        builder.Services.AddScoped<IDistilleryWriteService, DistilleryWriteService>();
-        builder.Services.AddScoped<IWhiskyBottleWriteService, WhiskyBottleWriteService>();
+        builder.AddMappers();
+        builder.AddServices();
+    }
+
+    private static void AddServices(this IHostApplicationBuilder builder)
+    {
+        builder.Services
+            .AddSingleton<IDistilleryNameCacheService, DistilleryNameCacheService>();
+        builder.Services
+            .AddScoped<IDistilleryReadService, DistilleryReadService>()
+            .AddScoped<IDistilleryWriteService, DistilleryWriteService>();
+        builder.Services
+            .AddScoped<IWhiskyBottleWriteService, WhiskyBottleWriteService>()
+            .AddScoped<IWhiskyBottleReadService, WhiskyBottleReadService>();
+    }
+
+    private static void AddMappers(this IHostApplicationBuilder builder)
+    {
+        builder.Services
+            .AddSingleton<IMapper<DistilleryEntity, DistilleryResponse>, DistilleryEntityToResponseMapper>()
+            .AddSingleton<IMapper<DistilleryRequest, DistilleryEntity>, DistilleryRequestToEntityMapper>();
+        builder.Services
+            .AddSingleton<IMapper<WhiskyBottleEntity, WhiskyBottleResponse>, WhiskyBottleEntityToResponseMapper>()
+            .AddSingleton<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>, WhiskyBottleRequestToEntityMapper>();
     }
 }

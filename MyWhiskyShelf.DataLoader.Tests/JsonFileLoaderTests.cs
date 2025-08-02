@@ -63,17 +63,17 @@ public class JsonFileLoaderTests
         var distilleries = await dataLoader.GetDistilleriesFromJsonAsync(filePath);
 
         var distillery = Assert.Single(distilleries);
-        Assert.Equal(DistilleryTestData.Aberargie, distillery);
+        Assert.Equal(DistilleryRequestTestData.Aberargie, distillery);
     }
 
     [Fact]
     public async Task When_GetDistilleriesFromJsonWithThreeDistilleries_Expect_ListOfJustThoseDistilleries()
     {
-        List<Distillery> expectedDistilleries =
+        List<DistilleryRequest> expectedDistilleries =
         [
-            DistilleryTestData.Aberargie,
-            DistilleryTestData.Aberfeldy,
-            DistilleryTestData.Aberlour
+            DistilleryRequestTestData.Aberargie,
+            DistilleryRequestTestData.Aberfeldy,
+            DistilleryRequestTestData.Aberlour
         ];
 
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/DistilleryData/three-distilleries.json");

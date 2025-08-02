@@ -271,7 +271,7 @@ public class DistilleryNameCacheServiceTests
             DistilleryEntityTestData.Aberargie.DistilleryName,
             DistilleryEntityTestData.Aberargie.Id);
 
-        var distilleryDetails = distilleryNameCacheService.Search(DistilleryTestData.Aberargie.DistilleryName);
+        var distilleryDetails = distilleryNameCacheService.Search(DistilleryRequestTestData.Aberargie.DistilleryName);
 
         Assert.Equal(expectedDistilleryDetails, distilleryDetails);
     }
@@ -295,7 +295,7 @@ public class DistilleryNameCacheServiceTests
             DistilleryEntityTestData.Aberargie.DistilleryName,
             DistilleryEntityTestData.Aberargie.Id);
 
-        var distilleryDetails = distilleryNameCacheService.Search(DistilleryTestData.Aberargie.DistilleryName);
+        var distilleryDetails = distilleryNameCacheService.Search(DistilleryRequestTestData.Aberargie.DistilleryName);
 
         Assert.Equal(expectedDistilleryDetails, distilleryDetails);
     }

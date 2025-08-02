@@ -4,5 +4,5 @@ namespace MyWhiskyShelf.DataLoader;
 
 public interface IJsonFileLoader
 {
-    Task<List<Distillery>> GetDistilleriesFromJsonAsync(string filePath);
+    Task<List<DistilleryRequest>> GetDistilleriesFromJsonAsync(string filePath);
 }

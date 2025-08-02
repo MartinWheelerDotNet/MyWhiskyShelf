@@ -18,17 +18,17 @@ public class WhiskyBottleWriteServiceTests
         await using var dbContext = await MyWhiskyShelfContextBuilder
             .CreateDbContextAsync<WhiskyBottleEntity>();
 
-        var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottle, WhiskyBottleEntity>>();
+        var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>>();
         mockWhiskyBottleMapper
-            .Setup(mapper => mapper.MapToEntity(WhiskyBottleTestData.AllValuesPopulated))
+            .Setup(mapper => mapper.Map(WhiskyBottleRequestTestData.AllValuesPopulated))
             .Returns(WhiskyBottleEntityTestData.AllValuesPopulated)
             .Verifiable(Times.Once);
 
         var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
-        var bottleAdded = await whiskyBottleService.TryAddAsync(WhiskyBottleTestData.AllValuesPopulated);
+        var response = await whiskyBottleService.TryAddAsync(WhiskyBottleRequestTestData.AllValuesPopulated);
 
         Assert.Multiple(
-            () => Assert.True(bottleAdded),
+            () => Assert.True(response.hasBeenAdded),
             () => mockWhiskyBottleMapper.Verify());
     }
 
@@ -38,17 +38,17 @@ public class WhiskyBottleWriteServiceTests
         await using var dbContext = await MyWhiskyShelfContextBuilder
             .CreateDbContextAsync<WhiskyBottleEntity>();
 
-        var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottle, WhiskyBottleEntity>>();
+        var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>>();
         mockWhiskyBottleMapper
-            .Setup(mapper => mapper.MapToEntity(WhiskyBottleTestData.AllValuesPopulated))
+            .Setup(mapper => mapper.Map(WhiskyBottleRequestTestData.AllValuesPopulated))
             .Returns(WhiskyBottleEntityTestData.AllValuesPopulated);
 
         var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
-        await whiskyBottleService.TryAddAsync(WhiskyBottleTestData.AllValuesPopulated);
+        await whiskyBottleService.TryAddAsync(WhiskyBottleRequestTestData.AllValuesPopulated);
 
         var whiskyBottleEntity = dbContext
             .Set<WhiskyBottleEntity>()
-            .Where(whiskyBottle => whiskyBottle.Name == WhiskyBottleTestData.AllValuesPopulated.Name);
+            .Where(whiskyBottle => whiskyBottle.Name == WhiskyBottleRequestTestData.AllValuesPopulated.Name);
 
         Assert.Single(whiskyBottleEntity);
     }
@@ -62,14 +62,14 @@ public class WhiskyBottleWriteServiceTests
         await using var dbContext = MyWhiskyShelfContextBuilder
             .CreateFailingDbContextAsync(exceptionType);
 
-        var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottle, WhiskyBottleEntity>>();
+        var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>>();
         mockWhiskyBottleMapper
-            .Setup(mapper => mapper.MapToEntity(WhiskyBottleTestData.AllValuesPopulated))
+            .Setup(mapper => mapper.Map(WhiskyBottleRequestTestData.AllValuesPopulated))
             .Returns(WhiskyBottleEntityTestData.AllValuesPopulated);
 
         var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
-        var tryAddResult = await whiskyBottleService.TryAddAsync(WhiskyBottleTestData.AllValuesPopulated);
+        var response = await whiskyBottleService.TryAddAsync(WhiskyBottleRequestTestData.AllValuesPopulated);
 
-        Assert.False(tryAddResult);
+        Assert.False(response.hasBeenAdded);
     }
 }

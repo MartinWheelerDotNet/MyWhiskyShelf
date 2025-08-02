@@ -3,13 +3,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
-using DistilleryTestData = MyWhiskyShelf.TestHelpers.Data.DistilleryTestData;
+using MyWhiskyShelf.TestHelpers.Data;
 
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
 public static class WebApiDistilleriesTests
 {
     private const string WebApiResourceName = "WebApi";
+
+    private static bool EqualsIgnoringId(DistilleryResponse expected, DistilleryResponse actual)
+    {
+        return expected with { Id = Guid.Empty } == actual with { Id = Guid.Empty };
+    }
 
     [Collection("AspireTests")]
     public class WebApiSeededDataTests(MyWhiskyShelfBaseFixtureSeededDb fixture)
@@ -21,9 +26,9 @@ public static class WebApiDistilleriesTests
             const string endpoint = "/distilleries/names";
             List<string> expectedDistilleryNames =
             [
-                DistilleryTestData.Aberargie.DistilleryName,
-                DistilleryTestData.Aberfeldy.DistilleryName,
-                DistilleryTestData.Aberlour.DistilleryName
+                DistilleryResponseTestData.Aberargie.DistilleryName,
+                DistilleryResponseTestData.Aberfeldy.DistilleryName,
+                DistilleryResponseTestData.Aberlour.DistilleryName
             ];
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
@@ -36,7 +41,7 @@ public static class WebApiDistilleriesTests
                 {
                     var (distilleryName, identifier) = details;
                     Assert.Contains(distilleryName, expectedDistilleryNames);
-                    Assert.IsType<Guid>(identifier);
+                    Assert.NotEqual(Guid.Empty, identifier);
                 }));
         }
 
@@ -44,34 +49,37 @@ public static class WebApiDistilleriesTests
         public async Task When_RequestingAllDistilleries_Expect_AllDistilleriesReturned()
         {
             const string endpoint = "/distilleries";
-            List<Distillery> expectedDistilleries =
+            List<DistilleryResponse> expectedDistilleries =
             [
-                DistilleryTestData.Aberargie,
-                DistilleryTestData.Aberfeldy,
-                DistilleryTestData.Aberlour
+                DistilleryResponseTestData.Aberargie with { Id = Guid.Empty },
+                DistilleryResponseTestData.Aberfeldy with { Id = Guid.Empty },
+                DistilleryResponseTestData.Aberlour with { Id = Guid.Empty }
             ];
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
-            var distilleries = await response.Content.ReadFromJsonAsync<List<Distillery>>();
+            var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.All(expectedDistilleries, distillery => Assert.Contains(distillery, distilleries!)));
+                () => Assert.All(expectedDistilleries, distillery
+                    => Assert.Contains(distilleries!, actual => EqualsIgnoringId(distillery, actual))),
+                () => Assert.All(distilleries!, distillery
+                    => Assert.NotEqual(Guid.Empty, distillery.Id)));
         }
 
         [Fact]
         public async Task When_RequestingDistilleryByName_Expect_CorrectDistilleryReturned()
         {
-            var endpoint = $"/distilleries/{DistilleryTestData.Aberfeldy.DistilleryName}";
+            const string endpoint = "/distilleries/Aberfeldy";
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
-            var distillery = await response.Content.ReadFromJsonAsync<Distillery>();
+            var distillery = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.Equal(DistilleryTestData.Aberfeldy, distillery));
+                () => Assert.True(EqualsIgnoringId(DistilleryResponseTestData.Aberfeldy, distillery!)));
         }
 
         [Fact]
@@ -92,7 +100,7 @@ public static class WebApiDistilleriesTests
         [Fact]
         public async Task When_SearchingExactMatchFound_Expect_ListWithJustThatDistilleryNameDetails()
         {
-            var endpoint = $"/distilleries/name/search?pattern={DistilleryTestData.Aberfeldy.DistilleryName}";
+            var endpoint = $"/distilleries/name/search?pattern={DistilleryRequestTestData.Aberfeldy.DistilleryName}";
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
@@ -101,7 +109,7 @@ public static class WebApiDistilleriesTests
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
                 () => Assert.Single(distilleryNameDetails!),
-                () => Assert.Equal(DistilleryTestData.Aberfeldy.DistilleryName,
+                () => Assert.Equal(DistilleryRequestTestData.Aberfeldy.DistilleryName,
                     distilleryNameDetails!.First().DistilleryName),
                 () => Assert.IsType<Guid>(distilleryNameDetails!.First().Identifier));
         }
@@ -167,7 +175,7 @@ public static class WebApiDistilleriesTests
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.PostAsJsonAsync(
                 "/distilleries/add",
-                DistilleryTestData.Aberargie with { DistilleryName = "NewDistillery" });
+                DistilleryRequestTestData.Aberargie with { DistilleryName = "NewDistillery" });
             await httpClient.DeleteAsync("/distilleries/remove/NewDistillery");
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -180,7 +188,7 @@ public static class WebApiDistilleriesTests
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.DeleteAsync("/distilleries/remove/Aberargie");
 
-            await httpClient.PostAsJsonAsync("/distilleries/add/", DistilleryTestData.Aberargie);
+            await httpClient.PostAsJsonAsync("/distilleries/add/", DistilleryRequestTestData.Aberargie);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -215,7 +223,7 @@ public static class WebApiDistilleriesTests
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.PostAsJsonAsync(
                 endpoint,
-                DistilleryTestData.Aberargie with { DistilleryName = "Burn O'Bennie" });
+                DistilleryRequestTestData.Aberargie with { DistilleryName = "Burn O'Bennie" });
 
 
             await httpClient.DeleteAsync("/distilleries/remove/Burn%20O%27Bennie");
@@ -250,7 +258,7 @@ public static class WebApiDistilleriesTests
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
-            var distilleries = await response.Content.ReadFromJsonAsync<List<Distillery>>();
+            var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
 
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
@@ -260,7 +268,7 @@ public static class WebApiDistilleriesTests
         [Fact]
         public async Task When_RequestingDistilleryByName_Expect_NotFoundResponse()
         {
-            var endpoint = $"/distilleries/{DistilleryTestData.Aberfeldy.DistilleryName}";
+            const string endpoint = "/distilleries/Aberfeldy";
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);

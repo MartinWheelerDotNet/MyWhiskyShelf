@@ -1,16 +1,16 @@
-using MyWhiskyShelf.Core.Enums;
 using MyWhiskyShelf.Core.Models;
 
 namespace MyWhiskyShelf.TestHelpers.Data;
 
-public static class WhiskyBottleTestData
+public static class WhiskyBottleResponseTestData
 {
-    public static WhiskyBottle AllValuesPopulated => new()
+    public static WhiskyBottleResponse AllValuesPopulated => new()
     {
+        Id = Guid.Parse("b2901307-8840-45e6-8f4a-a8537d1e5b9a"),
         Name = "All Values Populated",
-        DistilleryName = "A Distillery Name",
-        Status = BottleStatus.Unopened,
-        Bottler = "Distillery",
+        DistilleryName = "A DistilleryRequest Name",
+        Status = "Unopened",
+        Bottler = "DistilleryRequest",
         DateBottled = new DateOnly(2022, 1, 1),
         YearBottled = 2022,
         BatchNumber = 1000,

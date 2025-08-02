@@ -2,7 +2,7 @@ using MyWhiskyShelf.Core.Enums;
 
 namespace MyWhiskyShelf.Core.Models;
 
-public record WhiskyBottle
+public record WhiskyBottleRequest
 {
     public required string Name { get; init; }
     public required string DistilleryName { get; init; }

@@ -8,7 +8,7 @@ public class FailingSaveChangesDbContext(DbContextOptions<MyWhiskyShelfDbContext
 {
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var exception = Activator.CreateInstance(exceptionType, "Test failure in SaveChangesAsync") as Exception
+        var exception = Activator.CreateInstance(exceptionType, exceptionType.Name) as Exception
                         ?? throw new InvalidOperationException("Could not create exception of the specified type");
         throw exception;
     }

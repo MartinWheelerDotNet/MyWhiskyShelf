@@ -1,8 +1,9 @@
-﻿namespace MyWhiskyShelf.Core.Models;
+namespace MyWhiskyShelf.Core.Models;
 
 [Serializable]
-public record Distillery
+public record DistilleryResponse
 {
+    public required Guid Id { get; init; }
     public required string DistilleryName { get; init; }
     public required string Location { get; init; }
     public required string Region { get; init; }

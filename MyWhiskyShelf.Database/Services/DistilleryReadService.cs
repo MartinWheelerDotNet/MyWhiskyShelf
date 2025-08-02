@@ -9,17 +9,19 @@ namespace MyWhiskyShelf.Database.Services;
 public class DistilleryReadService(
     MyWhiskyShelfDbContext dbContext,
     IDistilleryNameCacheService distilleryNameCacheService,
-    IMapper<Distillery, DistilleryEntity> distilleryMapper) : IDistilleryReadService
+    IMapper<DistilleryEntity, DistilleryResponse> mapper) : IDistilleryReadService
 {
-    public async Task<List<Distillery>> GetAllDistilleriesAsync()
+    public async Task<IReadOnlyList<DistilleryResponse>> GetAllDistilleriesAsync()
     {
-        return await dbContext.Distilleries
+        var distilleryEntities = await dbContext.Distilleries
             .OrderBy(entity => entity.DistilleryName)
-            .Select(entity => distilleryMapper.MapToDomain(entity))
+            .AsNoTracking()
             .ToListAsync();
+
+        return distilleryEntities.Select(mapper.Map).ToList().AsReadOnly();
     }
 
-    public async Task<Distillery?> GetDistilleryByNameAsync(string distilleryName)
+    public async Task<DistilleryResponse?> GetDistilleryByNameAsync(string distilleryName)
     {
         if (!distilleryNameCacheService.TryGet(distilleryName, out var distilleryDetails))
             return null;
@@ -28,7 +30,7 @@ public class DistilleryReadService(
 
         return distillery is null
             ? null
-            : distilleryMapper.MapToDomain(distillery);
+            : mapper.Map(distillery);
     }
 
 
@@ -42,12 +44,12 @@ public class DistilleryReadService(
         return distilleryNameCacheService.Search(queryPattern);
     }
 
-    public async Task<Distillery?> GetDistilleryByIdAsync(Guid distilleryId)
+    public async Task<DistilleryResponse?> GetDistilleryByIdAsync(Guid distilleryId)
     {
         var distillery = await dbContext.Distilleries.FindAsync(distilleryId);
 
         return distillery is null
             ? null
-            : distilleryMapper.MapToDomain(distillery);
+            : mapper.Map(distillery);
     }
 }
