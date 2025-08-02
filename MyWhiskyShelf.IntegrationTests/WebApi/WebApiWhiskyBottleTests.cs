@@ -8,7 +8,6 @@ namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
 [Collection("AspireTests")]
 public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
-    : IClassFixture<MyWhiskyShelfFixture>
 {
     private const string WebApiResourceName = "WebApi";
 

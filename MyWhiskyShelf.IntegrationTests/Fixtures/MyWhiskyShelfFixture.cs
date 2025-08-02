@@ -8,8 +8,6 @@ namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 [UsedImplicitly]
 public class MyWhiskyShelfFixture : IAsyncLifetime
 {
-    protected virtual bool UseDataSeeding => true;
-    
     public DistributedApplication Application { get; private set; } = null!;
 
     public virtual async Task InitializeAsync()
@@ -17,7 +15,7 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
         var appHost = await CreateDefaultAppHost();
         Application = await appHost.BuildAsync();
         Application.Start();
-        
+
         await WaitForRunningState(Application, "WebApi");
     }
 
@@ -26,10 +24,10 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
         await Application.DisposeAsync();
     }
 
-    private async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
+    private static async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
     {
         var appHost = await DistributedApplicationTestingBuilder.CreateAsync<MyWhiskyShelf_AppHost>(
-            [$"MYWHISKYSHELF_DATA_SEEDING_ENABLED={UseDataSeeding}"]);
+            ["MYWHISKYSHELF_DATA_SEEDING_ENABLED=false"]);
 
         appHost.Services
             .ConfigureHttpClientDefaults(clientBuilder => clientBuilder.AddStandardResilienceHandler());

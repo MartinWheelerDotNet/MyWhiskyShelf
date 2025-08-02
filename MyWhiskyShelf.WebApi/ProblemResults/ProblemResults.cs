@@ -20,7 +20,7 @@ internal static class ProblemResults
     }
 
 
-    public static IResult DistilleryNotFound(string distilleryName, HttpContext httpContext)
+    public static IResult DistilleryNotFound(Guid distilleryId, HttpContext httpContext)
     {
         return Results.Problem(
             new ProblemDetails
@@ -28,7 +28,7 @@ internal static class ProblemResults
                 Type = "urn:mywhiskyshelf:errors:distillery-does-not-exist",
                 Title = "Distillery does not exist.",
                 Status = StatusCodes.Status404NotFound,
-                Detail = $"Cannot remove distillery '{distilleryName}' as it does not exist.",
+                Detail = $"Cannot remove distillery '{distilleryId}' as it does not exist.",
                 Instance = httpContext.Request.Path
             });
     }

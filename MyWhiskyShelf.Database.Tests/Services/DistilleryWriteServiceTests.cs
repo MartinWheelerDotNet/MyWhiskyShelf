@@ -23,14 +23,14 @@ public class DistilleryWriteServiceTests
             dbContext,
             new Mock<IDistilleryNameCacheService>().Object,
             new DistilleryRequestToEntityMapper());
-        var result = await distilleryWriteService
+        var (hasBeenAdded, _) = await distilleryWriteService
             .TryAddDistilleryAsync(DistilleryRequestTestData.Aberargie);
         var distilleryEntity = await dbContext
             .Set<DistilleryEntity>()
             .FirstAsync(entity => entity.DistilleryName == DistilleryEntityTestData.Aberargie.DistilleryName);
 
         Assert.Multiple(
-            () => Assert.True(result, "'result' should be true"),
+            () => Assert.True(hasBeenAdded, "'hasBeenAdded' should be true"),
             () => Assert.Equal(
                 DistilleryEntityTestData.Aberargie with { Id = distilleryEntity.Id },
                 distilleryEntity));
@@ -54,14 +54,14 @@ public class DistilleryWriteServiceTests
             dbContext,
             mockDistilleryNameCacheService.Object,
             new DistilleryRequestToEntityMapper());
-        var result = await distilleryWriteService.TryAddDistilleryAsync(modifiedAberargieDistillery);
+        var (hasBeenAdded, _) = await distilleryWriteService.TryAddDistilleryAsync(modifiedAberargieDistillery);
 
         var distilleryEntity = await dbContext
             .Set<DistilleryEntity>()
             .FirstAsync(entity => entity.DistilleryName == modifiedAberargieDistillery.DistilleryName);
 
         Assert.Multiple(
-            () => Assert.False(result, "'result' should be false"),
+            () => Assert.False(hasBeenAdded, "'hasBeenAdded' should be false"),
             () => Assert.Equal(distilleryEntity, DistilleryEntityTestData.Aberargie));
     }
 
@@ -123,7 +123,7 @@ public class DistilleryWriteServiceTests
             dbContext,
             mockDistilleryNameCacheService.Object,
             new DistilleryRequestToEntityMapper());
-        await distilleryWriteService.TryRemoveDistilleryAsync(DistilleryRequestTestData.Aberargie.DistilleryName);
+        await distilleryWriteService.TryRemoveDistilleryAsync(DistilleryEntityTestData.Aberargie.Id);
 
         var distilleryEntity = await dbContext
             .Set<DistilleryEntity>()
@@ -147,7 +147,7 @@ public class DistilleryWriteServiceTests
             dbContext,
             mockDistilleryNameCacheService.Object,
             new DistilleryRequestToEntityMapper());
-        await distilleryWriteService.TryRemoveDistilleryAsync(DistilleryRequestTestData.Aberargie.DistilleryName);
+        await distilleryWriteService.TryRemoveDistilleryAsync(DistilleryEntityTestData.Aberargie.Id);
 
         mockDistilleryNameCacheService.Verify();
     }
