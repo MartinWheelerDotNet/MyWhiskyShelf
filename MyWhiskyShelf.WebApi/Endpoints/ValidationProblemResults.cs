@@ -4,7 +4,7 @@ namespace MyWhiskyShelf.WebApi.Endpoints;
 
 public static class ValidationProblemResults
 {
-    #region WhiskyBottle Validation Problem Results
+    #region WhiskyBottleRequest Validation Problem Results
 
     public static IResult WhiskyBottleValidationProblemResults()
     {
@@ -13,7 +13,7 @@ public static class ValidationProblemResults
             type: "urn:mywhiskyshelf:validation-errors:whisky-bottle",
             errors: new Dictionary<string, string[]>
             {
-                [nameof(WhiskyBottle)] = ["An error occurred trying to add the whisky bottle to the database."]
+                [nameof(WhiskyBottleRequest)] = ["An error occurred trying to add the whisky bottle to the database."]
             });
     }
 

@@ -1,7 +1,7 @@
 {
-  "yaakVersion": "2025.4.0",
+  "yaakVersion": "2025.5.5",
   "yaakSchema": 4,
-  "timestamp": "2025-07-17T21:14:57.105441400",
+  "timestamp": "2025-08-02T12:54:04.686233100",
   "resources": {
     "workspaces": [
       {
@@ -56,23 +56,79 @@
     "folders": [
       {
         "model": "folder",
-        "id": "fl_LEgTwPMdsP",
-        "createdAt": "2025-07-17T20:54:06.669954",
-        "updatedAt": "2025-07-17T20:54:06.669954700",
+        "id": "fl_9t3uKNykZ3",
+        "createdAt": "2025-08-01T22:24:47.233827700",
+        "updatedAt": "2025-08-01T22:24:47.233828300",
         "workspaceId": "wk_E9kD4NLtfq",
         "folderId": "fl_WBpgkDXQi2",
         "authentication": {},
         "authenticationType": null,
         "description": "",
         "headers": [],
-        "name": "Add new whisky bottle - Distillery known",
-        "sortPriority": -1752785600000.0
+        "name": "Get whisky bottle",
+        "sortPriority": -1754087000000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_ToKj9W9EpX",
+        "createdAt": "2025-08-01T22:24:27.025144300",
+        "updatedAt": "2025-08-01T22:24:27.025144700",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_WBpgkDXQi2",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "Add whisky bottle",
+        "sortPriority": -1754087000000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_CHMifXdk8A",
+        "createdAt": "2025-07-30T17:33:16.462150500",
+        "updatedAt": "2025-07-30T17:33:16.462151100",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": null,
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "OpenApi",
+        "sortPriority": -1753896800000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_yzaK4Zyg8g",
+        "createdAt": "2025-07-29T18:50:10.205706800",
+        "updatedAt": "2025-07-29T18:50:10.205707300",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_Zi75WXkdYA",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "Search for distillery",
+        "sortPriority": -1753815000000.0
+      },
+      {
+        "model": "folder",
+        "id": "fl_SxuS3gvX9s",
+        "createdAt": "2025-07-29T18:49:26.730437500",
+        "updatedAt": "2025-07-29T18:49:26.730438",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_vr5hv9qtjH",
+        "authentication": {},
+        "authenticationType": null,
+        "description": "",
+        "headers": [],
+        "name": "Search for distillery",
+        "sortPriority": -1753814900000.0
       },
       {
         "model": "folder",
         "id": "fl_ZNqELPbX8Z",
         "createdAt": "2025-07-17T20:52:55.805731400",
-        "updatedAt": "2025-07-17T20:52:55.805731900",
+        "updatedAt": "2025-08-01T21:45:37.943763200",
         "workspaceId": "wk_E9kD4NLtfq",
         "folderId": "fl_Zf75h7fUgq",
         "authentication": {},
@@ -80,13 +136,13 @@
         "description": "",
         "headers": [],
         "name": "Unhappy Path",
-        "sortPriority": -1752785600000.0
+        "sortPriority": 2000.0
       },
       {
         "model": "folder",
         "id": "fl_WBpgkDXQi2",
         "createdAt": "2025-07-17T20:52:48.084722300",
-        "updatedAt": "2025-07-17T20:52:48.084722900",
+        "updatedAt": "2025-08-01T21:45:37.948003800",
         "workspaceId": "wk_E9kD4NLtfq",
         "folderId": "fl_Zf75h7fUgq",
         "authentication": {},
@@ -94,7 +150,7 @@
         "description": "",
         "headers": [],
         "name": "Happy Path",
-        "sortPriority": -1752785600000.0
+        "sortPriority": 3000.0
       },
       {
         "model": "folder",
@@ -107,7 +163,7 @@
         "authenticationType": null,
         "description": "",
         "headers": [],
-        "name": "WhiskyBottle",
+        "name": "Whisky Bottle",
         "sortPriority": -1752785600000.0
       },
       {
@@ -212,11 +268,30 @@
     "httpRequests": [
       {
         "model": "http_request",
-        "id": "rq_RRCzkfssCq",
-        "createdAt": "2025-07-17T20:54:12.775640600",
-        "updatedAt": "2025-07-17T21:08:57.602585800",
+        "id": "rq_5ts6wFA5wr",
+        "createdAt": "2025-08-01T22:16:49.504200300",
+        "updatedAt": "2025-08-01T22:17:15.953152900",
         "workspaceId": "wk_E9kD4NLtfq",
-        "folderId": "fl_LEgTwPMdsP",
+        "folderId": "fl_SxuS3gvX9s",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Search with exact match",
+        "sortPriority": 0.0,
+        "url": "${[ host ]}/distilleries/name/search?pattern=aberfeldy",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_LNue6q95n2",
+        "createdAt": "2025-08-01T21:46:24.102550400",
+        "updatedAt": "2025-08-01T22:25:00.846165100",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_9t3uKNykZ3",
         "authentication": {},
         "authenticationType": null,
         "body": {
@@ -233,9 +308,160 @@
           }
         ],
         "method": "POST",
-        "name": "Add new whisky bottle - distillery known",
-        "sortPriority": 1999.9999,
-        "url": "${[ host ]}/whiskyBottle/add",
+        "name": "Add new whisky bottle",
+        "sortPriority": 0.0,
+        "url": "${[ host ]}/whisky-bottle/add",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_Tzt79jvqWJ",
+        "createdAt": "2025-08-01T21:46:01.833783800",
+        "updatedAt": "2025-08-01T22:25:00.853761500",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_9t3uKNykZ3",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get whisky bottle",
+        "sortPriority": 1000.0,
+        "url": "${[ host ]}${[ response.header(request='rq_LNue6q95n2', header='Location', behavior='always') ]}",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_k2P7d9JpsH",
+        "createdAt": "2025-07-31T12:47:33.881377200",
+        "updatedAt": "2025-08-01T22:15:56.338733500",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_ZNqELPbX8Z",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "    {\n        \"Name\": null,\n        \"DistilleryName\": \"Aberfeldy\",\n        \"Status\": \"Unopened\",\n        \"Bottler\": \"Distillery\",\n        \"DateBottled\": \"2002-01-01\",\n        \"YearBottled\": 2022,\n        \"BatchNumber\": 1000,\n        \"CaskNumber\": 1,\n        \"AbvPercentage\": 50.8,\n        \"VolumeCl\": 70,\n        \"VolumeRemainingCl\": 70,\n        \"AddedColouring\": false,\n        \"ChillFiltered\": false,\n        \"FlavourProfile\": \n        {\n            \"Sweet\": 1,\n            \"Fruit\": 1,\n            \"Body\": 1,\n            \"Tobacco\": 2,\n            \"Wine\": 2,\n            \"Spice\": 3,\n            \"Nut\": 1,\n            \"Honey\": 1\n        }\n    }"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "F8gFTZ5BXp"
+          }
+        ],
+        "method": "POST",
+        "name": "Add whisky bottle",
+        "sortPriority": 0.0,
+        "url": "${[ host ]}/whisky-bottle/add",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_FDqYC3Mzwe",
+        "createdAt": "2025-07-30T17:33:21.066984600",
+        "updatedAt": "2025-07-30T17:36:54.105223300",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_CHMifXdk8A",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "",
+        "sortPriority": 999.9999,
+        "url": "${[ host ]}/openapi/v1.json",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_jkGM7jDHDQ",
+        "createdAt": "2025-07-30T16:26:38.146720400",
+        "updatedAt": "2025-08-01T22:15:32.142604900",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_ZNqELPbX8Z",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Get whisky bottle",
+        "sortPriority": 1000.0,
+        "url": "${[ host ]}/whisky-bottle/019867b3-9e45-7573-b97f-1bee3ed1aaaa",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_bEC5kEafcf",
+        "createdAt": "2025-07-29T18:50:22.390669500",
+        "updatedAt": "2025-07-29T18:50:44.808193800",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_yzaK4Zyg8g",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Search without pattern parameter",
+        "sortPriority": 0.0,
+        "url": "${[ host ]}/distilleries/name/search",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_zpTnoq9ctx",
+        "createdAt": "2025-07-28T15:43:08.953209800",
+        "updatedAt": "2025-08-01T22:16:55.211348300",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_SxuS3gvX9s",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {},
+        "bodyType": null,
+        "description": "",
+        "headers": [],
+        "method": "GET",
+        "name": "Search with fuzzy pattern",
+        "sortPriority": 1000.0,
+        "url": "${[ host ]}/distilleries/name/search?pattern=abr",
+        "urlParameters": []
+      },
+      {
+        "model": "http_request",
+        "id": "rq_RRCzkfssCq",
+        "createdAt": "2025-07-17T20:54:12.775640600",
+        "updatedAt": "2025-08-01T22:24:32.317343700",
+        "workspaceId": "wk_E9kD4NLtfq",
+        "folderId": "fl_ToKj9W9EpX",
+        "authentication": {},
+        "authenticationType": null,
+        "body": {
+          "text": "{\n        \"name\": \"New Whisky Bottle\",\n        \"distilleryName\": \"Aberfeldy\",\n        \"status\": \"Unknown\",\n        \"bottler\":\"Indie Bottler Number 1\",\n        \"dateBottled\": \"2022-01-01\",\n        \"yearBottled\": 2022,\n        \"batchNumber\": 1000,\n        \"caskNumber\": 1,\n        \"abvPercentage\": 50.8,\n        \"volumeCl\": 70,\n        \"volumeRemainingCl\": 70,\n        \"addedColouring\": false,\n        \"chillFiltered\": false,\n        \"flavourProfile\": \n        {\n            \"sweet\": 1,\n            \"fruit\": 1,\n            \"body\": 1,\n            \"tobacco\": 2,\n            \"wine\": 2,\n            \"spice\": 3,\n            \"nut\": 1,\n            \"honey\": 1\n        }\n    }"
+        },
+        "bodyType": "application/json",
+        "description": "",
+        "headers": [
+          {
+            "enabled": true,
+            "name": "Content-Type",
+            "value": "application/json",
+            "id": "cCcrswy2YJ"
+          }
+        ],
+        "method": "POST",
+        "name": "Add new whisky bottle",
+        "sortPriority": 0.0,
+        "url": "${[ host ]}/whisky-bottle/add",
         "urlParameters": []
       },
       {
@@ -384,7 +610,7 @@
         "model": "http_request",
         "id": "rq_XxDobBn495",
         "createdAt": "2025-07-08T16:47:47.456726100",
-        "updatedAt": "2025-07-10T20:00:59.769294300",
+        "updatedAt": "2025-08-01T22:22:10.486663100",
         "workspaceId": "wk_E9kD4NLtfq",
         "folderId": "fl_RiY8GMkMDb",
         "authentication": {},

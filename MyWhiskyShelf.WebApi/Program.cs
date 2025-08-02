@@ -70,9 +70,12 @@ internal static class Program
     {
         using var scope = serviceProvider.CreateScope();
 
-        var dbContext = scope.ServiceProvider.GetRequiredService<MyWhiskyShelfDbContext>();
-        var dataLoader = scope.ServiceProvider.GetRequiredService<IJsonFileLoader>();
-        var mapper = scope.ServiceProvider.GetRequiredService<IMapper<Distillery, DistilleryEntity>>();
+        var dbContext = scope.ServiceProvider
+            .GetRequiredService<MyWhiskyShelfDbContext>();
+        var dataLoader = scope.ServiceProvider
+            .GetRequiredService<IJsonFileLoader>();
+        var mapper = scope.ServiceProvider
+            .GetRequiredService<IMapper<DistilleryRequest, DistilleryEntity>>();
 
         await dbContext.Database.EnsureCreatedAsync();
 
@@ -82,7 +85,7 @@ internal static class Program
         if (useDataSeeding)
         {
             var distilleries = await dataLoader.GetDistilleriesFromJsonAsync("Resources/distilleries.json");
-            var mappedDistilleries = distilleries.Select(distillery => mapper.MapToEntity(distillery));
+            var mappedDistilleries = distilleries.Select(mapper.Map);
 
             dbContext.Set<DistilleryEntity>().AddRange(mappedDistilleries);
             await dbContext.SaveChangesAsync();

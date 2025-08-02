@@ -1,7 +1,6 @@
 namespace MyWhiskyShelf.Database.Interfaces;
 
-public interface IMapper<TDomain, TEntity>
+public interface IMapper<in TInput, out TOutput>
 {
-    public TDomain MapToDomain(TEntity whiskyBottleEntity);
-    public TEntity MapToEntity(TDomain domain);
+    public TOutput Map(TInput input);
 }

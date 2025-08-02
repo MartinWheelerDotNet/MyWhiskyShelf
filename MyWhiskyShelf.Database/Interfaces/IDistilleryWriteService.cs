@@ -4,6 +4,6 @@ namespace MyWhiskyShelf.Database.Interfaces;
 
 public interface IDistilleryWriteService
 {
-    Task<bool> TryAddDistilleryAsync(Distillery distillery);
+    Task<bool> TryAddDistilleryAsync(DistilleryRequest distilleryRequest);
     Task<bool> TryRemoveDistilleryAsync(string distilleryName);
 }
