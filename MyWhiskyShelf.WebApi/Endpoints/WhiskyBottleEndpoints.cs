@@ -10,6 +10,7 @@ internal static partial class EndpointMappings
     private const string WhiskyBottleEndpoint = "/whisky-bottle";
     private const string GetByIdEndpoint = "/whisky-bottle/{identifier:guid}";
     private const string WhiskyBottleTag = "WhiskyBottle";
+
     public static void MapWhiskyBottleEndpoints(this WebApplication app)
     {
         app.MapGet(

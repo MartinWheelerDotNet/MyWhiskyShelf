@@ -28,7 +28,7 @@ public class DistilleryNameCacheService : IDistilleryNameCacheService
         var distilleryNameDetailsDictionary = new ConcurrentDictionary<string, DistilleryNameDetails>(
             distilleryDetails.ToDictionary(details => details.DistilleryName, details => details),
             StringComparer.OrdinalIgnoreCase);
-        
+
         var distilleryIdDictionary = new ConcurrentDictionary<Guid, string>(
             distilleryDetails.ToDictionary(details => details.Identifier, details => details.DistilleryName));
 

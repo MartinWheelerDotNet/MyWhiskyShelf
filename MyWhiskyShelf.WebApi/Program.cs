@@ -90,6 +90,7 @@ internal static class Program
 
             dbContext.Set<DistilleryEntity>().AddRange(mappedDistilleries);
         }
+
         await dbContext.SaveChangesAsync();
 
         var cacheService = scope.ServiceProvider.GetRequiredService<IDistilleryNameCacheService>();

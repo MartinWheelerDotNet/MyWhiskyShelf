@@ -10,7 +10,6 @@ public class DistilleryReadService(
     MyWhiskyShelfDbContext dbContext,
     IMapper<DistilleryEntity, DistilleryResponse> mapper) : IDistilleryReadService
 {
-    
     public async Task<DistilleryResponse?> GetDistilleryByIdAsync(Guid distilleryId)
     {
         var distillery = await dbContext.Distilleries.FindAsync(distilleryId);
@@ -19,7 +18,7 @@ public class DistilleryReadService(
             ? null
             : mapper.Map(distillery);
     }
-    
+
     public async Task<IReadOnlyList<DistilleryResponse>> GetAllDistilleriesAsync()
     {
         var distilleryEntities = await dbContext.Distilleries

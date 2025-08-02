@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Contexts;
 using MyWhiskyShelf.Database.Entities;
@@ -11,9 +10,10 @@ public class DistilleryWriteService(
     IDistilleryNameCacheService distilleryNameCacheService,
     IMapper<DistilleryRequest, DistilleryEntity> mapper) : IDistilleryWriteService
 {
-    public async Task<bool> TryAddDistilleryAsync(DistilleryRequest distilleryRequest)
+    public async Task<(bool hasBeenAdded, Guid? identifier)> TryAddDistilleryAsync(DistilleryRequest distilleryRequest)
     {
-        if (distilleryNameCacheService.TryGet(distilleryRequest.DistilleryName, out _)) return false;
+        if (distilleryNameCacheService.TryGet(distilleryRequest.DistilleryName, out _))
+            return (false, null);
 
         try
         {
@@ -21,23 +21,21 @@ public class DistilleryWriteService(
             dbContext.Distilleries.Add(entity);
             distilleryNameCacheService.Add(entity.DistilleryName, entity.Id);
             await dbContext.SaveChangesAsync();
+            return (true, entity.Id);
         }
         catch
         {
-            return false;
+            return (false, null);
         }
-
-        return true;
     }
 
-    public async Task<bool> TryRemoveDistilleryAsync(string distilleryName)
+    public async Task<bool> TryRemoveDistilleryAsync(Guid distilleryId)
     {
-        var distilleryEntity = await dbContext.Distilleries
-            .FirstOrDefaultAsync(entity => entity.DistilleryName == distilleryName);
+        var distilleryEntity = await dbContext.Distilleries.FindAsync(distilleryId);
 
         if (distilleryEntity == null) return false;
 
-        distilleryNameCacheService.Remove(distilleryEntity.Id);
+        distilleryNameCacheService.Remove(distilleryId);
         dbContext.Distilleries.Remove(distilleryEntity);
         await dbContext.SaveChangesAsync();
 

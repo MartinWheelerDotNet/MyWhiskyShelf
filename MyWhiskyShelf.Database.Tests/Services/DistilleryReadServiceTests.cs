@@ -66,7 +66,7 @@ public class DistilleryReadServiceTests
 
         Assert.All(expectedDistilleryResponses, distillery => Assert.Contains(distillery, distilleries));
     }
-    
+
     [Fact]
     public async Task When_GetDistilleryByIdAndDistilleryIsNotFound_Expect_NoDistilleryReturned()
     {
