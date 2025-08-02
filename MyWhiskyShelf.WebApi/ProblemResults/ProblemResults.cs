@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace MyWhiskyShelf.WebApi.Endpoints;
+namespace MyWhiskyShelf.WebApi.ProblemResults;
 
 internal static class ProblemResults
 {

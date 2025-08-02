@@ -50,6 +50,7 @@ internal static class Program
 
         app.MapDistilleryEndpoints();
         app.MapWhiskyBottleEndpoints();
+        app.MapDistilleryNameEndpoints();
 
         await app.RunAsync();
     }
@@ -88,8 +89,8 @@ internal static class Program
             var mappedDistilleries = distilleries.Select(mapper.Map);
 
             dbContext.Set<DistilleryEntity>().AddRange(mappedDistilleries);
-            await dbContext.SaveChangesAsync();
         }
+        await dbContext.SaveChangesAsync();
 
         var cacheService = scope.ServiceProvider.GetRequiredService<IDistilleryNameCacheService>();
         await cacheService.InitializeFromDatabaseAsync(dbContext);

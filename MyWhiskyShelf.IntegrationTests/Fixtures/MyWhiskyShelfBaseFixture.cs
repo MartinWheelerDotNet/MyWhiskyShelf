@@ -6,20 +6,20 @@ namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 
 public class MyWhiskyShelfBaseFixture : IAsyncLifetime
 {
-    protected bool UseDataSeeding { get; init; }
-
+    protected virtual bool UseDataSeeding => false;
+    
     public DistributedApplication Application { get; private set; } = null!;
 
-    public async Task InitializeAsync()
+    public virtual async Task InitializeAsync()
     {
         var appHost = await CreateDefaultAppHost();
         Application = await appHost.BuildAsync();
         Application.Start();
-
+        
         await WaitForRunningState(Application, "WebApi");
     }
 
-    public async Task DisposeAsync()
+    public virtual async Task DisposeAsync()
     {
         await Application.DisposeAsync();
     }
