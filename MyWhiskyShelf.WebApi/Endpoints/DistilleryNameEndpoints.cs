@@ -15,16 +15,16 @@ internal static partial class EndpointMappings
     {
         app.MapGet(
                 GetAllDistilleryNameDetailsEndpoint,
-                ([FromServices] IDistilleryReadService distilleryReadService) =>
-                    Results.Ok(distilleryReadService.GetDistilleryNames()))
+                ([FromServices] IDistilleryNameCacheService nameCacheService) =>
+                    Results.Ok(nameCacheService.GetAll()))
             .WithName("Get All DistilleryRequest Name Details").Produces<List<DistilleryNameDetails>>()
             .WithTags(DistilleryNameDetailsTag)
             .Produces<List<DistilleryRequest>>();
 
         app.MapGet(
                 SearchForDetailsByNameEndpoint,
-                ([FromServices] IDistilleryReadService distilleryReadService, [FromQuery] string? pattern) =>
-                    Results.Ok(distilleryReadService.SearchByName(pattern!)))
+                ([FromServices] IDistilleryNameCacheService nameCacheService, [FromQuery] string? pattern) =>
+                    Results.Ok(nameCacheService.Search(pattern!)))
             .WithName("Search by Query Pattern")
             .WithTags(DistilleryNameDetailsTag)
             .RequiresNonEmptyQueryParameter("pattern")

@@ -1,12 +1,14 @@
 using Aspire.Hosting;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Hosting;
 using Projects;
 
 namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 
-public class MyWhiskyShelfBaseFixture : IAsyncLifetime
+[UsedImplicitly]
+public class MyWhiskyShelfFixture : IAsyncLifetime
 {
-    protected virtual bool UseDataSeeding => false;
+    protected virtual bool UseDataSeeding => true;
     
     public DistributedApplication Application { get; private set; } = null!;
 

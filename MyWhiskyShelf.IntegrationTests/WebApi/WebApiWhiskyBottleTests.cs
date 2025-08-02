@@ -7,8 +7,8 @@ using Xunit.Sdk;
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
 [Collection("AspireTests")]
-public class WebApiWhiskyBottleTests(MyWhiskyShelfBaseFixtureEmptyDb fixture)
-    : IClassFixture<MyWhiskyShelfBaseFixtureEmptyDb>
+public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
+    : IClassFixture<MyWhiskyShelfFixture>
 {
     private const string WebApiResourceName = "WebApi";
 

@@ -140,7 +140,7 @@ public class DistilleryWriteServiceTests
 
         var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
         mockDistilleryNameCacheService
-            .Setup(nameCacheService => nameCacheService.Remove(DistilleryRequestTestData.Aberargie.DistilleryName))
+            .Setup(nameCacheService => nameCacheService.Remove(DistilleryEntityTestData.Aberargie.Id))
             .Verifiable(Times.Once);
 
         var distilleryWriteService = new DistilleryWriteService(

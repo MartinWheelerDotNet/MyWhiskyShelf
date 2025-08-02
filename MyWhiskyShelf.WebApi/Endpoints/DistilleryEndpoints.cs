@@ -8,24 +8,25 @@ namespace MyWhiskyShelf.WebApi.Endpoints;
 
 internal static partial class EndpointMappings
 {
-    private const string GetDistilleryByNameEndpoint = "/distilleries/{distilleryName}";
+    private const string GetDistilleryByIdEndpoint = "/distilleries/{identifier:guid}";
     private const string DistilleriesEndpoint = "/distilleries";
     private const string DistilleriesTag = "Distilleries";
 
     public static void MapDistilleryEndpoints(this WebApplication app)
     {
         app.MapGet(
-                GetDistilleryByNameEndpoint,
-                async ([FromServices] IDistilleryReadService distilleryReadService, string distilleryName) =>
+                GetDistilleryByIdEndpoint,
+                async ([FromServices] IDistilleryReadService distilleryReadService, 
+                    [FromRoute] Guid identifier) =>
                 {
-                    var distillery = await distilleryReadService.GetDistilleryByNameAsync(distilleryName);
+                    var distillery = await distilleryReadService.GetDistilleryByIdAsync(identifier);
                     return distillery is null
                         ? Results.NotFound()
                         : Results.Ok(distillery);
                 })
             .WithName("Get DistilleryRequest By Name")
             .WithTags(DistilleriesTag)
-            .RequiresNonEmptyRouteParameter("distilleryName")
+            .RequiresNonEmptyRouteParameter("identifier")
             .Produces<DistilleryRequest>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status404NotFound);
         

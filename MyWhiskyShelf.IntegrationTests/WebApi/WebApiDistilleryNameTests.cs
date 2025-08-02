@@ -12,8 +12,8 @@ public static class WebApiDistilleryNameTests
     private const string WebApiResourceName = "WebApi";
 
     [Collection("AspireTests")]
-    public class WebApiSeededDataTests(MyWhiskyShelfBaseFixtureSeededDb fixture)
-        : IClassFixture<MyWhiskyShelfBaseFixtureSeededDb>
+    public class WebApiSeededDataTests(MyWhiskyShelfFixture fixture)
+        : IClassFixture<MyWhiskyShelfFixture>
     {
         [Fact]
         public async Task When_GettingAllDistilleryNamesDetails_Expect_AllDistilleriesNameDetailsToBeReturned()
@@ -125,39 +125,6 @@ public static class WebApiDistilleryNameTests
             Assert.Multiple(
                 () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
                 () => Assert.Equivalent(expectedProblem, problemResponse));
-        }
-    }
-
-    [Collection("AspireTests")]
-    public class WebApiNotSeededDataTests(MyWhiskyShelfBaseFixtureEmptyDb fixture)
-        : IClassFixture<MyWhiskyShelfBaseFixtureEmptyDb>
-    {
-        [Fact]
-        public async Task When_RequestingAllDistilleryNames_Expect_EmptyListIsReturned()
-        {
-            const string endpointName = "/distilleries/names";
-
-            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.GetAsync(endpointName);
-            var distilleries = await response.Content.ReadFromJsonAsync<List<string>>();
-
-            Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.Equal([], distilleries));
-        }
-
-        [Fact]
-        public async Task When_Searching_Expect_EmptyListIsReturned()
-        {
-            const string endpoint = "/distilleries/name/search?pattern=aber";
-
-            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.GetAsync(endpoint);
-            var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
-
-            Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.Empty(distilleryNames!));
         }
     }
 }

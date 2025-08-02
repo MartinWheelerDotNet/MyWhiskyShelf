@@ -37,7 +37,7 @@ public class DistilleryWriteService(
 
         if (distilleryEntity == null) return false;
 
-        distilleryNameCacheService.Remove(distilleryEntity.DistilleryName);
+        distilleryNameCacheService.Remove(distilleryEntity.Id);
         dbContext.Distilleries.Remove(distilleryEntity);
         await dbContext.SaveChangesAsync();
 
