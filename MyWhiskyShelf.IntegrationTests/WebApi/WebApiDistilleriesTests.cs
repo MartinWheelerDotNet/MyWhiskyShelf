@@ -21,39 +21,14 @@ public static class WebApiDistilleriesTests
         : IClassFixture<MyWhiskyShelfBaseFixtureSeededDb>
     {
         [Fact]
-        public async Task When_RequestingAllDistilleryNames_Expect_AllTestDistilleriesNamesToBeReturned()
-        {
-            const string endpoint = "/distilleries/names";
-            List<string> expectedDistilleryNames =
-            [
-                DistilleryResponseTestData.Aberargie.DistilleryName,
-                DistilleryResponseTestData.Aberfeldy.DistilleryName,
-                DistilleryResponseTestData.Aberlour.DistilleryName
-            ];
-
-            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.GetAsync(endpoint);
-            var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
-
-            Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.All(distilleryNames!, details =>
-                {
-                    var (distilleryName, identifier) = details;
-                    Assert.Contains(distilleryName, expectedDistilleryNames);
-                    Assert.NotEqual(Guid.Empty, identifier);
-                }));
-        }
-
-        [Fact]
         public async Task When_RequestingAllDistilleries_Expect_AllDistilleriesReturned()
         {
             const string endpoint = "/distilleries";
             List<DistilleryResponse> expectedDistilleries =
             [
-                DistilleryResponseTestData.Aberargie with { Id = Guid.Empty },
-                DistilleryResponseTestData.Aberfeldy with { Id = Guid.Empty },
-                DistilleryResponseTestData.Aberlour with { Id = Guid.Empty }
+                DistilleryResponseTestData.Aberargie,
+                DistilleryResponseTestData.Aberfeldy,
+                DistilleryResponseTestData.Aberlour
             ];
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
@@ -83,98 +58,11 @@ public static class WebApiDistilleriesTests
         }
 
         [Fact]
-        public async Task When_SearchingAndNoMatchesFound_Expect_EmptyList()
-        {
-            const string endpoint = "/distilleries/name/search?pattern=anything";
-
-            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.GetAsync(endpoint);
-            var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
-
-
-            Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.Empty(distilleryNames!));
-        }
-
-        [Fact]
-        public async Task When_SearchingExactMatchFound_Expect_ListWithJustThatDistilleryNameDetails()
-        {
-            var endpoint = $"/distilleries/name/search?pattern={DistilleryRequestTestData.Aberfeldy.DistilleryName}";
-
-            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.GetAsync(endpoint);
-            var distilleryNameDetails = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
-
-            Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.Single(distilleryNameDetails!),
-                () => Assert.Equal(DistilleryRequestTestData.Aberfeldy.DistilleryName,
-                    distilleryNameDetails!.First().DistilleryName),
-                () => Assert.IsType<Guid>(distilleryNameDetails!.First().Identifier));
-        }
-
-        [Fact]
-        public async Task When_SearchingAndPatternIsNotProvided_Expect_BadRequestWithValidationProblemDetails()
-        {
-            const string endpoint = "/distilleries/name/search";
-
-            var expectedProblem = new ValidationProblemDetails
-            {
-                Status = StatusCodes.Status400BadRequest,
-                Title = "Missing or empty query parameters",
-                Type = "urn:mywhiskyshelf:validation-errors:query-parameter",
-                Errors = new Dictionary<string, string[]>
-                {
-                    { "pattern", ["Query parameter 'pattern' is required and cannot be empty."] }
-                }
-            };
-
-            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.GetAsync(endpoint);
-            var problemResponse = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-
-            Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
-                () => Assert.Equivalent(expectedProblem, problemResponse));
-        }
-
-        [Theory]
-        [InlineData(" ")]
-        [InlineData("   ")]
-        [InlineData("    ")]
-        [InlineData("\t \n")]
-        public async Task When_SearchingAndPatternIsEmptyOrWhiteSpace_Expect_BadRequestProblemResponse(
-            string pattern)
-        {
-            var endpoint = $"/distilleries/name/search?pattern={pattern}";
-
-            var expectedProblem = new ValidationProblemDetails
-            {
-                Status = StatusCodes.Status400BadRequest,
-                Title = "Missing or empty query parameters",
-                Type = "urn:mywhiskyshelf:validation-errors:query-parameter",
-                Errors = new Dictionary<string, string[]>
-                {
-                    { "pattern", ["Query parameter 'pattern' is required and cannot be empty."] }
-                }
-            };
-
-            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.GetAsync(endpoint);
-            var problemResponse = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-
-            Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
-                () => Assert.Equivalent(expectedProblem, problemResponse));
-        }
-
-        [Fact]
         public async Task When_AddingDistilleryAndDistilleryDoesNotExist_Expect_CreatedWithLocationHeaderSet()
         {
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.PostAsJsonAsync(
-                "/distilleries/add",
+                "/distilleries",
                 DistilleryRequestTestData.Aberargie with { DistilleryName = "NewDistillery" });
             await httpClient.DeleteAsync("/distilleries/remove/NewDistillery");
 
@@ -186,10 +74,13 @@ public static class WebApiDistilleriesTests
         public async Task When_RemovingDistilleryAndDistilleryExists_Expect_OkResponse()
         {
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.DeleteAsync("/distilleries/remove/Aberargie");
-
-            await httpClient.PostAsJsonAsync("/distilleries/add/", DistilleryRequestTestData.Aberargie);
-
+            
+            await httpClient.PostAsJsonAsync(
+                "/distilleries",
+                DistilleryRequestTestData.Aberargie with { DistilleryName = "NewDistilleryToRemove" });
+            
+            var response = await httpClient.DeleteAsync("/distilleries/remove/NewDistilleryToRemove");
+            
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
@@ -218,13 +109,12 @@ public static class WebApiDistilleriesTests
         public async Task
             When_AddingDistilleryAndNameContainsSpecialCharacters_Expect_CreatedWithUrlEncodedLocationHeaderSet()
         {
-            const string endpoint = "/distilleries/add";
+            const string endpoint = "/distilleries";
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.PostAsJsonAsync(
                 endpoint,
                 DistilleryRequestTestData.Aberargie with { DistilleryName = "Burn O'Bennie" });
-
 
             await httpClient.DeleteAsync("/distilleries/remove/Burn%20O%27Bennie");
 
@@ -237,20 +127,6 @@ public static class WebApiDistilleriesTests
     public class WebApiNotSeededDataTests(MyWhiskyShelfBaseFixtureEmptyDb fixture)
         : IClassFixture<MyWhiskyShelfBaseFixtureEmptyDb>
     {
-        [Fact]
-        public async Task When_RequestingAllDistilleryNames_Expect_EmptyListIsReturned()
-        {
-            const string endpointName = "/distilleries/names";
-
-            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.GetAsync(endpointName);
-            var distilleries = await response.Content.ReadFromJsonAsync<List<string>>();
-
-            Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.Equal([], distilleries));
-        }
-
         [Fact]
         public async Task When_RequestingAllDistilleries_Expect_EmptyListIsReturned()
         {
@@ -274,20 +150,6 @@ public static class WebApiDistilleriesTests
             var response = await httpClient.GetAsync(endpoint);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        }
-
-        [Fact]
-        public async Task When_Searching_Expect_EmptyListIsReturned()
-        {
-            const string endpoint = "/distilleries/name/search?pattern=anything";
-
-            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.GetAsync(endpoint);
-            var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
-
-            Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.Empty(distilleryNames!));
         }
     }
 }

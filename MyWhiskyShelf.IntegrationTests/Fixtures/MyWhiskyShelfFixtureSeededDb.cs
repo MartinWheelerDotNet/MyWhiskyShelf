@@ -5,8 +5,5 @@ namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 [UsedImplicitly]
 public class MyWhiskyShelfBaseFixtureSeededDb : MyWhiskyShelfBaseFixture
 {
-    public MyWhiskyShelfBaseFixtureSeededDb()
-    {
-        UseDataSeeding = true;
-    }
+    protected override bool UseDataSeeding => true;
 }

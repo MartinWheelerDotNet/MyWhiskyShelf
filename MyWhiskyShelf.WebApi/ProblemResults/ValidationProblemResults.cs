@@ -1,6 +1,6 @@
 using MyWhiskyShelf.Core.Models;
 
-namespace MyWhiskyShelf.WebApi.Endpoints;
+namespace MyWhiskyShelf.WebApi.ProblemResults;
 
 public static class ValidationProblemResults
 {
