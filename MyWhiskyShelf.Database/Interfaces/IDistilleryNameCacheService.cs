@@ -10,6 +10,6 @@ public interface IDistilleryNameCacheService
     IReadOnlyList<DistilleryNameDetails> GetAll();
     bool TryGet(string distilleryName, [NotNullWhen(true)] out DistilleryNameDetails? distilleryNameDetails);
     void Add(string distilleryName, Guid identifier);
-    void Remove(string distilleryName);
+    void Remove(Guid identifier);
     IReadOnlyList<DistilleryNameDetails> Search(string queryPattern);
 }

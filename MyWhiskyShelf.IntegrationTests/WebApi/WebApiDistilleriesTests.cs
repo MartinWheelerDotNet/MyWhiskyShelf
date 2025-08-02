@@ -17,8 +17,8 @@ public static class WebApiDistilleriesTests
     }
 
     [Collection("AspireTests")]
-    public class WebApiSeededDataTests(MyWhiskyShelfBaseFixtureSeededDb fixture)
-        : IClassFixture<MyWhiskyShelfBaseFixtureSeededDb>
+    public class WebApiSeededDataTests(MyWhiskyShelfFixture fixture)
+        : IClassFixture<MyWhiskyShelfFixture>
     {
         [Fact]
         public async Task When_RequestingAllDistilleries_Expect_AllDistilleriesReturned()
@@ -44,17 +44,34 @@ public static class WebApiDistilleriesTests
         }
 
         [Fact]
-        public async Task When_RequestingDistilleryByName_Expect_CorrectDistilleryReturned()
+        public async Task When_RequestingDistilleryByIdAndDistilleryExists_Expect_CorrectDistilleryReturned()
         {
-            const string endpoint = "/distilleries/Aberfeldy";
+            const string detailsEndpoint = "/distilleries/name/search?pattern=Aberfeldy";
+            
+            // get the ID of an existing distillery.
+            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+            var detailsResponse = await httpClient.GetAsync(detailsEndpoint);
+            var distilleryDetails = await detailsResponse.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
+            
+            var distilleryEndpoint = $"/distilleries/{distilleryDetails!.First().Identifier}";
+            
+            var distilleryResponse = await httpClient.GetAsync(distilleryEndpoint);
+            var distillery = await distilleryResponse.Content.ReadFromJsonAsync<DistilleryResponse>();
+
+            Assert.Multiple(
+                () => Assert.Equal(HttpStatusCode.OK, distilleryResponse.StatusCode),
+                () => Assert.True(EqualsIgnoringId(DistilleryResponseTestData.Aberfeldy, distillery!)));
+        }
+
+        [Fact]
+        public async Task When_RequestingDistilleryByIdAndDistilleryDoesNotExist_Expect_NotFoundResponse()
+        {
+            var endpoint = $"/distilleries/{Guid.NewGuid()}";
 
             using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
             var response = await httpClient.GetAsync(endpoint);
-            var distillery = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
 
-            Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.True(EqualsIgnoringId(DistilleryResponseTestData.Aberfeldy, distillery!)));
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
@@ -120,36 +137,6 @@ public static class WebApiDistilleriesTests
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal("/distilleries/Burn%20O%27Bennie", response.Headers.Location!.ToString());
-        }
-    }
-
-    [Collection("AspireTests")]
-    public class WebApiNotSeededDataTests(MyWhiskyShelfBaseFixtureEmptyDb fixture)
-        : IClassFixture<MyWhiskyShelfBaseFixtureEmptyDb>
-    {
-        [Fact]
-        public async Task When_RequestingAllDistilleries_Expect_EmptyListIsReturned()
-        {
-            const string endpoint = "/distilleries";
-
-            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.GetAsync(endpoint);
-            var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
-
-            Assert.Multiple(
-                () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-                () => Assert.Equal([], distilleries));
-        }
-
-        [Fact]
-        public async Task When_RequestingDistilleryByName_Expect_NotFoundResponse()
-        {
-            const string endpoint = "/distilleries/Aberfeldy";
-
-            using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-            var response = await httpClient.GetAsync(endpoint);
-
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

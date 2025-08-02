@@ -310,7 +310,7 @@ public class DistilleryNameCacheServiceTests
         var distilleryNameCacheService = new DistilleryNameCacheService();
         await distilleryNameCacheService.InitializeFromDatabaseAsync(dbContext);
 
-        distilleryNameCacheService.Remove(DistilleryEntityTestData.Aberargie.DistilleryName);
+        distilleryNameCacheService.Remove(DistilleryEntityTestData.Aberargie.Id);
         var distilleryDetails = distilleryNameCacheService.GetAll();
 
         Assert.DoesNotContain(
@@ -330,7 +330,7 @@ public class DistilleryNameCacheServiceTests
         var distilleryNameCacheService = new DistilleryNameCacheService();
         await distilleryNameCacheService.InitializeFromDatabaseAsync(dbContext);
 
-        distilleryNameCacheService.Remove(DistilleryEntityTestData.Bunnahabhain.DistilleryName);
+        distilleryNameCacheService.Remove(DistilleryEntityTestData.Bunnahabhain.Id);
         var distilleryDetails = distilleryNameCacheService.GetAll();
 
         Assert.Equal(expectedDistilleryDetails, distilleryDetails);
