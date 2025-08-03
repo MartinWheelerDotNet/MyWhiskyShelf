@@ -50,7 +50,7 @@ public static class HostApplicationBuilderExtensions
     {
         builder.Services
             .AddSingleton<IMapper<DistilleryEntity, DistilleryResponse>, DistilleryEntityToResponseMapper>()
-            .AddSingleton<IMapper<DistilleryRequest, DistilleryEntity>, DistilleryRequestToEntityMapper>();
+            .AddSingleton<IMapper<CreateDistilleryRequest, DistilleryEntity>, DistilleryRequestToEntityMapper>();
         builder.Services
             .AddSingleton<IMapper<WhiskyBottleEntity, WhiskyBottleResponse>, WhiskyBottleEntityToResponseMapper>()
             .AddSingleton<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>, WhiskyBottleRequestToEntityMapper>();

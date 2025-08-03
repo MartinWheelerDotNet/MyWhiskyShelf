@@ -8,7 +8,7 @@ public class JsonFileLoader(ILogger<JsonFileLoader> logger) : IJsonFileLoader
 {
     private const string DistilleryPrefix = "when loading distillery data.";
 
-    public async Task<List<DistilleryRequest>> GetDistilleriesFromJsonAsync(string filePath)
+    public async Task<List<CreateDistilleryRequest>> GetDistilleriesFromJsonAsync(string filePath)
     {
         if (!File.Exists(filePath)) throw new FileNotFoundException($"'{filePath}' not found {DistilleryPrefix}");
 
@@ -18,7 +18,7 @@ public class JsonFileLoader(ILogger<JsonFileLoader> logger) : IJsonFileLoader
         try
         {
             await using var fileStream = File.OpenRead(filePath);
-            var distilleries = await JsonSerializer.DeserializeAsync<List<DistilleryRequest>>(fileStream) ?? [];
+            var distilleries = await JsonSerializer.DeserializeAsync<List<CreateDistilleryRequest>>(fileStream) ?? [];
 
             logger.LogInformation("{Count} distilleries loaded", distilleries.Count);
             return distilleries;

@@ -6,7 +6,7 @@ namespace MyWhiskyShelf.TestHelpers;
 public static class DatabaseSeeding
 {
     public static async Task<List<Guid>> AddDistilleries(HttpClient httpClient,
-        params DistilleryRequest[] distilleryRequests)
+        params CreateDistilleryRequest[] distilleryRequests)
     {
         const string addEndpoint = "/distilleries";
         var createdIds = new List<Guid>();
