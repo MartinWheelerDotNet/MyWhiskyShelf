@@ -8,16 +8,17 @@ namespace MyWhiskyShelf.Database.Services;
 public class DistilleryWriteService(
     MyWhiskyShelfDbContext dbContext,
     IDistilleryNameCacheService distilleryNameCacheService,
-    IMapper<DistilleryRequest, DistilleryEntity> mapper) : IDistilleryWriteService
+    IMapper<CreateDistilleryRequest, DistilleryEntity> mapper) : IDistilleryWriteService
 {
-    public async Task<(bool hasBeenAdded, Guid? identifier)> TryAddDistilleryAsync(DistilleryRequest distilleryRequest)
+    public async Task<(bool hasBeenAdded, Guid? identifier)> TryAddDistilleryAsync(
+        CreateDistilleryRequest createDistilleryRequest)
     {
-        if (distilleryNameCacheService.TryGet(distilleryRequest.DistilleryName, out _))
+        if (distilleryNameCacheService.TryGet(createDistilleryRequest.DistilleryName, out _))
             return (false, null);
 
         try
         {
-            var entity = mapper.Map(distilleryRequest);
+            var entity = mapper.Map(createDistilleryRequest);
             dbContext.Distilleries.Add(entity);
             distilleryNameCacheService.Add(entity.DistilleryName, entity.Id);
             await dbContext.SaveChangesAsync();

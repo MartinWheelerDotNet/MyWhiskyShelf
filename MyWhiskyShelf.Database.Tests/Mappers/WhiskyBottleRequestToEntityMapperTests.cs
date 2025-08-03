@@ -45,7 +45,7 @@ public class WhiskyBottleRequestToEntityMapperTests
     [Fact]
     public void When_MapToEntityWithDistilleryNameInCache_Expect_EntityWithDistilleryIdSet()
     {
-        var distilleryNameDetails = new DistilleryNameDetails("A DistilleryRequest Name", Guid.AllBitsSet);
+        var distilleryNameDetails = new DistilleryNameDetails("A Distillery Name", Guid.AllBitsSet);
         _mockDistilleryNameCacheService
             .Setup(nameCacheService => nameCacheService.TryGet(
                 WhiskyBottleRequestTestData.AllValuesPopulated.DistilleryName,

@@ -8,9 +8,9 @@ public static class WhiskyBottleResponseTestData
     {
         Id = Guid.Parse("b2901307-8840-45e6-8f4a-a8537d1e5b9a"),
         Name = "All Values Populated",
-        DistilleryName = "A DistilleryRequest Name",
+        DistilleryName = "A Distillery Name",
         Status = "Unopened",
-        Bottler = "DistilleryRequest",
+        Bottler = "Distillery",
         DateBottled = new DateOnly(2022, 1, 1),
         YearBottled = 2022,
         BatchNumber = 1000,

@@ -8,9 +8,9 @@ public static class WhiskyBottleRequestTestData
     public static WhiskyBottleRequest AllValuesPopulated => new()
     {
         Name = "All Values Populated",
-        DistilleryName = "A DistilleryRequest Name",
+        DistilleryName = "A Distillery Name",
         Status = BottleStatus.Unopened,
-        Bottler = "DistilleryRequest",
+        Bottler = "Distillery",
         DateBottled = new DateOnly(2022, 1, 1),
         YearBottled = 2022,
         BatchNumber = 1000,

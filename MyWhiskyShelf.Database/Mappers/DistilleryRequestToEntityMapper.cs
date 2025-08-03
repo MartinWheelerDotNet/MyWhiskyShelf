@@ -5,20 +5,20 @@ using MyWhiskyShelf.Database.Interfaces;
 
 namespace MyWhiskyShelf.Database.Mappers;
 
-public class DistilleryRequestToEntityMapper : IMapper<DistilleryRequest, DistilleryEntity>
+public class DistilleryRequestToEntityMapper : IMapper<CreateDistilleryRequest, DistilleryEntity>
 {
-    public DistilleryEntity Map(DistilleryRequest distilleryRequest)
+    public DistilleryEntity Map(CreateDistilleryRequest createDistilleryRequest)
     {
         return new DistilleryEntity
         {
-            DistilleryName = distilleryRequest.DistilleryName,
-            Location = distilleryRequest.Location,
-            Region = distilleryRequest.Region,
-            Founded = distilleryRequest.Founded,
-            Owner = distilleryRequest.Owner,
-            DistilleryType = distilleryRequest.DistilleryType,
-            EncodedFlavourProfile = FlavourProfileEncoder.Encode(distilleryRequest.FlavourProfile),
-            Active = distilleryRequest.Active
+            DistilleryName = createDistilleryRequest.DistilleryName,
+            Location = createDistilleryRequest.Location,
+            Region = createDistilleryRequest.Region,
+            Founded = createDistilleryRequest.Founded,
+            Owner = createDistilleryRequest.Owner,
+            DistilleryType = createDistilleryRequest.DistilleryType,
+            EncodedFlavourProfile = FlavourProfileEncoder.Encode(createDistilleryRequest.FlavourProfile),
+            Active = createDistilleryRequest.Active
         };
     }
 }

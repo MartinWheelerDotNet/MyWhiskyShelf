@@ -4,7 +4,7 @@ namespace MyWhiskyShelf.WebApi.ProblemResults;
 
 internal static class ProblemResults
 {
-    #region DistilleryRequest Problem Results
+    #region CreateDistilleryRequest Problem Results
 
     public static IResult DistilleryAlreadyExists(string distilleryName, HttpContext httpContext)
     {

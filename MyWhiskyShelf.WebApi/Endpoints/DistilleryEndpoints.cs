@@ -14,6 +14,28 @@ internal static partial class EndpointMappings
 
     public static void MapDistilleryEndpoints(this WebApplication app)
     {
+        app.MapPost(
+                DistilleriesEndpoint,
+                async (
+                    [FromServices] IDistilleryWriteService distilleryWriteService,
+                    [FromBody] CreateDistilleryRequest createDistilleryRequest,
+                    HttpContext httpContext) =>
+                {
+                    var (hasBeenAdded, identifier) =
+                        await distilleryWriteService.TryAddDistilleryAsync(createDistilleryRequest);
+
+                    return hasBeenAdded
+                        ? Results.Created($"{DistilleriesEndpoint}/{identifier}", null)
+                        : ProblemResults.ProblemResults.DistilleryAlreadyExists(
+                            createDistilleryRequest.DistilleryName,
+                            httpContext);
+                })
+            .WithName("Create Distillery")
+            .WithTags(DistilleriesTag)
+            .Accepts<CreateDistilleryRequest>(MediaTypeNames.Application.Json)
+            .Produces(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status409Conflict);
+        
         app.MapGet(
                 GetDistilleryByIdEndpoint,
                 async ([FromServices] IDistilleryReadService distilleryReadService,
@@ -24,10 +46,10 @@ internal static partial class EndpointMappings
                         ? Results.NotFound()
                         : Results.Ok(distillery);
                 })
-            .WithName("Get DistilleryRequest By Name")
+            .WithName("Get Distillery")
             .WithTags(DistilleriesTag)
             .RequiresNonEmptyRouteParameter("identifier")
-            .Produces<DistilleryRequest>(StatusCodes.Status201Created)
+            .Produces<CreateDistilleryRequest>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status404NotFound);
 
         app.MapGet(
@@ -39,29 +61,9 @@ internal static partial class EndpointMappings
                 })
             .WithName("Get All Distilleries")
             .WithTags(DistilleriesTag)
-            .Produces<List<DistilleryRequest>>();
+            .Produces<List<CreateDistilleryRequest>>();
 
-        app.MapPost(
-                DistilleriesEndpoint,
-                async (
-                    [FromServices] IDistilleryWriteService distilleryWriteService,
-                    [FromBody] DistilleryRequest distilleryRequest,
-                    HttpContext httpContext) =>
-                {
-                    var (hasBeenAdded, identifier) =
-                        await distilleryWriteService.TryAddDistilleryAsync(distilleryRequest);
-
-                    return hasBeenAdded
-                        ? Results.Created($"{DistilleriesEndpoint}/{identifier}", null)
-                        : ProblemResults.ProblemResults.DistilleryAlreadyExists(
-                            distilleryRequest.DistilleryName,
-                            httpContext);
-                })
-            .WithName("Add DistilleryRequest")
-            .WithTags(DistilleriesTag)
-            .Accepts<DistilleryRequest>(MediaTypeNames.Application.Json)
-            .Produces(StatusCodes.Status201Created)
-            .ProducesProblem(StatusCodes.Status409Conflict);
+        
 
         app.MapDelete(
                 "/distilleries/{identifier:guid}",
@@ -72,7 +74,7 @@ internal static partial class EndpointMappings
                     await distilleryWriteService.TryRemoveDistilleryAsync(identifier)
                         ? Results.Ok()
                         : ProblemResults.ProblemResults.DistilleryNotFound(identifier, httpContext))
-            .WithName("Remove DistilleryRequest")
+            .WithName("Delete Distillery")
             .WithTags(DistilleriesTag)
             .RequiresNonEmptyRouteParameter("identifier")
             .Produces(StatusCodes.Status200OK)

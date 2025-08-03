@@ -17,9 +17,9 @@ internal static partial class EndpointMappings
                 GetAllDistilleryNameDetailsEndpoint,
                 ([FromServices] IDistilleryNameCacheService nameCacheService) =>
                     Results.Ok(nameCacheService.GetAll()))
-            .WithName("Get All DistilleryRequest Name Details").Produces<List<DistilleryNameDetails>>()
+            .WithName("Get All Distillery Name Details").Produces<List<DistilleryNameDetails>>()
             .WithTags(DistilleryNameDetailsTag)
-            .Produces<List<DistilleryRequest>>();
+            .Produces<List<CreateDistilleryRequest>>();
 
         app.MapGet(
                 SearchForDetailsByNameEndpoint,
