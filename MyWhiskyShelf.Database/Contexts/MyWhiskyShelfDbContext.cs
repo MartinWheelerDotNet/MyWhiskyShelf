@@ -9,6 +9,6 @@ namespace MyWhiskyShelf.Database.Contexts;
 public class MyWhiskyShelfDbContext(
     DbContextOptions<MyWhiskyShelfDbContext> options) : DbContext(options)
 {
-    public DbSet<DistilleryEntity> Distilleries { get; set; }
-    public DbSet<WhiskyBottleEntity> WhiskyBottles { get; set; }
+    internal DbSet<DistilleryEntity> Distilleries { get; set; }
+    internal DbSet<WhiskyBottleEntity> WhiskyBottles { get; set; }
 }

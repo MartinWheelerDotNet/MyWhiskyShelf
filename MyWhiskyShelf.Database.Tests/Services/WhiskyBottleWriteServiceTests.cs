@@ -59,8 +59,8 @@ public class WhiskyBottleWriteServiceTests
     [InlineData(typeof(Exception))]
     public async Task When_AddWhiskyBottleAndDatabaseThrowsAnException_Expect_ReturnsFalse(Type exceptionType)
     {
-        await using var dbContext = MyWhiskyShelfContextBuilder
-            .CreateFailingDbContextAsync(exceptionType);
+        await using var dbContext = await MyWhiskyShelfContextBuilder
+            .CreateFailingDbContextAsync<WhiskyBottleEntity>(exceptionType);
 
         var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>>();
         mockWhiskyBottleMapper
@@ -71,5 +71,52 @@ public class WhiskyBottleWriteServiceTests
         var response = await whiskyBottleService.TryAddAsync(WhiskyBottleRequestTestData.AllValuesPopulated);
 
         Assert.False(response.hasBeenAdded);
+    }
+
+    [Fact]
+    public async Task When_DeleteWhiskyBottleAndWhiskyBottleDoesNotExist_ExpectReturnsFalse()
+    {
+        await using var dbContext = await MyWhiskyShelfContextBuilder.CreateDbContextAsync<WhiskyBottleEntity>();
+        var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>>();
+
+        var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
+        var isDeleted = await whiskyBottleService.TryDeleteAsync(WhiskyBottleEntityTestData.AllValuesPopulated.Id);
+
+        Assert.False(isDeleted);
+    }
+    
+    [Fact]
+    public async Task When_DeleteWhiskyBottleAndWhiskyBottleExists_ExpectWhiskyBottleIsDeletedFromDatabase()
+    {
+        await using var dbContext = await MyWhiskyShelfContextBuilder
+            .CreateDbContextAsync(WhiskyBottleEntityTestData.AllValuesPopulated);
+        var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>>();
+
+        var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
+        var isDeleted = await whiskyBottleService.TryDeleteAsync(WhiskyBottleEntityTestData.AllValuesPopulated.Id);
+
+        var doesEntityExist = await dbContext
+            .Set<WhiskyBottleEntity>()
+            .FindAsync(WhiskyBottleEntityTestData.AllValuesPopulated.Id);
+
+        Assert.Multiple(
+            () => Assert.True(isDeleted),
+            () => Assert.Null(doesEntityExist));
+    }
+    
+    [Theory]
+    [InlineData(typeof(DbUpdateException))]
+    [InlineData(typeof(DbUpdateConcurrencyException))]
+    [InlineData(typeof(Exception))]
+    public async Task When_DeleteWhiskyBottleAndDatabaseThrowsAnException_Expect_ReturnsFalse(Type exceptionType)
+    {
+        await using var dbContext = await MyWhiskyShelfContextBuilder
+            .CreateFailingDbContextAsync(exceptionType, WhiskyBottleEntityTestData.AllValuesPopulated);
+        var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>>();
+       
+        var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
+        var hasBeenDeleted = await whiskyBottleService.TryDeleteAsync(WhiskyBottleEntityTestData.AllValuesPopulated.Id);
+
+        Assert.False(hasBeenDeleted);
     }
 }
