@@ -17,12 +17,29 @@ public class WhiskyBottleWriteService(
         {
             dbContext.WhiskyBottles.Add(whiskyBottleEntity);
             await dbContext.SaveChangesAsync();
+            return (true, whiskyBottleEntity.Id);
         }
         catch
         {
             return (false, null);
         }
+    }
 
-        return (true, whiskyBottleEntity.Id);
+    public async Task<bool> TryDeleteAsync(Guid identifier)
+    {
+        var entity = await dbContext.WhiskyBottles.FindAsync(identifier);
+
+        if (entity is null) return false;
+
+        try
+        {
+            dbContext.WhiskyBottles.Remove(entity);
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }
