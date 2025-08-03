@@ -69,7 +69,7 @@ jobs:
         run: dotnet build  ${{ matrix.project }} --configuration Release --no-restore
         
       - name: Setup Dev Credentials
-        run: dotnet dev-certs https
+        run: dotnet dev-certs https --trust
         if: ${{ matrix.name == 'Integration' }}
         
       - name: Run tests
