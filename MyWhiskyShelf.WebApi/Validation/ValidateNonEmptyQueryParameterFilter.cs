@@ -1,4 +1,4 @@
-using MyWhiskyShelf.WebApi.ProblemResults;
+using MyWhiskyShelf.WebApi.ErrorResults;
 
 namespace MyWhiskyShelf.WebApi.Validation;
 

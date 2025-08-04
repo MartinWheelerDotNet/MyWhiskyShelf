@@ -2,13 +2,14 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Interfaces;
+using MyWhiskyShelf.WebApi.ErrorResults;
 using MyWhiskyShelf.WebApi.ExtensionMethods;
 
 namespace MyWhiskyShelf.WebApi.Endpoints;
 
 internal static partial class EndpointMappings
 {
-    private const string GetDistilleryByIdEndpoint = "/distilleries/{identifier:guid}";
+    private const string DistilleryWithRouteIdentifierEndpoint = "/distilleries/{identifier:guid}";
     private const string DistilleriesEndpoint = "/distilleries";
     private const string DistilleriesTag = "Distilleries";
 
@@ -26,7 +27,8 @@ internal static partial class EndpointMappings
 
                     return hasBeenAdded
                         ? Results.Created($"{DistilleriesEndpoint}/{identifier}", null)
-                        : ProblemResults.ProblemResults.DistilleryAlreadyExists(
+                        : ProblemResults.ResourceAlreadyExists(
+                            "distillery",
                             createDistilleryRequest.DistilleryName,
                             httpContext);
                 })
@@ -37,7 +39,7 @@ internal static partial class EndpointMappings
             .ProducesProblem(StatusCodes.Status409Conflict);
         
         app.MapGet(
-                GetDistilleryByIdEndpoint,
+                DistilleryWithRouteIdentifierEndpoint,
                 async ([FromServices] IDistilleryReadService distilleryReadService,
                     [FromRoute] Guid identifier) =>
                 {
@@ -62,18 +64,16 @@ internal static partial class EndpointMappings
             .WithName("Get All Distilleries")
             .WithTags(DistilleriesTag)
             .Produces<List<CreateDistilleryRequest>>();
-
         
-
         app.MapDelete(
-                "/distilleries/{identifier:guid}",
+                DistilleryWithRouteIdentifierEndpoint,
                 async (
                         [FromServices] IDistilleryWriteService distilleryWriteService,
                         [FromRoute] Guid identifier,
                         HttpContext httpContext) =>
                     await distilleryWriteService.TryRemoveDistilleryAsync(identifier)
                         ? Results.Ok()
-                        : ProblemResults.ProblemResults.DistilleryNotFound(identifier, httpContext))
+                        : ProblemResults.ResourceNotFound("distillery", identifier, httpContext))
             .WithName("Delete Distillery")
             .WithTags(DistilleriesTag)
             .RequiresNonEmptyRouteParameter("identifier")

@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 using MyWhiskyShelf.TestHelpers.Data;
@@ -18,8 +19,9 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
 
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
         var postResponse = await httpClient.PostAsJsonAsync(endpoint, WhiskyBottleRequestTestData.AllValuesPopulated);
+        await httpClient.DeleteAsync(postResponse.Headers.Location);
         var parts = postResponse.Headers.Location!.OriginalString.Trim('/').Split("/");
-
+        
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.Created, postResponse.StatusCode),
             () => Assert.Equal("whisky-bottle", parts[0]),
@@ -54,7 +56,43 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
         Assert.Equivalent(expectedValidationProblem, body);
     }
 
-    private static void AssertIsGuidAndNotEmpty(string guidString)
+    [Fact]
+    public async Task When_DeleteWhiskyBottleAndBottleDoesNotExist_Expect_NotFoundProblemDetails()
+    {
+        var id = Guid.NewGuid();
+        var endpoint = $"/whisky-bottle/{id}";
+        var expectedProblem = new ProblemDetails
+        {
+            Type = "urn:mywhiskyshelf:errors:whisky-bottle-does-not-exist",
+            Title = "whisky-bottle does not exist.",
+            Status = StatusCodes.Status404NotFound,
+            Detail = $"Cannot remove whisky-bottle '{id}' as it does not exist.",
+            Instance = $"/whisky-bottle/{id}"
+        };
+
+        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        var response = await httpClient.DeleteAsync(endpoint);
+        var problemResponse = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.NotFound, response.StatusCode),
+            () => Assert.Equivalent(expectedProblem, problemResponse));
+    }
+    
+    [Fact]
+    public async Task When_DeleteWhiskyBottleAndBottleDoesExist_Expect_OkResponse()
+    {
+        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        var createResponse = await httpClient.PostAsJsonAsync(
+            "/whisky-bottle",
+            WhiskyBottleRequestTestData.AllValuesPopulated);
+
+        var response = await httpClient.DeleteAsync(createResponse.Headers.Location);
+        
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+    
+private static void AssertIsGuidAndNotEmpty(string guidString)
     {
         if (!Guid.TryParse(guidString, out var result))
             throw new XunitException($"Expected a valid GUID but got: '{guidString}'");
