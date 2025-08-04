@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Database.Interfaces;
-using MyWhiskyShelf.WebApi.ProblemResults;
+using MyWhiskyShelf.WebApi.ErrorResults;
 
 namespace MyWhiskyShelf.WebApi.Endpoints;
 
 internal static partial class EndpointMappings
 {
     private const string WhiskyBottleEndpoint = "/whisky-bottle";
-    private const string GetByIdEndpoint = "/whisky-bottle/{identifier:guid}";
+    private const string WhiskyBottleWithRouteIdentifierEndpoint = "/whisky-bottle/{identifier:guid}";
     private const string WhiskyBottleTag = "WhiskyBottle";
 
     public static void MapWhiskyBottleEndpoints(this WebApplication app)
     {
         app.MapGet(
-                GetByIdEndpoint,
+                WhiskyBottleWithRouteIdentifierEndpoint,
                 async (
                     [FromServices] IWhiskyBottleReadService whiskyBottleReadService,
                     [FromRoute] Guid identifier) =>
@@ -46,5 +46,20 @@ internal static partial class EndpointMappings
             .WithTags(WhiskyBottleTag)
             .Produces(StatusCodes.Status201Created)
             .ProducesValidationProblem();
+
+        app.MapDelete(
+            WhiskyBottleWithRouteIdentifierEndpoint,
+            async (
+                [FromServices] IWhiskyBottleWriteService whiskyBottleWriteService,
+                [FromRoute] Guid identifier,
+                HttpContext httpContext) =>
+            {
+                var hasBeenDeleted = await whiskyBottleWriteService.TryDeleteAsync(identifier);
+
+                return hasBeenDeleted
+                    ? Results.Ok()
+                    : ProblemResults.ResourceNotFound("whisky-bottle", identifier, httpContext);
+            });
     }
+    
 }
