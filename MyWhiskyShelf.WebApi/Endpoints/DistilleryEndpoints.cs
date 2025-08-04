@@ -37,7 +37,7 @@ internal static partial class EndpointMappings
             .Accepts<CreateDistilleryRequest>(MediaTypeNames.Application.Json)
             .Produces(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status409Conflict);
-        
+
         app.MapGet(
                 DistilleryWithRouteIdentifierEndpoint,
                 async ([FromServices] IDistilleryReadService distilleryReadService,
@@ -64,7 +64,7 @@ internal static partial class EndpointMappings
             .WithName("Get All Distilleries")
             .WithTags(DistilleriesTag)
             .Produces<List<CreateDistilleryRequest>>();
-        
+
         app.MapDelete(
                 DistilleryWithRouteIdentifierEndpoint,
                 async (

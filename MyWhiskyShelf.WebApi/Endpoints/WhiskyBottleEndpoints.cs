@@ -61,5 +61,4 @@ internal static partial class EndpointMappings
                     : ProblemResults.ResourceNotFound("whisky-bottle", identifier, httpContext);
             });
     }
-    
 }

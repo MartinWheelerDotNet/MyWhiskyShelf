@@ -21,7 +21,7 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
         var postResponse = await httpClient.PostAsJsonAsync(endpoint, WhiskyBottleRequestTestData.AllValuesPopulated);
         await httpClient.DeleteAsync(postResponse.Headers.Location);
         var parts = postResponse.Headers.Location!.OriginalString.Trim('/').Split("/");
-        
+
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.Created, postResponse.StatusCode),
             () => Assert.Equal("whisky-bottle", parts[0]),
@@ -73,12 +73,12 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
         var response = await httpClient.DeleteAsync(endpoint);
         var problemResponse = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-        
+
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.NotFound, response.StatusCode),
             () => Assert.Equivalent(expectedProblem, problemResponse));
     }
-    
+
     [Fact]
     public async Task When_DeleteWhiskyBottleAndBottleDoesExist_Expect_OkResponse()
     {
@@ -88,11 +88,11 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
             WhiskyBottleRequestTestData.AllValuesPopulated);
 
         var response = await httpClient.DeleteAsync(createResponse.Headers.Location);
-        
+
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
-    
-private static void AssertIsGuidAndNotEmpty(string guidString)
+
+    private static void AssertIsGuidAndNotEmpty(string guidString)
     {
         if (!Guid.TryParse(guidString, out var result))
             throw new XunitException($"Expected a valid GUID but got: '{guidString}'");
