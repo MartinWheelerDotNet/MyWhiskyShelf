@@ -84,7 +84,7 @@ public class WhiskyBottleWriteServiceTests
 
         Assert.False(isDeleted);
     }
-    
+
     [Fact]
     public async Task When_DeleteWhiskyBottleAndWhiskyBottleExists_ExpectWhiskyBottleIsDeletedFromDatabase()
     {
@@ -103,7 +103,7 @@ public class WhiskyBottleWriteServiceTests
             () => Assert.True(isDeleted),
             () => Assert.Null(doesEntityExist));
     }
-    
+
     [Theory]
     [InlineData(typeof(DbUpdateException))]
     [InlineData(typeof(DbUpdateConcurrencyException))]
@@ -113,7 +113,7 @@ public class WhiskyBottleWriteServiceTests
         await using var dbContext = await MyWhiskyShelfContextBuilder
             .CreateFailingDbContextAsync(exceptionType, WhiskyBottleEntityTestData.AllValuesPopulated);
         var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>>();
-       
+
         var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
         var hasBeenDeleted = await whiskyBottleService.TryDeleteAsync(WhiskyBottleEntityTestData.AllValuesPopulated.Id);
 
