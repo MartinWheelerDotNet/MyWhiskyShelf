@@ -42,4 +42,22 @@ public class WhiskyBottleWriteService(
             return false;
         }
     }
+
+    public async Task<bool> TryUpdateAsync(Guid identifier, WhiskyBottleRequest whiskyBottleRequest)
+    {
+        var existing = await dbContext.WhiskyBottles.FindAsync(identifier);
+        if (existing is null) return false;
+
+        try
+        {
+            var updatedEntity = mapper.Map(whiskyBottleRequest);
+            dbContext.Entry(existing).CurrentValues.SetValues(updatedEntity);
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }
