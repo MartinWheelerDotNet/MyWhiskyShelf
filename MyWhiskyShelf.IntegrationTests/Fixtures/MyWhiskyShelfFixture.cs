@@ -1,6 +1,5 @@
 using Aspire.Hosting;
 using JetBrains.Annotations;
-using Microsoft.Extensions.Hosting;
 using Projects;
 
 namespace MyWhiskyShelf.IntegrationTests.Fixtures;
