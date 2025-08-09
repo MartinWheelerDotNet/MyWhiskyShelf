@@ -15,11 +15,14 @@ public class WhiskyBottleRequestToEntityMapperTests
     [Fact]
     public void When_MapToEntityWithAllValuesPopulated_Expect_EntityWithAllValuesPopulated()
     {
+        var expectedWhiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
+        expectedWhiskyBottleEntity.Id = Guid.Empty;
+        
         var whiskyBottleMapper = new WhiskyBottleRequestToEntityMapper(_mockDistilleryNameCacheService.Object);
 
         var whiskyBottleEntity = whiskyBottleMapper.Map(WhiskyBottleRequestTestData.AllValuesPopulated);
 
-        Assert.Equal(WhiskyBottleEntityTestData.AllValuesPopulated with { Id = Guid.Empty }, whiskyBottleEntity);
+        Assert.Equivalent(expectedWhiskyBottleEntity, whiskyBottleEntity);
     }
 
     [Fact]

@@ -20,7 +20,7 @@ public class WhiskyBottleReadServiceTests
         var mockRequestToEntityMapper = new Mock<IMapper<WhiskyBottleEntity, WhiskyBottleResponse>>();
 
         mockRequestToEntityMapper
-            .Setup(mapper => mapper.Map(WhiskyBottleEntityTestData.AllValuesPopulated))
+            .Setup(mapper => mapper.Map(It.IsAny<WhiskyBottleEntity>()))
             .Returns(WhiskyBottleResponseTestData.AllValuesPopulated)
             .Verifiable(Times.Once);
 
@@ -28,7 +28,7 @@ public class WhiskyBottleReadServiceTests
         var whiskyBottle = await whiskyBottleReadService.GetByIdAsync(WhiskyBottleEntityTestData.AllValuesPopulated.Id);
 
         Assert.Multiple(
-            () => Assert.Equal(WhiskyBottleResponseTestData.AllValuesPopulated, whiskyBottle),
+            () => Assert.Equivalent(WhiskyBottleResponseTestData.AllValuesPopulated, whiskyBottle),
             () => mockRequestToEntityMapper.Verify());
     }
 

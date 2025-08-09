@@ -21,9 +21,11 @@ public class WhiskyBottleEntityToResponseMapperTests
     [Fact]
     public void When_MapToDomainWithDateBottledButNotYearBottled_Expect_DomainModelWithYearBottledSetFromDate()
     {
+        var whiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
+        whiskyBottleEntity.YearBottled = null;
         var whiskyBottleMapper = new WhiskyBottleEntityToResponseMapper();
         var whiskyBottle = whiskyBottleMapper
-            .Map(WhiskyBottleEntityTestData.AllValuesPopulated with { YearBottled = null });
+            .Map(whiskyBottleEntity);
 
         Assert.Equal(WhiskyBottleEntityTestData.AllValuesPopulated.DateBottled?.Year, whiskyBottle.YearBottled);
     }
@@ -31,11 +33,15 @@ public class WhiskyBottleEntityToResponseMapperTests
     [Fact]
     public void When_MapToDomainWithoutDateBottledOrYearBottled_Expect_DomainModelWithoutYearBottledSet()
     {
+        var whiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
+        whiskyBottleEntity.YearBottled = null;
+        whiskyBottleEntity.DateBottled = null;
+            
         var whiskyBottleMapper = new WhiskyBottleEntityToResponseMapper();
-        var whiskyBottleEntity = whiskyBottleMapper
-            .Map(WhiskyBottleEntityTestData.AllValuesPopulated with { DateBottled = null, YearBottled = null });
+        var whiskyBottle = whiskyBottleMapper
+            .Map(whiskyBottleEntity);
 
-        Assert.Null(whiskyBottleEntity.YearBottled);
+        Assert.Null(whiskyBottle.YearBottled);
     }
 
     [Theory]
@@ -47,9 +53,11 @@ public class WhiskyBottleEntityToResponseMapperTests
         string status,
         BottleStatus expectedStatus)
     {
+        var whiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
+        whiskyBottleEntity.Status = status;
+        
         var whiskyBottleMapper = new WhiskyBottleEntityToResponseMapper();
-        var whiskyBottle = whiskyBottleMapper
-            .Map(WhiskyBottleEntityTestData.AllValuesPopulated with { Status = status });
+        var whiskyBottle = whiskyBottleMapper.Map(whiskyBottleEntity);
 
         Assert.Equal(expectedStatus.ToString(), whiskyBottle.Status);
     }
