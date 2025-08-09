@@ -8,7 +8,7 @@ var postgres = builder
 
 var database = postgres.AddDatabase("postgresDb");
 
-var enableDataSeeding = builder.Configuration["MYWHISKYSHELF_DATA_SEEDING_ENABLED"] ?? "true";
+var enableDataSeeding = builder.Configuration["MYWHISKYSHELF_DATA_SEEDING_ENABLED"];
 
 builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
     .WithReference(database)
