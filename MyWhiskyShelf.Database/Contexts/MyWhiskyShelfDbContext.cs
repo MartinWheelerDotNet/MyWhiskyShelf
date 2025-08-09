@@ -16,6 +16,7 @@ public class MyWhiskyShelfDbContext(
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfiguration(new DistilleryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new WhiskyBottleEntityConfiguration());
     }
 }

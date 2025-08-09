@@ -28,12 +28,13 @@ public class DistilleryWriteServiceTests
         var distilleryEntity = await dbContext
             .Set<DistilleryEntity>()
             .FirstAsync(entity => entity.DistilleryName == DistilleryEntityTestData.Aberargie.DistilleryName);
+        
+        var expectedDistilleryEntity = DistilleryEntityTestData.Aberargie;
+        expectedDistilleryEntity.Id = distilleryEntity.Id;
 
         Assert.Multiple(
             () => Assert.True(hasBeenAdded, "'hasBeenAdded' should be true"),
-            () => Assert.Equal(
-                DistilleryEntityTestData.Aberargie with { Id = distilleryEntity.Id },
-                distilleryEntity));
+            () => Assert.Equivalent(expectedDistilleryEntity, distilleryEntity));
     }
 
     [Fact]
@@ -62,7 +63,7 @@ public class DistilleryWriteServiceTests
 
         Assert.Multiple(
             () => Assert.False(hasBeenAdded, "'hasBeenAdded' should be false"),
-            () => Assert.Equal(distilleryEntity, DistilleryEntityTestData.Aberargie));
+            () => Assert.Equivalent(distilleryEntity, DistilleryEntityTestData.Aberargie));
     }
 
     [Fact]
