@@ -47,6 +47,25 @@ internal static partial class EndpointMappings
             .Produces(StatusCodes.Status201Created)
             .ProducesValidationProblem();
 
+        app.MapPut(
+            WhiskyBottleWithRouteIdentifierEndpoint,
+            async (
+                [FromServices] IWhiskyBottleWriteService whiskyBottleWriteService,
+                [FromRoute] Guid identifier,
+                [FromBody] WhiskyBottleRequest whiskyBottleRequest,
+                HttpContext httpContext) =>
+            {
+                var hasBeenUpdated = await whiskyBottleWriteService.TryUpdateAsync(identifier, whiskyBottleRequest);
+
+                return hasBeenUpdated
+                    ? Results.Ok()
+                    : ProblemResults.ResourceNotFound("whisky-bottle", identifier, httpContext);
+            })
+            .WithName("Update Whisky Bottle")
+            .WithTags(WhiskyBottleTag)
+            .Produces(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status404NotFound);
+        
         app.MapDelete(
             WhiskyBottleWithRouteIdentifierEndpoint,
             async (

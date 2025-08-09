@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MyWhiskyShelf.Database.Configurations;
 using MyWhiskyShelf.Database.Entities;
 
 namespace MyWhiskyShelf.Database.Contexts;
@@ -11,4 +12,10 @@ public class MyWhiskyShelfDbContext(
 {
     internal DbSet<DistilleryEntity> Distilleries { get; set; }
     internal DbSet<WhiskyBottleEntity> WhiskyBottles { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfiguration(new WhiskyBottleEntityConfiguration());
+    }
 }
