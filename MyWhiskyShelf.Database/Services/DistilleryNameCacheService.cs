@@ -21,32 +21,32 @@ public class DistilleryNameCacheService : IDistilleryNameCacheService
     public async Task InitializeFromDatabaseAsync(MyWhiskyShelfDbContext dbContext)
     {
         var distilleryDetails = await dbContext.Set<DistilleryEntity>()
-            .OrderBy(entity => entity.DistilleryName)
-            .Select(entity => new DistilleryNameDetails(entity.DistilleryName, entity.Id))
+            .OrderBy(entity => entity.Name)
+            .Select(entity => new DistilleryNameDetails(entity.Name, entity.Id))
             .ToListAsync();
 
         var distilleryNameDetailsDictionary = new ConcurrentDictionary<string, DistilleryNameDetails>(
-            distilleryDetails.ToDictionary(details => details.DistilleryName, details => details),
+            distilleryDetails.ToDictionary(details => details.Name, details => details),
             StringComparer.OrdinalIgnoreCase);
 
         var distilleryIdDictionary = new ConcurrentDictionary<Guid, string>(
-            distilleryDetails.ToDictionary(details => details.Identifier, details => details.DistilleryName));
+            distilleryDetails.ToDictionary(details => details.Id, details => details.Name));
 
         Interlocked.Exchange(ref _distilleryDetails, distilleryNameDetailsDictionary);
         Interlocked.Exchange(ref _distilleryIds, distilleryIdDictionary);
     }
 
-    public void Add(string distilleryName, Guid identifier)
+    public void Add(string distilleryName, Guid id)
     {
-        var distilleryNameDetails = new DistilleryNameDetails(distilleryName, identifier);
+        var distilleryNameDetails = new DistilleryNameDetails(distilleryName, id);
 
         _distilleryDetails.AddOrUpdate(distilleryName, distilleryNameDetails, (_, _) => distilleryNameDetails);
-        _distilleryIds.AddOrUpdate(identifier, distilleryName, (_, _) => distilleryName);
+        _distilleryIds.AddOrUpdate(id, distilleryName, (_, _) => distilleryName);
     }
 
-    public void Remove(Guid identifier)
+    public void Remove(Guid id)
     {
-        if (_distilleryIds.Remove(identifier, out var distilleryName))
+        if (_distilleryIds.Remove(id, out var distilleryName))
             _distilleryDetails.Remove(distilleryName, out _);
     }
 

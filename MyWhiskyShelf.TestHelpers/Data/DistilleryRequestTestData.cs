@@ -6,12 +6,12 @@ public static class DistilleryRequestTestData
 {
     public static CreateDistilleryRequest Aberargie => new()
     {
-        DistilleryName = "Aberargie",
+        Name = "Aberargie",
         Location = "Aberargie",
         Region = "Lowland",
         Founded = 2017,
         Owner = "Perth Distilling Co",
-        DistilleryType = "Malt",
+        Type = "Malt",
         FlavourProfile = new FlavourProfile
         {
             Fruit = 1,
@@ -24,12 +24,12 @@ public static class DistilleryRequestTestData
 
     public static CreateDistilleryRequest Aberfeldy => new()
     {
-        DistilleryName = "Aberfeldy",
+        Name = "Aberfeldy",
         Location = "Aberfeldy",
         Region = "Highland",
         Founded = 1896,
         Owner = "John Dewar & Sons",
-        DistilleryType = "Malt",
+        Type = "Malt",
         FlavourProfile = new FlavourProfile
         {
             Body = 2,
@@ -50,12 +50,12 @@ public static class DistilleryRequestTestData
 
     public static CreateDistilleryRequest Aberlour => new()
     {
-        DistilleryName = "Aberlour",
+        Name = "Aberlour",
         Location = "Aberlour",
         Region = "Speyside",
         Founded = 1879,
         Owner = "Chivas Brothers",
-        DistilleryType = "Malt",
+        Type = "Malt",
         Active = true
     };
 }

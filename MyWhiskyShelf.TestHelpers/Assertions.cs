@@ -9,7 +9,7 @@ public static class Assertions
     {
         return expected with { Id = Guid.Empty } == actual with { Id = Guid.Empty };
     }
-    
+
     public static void AssertIsGuidAndNotEmpty(string guidString)
     {
         if (!Guid.TryParse(guidString, out var result))

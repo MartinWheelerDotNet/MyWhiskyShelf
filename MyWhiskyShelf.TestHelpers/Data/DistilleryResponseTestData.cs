@@ -7,12 +7,12 @@ public static class DistilleryResponseTestData
     public static DistilleryResponse Aberargie => new()
     {
         Id = Guid.Parse("00e2b45f-4632-40e4-a29c-8a948fbe85e3"),
-        DistilleryName = "Aberargie",
+        Name = "Aberargie",
         Location = "Aberargie",
         Region = "Lowland",
         Founded = 2017,
         Owner = "Perth Distilling Co",
-        DistilleryType = "Malt",
+        Type = "Malt",
         FlavourProfile = new FlavourProfile
         {
             Fruit = 1,
@@ -26,12 +26,12 @@ public static class DistilleryResponseTestData
     public static DistilleryResponse Aberfeldy => new()
     {
         Id = Guid.Parse("9bba2d8b-7c08-4006-a8ef-d858ba7afd78"),
-        DistilleryName = "Aberfeldy",
+        Name = "Aberfeldy",
         Location = "Aberfeldy",
         Region = "Highland",
         Founded = 1896,
         Owner = "John Dewar & Sons",
-        DistilleryType = "Malt",
+        Type = "Malt",
         FlavourProfile = new FlavourProfile
         {
             Body = 2,
@@ -53,24 +53,24 @@ public static class DistilleryResponseTestData
     public static DistilleryResponse Bunnahabhain => new()
     {
         Id = Guid.Parse("ea5602a4-91be-4b87-a9aa-1ec0758642f6"),
-        DistilleryName = "Bunnahabhain",
+        Name = "Bunnahabhain",
         Location = "Port Askaig",
         Region = "Islay",
         Founded = 1881,
         Owner = "Distell",
-        DistilleryType = "Malt",
+        Type = "Malt",
         Active = true
     };
 
     public static DistilleryResponse Aberlour => new()
     {
         Id = Guid.Parse("1620094e-bd6f-43f5-b289-997b4f160530"),
-        DistilleryName = "Aberlour",
+        Name = "Aberlour",
         Location = "Aberlour",
         Region = "Speyside",
         Founded = 1879,
         Owner = "Chivas Brothers",
-        DistilleryType = "Malt",
+        Type = "Malt",
         Active = true
     };
 }

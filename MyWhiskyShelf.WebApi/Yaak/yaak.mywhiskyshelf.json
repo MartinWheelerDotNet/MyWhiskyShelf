@@ -512,7 +512,7 @@
         "authentication": {},
         "authenticationType": null,
         "body": {
-          "text": "  {\n    \"distilleryName\": \"Aberargie\",\n    \"location\": \"Aberargie\",\n    \"region\": \"Lowland\",\n    \"founded\": 2017,\n    \"owner\": \"Perth Distilling Co\",\n    \"distilleryType\": \"Malt\",\n    \"flavourProfile\": {\n      \"sweet\": 0,\n      \"fruit\": 1,\n      \"floral\": 0,\n      \"body\": 0,\n      \"smoke\": 0,\n      \"tobacco\": 0,\n      \"medicinal\": 0,\n      \"wine\": 0,\n      \"spice\": 2,\n      \"malt\": 2,\n      \"nut\": 2,\n      \"honey\": 0\n    },\n    \"active\": true\n  }"
+          "text": "  {\n    \"distilleryName\": \"Aberargie\",\n    \"location\": \"Aberargie\",\n    \"region\": \"Lowland\",\n    \"founded\": 2017,\n    \"owner\": \"Perth Distilling Co\",\n    \"Type\": \"Malt\",\n    \"flavourProfile\": {\n      \"sweet\": 0,\n      \"fruit\": 1,\n      \"floral\": 0,\n      \"body\": 0,\n      \"smoke\": 0,\n      \"tobacco\": 0,\n      \"medicinal\": 0,\n      \"wine\": 0,\n      \"spice\": 2,\n      \"malt\": 2,\n      \"nut\": 2,\n      \"honey\": 0\n    },\n    \"active\": true\n  }"
         },
         "bodyType": "application/json",
         "description": "",
@@ -711,7 +711,7 @@
         "authentication": {},
         "authenticationType": null,
         "body": {
-          "text": "{\n    \"distilleryName\": \"Aberargie\",\n    \"location\": \"Aberargie\",\n    \"region\": \"Lowland\",\n    \"founded\": 2017,\n    \"owner\": \"Perth Distilling Co\",\n    \"distilleryType\": \"Malt\",\n    \"flavourProfile\": {\n      \"sweet\": 0,\n      \"fruit\": 1,\n      \"floral\": 0,\n      \"body\": 0,\n      \"smoke\": 0,\n      \"tobacco\": 0,\n      \"medicinal\": 0,\n      \"wine\": 0,\n      \"spice\": 2,\n      \"malt\": 2,\n      \"nut\": 2,\n      \"honey\": 0\n    },\n    \"active\": true\n  }"
+          "text": "{\n    \"distilleryName\": \"Aberargie\",\n    \"location\": \"Aberargie\",\n    \"region\": \"Lowland\",\n    \"founded\": 2017,\n    \"owner\": \"Perth Distilling Co\",\n    \"Type\": \"Malt\",\n    \"flavourProfile\": {\n      \"sweet\": 0,\n      \"fruit\": 1,\n      \"floral\": 0,\n      \"body\": 0,\n      \"smoke\": 0,\n      \"tobacco\": 0,\n      \"medicinal\": 0,\n      \"wine\": 0,\n      \"spice\": 2,\n      \"malt\": 2,\n      \"nut\": 2,\n      \"honey\": 0\n    },\n    \"active\": true\n  }"
         },
         "bodyType": "application/json",
         "description": "",
@@ -739,7 +739,7 @@
         "authentication": {},
         "authenticationType": null,
         "body": {
-          "text": "  {\n    \"distilleryName\": \"Burn O'Bennie\",\n    \"location\": \"Location\",\n    \"region\": \"Region\",\n    \"founded\": 2025,\n    \"owner\": \"MyWhiskyShelf\",\n    \"distilleryType\": \"Malt\",\n    \"flavourProfile\": {\n      \"sweet\": 4,\n      \"fruit\": 4,\n      \"floral\": 4,\n      \"body\": 4,\n      \"smoke\": 4,\n      \"tobacco\": 4,\n      \"medicinal\": 4,\n      \"wine\": 4,\n      \"spice\": 4,\n      \"malt\": 4,\n      \"nut\": 4,\n      \"honey\": 4\n    },\n    \"active\": true\n  }"
+          "text": "  {\n    \"distilleryName\": \"Burn O'Bennie\",\n    \"location\": \"Location\",\n    \"region\": \"Region\",\n    \"founded\": 2025,\n    \"owner\": \"MyWhiskyShelf\",\n    \"Type\": \"Malt\",\n    \"flavourProfile\": {\n      \"sweet\": 4,\n      \"fruit\": 4,\n      \"floral\": 4,\n      \"body\": 4,\n      \"smoke\": 4,\n      \"tobacco\": 4,\n      \"medicinal\": 4,\n      \"wine\": 4,\n      \"spice\": 4,\n      \"malt\": 4,\n      \"nut\": 4,\n      \"honey\": 4\n    },\n    \"active\": true\n  }"
         },
         "bodyType": "application/json",
         "description": "",

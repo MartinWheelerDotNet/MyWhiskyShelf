@@ -4,7 +4,7 @@ namespace MyWhiskyShelf.Database.Interfaces;
 
 public interface IWhiskyBottleWriteService
 {
-    Task<(bool hasBeenAdded, Guid? identifier)> TryAddAsync(WhiskyBottleRequest whiskyBottleRequest);
-    Task<bool> TryUpdateAsync(Guid identifier, WhiskyBottleRequest whiskyBottleRequest);
-    Task<bool> TryDeleteAsync(Guid identifier);
+    Task<(bool hasBeenAdded, Guid? id)> TryAddAsync(WhiskyBottleRequest whiskyBottleRequest);
+    Task<bool> TryUpdateAsync(Guid id, WhiskyBottleRequest whiskyBottleRequest);
+    Task<bool> TryDeleteAsync(Guid id);
 }

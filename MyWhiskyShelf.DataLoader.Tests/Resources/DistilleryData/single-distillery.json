@@ -1,11 +1,11 @@
 [
   {
-    "DistilleryName": "Aberargie",
+    "Name": "Aberargie",
     "Location": "Aberargie",
     "Region": "Lowland",
     "Founded": 2017,
     "Owner": "Perth Distilling Co",
-    "DistilleryType": "Malt",
+    "Type": "Malt",
     "FlavourProfile": {
       "Fruit": 1,
       "Malt": 2,

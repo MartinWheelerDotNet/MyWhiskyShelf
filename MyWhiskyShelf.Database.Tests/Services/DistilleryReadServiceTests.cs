@@ -45,7 +45,7 @@ public class DistilleryReadServiceTests
     }
 
     [Fact]
-    public async Task When_GetAllDistilleriesAndDistilleriesAreFound_Expect_ListIsOrderedByDistilleryName()
+    public async Task When_GetAllDistilleriesAndDistilleriesAreFound_Expect_ListIsOrderedByName()
     {
         List<DistilleryResponse> expectedDistilleryResponses =
         [

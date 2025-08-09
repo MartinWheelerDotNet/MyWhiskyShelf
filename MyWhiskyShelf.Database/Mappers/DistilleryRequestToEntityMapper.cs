@@ -11,12 +11,12 @@ public class DistilleryRequestToEntityMapper : IMapper<CreateDistilleryRequest, 
     {
         return new DistilleryEntity
         {
-            DistilleryName = createDistilleryRequest.DistilleryName,
+            Name = createDistilleryRequest.Name,
             Location = createDistilleryRequest.Location,
             Region = createDistilleryRequest.Region,
             Founded = createDistilleryRequest.Founded,
             Owner = createDistilleryRequest.Owner,
-            DistilleryType = createDistilleryRequest.DistilleryType,
+            Type = createDistilleryRequest.Type,
             EncodedFlavourProfile = FlavourProfileEncoder.Encode(createDistilleryRequest.FlavourProfile),
             Active = createDistilleryRequest.Active
         };

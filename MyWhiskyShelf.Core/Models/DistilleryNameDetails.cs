@@ -1,3 +1,3 @@
 namespace MyWhiskyShelf.Core.Models;
 
-public record DistilleryNameDetails(string DistilleryName, Guid Identifier);
+public record DistilleryNameDetails(string Name, Guid Id);
