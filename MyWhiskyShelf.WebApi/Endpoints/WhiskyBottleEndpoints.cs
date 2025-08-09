@@ -59,7 +59,7 @@ internal static partial class EndpointMappings
 
                 return hasBeenUpdated
                     ? Results.Ok()
-                    : ProblemResults.ResourceNotFound("whisky-bottle", identifier, httpContext);
+                    : ProblemResults.ResourceNotFound("whisky-bottle", "update", identifier, httpContext);
             })
             .WithName("Update Whisky Bottle")
             .WithTags(WhiskyBottleTag)
@@ -77,7 +77,7 @@ internal static partial class EndpointMappings
 
                 return hasBeenDeleted
                     ? Results.Ok()
-                    : ProblemResults.ResourceNotFound("whisky-bottle", identifier, httpContext);
+                    : ProblemResults.ResourceNotFound("whisky-bottle", "delete", identifier, httpContext);
             });
     }
 }

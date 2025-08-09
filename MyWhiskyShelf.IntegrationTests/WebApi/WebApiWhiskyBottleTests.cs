@@ -3,25 +3,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 using MyWhiskyShelf.TestHelpers.Data;
-using Xunit.Sdk;
+using static MyWhiskyShelf.TestHelpers.Assertions;
 
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
 [Collection("AspireTests")]
 public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
 {
+    
     private const string WebApiResourceName = "WebApi";
-
+    private const string Endpoint = "/whisky-bottle";
+    private HttpClient CreateClient() => fixture.Application.CreateHttpClient(WebApiResourceName);
+    
     [Fact]
     public async Task When_AddWhiskyBottle_Expect_WhiskyBottleIsCreatedWithLocationHeaderSet()
     {
-        const string endpoint = "/whisky-bottle";
-
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-        var postResponse = await httpClient.PostAsJsonAsync(endpoint, WhiskyBottleRequestTestData.AllValuesPopulated);
+        using var httpClient = CreateClient();
+        var postResponse = await httpClient.PostAsJsonAsync(Endpoint, WhiskyBottleRequestTestData.AllValuesPopulated);
+        
         await httpClient.DeleteAsync(postResponse.Headers.Location);
+        
         var parts = postResponse.Headers.Location!.OriginalString.Trim('/').Split("/");
-
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.Created, postResponse.StatusCode),
             () => Assert.Equal("whisky-bottle", parts[0]),
@@ -29,15 +31,9 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
     }
 
     [Fact]
-    public async Task When_AddWhiskyBottleAndBottleCannotBeAddedToDatabase_Expect_ValidationProblemDetails()
+    public async Task When_AddWhiskyBottleWithInvalidData_Expect_ValidationProblemDetails()
     {
-        const string endpoint = "/whisky-bottle";
-
-        // we are deliberately breaking the model constraints here to so that the database will attempt to insert
-        // an invalid entity, which will cause it to fail.
-        var whiskyBottleWithoutName = WhiskyBottleRequestTestData.AllValuesPopulated with { Name = null! };
-
-        var expectedValidationProblem = new ValidationProblemDetails
+        var expectedProblem = new ValidationProblemDetails
         {
             Title = "One or more validation errors occurred.",
             Type = "urn:mywhiskyshelf:validation-errors:whisky-bottle",
@@ -47,72 +43,89 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
                 ["WhiskyBottleRequest"] = ["An error occurred trying to add the whisky bottle to the database."]
             }
         };
+        var invalidBottle = WhiskyBottleRequestTestData.AllValuesPopulated with { Name = null! };
 
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-        var response = await httpClient.PostAsJsonAsync(endpoint, whiskyBottleWithoutName);
-        var body = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        using var httpClient = CreateClient();
+        var addResponse = await httpClient.PostAsJsonAsync(Endpoint, invalidBottle);
+        var problemDetails = await addResponse.Content.ReadFromJsonAsync<ValidationProblemDetails>();
 
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equivalent(expectedValidationProblem, body);
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.BadRequest, addResponse.StatusCode),
+            () => Assert.Equivalent(expectedProblem, problemDetails));
     }
 
     [Fact]
     public async Task When_DeleteWhiskyBottleAndBottleDoesNotExist_Expect_NotFoundProblemDetails()
     {
         var id = Guid.NewGuid();
-        var endpoint = $"/whisky-bottle/{id}";
-        var expectedProblem = new ProblemDetails
-        {
-            Type = "urn:mywhiskyshelf:errors:whisky-bottle-does-not-exist",
-            Title = "whisky-bottle does not exist.",
-            Status = StatusCodes.Status404NotFound,
-            Detail = $"Cannot remove whisky-bottle '{id}' as it does not exist.",
-            Instance = $"/whisky-bottle/{id}"
-        };
-
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-        var response = await httpClient.DeleteAsync(endpoint);
-        var problemResponse = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+        var url = $"/whisky-bottle/{id}";
+        var expectedProblem = CreateExpectedResourceNotFound("whisky-bottle", "delete", id, $"/whisky-bottle/{id}");
+         
+        using var httpClient = CreateClient();
+        var deleteResponse = await httpClient.DeleteAsync(url);
+        var problemResponse = await deleteResponse.Content.ReadFromJsonAsync<ProblemDetails>();
 
         Assert.Multiple(
-            () => Assert.Equal(HttpStatusCode.NotFound, response.StatusCode),
+            () => Assert.Equal(HttpStatusCode.NotFound, deleteResponse.StatusCode),
             () => Assert.Equivalent(expectedProblem, problemResponse));
     }
 
     [Fact]
-    public async Task When_DeleteWhiskyBottleAndBottleDoesExist_Expect_OkResponse()
+    public async Task When_DeleteWhiskyBottleAndBottleExists_Expect_Ok()
     {
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-        var createResponse = await httpClient.PostAsJsonAsync(
-            "/whisky-bottle",
-            WhiskyBottleRequestTestData.AllValuesPopulated);
+        using var httpClient = CreateClient();
+        var createResponse = await httpClient.PostAsJsonAsync(Endpoint, WhiskyBottleRequestTestData.AllValuesPopulated);
 
-        var response = await httpClient.DeleteAsync(createResponse.Headers.Location);
+        var deleteResponse = await httpClient.DeleteAsync(createResponse.Headers.Location);
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
     }
 
     [Fact]
-    public async Task When_UpdateWhiskyBottleAndWhiskyBottleIsFound_Expect_OkResponse()
+    public async Task When_UpdateWhiskyBottleAndWhiskyBottleExists_Expect_Ok()
     {
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-        var createResponse = await httpClient.PostAsJsonAsync(
-            "/whisky-bottle", 
-            WhiskyBottleRequestTestData.AllValuesPopulated);
+        using var httpClient = CreateClient();
+        var createResponse = await httpClient.PostAsJsonAsync(Endpoint, WhiskyBottleRequestTestData.AllValuesPopulated);
         
-        var response = await httpClient.PutAsJsonAsync(
-            createResponse.Headers.Location,
-            WhiskyBottleRequestTestData.AllValuesPopulated with { VolumeRemainingCl = 20 });
+        var updatedBottle = WhiskyBottleRequestTestData.AllValuesPopulated with { VolumeRemainingCl = 20 };
+        var updateResponse = await httpClient.PutAsJsonAsync(createResponse.Headers.Location, updatedBottle);
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
     }
     
-    private static void AssertIsGuidAndNotEmpty(string guidString)
+    [Fact]
+    public async Task When_UpdateWhiskyBottleAndWhiskyBottleDoesNotExist_Expect_NotFoundProblemDetails()
     {
-        if (!Guid.TryParse(guidString, out var result))
-            throw new XunitException($"Expected a valid GUID but got: '{guidString}'");
+        var id = Guid.NewGuid();
+        var url = $"/whisky-bottle/{id}";
+        var expectedProblem = CreateExpectedResourceNotFound("whisky-bottle", "update", id, $"/whisky-bottle/{id}"); 
+        
+        using var httpClient = CreateClient();
+        var updateResponse = await httpClient.PutAsJsonAsync(url, WhiskyBottleRequestTestData.AllValuesPopulated);
+        var problemDetails = await updateResponse.Content.ReadFromJsonAsync<ProblemDetails>();
 
-        if (Guid.Empty.Equals(result))
-            throw new XunitException($"Expected a none-empty GUID but got: '{result}'");
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.NotFound, updateResponse.StatusCode),
+            () => Assert.Equivalent(expectedProblem, problemDetails));
     }
+    
+    #region Helpers
+    
+    private static ProblemDetails CreateExpectedResourceNotFound(
+        string resourceName,
+        string action,
+        Guid resourceId,
+        string instance)
+    {
+        return new ProblemDetails
+        {
+            Type = $"urn:mywhiskyshelf:errors:{resourceName}-does-not-exist",
+            Title = $"{resourceName} does not exist.",
+            Status = StatusCodes.Status404NotFound,
+            Detail = $"Cannot {action} {resourceName} '{resourceId}' as it does not exist.",
+            Instance = instance
+        };
+    }
+    
+    #endregion
 }

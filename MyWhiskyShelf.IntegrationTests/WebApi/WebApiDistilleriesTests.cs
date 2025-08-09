@@ -104,7 +104,7 @@ public class WebApiDistilleriesTests(MyWhiskyShelfFixture fixture)
             Type = "urn:mywhiskyshelf:errors:distillery-does-not-exist",
             Title = "distillery does not exist.",
             Status = StatusCodes.Status404NotFound,
-            Detail = $"Cannot remove distillery '{id}' as it does not exist.",
+            Detail = $"Cannot delete distillery '{id}' as it does not exist.",
             Instance = $"/distilleries/{id}"
         };
 
