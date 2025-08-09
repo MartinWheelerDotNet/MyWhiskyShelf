@@ -73,7 +73,7 @@ internal static partial class EndpointMappings
                         HttpContext httpContext) =>
                     await distilleryWriteService.TryRemoveDistilleryAsync(identifier)
                         ? Results.Ok()
-                        : ProblemResults.ResourceNotFound("distillery", identifier, httpContext))
+                        : ProblemResults.ResourceNotFound("distillery", "delete", identifier, httpContext))
             .WithName("Delete Distillery")
             .WithTags(DistilleriesTag)
             .RequiresNonEmptyRouteParameter("identifier")

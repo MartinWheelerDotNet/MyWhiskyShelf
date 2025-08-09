@@ -20,7 +20,11 @@ internal static class ProblemResults
     }
 
 
-    public static IResult ResourceNotFound(string resourceName, Guid resourceIdentifier, HttpContext httpContext)
+    public static IResult ResourceNotFound(
+        string resourceName,
+        string action,
+        Guid resourceIdentifier, 
+        HttpContext httpContext)
     {
         return Results.Problem(
             new ProblemDetails
@@ -28,7 +32,7 @@ internal static class ProblemResults
                 Type = $"urn:mywhiskyshelf:errors:{resourceName}-does-not-exist",
                 Title = $"{resourceName} does not exist.",
                 Status = StatusCodes.Status404NotFound,
-                Detail = $"Cannot remove {resourceName} '{resourceIdentifier}' as it does not exist.",
+                Detail = $"Cannot {action} {resourceName} '{resourceIdentifier}' as it does not exist.",
                 Instance = httpContext.Request.Path
             });
     }
