@@ -40,6 +40,9 @@
         <None Update="Resources\DistilleryData\three-distilleries.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
+        <None Update="Resources\DistilleryData\null-file.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>

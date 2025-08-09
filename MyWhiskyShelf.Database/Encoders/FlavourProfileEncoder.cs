@@ -27,6 +27,7 @@ public static class FlavourProfileEncoder
                     flavourProfileValues[index].ProfileName,
                     "Flavour profile values cannot be lower than 0 or greater than 4");
 
+            //Stryker disable once Assignment
             encodedFlavourProfile |= (ulong)value << (index * BitsPerFlavour);
         }
 
@@ -62,6 +63,7 @@ public static class FlavourProfileEncoder
         var values = new int[12];
 
         for (var index = 0; index < AmountOfFlavours; index++)
+            //Stryker disable once Bitwise
             values[index] = (int)((encodedFlavourProfile >> (index * BitsPerFlavour)) & MaxValuePerFlavour);
 
         return new FlavourProfile

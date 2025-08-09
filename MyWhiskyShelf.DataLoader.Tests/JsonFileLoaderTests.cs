@@ -49,10 +49,27 @@ public class JsonFileLoaderTests
     {
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/DistilleryData/no-distillery-data.json");
 
-        var dataLoader = new JsonFileLoader(NullLogger<JsonFileLoader>.Instance);
+        var fakeLogger = new FakeLogger<JsonFileLoader>();
+        var dataLoader = new JsonFileLoader(fakeLogger);
         var distilleries = await dataLoader.GetDistilleriesFromJsonAsync(filePath);
 
-        Assert.Empty(distilleries);
+        Assert.Multiple(
+            () => Assert.Empty(distilleries),
+            () => Assert.Equal("0 distilleries loaded", fakeLogger.LatestRecord.Message));
+    }
+
+    [Fact]
+    public async Task When_GetDistilleriesFromJsonWithANullList_Expect_EmptyListOfDistilleryData()
+    {
+        var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/DistilleryData/null-file.json");
+
+        var fakeLogger = new FakeLogger<JsonFileLoader>();
+        var dataLoader = new JsonFileLoader(fakeLogger);
+        var distilleries = await dataLoader.GetDistilleriesFromJsonAsync(filePath);
+
+        Assert.Multiple(
+            () => Assert.Empty(distilleries),
+            () => Assert.Equal("0 distilleries loaded", fakeLogger.LatestRecord.Message));
     }
 
     [Fact]

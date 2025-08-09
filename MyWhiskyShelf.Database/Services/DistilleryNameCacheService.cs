@@ -21,7 +21,6 @@ public class DistilleryNameCacheService : IDistilleryNameCacheService
     public async Task InitializeFromDatabaseAsync(MyWhiskyShelfDbContext dbContext)
     {
         var distilleryDetails = await dbContext.Set<DistilleryEntity>()
-            .OrderBy(entity => entity.Name)
             .Select(entity => new DistilleryNameDetails(entity.Name, entity.Id))
             .ToListAsync();
 
@@ -69,13 +68,10 @@ public class DistilleryNameCacheService : IDistilleryNameCacheService
     {
         if (queryPattern.Length < 3 || string.IsNullOrWhiteSpace(queryPattern)) return [];
 
-        var rankedResults = Process
-            .ExtractSorted(
-                queryPattern,
-                _distilleryDetails.Keys.OrderBy(key => key, StringComparer.OrdinalIgnoreCase),
-                cutoff: CutoffRatioForFuzzySearch);
-
-        return rankedResults
+        return Process
+            .ExtractAll(queryPattern, _distilleryDetails.Keys, cutoff: CutoffRatioForFuzzySearch)
+            .OrderByDescending(result => result.Score)
+            .ThenBy(result => result.Value, StringComparer.OrdinalIgnoreCase)
             .Select(rankedResult => _distilleryDetails[rankedResult.Value])
             .ToList()
             .AsReadOnly();
