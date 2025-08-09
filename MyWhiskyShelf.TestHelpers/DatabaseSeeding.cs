@@ -13,7 +13,7 @@ public static class DatabaseSeeding
         foreach (var distilleryRequest in distilleryRequests)
         {
             var response = await httpClient.PostAsJsonAsync(addEndpoint, distilleryRequest);
-            var identifierString = response.Headers.Location!.OriginalString.Split('/').Last();
+            var identifierString = response.Headers.Location!.OriginalString.Split('/')[0];
             createdIds.Add(Guid.Parse(identifierString));
         }
 

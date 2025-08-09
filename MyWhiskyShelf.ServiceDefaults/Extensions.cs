@@ -37,12 +37,6 @@ public static class Extensions
             // Turn on service discovery by default
             http.AddServiceDiscovery();
         });
-
-        // Uncomment the following to restrict the allowed schemes for service discovery.
-        // builder.Services.Configure<ServiceDiscoveryOptions>(options =>
-        // {
-        //     options.AllowedSchemes = ["https"];
-        // });
     }
 
     private static void ConfigureOpenTelemetry<TBuilder>(this TBuilder builder)
@@ -84,13 +78,6 @@ public static class Extensions
         var useExporter = !string.IsNullOrWhiteSpace(builder.Configuration[OtlpExporter]);
 
         if (useExporter) builder.Services.AddOpenTelemetry().UseOtlpExporter();
-
-        // Uncomment the following lines to enable the Azure Monitor exporter (requires the Azure.Monitor.OpenTelemetry.AspNetCore package)
-        //if (!string.IsNullOrEmpty(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
-        //{
-        //    builder.Services.AddOpenTelemetry()
-        //       .UseAzureMonitor();
-        //}
     }
 
     private static void AddDefaultHealthChecks<TBuilder>(this TBuilder builder)

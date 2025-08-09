@@ -47,7 +47,7 @@ public class WebApiDistilleriesTests(MyWhiskyShelfFixture fixture)
     {
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
         var addedIds = await DatabaseSeeding.AddDistilleries(httpClient, DistilleryRequestTestData.Aberargie);
-        var distilleryEndpoint = $"/distilleries/{addedIds.First()}";
+        var distilleryEndpoint = $"/distilleries/{addedIds[0]}";
 
         var distilleryResponse = await httpClient.GetAsync(distilleryEndpoint);
         var distillery = await distilleryResponse.Content.ReadFromJsonAsync<DistilleryResponse>();
@@ -90,7 +90,7 @@ public class WebApiDistilleriesTests(MyWhiskyShelfFixture fixture)
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
         var distilleryIds = await DatabaseSeeding.AddDistilleries(httpClient, DistilleryRequestTestData.Aberfeldy);
 
-        var response = await httpClient.DeleteAsync($"/distilleries/{distilleryIds.First()}");
+        var response = await httpClient.DeleteAsync($"/distilleries/{distilleryIds[0]}");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }

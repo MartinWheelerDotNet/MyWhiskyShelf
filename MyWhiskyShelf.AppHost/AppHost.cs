@@ -15,4 +15,4 @@ builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
     .WithEnvironment("MYWHISKYSHELF_DATA_SEEDING_ENABLED", enableDataSeeding)
     .WaitFor(database);
 
-builder.Build().Run();
+await builder.Build().RunAsync();

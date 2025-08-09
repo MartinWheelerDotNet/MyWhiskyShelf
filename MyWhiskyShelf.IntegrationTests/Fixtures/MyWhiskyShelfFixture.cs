@@ -14,7 +14,7 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
     {
         var appHost = await CreateDefaultAppHost();
         Application = await appHost.BuildAsync();
-        Application.Start();
+        await Application.StartAsync();
 
         await WaitForRunningState(Application, "WebApi");
     }
