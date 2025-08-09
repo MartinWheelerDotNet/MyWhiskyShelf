@@ -146,8 +146,6 @@ jobs:
           noBuild: true
           extensions: ReSharperPlugin.CognitiveComplexity
         
-        
-  
   mutation-testing:
     runs-on: ubuntu-latest
     needs: test
@@ -178,7 +176,7 @@ jobs:
         run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Run mutation tests
-        run: dotnet stryker --solution MyWhiskyShelf.sln --reporters 'html;progress'
+        run: dotnet stryker --solution MyWhiskyShelf.sln --reporter 'html;progress'
 
       - name: Upload mutation testing report
         uses: actions/upload-artifact@v4
