@@ -9,7 +9,7 @@ public class WhiskyBottleWriteService(
     MyWhiskyShelfDbContext dbContext,
     IMapper<WhiskyBottleRequest, WhiskyBottleEntity> mapper) : IWhiskyBottleWriteService
 {
-    public async Task<(bool hasBeenAdded, Guid? identifier)> TryAddAsync(WhiskyBottleRequest whiskyBottleRequest)
+   public async Task<(bool hasBeenAdded, Guid? identifier)> TryAddAsync(WhiskyBottleRequest whiskyBottleRequest)
     {
         var whiskyBottleEntity = mapper.Map(whiskyBottleRequest);
 
@@ -45,13 +45,14 @@ public class WhiskyBottleWriteService(
 
     public async Task<bool> TryUpdateAsync(Guid identifier, WhiskyBottleRequest whiskyBottleRequest)
     {
-        var existing = await dbContext.WhiskyBottles.FindAsync(identifier);
-        if (existing is null) return false;
-
+        var existingEntity = await dbContext.WhiskyBottles.FindAsync(identifier);
+        if (existingEntity is null) return false;
+        
+        var updatedEntity = mapper.Map(whiskyBottleRequest);
+        updatedEntity.Id = existingEntity.Id;
+        
         try
         {
-            var updatedEntity = mapper.Map(whiskyBottleRequest);
-            dbContext.Entry(existing).CurrentValues.SetValues(updatedEntity);
             await dbContext.SaveChangesAsync();
             return true;
         }

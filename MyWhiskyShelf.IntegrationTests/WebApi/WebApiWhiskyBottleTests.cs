@@ -92,6 +92,21 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
+    [Fact]
+    public async Task When_UpdateWhiskyBottleAndWhiskyBottleIsFound_Expect_OkResponse()
+    {
+        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        var createResponse = await httpClient.PostAsJsonAsync(
+            "/whisky-bottle", 
+            WhiskyBottleRequestTestData.AllValuesPopulated);
+        
+        var response = await httpClient.PutAsJsonAsync(
+            createResponse.Headers.Location,
+            WhiskyBottleRequestTestData.AllValuesPopulated with { VolumeRemainingCl = 20 });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+    
     private static void AssertIsGuidAndNotEmpty(string guidString)
     {
         if (!Guid.TryParse(guidString, out var result))

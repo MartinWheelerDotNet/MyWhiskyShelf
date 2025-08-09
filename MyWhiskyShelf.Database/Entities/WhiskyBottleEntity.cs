@@ -1,32 +1,24 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
+// EF Models should be classes and should have publicly settable properties
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
 
 namespace MyWhiskyShelf.Database.Entities;
 
-[Index(nameof(DistilleryName), IsUnique = false)]
-[Index(nameof(Status), IsUnique = false)]
-public record WhiskyBottleEntity
+public class WhiskyBottleEntity
 {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; init; }
-
-    public required string Name { get; init; }
-    public required string DistilleryName { get; init; }
-    public Guid? DistilleryId { get; init; }
-    public required string Status { get; init; }
-    public string? Bottler { get; init; }
-    public DateOnly? DateBottled { get; init; }
-    public int? YearBottled { get; init; }
-    public int? BatchNumber { get; init; }
-    public int? CaskNumber { get; init; }
-
-    [Precision(4, 1)] public required decimal AbvPercentage { get; init; }
-
-    public required int VolumeCl { get; init; }
-    public required int VolumeRemainingCl { get; init; }
-
-    public bool? AddedColouring { get; init; }
-    public bool? ChillFiltered { get; init; }
-
-    public required ulong EncodedFlavourProfile { get; init; }
+    public Guid Id { get; set; }
+    public required string Name { get; set; }
+    public required string DistilleryName { get; set; }
+    public Guid? DistilleryId { get; set; }
+    public required string Status { get; set; }
+    public string? Bottler { get; set; }
+    public DateOnly? DateBottled { get; set; }
+    public int? YearBottled { get; set; }
+    public int? BatchNumber { get; set; }
+    public int? CaskNumber { get; set; }
+    public required decimal AbvPercentage { get; set; }
+    public required int VolumeCl { get; set; }
+    public required int VolumeRemainingCl { get; set; }
+    public bool? AddedColouring { get; set; }
+    public bool? ChillFiltered { get; set; }
+    public required ulong EncodedFlavourProfile { get; set; }
 }

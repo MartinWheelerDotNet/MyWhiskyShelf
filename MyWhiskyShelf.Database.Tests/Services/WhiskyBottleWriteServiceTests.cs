@@ -126,12 +126,15 @@ public class WhiskyBottleWriteServiceTests
         await using var dbContext = await MyWhiskyShelfContextBuilder.CreateDbContextAsync(
             WhiskyBottleEntityTestData.AllValuesPopulated);
 
+        var mappedWhiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
+        mappedWhiskyBottleEntity.VolumeRemainingCl = 20;
+
         var updatedWhiskyBottle = WhiskyBottleRequestTestData.AllValuesPopulated with { VolumeRemainingCl = 20 };
         var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>>();
         mockWhiskyBottleMapper
             .Setup(mapper => mapper.Map(updatedWhiskyBottle))
-            .Returns(WhiskyBottleEntityTestData.AllValuesPopulated with { VolumeRemainingCl = 20 });
-
+            .Returns(mappedWhiskyBottleEntity);
+        
         var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
         var hasBeenUpdated = await whiskyBottleService.TryUpdateAsync(
             WhiskyBottleEntityTestData.AllValuesPopulated.Id,
@@ -145,7 +148,7 @@ public class WhiskyBottleWriteServiceTests
             () => Assert.True(hasBeenUpdated));
     }
     
-   [Fact]
+    [Fact]
     public async Task When_UpdateWhiskyBottleAndWhiskyBottleDoesNotExist_Expect_ReturnsFalse()
     {
         await using var dbContext = await MyWhiskyShelfContextBuilder.CreateDbContextAsync<WhiskyBottleEntity>();
@@ -169,6 +172,9 @@ public class WhiskyBottleWriteServiceTests
     [InlineData(typeof(Exception))]
     public async Task When_UpdateWhiskyBottleAndDatabaseThrowsException_Expect_ReturnsFalse(Type exceptionType)
     {
+        var mappedWhiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
+        mappedWhiskyBottleEntity.VolumeRemainingCl = 20;
+
         await using var dbContext = await MyWhiskyShelfContextBuilder
             .CreateFailingDbContextAsync(exceptionType, WhiskyBottleEntityTestData.AllValuesPopulated);
 
@@ -176,7 +182,7 @@ public class WhiskyBottleWriteServiceTests
         var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>>();
         mockWhiskyBottleMapper
             .Setup(mapper => mapper.Map(updatedWhiskyBottle))
-            .Returns(WhiskyBottleEntityTestData.AllValuesPopulated with { VolumeRemainingCl = 20 });
+            .Returns(mappedWhiskyBottleEntity);
 
         var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
         var hasBeenUpdated = await whiskyBottleService.TryUpdateAsync(
