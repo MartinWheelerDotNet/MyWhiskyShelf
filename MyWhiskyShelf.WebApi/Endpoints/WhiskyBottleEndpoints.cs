@@ -8,18 +8,18 @@ namespace MyWhiskyShelf.WebApi.Endpoints;
 internal static partial class EndpointMappings
 {
     private const string WhiskyBottleEndpoint = "/whisky-bottle";
-    private const string WhiskyBottleWithRouteIdentifierEndpoint = "/whisky-bottle/{identifier:guid}";
+    private const string WhiskyBottleWithRouteIdEndpoint = "/whisky-bottle/{id:guid}";
     private const string WhiskyBottleTag = "WhiskyBottle";
 
     public static void MapWhiskyBottleEndpoints(this WebApplication app)
     {
         app.MapGet(
-                WhiskyBottleWithRouteIdentifierEndpoint,
+                WhiskyBottleWithRouteIdEndpoint,
                 async (
                     [FromServices] IWhiskyBottleReadService whiskyBottleReadService,
-                    [FromRoute] Guid identifier) =>
+                    [FromRoute] Guid id) =>
                 {
-                    var whiskyBottle = await whiskyBottleReadService.GetByIdAsync(identifier);
+                    var whiskyBottle = await whiskyBottleReadService.GetByIdAsync(id);
                     return whiskyBottle is null
                         ? Results.NotFound()
                         : Results.Ok(whiskyBottle);
@@ -35,11 +35,11 @@ internal static partial class EndpointMappings
                     [FromServices] IWhiskyBottleWriteService whiskyBottleWriteService,
                     [FromBody] WhiskyBottleRequest whiskyBottleRequest) =>
                 {
-                    var (hasBeenAdded, identifier) = await whiskyBottleWriteService
+                    var (hasBeenAdded, id) = await whiskyBottleWriteService
                         .TryAddAsync(whiskyBottleRequest);
 
                     return hasBeenAdded
-                        ? Results.Created($"{WhiskyBottleEndpoint}/{identifier}", null)
+                        ? Results.Created($"{WhiskyBottleEndpoint}/{id}", null)
                         : ValidationProblemResults.WhiskyBottleValidationProblemResults();
                 })
             .WithName("Add Whisky Bottle")
@@ -48,36 +48,36 @@ internal static partial class EndpointMappings
             .ProducesValidationProblem();
 
         app.MapPut(
-            WhiskyBottleWithRouteIdentifierEndpoint,
-            async (
-                [FromServices] IWhiskyBottleWriteService whiskyBottleWriteService,
-                [FromRoute] Guid identifier,
-                [FromBody] WhiskyBottleRequest whiskyBottleRequest,
-                HttpContext httpContext) =>
-            {
-                var hasBeenUpdated = await whiskyBottleWriteService.TryUpdateAsync(identifier, whiskyBottleRequest);
+                WhiskyBottleWithRouteIdEndpoint,
+                async (
+                    [FromServices] IWhiskyBottleWriteService whiskyBottleWriteService,
+                    [FromRoute] Guid id,
+                    [FromBody] WhiskyBottleRequest whiskyBottleRequest,
+                    HttpContext httpContext) =>
+                {
+                    var hasBeenUpdated = await whiskyBottleWriteService.TryUpdateAsync(id, whiskyBottleRequest);
 
-                return hasBeenUpdated
-                    ? Results.Ok()
-                    : ProblemResults.ResourceNotFound("whisky-bottle", "update", identifier, httpContext);
-            })
+                    return hasBeenUpdated
+                        ? Results.Ok()
+                        : ProblemResults.ResourceNotFound("whisky-bottle", "update", id, httpContext);
+                })
             .WithName("Update Whisky Bottle")
             .WithTags(WhiskyBottleTag)
             .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status404NotFound);
-        
+
         app.MapDelete(
-            WhiskyBottleWithRouteIdentifierEndpoint,
+            WhiskyBottleWithRouteIdEndpoint,
             async (
                 [FromServices] IWhiskyBottleWriteService whiskyBottleWriteService,
-                [FromRoute] Guid identifier,
+                [FromRoute] Guid id,
                 HttpContext httpContext) =>
             {
-                var hasBeenDeleted = await whiskyBottleWriteService.TryDeleteAsync(identifier);
+                var hasBeenDeleted = await whiskyBottleWriteService.TryDeleteAsync(id);
 
                 return hasBeenDeleted
                     ? Results.Ok()
-                    : ProblemResults.ResourceNotFound("whisky-bottle", "delete", identifier, httpContext);
+                    : ProblemResults.ResourceNotFound("whisky-bottle", "delete", id, httpContext);
             });
     }
 }

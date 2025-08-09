@@ -22,7 +22,7 @@ public class DistilleryReadService(
     public async Task<IReadOnlyList<DistilleryResponse>> GetAllDistilleriesAsync()
     {
         var distilleryEntities = await dbContext.Distilleries
-            .OrderBy(entity => entity.DistilleryName)
+            .OrderBy(entity => entity.Name)
             .AsNoTracking()
             .ToListAsync();
 

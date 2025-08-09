@@ -10,17 +10,17 @@ public class DistilleryWriteService(
     IDistilleryNameCacheService distilleryNameCacheService,
     IMapper<CreateDistilleryRequest, DistilleryEntity> mapper) : IDistilleryWriteService
 {
-    public async Task<(bool hasBeenAdded, Guid? identifier)> TryAddDistilleryAsync(
+    public async Task<(bool hasBeenAdded, Guid? id)> TryAddDistilleryAsync(
         CreateDistilleryRequest createDistilleryRequest)
     {
-        if (distilleryNameCacheService.TryGet(createDistilleryRequest.DistilleryName, out _))
+        if (distilleryNameCacheService.TryGet(createDistilleryRequest.Name, out _))
             return (false, null);
 
         try
         {
             var entity = mapper.Map(createDistilleryRequest);
             dbContext.Distilleries.Add(entity);
-            distilleryNameCacheService.Add(entity.DistilleryName, entity.Id);
+            distilleryNameCacheService.Add(entity.Name, entity.Id);
             await dbContext.SaveChangesAsync();
             return (true, entity.Id);
         }

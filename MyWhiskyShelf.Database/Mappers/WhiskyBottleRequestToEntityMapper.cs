@@ -16,7 +16,7 @@ public class WhiskyBottleRequestToEntityMapper(IDistilleryNameCacheService disti
         {
             Name = whiskyBottleRequest.Name,
             DistilleryName = whiskyBottleRequest.DistilleryName,
-            DistilleryId = distilleryNameDetails?.Identifier,
+            DistilleryId = distilleryNameDetails?.Id,
             Status = whiskyBottleRequest.Status?.ToString() ?? "Unknown",
             Bottler = whiskyBottleRequest.Bottler,
             DateBottled = whiskyBottleRequest.DateBottled,

@@ -146,25 +146,25 @@ public class WhiskyBottleWriteServiceTests
             () => Assert.Equal(20, whiskyBottleEntity!.VolumeRemainingCl),
             () => Assert.True(hasBeenUpdated));
     }
-    
-   [Fact]
+
+    [Fact]
     public async Task When_UpdateWhiskyBottleAndWhiskyBottleDoesNotExist_Expect_ReturnsFalse()
     {
         await using var dbContext = await MyWhiskyShelfContextBuilder.CreateDbContextAsync<WhiskyBottleEntity>();
-        
+
         var mockWhiskyBottleMapper = new Mock<IMapper<WhiskyBottleRequest, WhiskyBottleEntity>>();
         mockWhiskyBottleMapper
             .Setup(mapper => mapper.Map(WhiskyBottleRequestTestData.AllValuesPopulated))
             .Returns(WhiskyBottleEntityTestData.AllValuesPopulated);
-        
+
         var whiskyBottleService = new WhiskyBottleWriteService(dbContext, mockWhiskyBottleMapper.Object);
         var hasBeenUpdated = await whiskyBottleService.TryUpdateAsync(
             WhiskyBottleEntityTestData.AllValuesPopulated.Id,
             WhiskyBottleRequestTestData.AllValuesPopulated);
-        
+
         Assert.False(hasBeenUpdated);
     }
-    
+
     [Theory]
     [InlineData(typeof(DbUpdateException))]
     [InlineData(typeof(DbUpdateConcurrencyException))]
@@ -173,7 +173,7 @@ public class WhiskyBottleWriteServiceTests
     {
         var mappedWhiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
         mappedWhiskyBottleEntity.VolumeRemainingCl = 20;
-        
+
         await using var dbContext = await MyWhiskyShelfContextBuilder
             .CreateFailingDbContextAsync(exceptionType, WhiskyBottleEntityTestData.AllValuesPopulated);
 

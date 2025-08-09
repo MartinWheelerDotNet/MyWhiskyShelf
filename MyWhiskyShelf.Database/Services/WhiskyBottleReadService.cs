@@ -12,7 +12,7 @@ public class WhiskyBottleReadService(
     public async Task<WhiskyBottleResponse?> GetByIdAsync(Guid distilleryId)
     {
         var whiskyBottle = await dbContext.WhiskyBottles.FindAsync(distilleryId);
-        
+
         return whiskyBottle is null
             ? null
             : mapper.Map(whiskyBottle);

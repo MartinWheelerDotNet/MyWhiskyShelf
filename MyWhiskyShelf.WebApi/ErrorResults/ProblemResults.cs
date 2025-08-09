@@ -6,33 +6,33 @@ internal static class ProblemResults
 {
     #region CreateDistilleryRequest Problem Results
 
-    public static IResult ResourceAlreadyExists(string resourceName, string resourceIdentifier, HttpContext httpContext)
+    public static IResult ResourceAlreadyExists(string resource, string id, HttpContext httpContext)
     {
         return Results.Problem(
             new ProblemDetails
             {
-                Type = $"urn:mywhiskyshelf:errors:{resourceName}-already-exists",
-                Title = $"{resourceName} already exists.",
+                Type = $"urn:mywhiskyshelf:errors:{resource}-already-exists",
+                Title = $"{resource} already exists.",
                 Status = StatusCodes.Status409Conflict,
-                Detail = $"Cannot add {resourceName} '{resourceIdentifier} as it already exists.",
+                Detail = $"Cannot add {resource} '{id} as it already exists.",
                 Instance = httpContext.Request.Path
             });
     }
 
 
     public static IResult ResourceNotFound(
-        string resourceName,
+        string name,
         string action,
-        Guid resourceIdentifier, 
+        Guid resourceId,
         HttpContext httpContext)
     {
         return Results.Problem(
             new ProblemDetails
             {
-                Type = $"urn:mywhiskyshelf:errors:{resourceName}-does-not-exist",
-                Title = $"{resourceName} does not exist.",
+                Type = $"urn:mywhiskyshelf:errors:{name}-does-not-exist",
+                Title = $"{name} does not exist.",
                 Status = StatusCodes.Status404NotFound,
-                Detail = $"Cannot {action} {resourceName} '{resourceIdentifier}' as it does not exist.",
+                Detail = $"Cannot {action} {name} '{resourceId}' as it does not exist.",
                 Instance = httpContext.Request.Path
             });
     }

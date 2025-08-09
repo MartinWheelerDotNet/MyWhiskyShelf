@@ -17,7 +17,7 @@ public class WhiskyBottleRequestToEntityMapperTests
     {
         var expectedWhiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
         expectedWhiskyBottleEntity.Id = Guid.Empty;
-        
+
         var whiskyBottleMapper = new WhiskyBottleRequestToEntityMapper(_mockDistilleryNameCacheService.Object);
 
         var whiskyBottleEntity = whiskyBottleMapper.Map(WhiskyBottleRequestTestData.AllValuesPopulated);

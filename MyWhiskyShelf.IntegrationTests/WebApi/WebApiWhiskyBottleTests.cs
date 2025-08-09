@@ -10,19 +10,22 @@ namespace MyWhiskyShelf.IntegrationTests.WebApi;
 [Collection("AspireTests")]
 public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
 {
-    
     private const string WebApiResourceName = "WebApi";
     private const string Endpoint = "/whisky-bottle";
-    private HttpClient CreateClient() => fixture.Application.CreateHttpClient(WebApiResourceName);
-    
+
+    private HttpClient CreateClient()
+    {
+        return fixture.Application.CreateHttpClient(WebApiResourceName);
+    }
+
     [Fact]
     public async Task When_AddWhiskyBottle_Expect_WhiskyBottleIsCreatedWithLocationHeaderSet()
     {
         using var httpClient = CreateClient();
         var postResponse = await httpClient.PostAsJsonAsync(Endpoint, WhiskyBottleRequestTestData.AllValuesPopulated);
-        
+
         await httpClient.DeleteAsync(postResponse.Headers.Location);
-        
+
         var parts = postResponse.Headers.Location!.OriginalString.Trim('/').Split("/");
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.Created, postResponse.StatusCode),
@@ -60,7 +63,7 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
         var id = Guid.NewGuid();
         var url = $"/whisky-bottle/{id}";
         var expectedProblem = CreateExpectedResourceNotFound("whisky-bottle", "delete", id, $"/whisky-bottle/{id}");
-         
+
         using var httpClient = CreateClient();
         var deleteResponse = await httpClient.DeleteAsync(url);
         var problemResponse = await deleteResponse.Content.ReadFromJsonAsync<ProblemDetails>();
@@ -86,20 +89,20 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
     {
         using var httpClient = CreateClient();
         var createResponse = await httpClient.PostAsJsonAsync(Endpoint, WhiskyBottleRequestTestData.AllValuesPopulated);
-        
+
         var updatedBottle = WhiskyBottleRequestTestData.AllValuesPopulated with { VolumeRemainingCl = 20 };
         var updateResponse = await httpClient.PutAsJsonAsync(createResponse.Headers.Location, updatedBottle);
 
         Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
     }
-    
+
     [Fact]
     public async Task When_UpdateWhiskyBottleAndWhiskyBottleDoesNotExist_Expect_NotFoundProblemDetails()
     {
         var id = Guid.NewGuid();
         var url = $"/whisky-bottle/{id}";
-        var expectedProblem = CreateExpectedResourceNotFound("whisky-bottle", "update", id, $"/whisky-bottle/{id}"); 
-        
+        var expectedProblem = CreateExpectedResourceNotFound("whisky-bottle", "update", id, $"/whisky-bottle/{id}");
+
         using var httpClient = CreateClient();
         var updateResponse = await httpClient.PutAsJsonAsync(url, WhiskyBottleRequestTestData.AllValuesPopulated);
         var problemDetails = await updateResponse.Content.ReadFromJsonAsync<ProblemDetails>();
@@ -108,9 +111,9 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
             () => Assert.Equal(HttpStatusCode.NotFound, updateResponse.StatusCode),
             () => Assert.Equivalent(expectedProblem, problemDetails));
     }
-    
+
     #region Helpers
-    
+
     private static ProblemDetails CreateExpectedResourceNotFound(
         string resourceName,
         string action,
@@ -126,6 +129,6 @@ public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
             Instance = instance
         };
     }
-    
+
     #endregion
 }

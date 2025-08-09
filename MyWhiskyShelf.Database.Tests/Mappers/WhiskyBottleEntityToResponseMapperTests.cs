@@ -36,7 +36,7 @@ public class WhiskyBottleEntityToResponseMapperTests
         var whiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
         whiskyBottleEntity.YearBottled = null;
         whiskyBottleEntity.DateBottled = null;
-            
+
         var whiskyBottleMapper = new WhiskyBottleEntityToResponseMapper();
         var whiskyBottle = whiskyBottleMapper
             .Map(whiskyBottleEntity);
@@ -55,7 +55,7 @@ public class WhiskyBottleEntityToResponseMapperTests
     {
         var whiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
         whiskyBottleEntity.Status = status;
-        
+
         var whiskyBottleMapper = new WhiskyBottleEntityToResponseMapper();
         var whiskyBottle = whiskyBottleMapper.Map(whiskyBottleEntity);
 

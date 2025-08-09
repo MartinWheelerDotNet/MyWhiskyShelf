@@ -20,9 +20,9 @@ public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
 
         List<string> expectedDistilleryNames =
         [
-            DistilleryResponseTestData.Aberargie.DistilleryName,
-            DistilleryResponseTestData.Aberfeldy.DistilleryName,
-            DistilleryResponseTestData.Aberlour.DistilleryName
+            DistilleryResponseTestData.Aberargie.Name,
+            DistilleryResponseTestData.Aberfeldy.Name,
+            DistilleryResponseTestData.Aberlour.Name
         ];
 
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
@@ -36,9 +36,9 @@ public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
             () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
             () => Assert.All(distilleryNames!, details =>
             {
-                var (distilleryName, identifier) = details;
+                var (distilleryName, id) = details;
                 Assert.Contains(distilleryName, expectedDistilleryNames);
-                Assert.NotEqual(Guid.Empty, identifier);
+                Assert.NotEqual(Guid.Empty, id);
             }));
     }
 
@@ -70,7 +70,7 @@ public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
     [Fact]
     public async Task When_SearchingByNameAndMatchesExactly_Expect_ListWithJustThoseDistilleryNameDetails()
     {
-        var endpoint = $"/distilleries/name/search?pattern={DistilleryRequestTestData.Aberfeldy.DistilleryName}";
+        var endpoint = $"/distilleries/name/search?pattern={DistilleryRequestTestData.Aberfeldy.Name}";
 
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
         var addedIds = await SeedTestData(httpClient);
@@ -83,9 +83,9 @@ public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
             () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
             () => Assert.Single(distilleryNameDetails!),
             () => Assert.Equal(
-                DistilleryRequestTestData.Aberfeldy.DistilleryName,
-                distilleryNameDetails![0].DistilleryName),
-            () => Assert.IsType<Guid>(distilleryNameDetails![0].Identifier));
+                DistilleryRequestTestData.Aberfeldy.Name,
+                distilleryNameDetails![0].Name),
+            () => Assert.IsType<Guid>(distilleryNameDetails![0].Id));
     }
 
     [Fact]
@@ -94,8 +94,8 @@ public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
         const string endpoint = "/distilleries/name/search?pattern=erl";
         List<string> expectedDistilleryNames =
         [
-            DistilleryResponseTestData.Aberfeldy.DistilleryName,
-            DistilleryResponseTestData.Aberlour.DistilleryName
+            DistilleryResponseTestData.Aberfeldy.Name,
+            DistilleryResponseTestData.Aberlour.Name
         ];
 
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
@@ -108,9 +108,9 @@ public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
             () => Assert.All(expectedDistilleryNames, expectedDistilleryName
-                => Assert.Contains(distilleryNameDetails!, actual => expectedDistilleryName == actual.DistilleryName)),
+                => Assert.Contains(distilleryNameDetails!, actual => expectedDistilleryName == actual.Name)),
             () => Assert.All(distilleryNameDetails!, distilleryNameDetail
-                => Assert.NotEqual(Guid.Empty, distilleryNameDetail.Identifier)));
+                => Assert.NotEqual(Guid.Empty, distilleryNameDetail.Id)));
     }
 
     [Fact]

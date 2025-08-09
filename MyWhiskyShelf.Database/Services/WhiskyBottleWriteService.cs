@@ -9,7 +9,7 @@ public class WhiskyBottleWriteService(
     MyWhiskyShelfDbContext dbContext,
     IMapper<WhiskyBottleRequest, WhiskyBottleEntity> mapper) : IWhiskyBottleWriteService
 {
-   public async Task<(bool hasBeenAdded, Guid? identifier)> TryAddAsync(WhiskyBottleRequest whiskyBottleRequest)
+    public async Task<(bool hasBeenAdded, Guid? id)> TryAddAsync(WhiskyBottleRequest whiskyBottleRequest)
     {
         var whiskyBottleEntity = mapper.Map(whiskyBottleRequest);
 
@@ -25,9 +25,9 @@ public class WhiskyBottleWriteService(
         }
     }
 
-    public async Task<bool> TryDeleteAsync(Guid identifier)
+    public async Task<bool> TryDeleteAsync(Guid id)
     {
-        var entity = await dbContext.WhiskyBottles.FindAsync(identifier);
+        var entity = await dbContext.WhiskyBottles.FindAsync(id);
 
         if (entity is null) return false;
 
@@ -43,14 +43,14 @@ public class WhiskyBottleWriteService(
         }
     }
 
-    public async Task<bool> TryUpdateAsync(Guid identifier, WhiskyBottleRequest whiskyBottleRequest)
+    public async Task<bool> TryUpdateAsync(Guid id, WhiskyBottleRequest whiskyBottleRequest)
     {
-        var existingEntity = await dbContext.WhiskyBottles.FindAsync(identifier);
+        var existingEntity = await dbContext.WhiskyBottles.FindAsync(id);
         if (existingEntity is null) return false;
-        
+
         var updatedEntity = mapper.Map(whiskyBottleRequest);
         updatedEntity.Id = existingEntity.Id;
-        
+
         try
         {
             dbContext.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
