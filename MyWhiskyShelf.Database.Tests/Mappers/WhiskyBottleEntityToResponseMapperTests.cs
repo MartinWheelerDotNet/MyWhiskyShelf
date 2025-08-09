@@ -61,4 +61,31 @@ public class WhiskyBottleEntityToResponseMapperTests
 
         Assert.Equal(expectedStatus.ToString(), whiskyBottle.Status);
     }
+    
+    [Fact]
+    public void When_YearBottledIsSet_Then_YearBottledIsReturnedOverDateBottledYear()
+    {
+        var whiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
+        whiskyBottleEntity.YearBottled = 2020;
+        whiskyBottleEntity.DateBottled = new DateOnly(2000, 1, 1);
+
+        var whiskyBottleMapper = new WhiskyBottleEntityToResponseMapper();
+        var result = whiskyBottleMapper.Map(whiskyBottleEntity);
+
+        Assert.Equal(2020, result.YearBottled);
+    }
+
+    [Fact]
+    public void When_YearBottledIsNull_Then_DateBottledYearIsReturned()
+    {
+        var whiskyBottleEntity = WhiskyBottleEntityTestData.AllValuesPopulated;
+        whiskyBottleEntity.YearBottled = null;
+        whiskyBottleEntity.DateBottled = new DateOnly(2000, 1, 1);
+
+        var whiskyBottleMapper = new WhiskyBottleEntityToResponseMapper();
+        var result = whiskyBottleMapper.Map(whiskyBottleEntity);
+
+        Assert.Equal(2000, result.YearBottled);
+    }
 }
+

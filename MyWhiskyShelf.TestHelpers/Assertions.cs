@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using MyWhiskyShelf.Core.Models;
 using Xunit.Sdk;
 
 namespace MyWhiskyShelf.TestHelpers;
 
+[ExcludeFromCodeCoverage]
 public static class Assertions
 {
     public static bool EqualsIgnoringId(DistilleryResponse expected, DistilleryResponse actual)

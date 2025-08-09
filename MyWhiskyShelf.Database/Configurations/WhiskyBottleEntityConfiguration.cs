@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MyWhiskyShelf.Database.Entities;
 
 namespace MyWhiskyShelf.Database.Configurations;
 
+[ExcludeFromCodeCoverage]
 public class WhiskyBottleEntityConfiguration : IEntityTypeConfiguration<WhiskyBottleEntity>
 {
     public void Configure(EntityTypeBuilder<WhiskyBottleEntity> builder)

@@ -5,6 +5,21 @@ namespace MyWhiskyShelf.Database.Tests.Encoders;
 
 public class FlavourProfileEncoderTests
 {
+    private static readonly FlavourProfile MixedFlavourProfile = new()
+    {
+        Sweet = 1, Fruit = 2, Floral = 3, Body = 4,
+        Smoke = 0, Tobacco = 1, Medicinal = 2, Wine = 3,
+        Spice = 4, Malt = 0, Nut = 1, Honey = 2
+    };
+
+    private const ulong EncodedMixedFlavourProfile = 18327570641;
+
+    private static readonly FlavourProfile MaximumFlavourProfile = new()
+    {
+        Sweet = 4, Fruit = 4, Floral = 4, Body = 4, Smoke = 4, Tobacco = 4,
+        Medicinal = 4, Wine = 4, Spice = 4, Malt = 4, Nut = 4, Honey = 4
+    };
+
     // The maximum encoded value occurs when all 12 flavour profile attributes have the highest possible value (4).
     // Each attribute uses 3 bits (since 0–4 fits in 3 bits), so we pack 12 values × 3 bits = 36 bits total.
     // This value (39268272420) represents 12 consecutive 3-bit values all set to binary 100 (decimal 4).
@@ -17,15 +32,19 @@ public class FlavourProfileEncoderTests
 
         Assert.Equal(0ul, encodedFlavourProfile);
     }
+    
+    [Fact]
+    public void When_EncodeWithMixedFlavourProfile_Expect_CorrectEncodedValue()
+    {
+        var encodedFlavourProfile = FlavourProfileEncoder.Encode(MixedFlavourProfile);
+
+        Assert.Equal(EncodedMixedFlavourProfile, encodedFlavourProfile);
+    }
 
     [Fact]
     public void When_EncodeWithAFlavourProfileWithAllValuesSetTo4_Expect_MaximumEncodedFlavourProfile()
     {
-        var encodedFlavourProfile = FlavourProfileEncoder.Encode(new FlavourProfile
-        {
-            Sweet = 4, Fruit = 4, Floral = 4, Body = 4, Smoke = 4, Tobacco = 4,
-            Medicinal = 4, Wine = 4, Spice = 4, Malt = 4, Nut = 4, Honey = 4
-        });
+        var encodedFlavourProfile = FlavourProfileEncoder.Encode(MaximumFlavourProfile);
 
         Assert.Equal(MaximumEncodedFlavourProfile, encodedFlavourProfile);
     }
@@ -65,17 +84,11 @@ public class FlavourProfileEncoderTests
     }
 
     [Fact]
-    public void When_DecodeWithMaximumEncodedFlavourProfile_Expect_FlavourProfileWithAllValuesSetToFour()
+    public void When_DecodeWithMaximumEncodedFlavourProfile_Expect_MaximumFlavourProfile()
     {
-        var expectedFlavourProfile = new FlavourProfile
-        {
-            Sweet = 4, Fruit = 4, Floral = 4, Body = 4, Smoke = 4, Tobacco = 4,
-            Medicinal = 4, Wine = 4, Spice = 4, Malt = 4, Nut = 4, Honey = 4
-        };
-
         var flavourProfile = FlavourProfileEncoder.Decode(MaximumEncodedFlavourProfile);
 
-        Assert.Equal(expectedFlavourProfile, flavourProfile);
+        Assert.Equal(MaximumFlavourProfile, flavourProfile);
     }
 
     [Fact]
@@ -88,5 +101,14 @@ public class FlavourProfileEncoderTests
         Assert.Equal(
             "Value cannot be greater than '39268272420' (Parameter 'encodedFlavourProfile')",
             exception.Message);
+    }
+    
+    [Fact]
+    public void When_EncodeThenDecode_Expect_MixedFlavourProfile()
+    {
+        var encoded = FlavourProfileEncoder.Encode(MixedFlavourProfile);
+        var decoded = FlavourProfileEncoder.Decode(encoded);
+
+        Assert.Equal(MixedFlavourProfile, decoded);
     }
 }

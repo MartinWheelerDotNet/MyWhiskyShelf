@@ -14,7 +14,7 @@ namespace MyWhiskyShelf.Database.Tests.Services;
 public class DistilleryWriteServiceTests
 {
     [Fact]
-    public async Task When_AddDistilleryAndDistilleryDoesNotExist_Expect_DatabaseContainsDistilleryEntity()
+    public async Task When_TryAddDistilleryAndDistilleryDoesNotExist_Expect_DatabaseContainsDistilleryEntity()
     {
         await using var dbContext = await MyWhiskyShelfContextBuilder
             .CreateDbContextAsync<DistilleryEntity>();
@@ -38,7 +38,7 @@ public class DistilleryWriteServiceTests
     }
 
     [Fact]
-    public async Task When_AddDistilleryAndDistilleryExists_Expect_DatabaseIsNotUpdated()
+    public async Task When_TryAddDistilleryAndDistilleryExists_Expect_DatabaseIsNotUpdated()
     {
         var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
         DistilleryNameDetails? distilleryDetails;
@@ -67,7 +67,7 @@ public class DistilleryWriteServiceTests
     }
 
     [Fact]
-    public async Task When_AddDistilleryAndDistilleryExists_Expect_DistilleryNameCacheServiceIsNotUpdated()
+    public async Task When_TryAddDistilleryAndDistilleryExists_Expect_DistilleryNameCacheServiceIsNotUpdated()
     {
         var mockDistilleryNameCacheService = new Mock<IDistilleryNameCacheService>();
         mockDistilleryNameCacheService
@@ -88,7 +88,7 @@ public class DistilleryWriteServiceTests
     }
 
     [Fact]
-    public async Task When_AddDistilleryAndDistilleryDoesNotExist_Expect_DistilleryNameCacheServiceIsUpdated()
+    public async Task When_TryAddDistilleryAndDistilleryDoesNotExist_Expect_DistilleryNameCacheServiceIsUpdated()
     {
         await using var dbContext = await MyWhiskyShelfContextBuilder
             .CreateDbContextAsync<DistilleryEntity>();
@@ -106,6 +106,28 @@ public class DistilleryWriteServiceTests
         await distilleryWriteService.TryAddDistilleryAsync(DistilleryRequestTestData.Aberargie);
 
         mockDistilleryNameCacheService.Verify();
+    }
+    
+    [Theory]
+    [InlineData(typeof(DbUpdateException))]
+    [InlineData(typeof(DbUpdateConcurrencyException))]
+    [InlineData(typeof(Exception))]
+    public async Task When_TryAddDistilleryAndDatabaseThrowsAnException_Expect_ReturnsFalse(Type exceptionType)
+    {
+        await using var dbContext = await MyWhiskyShelfContextBuilder
+            .CreateFailingDbContextAsync<DistilleryEntity>(exceptionType);
+
+        var distilleryWriteService = new DistilleryWriteService(
+            dbContext,
+            new Mock<IDistilleryNameCacheService>().Object,
+            new DistilleryRequestToEntityMapper());
+        var (hasBeenAdded, id) = await distilleryWriteService
+            .TryAddDistilleryAsync(DistilleryRequestTestData.Aberargie);
+        
+
+        Assert.Multiple(
+                () => Assert.False(hasBeenAdded),
+                () => Assert.Null(id));
     }
 
     [Fact]

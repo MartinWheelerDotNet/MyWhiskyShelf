@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging.Testing;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.TestHelpers.Data;
 
@@ -58,12 +59,14 @@ public class JsonFileLoaderTests
     public async Task When_GetDistilleriesFromJsonWithOneDistillery_Expect_ListOfJustThatDistillery()
     {
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/DistilleryData/single-distillery.json");
-
-        var dataLoader = new JsonFileLoader(NullLogger<JsonFileLoader>.Instance);
+        var fakeLogger = new FakeLogger<JsonFileLoader>();
+        
+        var dataLoader = new JsonFileLoader(fakeLogger);
         var distilleries = await dataLoader.GetDistilleriesFromJsonAsync(filePath);
 
         var distillery = Assert.Single(distilleries);
         Assert.Equal(DistilleryRequestTestData.Aberargie, distillery);
+        Assert.Equal("1 distilleries loaded", fakeLogger.LatestRecord.Message);
     }
 
     [Fact]
@@ -77,11 +80,13 @@ public class JsonFileLoaderTests
         ];
 
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/DistilleryData/three-distilleries.json");
-
-        var dataLoader = new JsonFileLoader(NullLogger<JsonFileLoader>.Instance);
+        var fakeLogger = new FakeLogger<JsonFileLoader>();
+        
+        var dataLoader = new JsonFileLoader(fakeLogger);
         var distilleries = await dataLoader.GetDistilleriesFromJsonAsync(filePath);
 
         Assert.Equal(3, distilleries.Count);
         Assert.Equal(expectedDistilleries, distilleries);
+        Assert.Equal("3 distilleries loaded", fakeLogger.LatestRecord.Message);
     }
 }

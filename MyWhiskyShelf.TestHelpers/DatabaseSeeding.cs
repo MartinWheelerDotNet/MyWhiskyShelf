@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Json;
 using MyWhiskyShelf.Core.Models;
 
 namespace MyWhiskyShelf.TestHelpers;
 
+[ExcludeFromCodeCoverage]
 public static class DatabaseSeeding
 {
     public static async Task<List<Guid>> AddDistilleries(HttpClient httpClient,

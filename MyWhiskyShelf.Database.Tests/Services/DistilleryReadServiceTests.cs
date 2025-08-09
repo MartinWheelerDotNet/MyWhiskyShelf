@@ -64,7 +64,7 @@ public class DistilleryReadServiceTests
             new DistilleryEntityToResponseMapper());
         var distilleries = await distilleryReadService.GetAllDistilleriesAsync();
 
-        Assert.All(expectedDistilleryResponses, distillery => Assert.Contains(distillery, distilleries));
+        Assert.Equal(expectedDistilleryResponses, distilleries);
     }
 
     [Fact]

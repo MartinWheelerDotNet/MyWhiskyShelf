@@ -110,4 +110,86 @@ public class WhiskyBottleRequestToEntityMapperTests
 
         Assert.Equal(WhiskyBottleRequestTestData.AllValuesPopulated.VolumeCl, whiskyBottle.VolumeRemainingCl);
     }
+    
+    [Fact]
+    public void When_StatusIsSet_Then_StatusIsReturnedAsStringNotDefaultUnknown()
+    {
+        var whiskyBottleMapper = new WhiskyBottleRequestToEntityMapper(_mockDistilleryNameCacheService.Object);
+
+        var request = WhiskyBottleRequestTestData.AllValuesPopulated with { Status = BottleStatus.Opened };
+        var result = whiskyBottleMapper.Map(request);
+
+        Assert.Equal("Opened", result.Status);
+    }
+
+    [Fact]
+    public void When_StatusIsNull_Then_StatusIsSetToUnknown()
+    {
+        var whiskyBottleMapper = new WhiskyBottleRequestToEntityMapper(_mockDistilleryNameCacheService.Object);
+
+        var request = WhiskyBottleRequestTestData.AllValuesPopulated with { Status = null };
+        var result = whiskyBottleMapper.Map(request);
+
+        Assert.Equal("Unknown", result.Status);
+    }
+
+    [Fact]
+    public void When_YearBottledIsSet_Then_YearBottledIsReturnedOverDateBottledYear()
+    {
+        var whiskyBottleMapper = new WhiskyBottleRequestToEntityMapper(_mockDistilleryNameCacheService.Object);
+
+        var request = WhiskyBottleRequestTestData.AllValuesPopulated with
+        {
+            YearBottled = 2020,
+            DateBottled = new DateOnly(2000, 1, 1)
+        };
+        var result = whiskyBottleMapper.Map(request);
+
+        Assert.Equal(2020, result.YearBottled);
+    }
+
+    [Fact]
+    public void When_YearBottledIsNull_Then_DateBottledYearIsReturned()
+    {
+        var whiskyBottleMapper = new WhiskyBottleRequestToEntityMapper(_mockDistilleryNameCacheService.Object);
+
+        var request = WhiskyBottleRequestTestData.AllValuesPopulated with
+        {
+            YearBottled = null,
+            DateBottled = new DateOnly(2000, 1, 1)
+        };
+        var result = whiskyBottleMapper.Map(request);
+
+        Assert.Equal(2000, result.YearBottled);
+    }
+
+    [Fact]
+    public void When_VolumeRemainingClIsSet_Then_VolumeRemainingClIsReturnedNotVolumeCl()
+    {
+        var whiskyBottleMapper = new WhiskyBottleRequestToEntityMapper(_mockDistilleryNameCacheService.Object);
+
+        var request = WhiskyBottleRequestTestData.AllValuesPopulated with
+        {
+            VolumeCl = 100,
+            VolumeRemainingCl = 50
+        };
+        var result = whiskyBottleMapper.Map(request);
+
+        Assert.Equal(50, result.VolumeRemainingCl);
+    }
+
+    [Fact]
+    public void When_VolumeRemainingClIsNull_Then_VolumeClIsUsedAsRemainingVolume()
+    {
+        var whiskyBottleMapper = new WhiskyBottleRequestToEntityMapper(_mockDistilleryNameCacheService.Object);
+
+        var request = WhiskyBottleRequestTestData.AllValuesPopulated with
+        {
+            VolumeCl = 100,
+            VolumeRemainingCl = null
+        };
+        var result = whiskyBottleMapper.Map(request);
+
+        Assert.Equal(100, result.VolumeRemainingCl);
+    }
 }
