@@ -82,9 +82,10 @@ public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
             () => Assert.Single(distilleryNameDetails!),
-            () => Assert.Equal(DistilleryRequestTestData.Aberfeldy.DistilleryName,
-                distilleryNameDetails!.First().DistilleryName),
-            () => Assert.IsType<Guid>(distilleryNameDetails!.First().Identifier));
+            () => Assert.Equal(
+                DistilleryRequestTestData.Aberfeldy.DistilleryName,
+                distilleryNameDetails![0].DistilleryName),
+            () => Assert.IsType<Guid>(distilleryNameDetails![0].Identifier));
     }
 
     [Fact]
