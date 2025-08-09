@@ -7,16 +7,6 @@
       "!MyWhiskyShelf.Database/Configurations/*.cs",
       "!MyWhiskyShelf.TestHelpers/*.cs",
       "!**/*.Generated.cs"
-    ],
-    "ignoreMutations": [
-      {
-        "mutationName": "OrAssignmentExpression",
-        "fileName": "MyWhiskyShelf.Database/Encoders/FlavourProfileEncoder.cs"
-      },
-      {
-        "mutationName": "ShiftRight",
-        "fileName": "MyWhiskyShelf.Database/Encoders/FlavourProfileEncoder.cs"
-      }
     ]
   }
 }

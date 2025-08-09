@@ -191,12 +191,13 @@ public class DistilleryNameCacheServiceTests
     }
 
     [Fact]
-    public async Task When_SearchAsyncAndDistilleryNameContainsQueryString_Expect_DistilleryDetailsInNameOrder()
+    public async Task When_SearchAsyncAndBothDistilleryNameContainsQueryString_Expect_DistilleryDetailsInNameOrder()
     {
         List<DistilleryNameDetails> expectedDistilleryDetails =
         [
             new(DistilleryEntityTestData.AbhainnDearg.Name, DistilleryEntityTestData.AbhainnDearg.Id),
             new(DistilleryEntityTestData.Bunnahabhain.Name, DistilleryEntityTestData.Bunnahabhain.Id)
+  
         ];
 
         var dbContext = await CreateDbContext(
@@ -354,6 +355,21 @@ public class DistilleryNameCacheServiceTests
         Assert.Multiple(
             () => Assert.True(result),
             () => Assert.Equal(expectedDistilleryDetails, distilleryDetails));
+    }
+    
+    [Fact]
+    public void When_AddThenRemove_Expect_DistilleryDetailsRemovedFromCache()
+    {
+        var distilleryNameCacheService = new DistilleryNameCacheService();
+
+        distilleryNameCacheService.Add(DistilleryEntityTestData.Aberargie.Name, DistilleryEntityTestData.Aberargie.Id);
+        distilleryNameCacheService.Remove(DistilleryEntityTestData.Aberargie.Id);
+
+        var distilleryDetails = distilleryNameCacheService.GetAll();
+
+        Assert.DoesNotContain(
+            distilleryDetails,
+            details => details.Name == DistilleryEntityTestData.Aberargie.Name);
     }
 
     private static async Task<MyWhiskyShelfDbContext> CreateDbContext(params DistilleryEntity[] distilleryNames)
