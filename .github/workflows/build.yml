@@ -153,7 +153,7 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "Running Stryker for changed files only..."
-            dotnet stryker --solution MyWhiskyShelf.sln --since "${{ github.base_ref }}" --reporter 'html'
+            dotnet stryker --solution MyWhiskyShelf.sln --since:${{ github.base_ref }} --reporter 'html'
           else
             echo "Running full Stryker mutation testing..."
             dotnet stryker --solution MyWhiskyShelf.sln --reporter 'html'
