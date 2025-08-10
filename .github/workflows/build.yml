@@ -12,17 +12,15 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
-      - name: Checkout Repository
-        uses: actions/checkout@v4
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 9.0.x
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
 
     - name: Cache NuGet packages
       uses: actions/cache@v4
@@ -31,29 +29,17 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
-      - name: Cache NuGet packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
+    
     - name: Restore dependencies
       run: dotnet restore MyWhiskyShelf.sln
-      - name: Restore dependencies
-        run: dotnet restore MyWhiskyShelf.sln
-
+    
     - name: Build
       run: dotnet build --configuration Release --no-restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-  
+    
   test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
-      matrix: 
       matrix:
         include:
           - name: Database
@@ -62,13 +48,11 @@ jobs:
             project: MyWhiskyShelf.DataLoader.Tests/MyWhiskyShelf.DataLoader.Tests.csproj
           - name: Integration
             project: MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj
-            
     
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
-
+    
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -84,17 +68,14 @@ jobs:
 
       - name: Restore Dependencies
         run: dotnet restore ${{ matrix.project }}
-        
-
+    
       - name: Build solution
         run: dotnet build  ${{ matrix.project }} --configuration Release --no-restore
-        
-
+    
       - name: Setup Dev Credentials
         run: dotnet dev-certs https --trust
         if: ${{ matrix.name == 'Integration' }}
-        
-
+    
       - name: Run tests
         run: |
           dotnet test  ${{ matrix.project }} \
@@ -109,16 +90,14 @@ jobs:
         with:
           name: test-results-${{ matrix.name }}
           path: ./TestResults
-        
-  
+    
   code-inspection:
     name: Code Inspection
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
-
+    
       - name: Setup .NET
         id: setup-dotnet
         uses: actions/setup-dotnet@v3
@@ -132,12 +111,10 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-          
-
+      
       - name: Restore
         run: dotnet restore
-        
-
+      
       - name: Inspect code
         uses: muno92/resharper_inspectcode@v1
         with:
