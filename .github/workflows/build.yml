@@ -10,32 +10,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 9.0.x
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 9.0.x
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
 
-    - name: Cache NuGet packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-    
-    - name: Restore dependencies
-      run: dotnet restore MyWhiskyShelf.sln
-    
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore MyWhiskyShelf.sln
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+  
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -52,7 +48,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-    
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -68,14 +64,14 @@ jobs:
 
       - name: Restore Dependencies
         run: dotnet restore ${{ matrix.project }}
-    
+
       - name: Build solution
         run: dotnet build  ${{ matrix.project }} --configuration Release --no-restore
-    
+
       - name: Setup Dev Credentials
         run: dotnet dev-certs https --trust
         if: ${{ matrix.name == 'Integration' }}
-    
+
       - name: Run tests
         run: |
           dotnet test  ${{ matrix.project }} \
@@ -90,14 +86,14 @@ jobs:
         with:
           name: test-results-${{ matrix.name }}
           path: ./TestResults
-    
+  
   code-inspection:
     name: Code Inspection
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-    
+
       - name: Setup .NET
         id: setup-dotnet
         uses: actions/setup-dotnet@v3
@@ -111,10 +107,10 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-      
+
       - name: Restore
         run: dotnet restore
-      
+
       - name: Inspect code
         uses: muno92/resharper_inspectcode@v1
         with:
@@ -122,12 +118,14 @@ jobs:
           dotnetVersion: ${{ steps.setup-dotnet.outputs.dotnet-version }}
           noBuild: true
           extensions: ReSharperPlugin.CognitiveComplexity
-        
+  
   mutation-testing:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -152,8 +150,15 @@ jobs:
         run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Run mutation tests
-        run: dotnet stryker --solution MyWhiskyShelf.sln --reporter 'html'
-
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Running Stryker for changed files only..."
+            dotnet stryker --solution MyWhiskyShelf.sln --since "${{ github.base_ref }}" --reporter 'html'
+          else
+            echo "Running full Stryker mutation testing..."
+            dotnet stryker --solution MyWhiskyShelf.sln --reporter 'html'
+          fi
+          
       - name: Upload mutation testing report
         uses: actions/upload-artifact@v4
         with:
