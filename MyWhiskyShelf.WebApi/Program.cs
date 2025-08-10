@@ -76,7 +76,7 @@ internal static class Program
         var dataLoader = scope.ServiceProvider
             .GetRequiredService<IJsonFileLoader>();
         var mapper = scope.ServiceProvider
-            .GetRequiredService<IMapper<CreateDistilleryRequest, DistilleryEntity>>();
+            .GetRequiredService<IMapper<DistilleryRequest, DistilleryEntity>>();
 
         await dbContext.Database.EnsureCreatedAsync();
 
