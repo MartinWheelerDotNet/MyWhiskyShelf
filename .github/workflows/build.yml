@@ -17,6 +17,10 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
 
     - name: Cache NuGet packages
       uses: actions/cache@v4
@@ -25,18 +29,18 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
         restore-keys: |
           ${{ runner.os }}-nuget-
-
+    
     - name: Restore dependencies
       run: dotnet restore MyWhiskyShelf.sln
-
+    
     - name: Build
       run: dotnet build --configuration Release --no-restore
-  
+    
   test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
-      matrix: 
+      matrix:
         include:
           - name: Database
             project: MyWhiskyShelf.Database.Tests/MyWhiskyShelf.Database.Tests.csproj
@@ -44,11 +48,11 @@ jobs:
             project: MyWhiskyShelf.DataLoader.Tests/MyWhiskyShelf.DataLoader.Tests.csproj
           - name: Integration
             project: MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj
-            
+    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+    
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -64,14 +68,14 @@ jobs:
 
       - name: Restore Dependencies
         run: dotnet restore ${{ matrix.project }}
-        
+    
       - name: Build solution
         run: dotnet build  ${{ matrix.project }} --configuration Release --no-restore
-        
+    
       - name: Setup Dev Credentials
         run: dotnet dev-certs https --trust
         if: ${{ matrix.name == 'Integration' }}
-        
+    
       - name: Run tests
         run: |
           dotnet test  ${{ matrix.project }} \
@@ -86,14 +90,14 @@ jobs:
         with:
           name: test-results-${{ matrix.name }}
           path: ./TestResults
-        
+    
   code-inspection:
     name: Code Inspection
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        
+    
       - name: Setup .NET
         id: setup-dotnet
         uses: actions/setup-dotnet@v3
@@ -107,10 +111,10 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-          
+      
       - name: Restore
         run: dotnet restore
-        
+      
       - name: Inspect code
         uses: muno92/resharper_inspectcode@v1
         with:
@@ -119,4 +123,39 @@ jobs:
           noBuild: true
           extensions: ReSharperPlugin.CognitiveComplexity
         
-        
+  mutation-testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore MyWhiskyShelf.sln
+
+      - name: Install Stryker.NET tool
+        run: dotnet tool install -g dotnet-stryker
+
+      - name: Add tool path to environment
+        run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Run mutation tests
+        run: dotnet stryker --solution MyWhiskyShelf.sln --reporter 'html'
+
+      - name: Upload mutation testing report
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-report
+          path: ./StrykerOutput/reports/html
