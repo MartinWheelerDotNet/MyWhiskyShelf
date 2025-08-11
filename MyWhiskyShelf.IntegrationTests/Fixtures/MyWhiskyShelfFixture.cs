@@ -23,7 +23,7 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
         await Application.DisposeAsync();
     }
 
-    private static async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
+    protected virtual async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
     {
         var appHost = await DistributedApplicationTestingBuilder.CreateAsync<MyWhiskyShelf_AppHost>(
             ["MYWHISKYSHELF_DATA_SEEDING_ENABLED=false"]);
