@@ -47,6 +47,7 @@ public class WhiskyBottleWriteService(
     {
         var existingEntity = await dbContext.WhiskyBottles.FindAsync(id);
         if (existingEntity is null) return false;
+        
 
         var updatedEntity = mapper.Map(whiskyBottleRequest);
         updatedEntity.Id = existingEntity.Id;
