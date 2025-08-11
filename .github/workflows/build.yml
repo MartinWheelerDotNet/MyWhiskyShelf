@@ -188,7 +188,7 @@ jobs:
               }
             }
           EOF
-            dotnet stryker --project "${{ matrix.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config.json" --reporter "dashboard"
+            dotnet stryker --reporter "dashboard" --project "${{ matrix.project }}" --dashboard-api-key "fgaaaaafdfd" --config-file "stryker-config.json" 
           else
             echo "Running full Stryker mutation testing..."
             # Create a temporary config file for the dashboard reporter
