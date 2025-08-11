@@ -181,14 +181,13 @@ jobs:
               "stryker-config": {
                 "project-info": {
                   "name": "github.com/${{ github.repository }}",
-                  "version": "${{ github.head_ref }}",
-                  "module": "${{ matrix.name }}"
+                  "version": "${{ github.head_ref }}"
                 },
                 "since": { "target": "${{ github.base_ref }}" }
               }
             }
           EOF
-            dotnet stryker --reporter "dashboard" --project "${{ matrix.project }}" --dashboard-api-key "fgaaaaafdfd" --config-file "stryker-config.json" 
+            dotnet stryker --reporter "dashboard" --project "${{ matrix.project }}" --dashboard-api-key "078b06cd-ee8e-463d-87c4-76118d283d16" --config-file "stryker-config.json" 
           else
             echo "Running full Stryker mutation testing..."
             # Create a temporary config file for the dashboard reporter
