@@ -89,7 +89,7 @@ public class JsonFileLoaderTests
     [Fact]
     public async Task When_GetDistilleriesFromJsonWithThreeDistilleries_Expect_ListOfJustThoseDistilleries()
     {
-        List<CreateDistilleryRequest> expectedDistilleries =
+        List<DistilleryRequest> expectedDistilleries =
         [
             DistilleryRequestTestData.Aberargie,
             DistilleryRequestTestData.Aberfeldy,

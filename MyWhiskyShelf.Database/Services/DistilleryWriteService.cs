@@ -8,17 +8,17 @@ namespace MyWhiskyShelf.Database.Services;
 public class DistilleryWriteService(
     MyWhiskyShelfDbContext dbContext,
     IDistilleryNameCacheService distilleryNameCacheService,
-    IMapper<CreateDistilleryRequest, DistilleryEntity> mapper) : IDistilleryWriteService
+    IMapper<DistilleryRequest, DistilleryEntity> mapper) : IDistilleryWriteService
 {
     public async Task<(bool hasBeenAdded, Guid? id)> TryAddDistilleryAsync(
-        CreateDistilleryRequest createDistilleryRequest)
+        DistilleryRequest distilleryRequest)
     {
-        if (distilleryNameCacheService.TryGet(createDistilleryRequest.Name, out _))
+        if (distilleryNameCacheService.TryGet(distilleryRequest.Name, out _))
             return (false, null);
 
         try
         {
-            var entity = mapper.Map(createDistilleryRequest);
+            var entity = mapper.Map(distilleryRequest);
             dbContext.Distilleries.Add(entity);
             distilleryNameCacheService.Add(entity.Name, entity.Id);
             await dbContext.SaveChangesAsync();
@@ -27,6 +27,26 @@ public class DistilleryWriteService(
         catch
         {
             return (false, null);
+        }
+    }
+
+    public async Task<bool> TryUpdateDistilleryAsync(Guid id, DistilleryRequest distilleryRequest)
+    {
+        var existingEntity = await dbContext.Distilleries.FindAsync(id);
+        if (existingEntity is null) return false;
+
+        var updatedEntity = mapper.Map(distilleryRequest);
+        updatedEntity.Id = existingEntity.Id;
+
+        try
+        {
+            dbContext.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
         }
     }
 

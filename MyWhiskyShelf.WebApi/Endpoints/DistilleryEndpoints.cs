@@ -19,22 +19,22 @@ internal static partial class EndpointMappings
                 DistilleriesEndpoint,
                 async (
                     [FromServices] IDistilleryWriteService distilleryWriteService,
-                    [FromBody] CreateDistilleryRequest createDistilleryRequest,
+                    [FromBody] DistilleryRequest distilleryRequest,
                     HttpContext httpContext) =>
                 {
                     var (hasBeenAdded, id) =
-                        await distilleryWriteService.TryAddDistilleryAsync(createDistilleryRequest);
+                        await distilleryWriteService.TryAddDistilleryAsync(distilleryRequest);
 
                     return hasBeenAdded
                         ? Results.Created($"{DistilleriesEndpoint}/{id}", null)
                         : ProblemResults.ResourceAlreadyExists(
                             "distillery",
-                            createDistilleryRequest.Name,
+                            distilleryRequest.Name,
                             httpContext);
                 })
             .WithName("Create Distillery")
             .WithTags(DistilleriesTag)
-            .Accepts<CreateDistilleryRequest>(MediaTypeNames.Application.Json)
+            .Accepts<DistilleryRequest>(MediaTypeNames.Application.Json)
             .Produces(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status409Conflict);
 
@@ -50,7 +50,7 @@ internal static partial class EndpointMappings
             .WithName("Get Distillery")
             .WithTags(DistilleriesTag)
             .RequiresNonEmptyRouteParameter("id")
-            .Produces<CreateDistilleryRequest>(StatusCodes.Status201Created)
+            .Produces<DistilleryRequest>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status404NotFound);
 
         app.MapGet(
@@ -62,7 +62,7 @@ internal static partial class EndpointMappings
                 })
             .WithName("Get All Distilleries")
             .WithTags(DistilleriesTag)
-            .Produces<List<CreateDistilleryRequest>>();
+            .Produces<List<DistilleryRequest>>();
 
         app.MapDelete(
                 DistilleryWithRouteIdEndpoint,

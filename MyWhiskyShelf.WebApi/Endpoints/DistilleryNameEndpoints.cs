@@ -19,7 +19,7 @@ internal static partial class EndpointMappings
                     Results.Ok(nameCacheService.GetAll()))
             .WithName("Get All Distillery Name Details").Produces<List<DistilleryNameDetails>>()
             .WithTags(DistilleryNameDetailsTag)
-            .Produces<List<CreateDistilleryRequest>>();
+            .Produces<List<DistilleryRequest>>();
 
         app.MapGet(
                 SearchForDetailsByNameEndpoint,

@@ -1,7 +1,7 @@
 {
   "stryker-config": {
     "solution": "MyWhiskyShelf.sln",
-    "concurrency": 5,
+    "concurrency": 2,
     "mutate": [
       "!MyWhiskyShelf.Database/Contexts/*.cs",
       "!MyWhiskyShelf.Database/Configurations/*.cs",

@@ -1,7 +1,7 @@
 ﻿namespace MyWhiskyShelf.Core.Models;
 
 [Serializable]
-public record CreateDistilleryRequest
+public record DistilleryRequest
 {
     public required string Name { get; init; }
     public required string Location { get; init; }
