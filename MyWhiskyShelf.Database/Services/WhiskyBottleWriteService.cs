@@ -45,9 +45,6 @@ public class WhiskyBottleWriteService(
 
     public async Task<bool> TryUpdateAsync(Guid id, WhiskyBottleRequest whiskyBottleRequest)
     {
-        var validatedGuid = false;
-        if (validatedGuid is false) return false;
-        
         var existingEntity = await dbContext.WhiskyBottles.FindAsync(id);
         if (existingEntity is null) return false;
         
