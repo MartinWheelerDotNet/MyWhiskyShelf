@@ -130,13 +130,13 @@ jobs:
       matrix:
         include:
           - name: Core
-            project: MyWhiskyShelf.Core/MyWhiskyShelf.Core.csproj
+            project: MyWhiskyShelf.Core.csproj
           - name: DataLoader
-            project: MyWhiskyShelf.DataLoader/MyWhiskyShelf.DataLoader.csproj
+            project: MyWhiskyShelf.DataLoader.csproj
           - name: AppHost
-            project: MyWhiskyShelf.AppHost/MyWhiskyShelf.AppHost.csproj
+            project: MyWhiskyShelf.AppHost.csproj
           - name: Database
-            project: MyWhiskyShelf.Database/MyWhiskyShelf.Database.csproj
+            project: MyWhiskyShelf.Database.csproj
         
     steps:
       - name: Checkout Repository
@@ -169,21 +169,37 @@ jobs:
       - name: Add tool path to environment
         run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
 
-      - name: Run mutation tests for ${{ matrix.project }}
+      - name: Run mutation tests for ${{ matrix.name }}
         env:
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "Running Stryker for changed files only..."
-            dotnet stryker \
-              --project "${{ matrix.project }}" \
-              --since:${{ github.base_ref }} \
-              --reporter "dashboard" \
-              --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY"              
+            # Create a temporary config file for the dashboard reporter
+            cat <<EOF > stryker-config2.json
+            {
+              "project-info": {
+                "project": "github.com/${{ github.repository }}",
+                "version": "${{ github.head_ref }}",
+                "module": "${{ matrix.name }}"
+              },
+              "reporters": [ "dashboard" ],
+              "since": { "target": "${{ github.base_ref }}" }
+            }
+          EOF
+            dotnet stryker --project "${{ matrix.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config2.json"
           else
             echo "Running full Stryker mutation testing..."
-            dotnet stryker \
-              --project "${{ matrix.project }}" \
-              --reporter "dashboard" \
-              --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY"
+            # Create a temporary config file for the dashboard reporter
+            cat <<EOF > stryker-config2.json
+            {
+              "project-info": {
+                "project": "github.com/${{ github.repository }}",
+                "version": "${{ github.ref_name }}",
+                "module": "${{ matrix.name }}"
+              },
+              "reporters": [ "dashboard" ]
+            }
+          EOF
+            dotnet stryker --project "${{ matrix.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config2.json"
           fi
