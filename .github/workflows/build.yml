@@ -120,8 +120,6 @@ jobs:
           noBuild: true
           extensions: ReSharperPlugin.CognitiveComplexity
   
-  
-  
   mutation-testing:
     name: ${{ matrix.name }} Mutations
     runs-on: ubuntu-latest
@@ -197,11 +195,38 @@ jobs:
               "stryker-config": {
                 "project-info": {
                   "name": "github.com/${{ github.repository }}",
-                  "version": "${{ github.head_ref }}",
+                  "version": "${{ github.base_ref }}",
                   "module": "${{ matrix.name }}"
                 }
               }
             }
           EOF
-            dotnet stryker --project "${{ matrix.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config.json" --reporter "dashboard"
+            dotnet stryker --reporter "dashboard" --project "${{ matrix.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config.json"
           fi
+          
+  post-pr-comment:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    needs: mutation-testing
+    permissions:
+      pull-requests: write
+    
+    steps:
+      - name: Get branch name
+        id: branch_name
+        run: echo "branch=${{ github.head_ref }}" >> $GITHUB_OUTPUT
+
+      - name: Generate Markdown and Post to PR
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ### Mutation Testing Results
+            
+            | Branch                               | Project    | Score                                                                                                                                                                                                                                                                                                                                                                   |
+            |--------------------------------------|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+            | ${{ steps.branch_name.outputs.branch }}  | Overall    | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ steps.branch_name.outputs.branch }})](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ steps.branch_name.outputs.branch }})                                        |
+            |                                      | AppHost    | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ steps.branch_name.outputs.branch }}%3Fmodule%3DAppHost)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/?module=AppHost)          |
+            |                                      | Core       | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ steps.branch_name.outputs.branch }}%3Fmodule%3DCore)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/?module=Core)                |
+            |                                      | Database   | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ steps.branch_name.outputs.branch }}%3Fmodule%3DDatabase)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ steps.branch_name.outputs.branch }}?module=Database)    |
+            |                                      | DataLoader | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ steps.branch_name.outputs.branch }}%3Fmodule%3DDataLoader)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ steps.branch_name.outputs.branch }}?module=DataLoader) |        
