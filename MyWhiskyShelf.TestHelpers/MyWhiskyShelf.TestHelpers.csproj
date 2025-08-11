@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <PackageReference Include="xunit.assert" Version="2.9.3"/>
+        <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25" />
     </ItemGroup>
 
 </Project>
