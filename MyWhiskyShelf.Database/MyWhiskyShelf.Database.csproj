@@ -16,4 +16,8 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.66" PrivateAssets="All"/>
+    </ItemGroup>
+
 </Project>

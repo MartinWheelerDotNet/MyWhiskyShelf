@@ -19,4 +19,8 @@
         <ProjectReference Include="..\MyWhiskyShelf.WebApi\MyWhiskyShelf.WebApi.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="DotNet.ReproducibleBuilds" Version="0.1.66" PrivateAssets="All"/>
+    </ItemGroup>
+
 </Project>

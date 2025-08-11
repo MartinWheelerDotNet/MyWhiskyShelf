@@ -33,7 +33,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore
   
   test:
-    name: ${{ matrix.name }}
+    name: ${{ matrix.name }} Tests
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -120,8 +120,10 @@ jobs:
           noBuild: true
           extensions: ReSharperPlugin.CognitiveComplexity
   
+  
+  
   mutation-testing:
-    name: ${{ matrix.name }}
+    name: ${{ matrix.name }} Mutations
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -168,17 +170,20 @@ jobs:
         run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Run mutation tests for ${{ matrix.project }}
+        env:
+          STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "Running Stryker for changed files only..."
-            dotnet stryker --project "${{ matrix.project }}" --since:${{ github.base_ref }} --reporter html
+            dotnet stryker \
+              --project "${{ matrix.project }}" \
+              --since:${{ github.base_ref }} \
+              --reporter "dashboard" \
+              --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY"              
           else
             echo "Running full Stryker mutation testing..."
-            dotnet stryker --project "${{ matrix.project }}" --reporter html
+            dotnet stryker \
+              --project "${{ matrix.project }}" \
+              --reporter "dashboard" \
+              --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY"
           fi
-
-      - name: Upload mutation testing report
-        uses: actions/upload-artifact@v4
-        with:
-          name: mutation-report-${{ matrix.name }}
-          path: StrykerOutput/*/reports
