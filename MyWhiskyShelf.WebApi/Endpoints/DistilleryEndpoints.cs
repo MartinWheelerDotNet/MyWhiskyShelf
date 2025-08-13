@@ -20,10 +20,14 @@ internal static partial class EndpointMappings
                 async (
                     [FromServices] IDistilleryWriteService distilleryWriteService,
                     [FromBody] DistilleryRequest distilleryRequest,
+                    [FromHeader] Guid? idempotencyKey,
                     HttpContext httpContext) =>
                 {
+                    if (idempotencyKey.HasValue)
+                        return ValidationProblemResults.MissingIdempotencyKey();
+                    
                     var (hasBeenAdded, id) =
-                        await distilleryWriteService.TryAddDistilleryAsync(distilleryRequest);
+                        await distilleryWriteService.TryAddDistilleryAsync(distilleryRequest, idempotencyKey!.Value);
 
                     return hasBeenAdded
                         ? Results.Created($"{DistilleriesEndpoint}/{id}", null)

@@ -8,11 +8,18 @@ namespace MyWhiskyShelf.Database.Services;
 public class DistilleryWriteService(
     MyWhiskyShelfDbContext dbContext,
     IDistilleryNameCacheService distilleryNameCacheService,
+    IIdempotencyService redisIdempotencyService,
     IMapper<DistilleryRequest, DistilleryEntity> mapper) : IDistilleryWriteService
 {
     public async Task<(bool hasBeenAdded, Guid? id)> TryAddDistilleryAsync(
-        DistilleryRequest distilleryRequest)
+        DistilleryRequest distilleryRequest,
+        Guid idempotencyKey)
     {
+        var idempotencyResult = await redisIdempotencyService.TryGetCachedResult(idempotencyKey);
+    
+        if (idempotencyResult is not null)
+            return (true, idempotencyResult);
+        
         if (distilleryNameCacheService.TryGet(distilleryRequest.Name, out _))
             return (false, null);
 

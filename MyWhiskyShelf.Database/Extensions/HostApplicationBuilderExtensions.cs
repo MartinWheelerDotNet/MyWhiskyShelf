@@ -39,6 +39,8 @@ public static class HostApplicationBuilderExtensions
         builder.Services
             .AddSingleton<IDistilleryNameCacheService, DistilleryNameCacheService>();
         builder.Services
+            .AddSingleton<IIdempotencyService, RedisIdempotencyService>();
+        builder.Services
             .AddScoped<IDistilleryReadService, DistilleryReadService>()
             .AddScoped<IDistilleryWriteService, DistilleryWriteService>();
         builder.Services

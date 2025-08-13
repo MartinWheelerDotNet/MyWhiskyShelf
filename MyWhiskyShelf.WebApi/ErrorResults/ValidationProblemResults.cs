@@ -43,5 +43,16 @@ public static class ValidationProblemResults
             });
     }
 
+    public static IResult MissingIdempotencyKey()
+    {
+        return Results.ValidationProblem(
+            title: "Missing or empty idempotency key",
+            type: "urn:mywhiskyshelf:validation-errors:route-parameter",
+            errors: new Dictionary<string, string[]>
+            {
+                { "idempotencyKey", ["Header value 'idempotency-key' is required and cannot be an empty UUID"] }
+            }); 
+    }
+
     #endregion
 }
