@@ -10,8 +10,7 @@ public class DistilleryWriteService(
     IDistilleryNameCacheService distilleryNameCacheService,
     IMapper<DistilleryRequest, DistilleryEntity> mapper) : IDistilleryWriteService
 {
-    public async Task<(bool hasBeenAdded, Guid? id)> TryAddDistilleryAsync(
-        DistilleryRequest distilleryRequest)
+    public async Task<(bool hasBeenAdded, Guid? id)> TryAddDistilleryAsync(DistilleryRequest distilleryRequest)
     {
         if (distilleryNameCacheService.TryGet(distilleryRequest.Name, out _))
             return (false, null);
@@ -36,10 +35,15 @@ public class DistilleryWriteService(
         if (existingEntity is null) return false;
 
         var updatedEntity = mapper.Map(distilleryRequest);
-        updatedEntity.Id = existingEntity.Id;
+        updatedEntity.Id = id;
 
         try
         {
+            if (existingEntity.Name != updatedEntity.Name)
+            {
+                distilleryNameCacheService.Remove(existingEntity.Id);
+                distilleryNameCacheService.Add(updatedEntity.Name, id);
+            }
             dbContext.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
             await dbContext.SaveChangesAsync();
             return true;
@@ -50,16 +54,14 @@ public class DistilleryWriteService(
         }
     }
 
-    public async Task<bool> TryRemoveDistilleryAsync(Guid distilleryId)
+    public async Task RemoveDistilleryAsync(Guid distilleryId)
     {
         var distilleryEntity = await dbContext.Distilleries.FindAsync(distilleryId);
 
-        if (distilleryEntity == null) return false;
+        if (distilleryEntity == null) return;
 
         distilleryNameCacheService.Remove(distilleryId);
         dbContext.Distilleries.Remove(distilleryEntity);
         await dbContext.SaveChangesAsync();
-
-        return true;
     }
 }

@@ -1,30 +1,43 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Json;
 using MyWhiskyShelf.Core.Models;
+using MyWhiskyShelf.TestHelpers.Data;
 
 namespace MyWhiskyShelf.TestHelpers;
 
 [ExcludeFromCodeCoverage]
 public static class DatabaseSeeding
 {
-    public static async Task<List<Guid>> AddDistilleries(HttpClient httpClient,
-        params DistilleryRequest[] distilleryRequests)
+    private static readonly List<DistilleryRequest> DistilleriesToSeed =
+    [
+        DistilleryRequestTestData.Aberargie,
+        DistilleryRequestTestData.Aberfeldy,
+        DistilleryRequestTestData.Aberlour
+    ];
+
+    public static async Task SeedDatabase(HttpClient httpClient)
     {
-        const string addEndpoint = "/distilleries";
-        var createdIds = new List<Guid>();
-        foreach (var distilleryRequest in distilleryRequests)
+        foreach (var distilleryRequest in DistilleriesToSeed) 
         {
-            var response = await httpClient.PostAsJsonAsync(addEndpoint, distilleryRequest);
-            var idString = response.Headers.Location!.OriginalString.Split('/')[^1];
-            createdIds.Add(Guid.Parse(idString));
+            var request = new HttpRequestMessage(HttpMethod.Post, "/distilleries");
+            request.Content = JsonContent.Create(distilleryRequest);
+            request.Headers.Add("Idempotency-Key", Guid.NewGuid().ToString());
+            await httpClient.SendAsync(request);
         }
-
-        return createdIds;
     }
 
-    public static async Task RemoveDistilleries(HttpClient httpClient, List<Guid> ids)
+    public static async Task ClearDatabase(HttpClient httpClient)
     {
-        foreach (var id in ids)
-            await httpClient.DeleteAsync($"/distilleries/{id}");
+        var distilleryEntities = await httpClient.GetFromJsonAsync<List<DistilleryNameDetails>>("/distilleries");
+        if (distilleryEntities == null || distilleryEntities.Count == 0) return;
+        
+        foreach (var request in distilleryEntities.Select(entity => entity.Id).Select(id => new HttpRequestMessage(HttpMethod.Delete, $"/distilleries/{id}")))
+        {
+            request.Headers.Add("Idempotency-Key", Guid.NewGuid().ToString());
+            await httpClient.SendAsync(request);
+        }
+        
+        
     }
+    
 }

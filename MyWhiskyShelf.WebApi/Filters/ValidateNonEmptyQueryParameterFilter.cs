@@ -1,6 +1,6 @@
 using MyWhiskyShelf.WebApi.ErrorResults;
 
-namespace MyWhiskyShelf.WebApi.Validation;
+namespace MyWhiskyShelf.WebApi.Filters;
 
 public class ValidateNonEmptyQueryParameterFilter(string parameterName) : IEndpointFilter
 {

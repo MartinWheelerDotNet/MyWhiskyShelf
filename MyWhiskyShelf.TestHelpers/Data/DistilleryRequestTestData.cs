@@ -58,4 +58,15 @@ public static class DistilleryRequestTestData
         Type = "Malt",
         Active = true
     };
+    
+    public static DistilleryRequest NewDistillery => new()
+    {
+        Name = "NewDistillery",
+        Location = "A Place",
+        Region = "Speyside",
+        Founded = 1900,
+        Owner = "Chivas Brothers",
+        Type = "Malt",
+        Active = true
+    };
 }

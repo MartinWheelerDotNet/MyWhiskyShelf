@@ -10,6 +10,8 @@ using MyWhiskyShelf.DataLoader;
 using MyWhiskyShelf.DataLoader.Extensions;
 using MyWhiskyShelf.ServiceDefaults;
 using MyWhiskyShelf.WebApi.Endpoints;
+using MyWhiskyShelf.WebApi.Interfaces;
+using MyWhiskyShelf.WebApi.Services;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 
 namespace MyWhiskyShelf.WebApi;
@@ -23,7 +25,9 @@ internal static class Program
             .CreateBuilder(args)
             .ConfigureDefaultServices();
         builder.UsePostgresDatabase();
-
+        builder.AddRedisClient("cache");
+        
+        
         // If this project is being used as part of an Aspire Environment, the environment variable
         // MYWHISKYSHELF_DATA_SEEDING_ENABLED is configured in <MyWhiskyShelf.AppHost>.
         // This should be forwarded to this project to be used here. Otherwise, the standard configuration resources are
@@ -62,6 +66,7 @@ internal static class Program
             options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
+        builder.Services.AddSingleton<IIdempotencyService, RedisIdempotencyService>();
         builder.AddServiceDefaults();
 
         return builder;

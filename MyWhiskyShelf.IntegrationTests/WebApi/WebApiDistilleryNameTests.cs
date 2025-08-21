@@ -9,28 +9,29 @@ using MyWhiskyShelf.TestHelpers.Data;
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
 [Collection("AspireTests")]
-public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
+public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture) : IAsyncLifetime
 {
     private const string WebApiResourceName = "WebApi";
 
+    public async Task InitializeAsync()
+    {
+        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        await DatabaseSeeding.SeedDatabase(httpClient);
+    }
+    
     [Fact]
     public async Task When_GettingAllDistilleryNamesDetails_Expect_AllDistilleriesNameDetailsToBeReturned()
     {
-        const string endpoint = "/distilleries/names";
-
         List<string> expectedDistilleryNames =
         [
             DistilleryResponseTestData.Aberargie.Name,
             DistilleryResponseTestData.Aberfeldy.Name,
             DistilleryResponseTestData.Aberlour.Name
         ];
-
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-        var addedIds = await SeedTestData(httpClient);
 
-        var response = await httpClient.GetAsync(endpoint);
+        var response = await httpClient.GetAsync("/distilleries/names");
         var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
-        await DatabaseSeeding.RemoveDistilleries(httpClient, addedIds);
 
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
@@ -42,23 +43,11 @@ public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
             }));
     }
 
-    private static async Task<List<Guid>> SeedTestData(HttpClient httpClient)
-    {
-        var addedIds = await DatabaseSeeding.AddDistilleries(
-            httpClient,
-            DistilleryRequestTestData.Aberargie,
-            DistilleryRequestTestData.Aberfeldy,
-            DistilleryRequestTestData.Aberlour);
-        return addedIds;
-    }
-
     [Fact]
     public async Task When_SearchingByNameAndNoMatchesFound_Expect_EmptyList()
     {
-        const string endpoint = "/distilleries/name/search?pattern=anything";
-
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-        var response = await httpClient.GetAsync(endpoint);
+        var response = await httpClient.GetAsync("/distilleries/name/search?pattern=anything");
         var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
 
 
@@ -71,13 +60,10 @@ public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
     public async Task When_SearchingByNameAndMatchesExactly_Expect_ListWithJustThoseDistilleryNameDetails()
     {
         var endpoint = $"/distilleries/name/search?pattern={DistilleryRequestTestData.Aberfeldy.Name}";
-
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-        var addedIds = await SeedTestData(httpClient);
 
         var response = await httpClient.GetAsync(endpoint);
         var distilleryNameDetails = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
-        await DatabaseSeeding.RemoveDistilleries(httpClient, addedIds);
 
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
@@ -97,14 +83,11 @@ public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
             DistilleryResponseTestData.Aberfeldy.Name,
             DistilleryResponseTestData.Aberlour.Name
         ];
-
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-        var addedIds = await SeedTestData(httpClient);
-
+        
         var response = await httpClient.GetAsync(endpoint);
         var distilleryNameDetails = await response.Content.ReadFromJsonAsync<List<DistilleryNameDetails>>();
-        await DatabaseSeeding.RemoveDistilleries(httpClient, addedIds);
-
+        
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
             () => Assert.All(expectedDistilleryNames, expectedDistilleryName
@@ -166,5 +149,11 @@ public class WebApiDistilleryNameTests(MyWhiskyShelfFixture fixture)
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
             () => Assert.Equivalent(expectedProblem, problemResponse));
+    }
+
+    public async Task DisposeAsync()
+    {
+        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        await DatabaseSeeding.ClearDatabase(httpClient);
     }
 }

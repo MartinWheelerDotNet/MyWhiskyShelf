@@ -365,11 +365,9 @@ public class DistilleryNameCacheServiceTests
         distilleryNameCacheService.Add(DistilleryEntityTestData.Aberargie.Name, DistilleryEntityTestData.Aberargie.Id);
         distilleryNameCacheService.Remove(DistilleryEntityTestData.Aberargie.Id);
 
-        var distilleryDetails = distilleryNameCacheService.GetAll();
+        var distilleryDetails = distilleryNameCacheService.Search(DistilleryEntityTestData.Aberargie.Name);
 
-        Assert.DoesNotContain(
-            distilleryDetails,
-            details => details.Name == DistilleryEntityTestData.Aberargie.Name);
+        Assert.Empty(distilleryDetails);
     }
 
     private static async Task<MyWhiskyShelfDbContext> CreateDbContext(params DistilleryEntity[] distilleryNames)
