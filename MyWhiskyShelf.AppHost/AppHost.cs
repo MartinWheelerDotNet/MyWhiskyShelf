@@ -5,14 +5,19 @@ var builder = DistributedApplication.CreateBuilder(args);
 var postgres = builder
     .AddPostgres("postgres")
     .WithPgWeb();
+var database =postgres.AddDatabase("postgresDb");
 
-var database = postgres.AddDatabase("postgresDb");
+var cache = builder
+    .AddRedis("cache")
+    .WithRedisInsight();
 
 var enableDataSeeding = builder.Configuration["MYWHISKYSHELF_DATA_SEEDING_ENABLED"];
 
 builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
-    .WithReference(database)
     .WithEnvironment("MYWHISKYSHELF_DATA_SEEDING_ENABLED", enableDataSeeding)
-    .WaitFor(database);
+    .WithReference(database)
+    .WithReference(cache)
+    .WaitFor(database)
+    .WaitFor(cache);
 
 await builder.Build().RunAsync();

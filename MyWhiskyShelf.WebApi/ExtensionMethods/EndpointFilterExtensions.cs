@@ -1,7 +1,10 @@
-using MyWhiskyShelf.WebApi.Validation;
+using System.Diagnostics.CodeAnalysis;
+using MyWhiskyShelf.WebApi.Filters;
+using MyWhiskyShelf.WebApi.Interfaces;
 
 namespace MyWhiskyShelf.WebApi.ExtensionMethods;
 
+[ExcludeFromCodeCoverage]
 public static class EndpointFilterExtensions
 {
     public static RouteHandlerBuilder RequiresNonEmptyRouteParameter(
@@ -16,5 +19,17 @@ public static class EndpointFilterExtensions
         string parameterName)
     {
         return routeHandlerBuilder.AddEndpointFilter(new ValidateNonEmptyQueryParameterFilter(parameterName));
+    }
+
+    public static RouteHandlerBuilder RequiresIdempotencyKey(this RouteHandlerBuilder routeHandlerBuilder)
+    {
+        return routeHandlerBuilder.AddEndpointFilter(async (context, next) =>
+        {
+            var idempotencyService = context.HttpContext.RequestServices
+                .GetRequiredService<IIdempotencyService>();
+
+            var filter = new IdempotencyKeyFilter(idempotencyService);
+            return await filter.InvokeAsync(context, next);
+        });
     }
 }

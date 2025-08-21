@@ -8,18 +8,10 @@ namespace MyWhiskyShelf.Database.Services;
 public class DistilleryWriteService(
     MyWhiskyShelfDbContext dbContext,
     IDistilleryNameCacheService distilleryNameCacheService,
-    IIdempotencyService redisIdempotencyService,
     IMapper<DistilleryRequest, DistilleryEntity> mapper) : IDistilleryWriteService
 {
-    public async Task<(bool hasBeenAdded, Guid? id)> TryAddDistilleryAsync(
-        DistilleryRequest distilleryRequest,
-        Guid idempotencyKey)
+    public async Task<(bool hasBeenAdded, Guid? id)> TryAddDistilleryAsync(DistilleryRequest distilleryRequest)
     {
-        var idempotencyResult = await redisIdempotencyService.TryGetCachedResult(idempotencyKey);
-    
-        if (idempotencyResult is not null)
-            return (true, idempotencyResult);
-        
         if (distilleryNameCacheService.TryGet(distilleryRequest.Name, out _))
             return (false, null);
 
@@ -43,7 +35,7 @@ public class DistilleryWriteService(
         if (existingEntity is null) return false;
 
         var updatedEntity = mapper.Map(distilleryRequest);
-        updatedEntity.Id = existingEntity.Id;
+        updatedEntity.Id = id;
 
         try
         {
@@ -57,16 +49,14 @@ public class DistilleryWriteService(
         }
     }
 
-    public async Task<bool> TryRemoveDistilleryAsync(Guid distilleryId)
+    public async Task RemoveDistilleryAsync(Guid distilleryId)
     {
         var distilleryEntity = await dbContext.Distilleries.FindAsync(distilleryId);
 
-        if (distilleryEntity == null) return false;
+        if (distilleryEntity == null) return;
 
         distilleryNameCacheService.Remove(distilleryId);
         dbContext.Distilleries.Remove(distilleryEntity);
         await dbContext.SaveChangesAsync();
-
-        return true;
     }
 }

@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <PackageReference Include="Aspire.Npgsql" Version="9.4.0" />
+        <PackageReference Include="Aspire.StackExchange.Redis" Version="9.4.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8" />
         <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25" />
     </ItemGroup>
@@ -25,6 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="Validation\" />
         <Folder Include="Yaak\"/>
     </ItemGroup>
 
