@@ -39,6 +39,11 @@ public class DistilleryWriteService(
 
         try
         {
+            if (existingEntity.Name != updatedEntity.Name)
+            {
+                distilleryNameCacheService.Remove(existingEntity.Id);
+                distilleryNameCacheService.Add(updatedEntity.Name, id);
+            }
             dbContext.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
             await dbContext.SaveChangesAsync();
             return true;

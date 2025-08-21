@@ -6,7 +6,7 @@ internal static class ProblemResults
 {
     #region DistilleryRequest Problem Results
 
-    public static IResult ResourceAlreadyExists(string resource, string id, HttpContext httpContext)
+    public static IResult ResourceAlreadyExists(string resource, string name, HttpContext httpContext)
     {
         return Results.Problem(
             new ProblemDetails
@@ -14,7 +14,7 @@ internal static class ProblemResults
                 Type = $"urn:mywhiskyshelf:errors:{resource}-already-exists",
                 Title = $"{resource} already exists.",
                 Status = StatusCodes.Status409Conflict,
-                Detail = $"Cannot add {resource} '{id} as it already exists.",
+                Detail = $"Cannot add {resource} '{name}' as it already exists.",
                 Instance = httpContext.Request.Path
             });
     }

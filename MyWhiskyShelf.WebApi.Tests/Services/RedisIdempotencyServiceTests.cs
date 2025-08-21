@@ -5,7 +5,7 @@ using MyWhiskyShelf.WebApi.Models;
 using MyWhiskyShelf.WebApi.Services;
 using StackExchange.Redis;
 
-namespace MyWhiskyShelf.WebApi.Tests;
+namespace MyWhiskyShelf.WebApi.Tests.Services;
 
 public class RedisIdempotencyServiceTests
 {
