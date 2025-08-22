@@ -8,7 +8,6 @@ using MyWhiskyShelf.WebApi.ExtensionMethods;
 
 namespace MyWhiskyShelf.WebApi.Endpoints;
 
-[ExcludeFromCodeCoverage]
 internal static partial class EndpointMappings
 {
     private const string DistilleryWithRouteIdEndpoint = "/distilleries/{id:guid}";
