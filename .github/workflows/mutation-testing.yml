@@ -10,13 +10,6 @@ on:
         type: string
            
 jobs:
-  skip-for-dependabot:
-    name: Skip mutation testing for dependabot PR
-    if: ${{ github.actor == 'dependabot[bot]' }}
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo 'Mutation Testing skipped for Dependabot PRs'
-  
   mutation-tests:
     name: ${{ inputs.name }}
     if: ${{ github.actor != 'dependabot[bot]' }}
