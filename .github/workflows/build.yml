@@ -119,7 +119,7 @@ jobs:
           extensions: ReSharperPlugin.CognitiveComplexity
   
   mutation-testing:
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: ${{ github.actor != 'dependabot[bot]' }}
     uses: ./.github/workflows/mutation-testing.yml
     with:
       name: ${{ matrix.name }}
