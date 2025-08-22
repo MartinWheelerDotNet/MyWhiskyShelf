@@ -119,6 +119,8 @@ jobs:
           extensions: ReSharperPlugin.CognitiveComplexity
   
   mutation-testing:
+    permissions: 
+      pull-requests: write
     uses: ./.github/workflows/mutation-testing.yml
     with:
       name: ${{ matrix.name }}
