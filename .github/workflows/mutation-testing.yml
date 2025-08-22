@@ -8,6 +8,9 @@ on:
       project:
         required: true
         type: string
+    secrets:
+      STRYKER_DASHBOARD_API_KEY:
+        required: true
            
 jobs:
   mutation-tests:
