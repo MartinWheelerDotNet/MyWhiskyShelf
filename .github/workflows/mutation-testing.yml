@@ -81,31 +81,4 @@ jobs:
             dotnet stryker --reporter "dashboard" --project "${{ inputs.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config.json"
           fi
   
-  post-pr-comment:
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' && github.actor != 'dependabot[bot]' }}
-    needs: mutation-tests
-    permissions:
-      pull-requests: write
-    
-    steps:
-      - name: Generate Markdown and Post to PR
-        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043
-        env:
-          GITHUB_HEAD_REF: ${{ github.head_ref }}
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-id: 'mutation-results'
-          edit-mode: 'replace'
-          body: |
-            ### Mutation Testing Results
-            
-            | Project    | Score                                                                                                                                                                                                                                                                                                                                                                |
-            |------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-            | Overall    | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }})](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }})                                         |
-            | AppHost    | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }}%3Fmodule%3DAppHost)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }}?module=AppHost)       |
-            | Core       | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }}3Fmodule%3DCore)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }}?module=Core)              |
-            | Database   | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }}%3Fmodule%3DDatabase)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }}?module=Database)     |
-            | DataLoader | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }}%3Fmodule%3DDataLoader)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }}?module=DataLoader) |        
-            | WebApi     | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }}%3Fmodule%3DWebApi)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }}?module=WebApi)         |        
-      
+        
