@@ -1,0 +1,87 @@
+name: Mutation Testing
+on: 
+  workflow_call: 
+    inputs:
+      name:
+        required: true
+        type: string
+      project:
+        required: true
+        type: string
+    secrets:
+      STRYKER_DASHBOARD_API_KEY:
+        required: true
+           
+jobs:
+  mutation-tests:
+    name: ${{ inputs.name }}
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore MyWhiskyShelf.sln
+
+      - name: Setup Dev Credentials
+        run: dotnet dev-certs https --trust
+
+      - name: Install Stryker.NET tool
+        run: dotnet tool install -g dotnet-stryker
+
+      - name: Add tool path to environment
+        run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Run mutation tests for ${{ inputs.name }}
+        env:
+          STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+          GITHUB_HEAD_REF: ${{ github.head_ref }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Running Stryker for changed files only..."
+            # Create a temporary config file for the dashboard reporter
+            cat <<EOF > stryker-config.json
+            {
+              "stryker-config": {
+                "project-info": {
+                  "name": "github.com/${{ github.repository }}",
+                  "version": "$GITHUB_HEAD_REF",
+                  "module": "${{ inputs.name }}"
+                },
+                "since": { "target": "${{ github.base_ref }}" }
+              }
+            }
+          EOF
+            dotnet stryker --reporter "dashboard" --project "${{ inputs.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config.json" 
+          else
+            echo "Running full Stryker mutation testing..."
+            # Create a temporary config file for the dashboard reporter
+            cat <<EOF > stryker-config.json
+            {
+              "stryker-config": {
+                "project-info": {
+                  "name": "github.com/${{ github.repository }}",
+                  "version": "main",
+                  "module": "${{ inputs.name }}"
+                }
+              }
+            }
+          EOF
+            dotnet stryker --reporter "dashboard" --project "${{ inputs.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config.json"
+          fi
+  
+        
