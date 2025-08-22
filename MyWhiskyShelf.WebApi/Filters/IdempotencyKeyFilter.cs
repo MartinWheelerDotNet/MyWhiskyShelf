@@ -59,6 +59,10 @@ public class IdempotencyKeyFilter(IIdempotencyService idempotencyService) : IEnd
         {
             httpContext.Response.ContentType = null;
             httpContext.Response.ContentLength = 0;
+            
+            // This line is required to stop the .NET default content-type headers from being written which would
+            // break the idempotency response when there is no content to return.
+            //Stryker disable once Statement
             await httpContext.Response.WriteAsync(string.Empty);
         }
         else

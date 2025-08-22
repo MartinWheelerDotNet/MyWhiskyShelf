@@ -34,11 +34,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\MyWhiskyShelf.AppHost\MyWhiskyShelf.AppHost.csproj"/>
-        <ProjectReference Include="..\MyWhiskyShelf.Core\MyWhiskyShelf.Core.csproj"/>
-        <ProjectReference Include="..\MyWhiskyShelf.Database\MyWhiskyShelf.Database.csproj"/>
-        <ProjectReference Include="..\MyWhiskyShelf.DataLoader\MyWhiskyShelf.DataLoader.csproj"/>
         <ProjectReference Include="..\MyWhiskyShelf.TestHelpers\MyWhiskyShelf.TestHelpers.csproj"/>
-        <ProjectReference Include="..\MyWhiskyShelf.WebApi\MyWhiskyShelf.WebApi.csproj" />
     </ItemGroup>
 
 </Project>

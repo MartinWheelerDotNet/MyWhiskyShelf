@@ -134,7 +134,7 @@ public class IdempotencyKeyFilterTests
         httpContext.Response.Body = new MemoryStream();
         var context = CreateContext(httpContext);
 
-        var cachedResponse = new CachedResponse(204, content, "application/json", headers);
+        var cachedResponse = new CachedResponse(200, content, "application/json", headers);
         _idempotencyServiceMock
             .Setup(s => s.TryGetCachedResultAsync(idempotencyKey))
             .ReturnsAsync(cachedResponse);
@@ -149,7 +149,7 @@ public class IdempotencyKeyFilterTests
         Assert.Empty(body);
         Assert.Equal(0, httpContext.Response.ContentLength);
         Assert.Null(httpContext.Response.ContentType);
-        Assert.Equal(204, httpContext.Response.StatusCode);
+        Assert.Equal(200, httpContext.Response.StatusCode);
     }
 
     [Fact]

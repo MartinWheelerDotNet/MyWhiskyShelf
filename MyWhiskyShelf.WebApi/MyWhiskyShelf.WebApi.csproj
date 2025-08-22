@@ -24,10 +24,4 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Validation\" />
-        <Folder Include="Yaak\"/>
-    </ItemGroup>
-
 </Project>
