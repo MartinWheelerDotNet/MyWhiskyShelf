@@ -8,13 +8,14 @@ on:
       project:
         required: true
         type: string
-        
-        
+           
 jobs:
   skip-for-dependabot:
-    if: ${{ github.actor == 'dependabot[bot]' }}
     name: Skip mutation testing for dependabot PR
+    if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Mutation Testing skipped for Dependabot PRs'
   
   mutation-tests:
     name: ${{ inputs.name }}
@@ -49,7 +50,7 @@ jobs:
       - name: Add tool path to environment
         run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
 
-      - name: Run mutation tests for ${{ matrix.name }}
+      - name: Run mutation tests for ${{ inputs.name }}
         env:
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
           GITHUB_HEAD_REF: ${{ github.head_ref }}
@@ -63,13 +64,13 @@ jobs:
                 "project-info": {
                   "name": "github.com/${{ github.repository }}",
                   "version": "$GITHUB_HEAD_REF",
-                  "module": "${{ matrix.name }}"
+                  "module": "${{ inputs.name }}"
                 },
                 "since": { "target": "${{ github.base_ref }}" }
               }
             }
           EOF
-            dotnet stryker --reporter "dashboard" --project "${{ matrix.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config.json" 
+            dotnet stryker --reporter "dashboard" --project "${{ inputs.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config.json" 
           else
             echo "Running full Stryker mutation testing..."
             # Create a temporary config file for the dashboard reporter
@@ -79,12 +80,12 @@ jobs:
                 "project-info": {
                   "name": "github.com/${{ github.repository }}",
                   "version": "main",
-                  "module": "${{ matrix.name }}"
+                  "module": "${{ inputs.name }}"
                 }
               }
             }
           EOF
-            dotnet stryker --reporter "dashboard" --project "${{ matrix.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config.json"
+            dotnet stryker --reporter "dashboard" --project "${{ inputs.project }}" --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" --config-file "stryker-config.json"
           fi
   
   post-pr-comment:
