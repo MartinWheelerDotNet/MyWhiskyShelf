@@ -1,13 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using MyWhiskyShelf.Core.Models;
-using MyWhiskyShelf.Database.Contexts;
-using MyWhiskyShelf.Database.Entities;
-using MyWhiskyShelf.Database.Extensions;
-using MyWhiskyShelf.Database.Interfaces;
-using MyWhiskyShelf.DataLoader;
-using MyWhiskyShelf.DataLoader.Extensions;
+using MyWhiskyShelf.Application.Extensions;
+using MyWhiskyShelf.Infrastructure.Extensions;
+using MyWhiskyShelf.Infrastructure.Interfaces;
+using MyWhiskyShelf.Infrastructure.Mapping;
+using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
+using MyWhiskyShelf.Infrastructure.Persistence.Entities;
 using MyWhiskyShelf.ServiceDefaults;
 using MyWhiskyShelf.WebApi.Endpoints;
 using MyWhiskyShelf.WebApi.Interfaces;
@@ -27,6 +26,8 @@ internal static class Program
         builder.UsePostgresDatabase();
         builder.AddRedisClient("cache");
         
+        builder.Services.AddApplicationServices();
+        builder.Services.AddInfrastructureRepositories();
         
         // If this project is being used as part of an Aspire Environment, the environment variable
         // MYWHISKYSHELF_DATA_SEEDING_ENABLED is configured in <MyWhiskyShelf.AppHost>.
@@ -54,8 +55,7 @@ internal static class Program
 
         app.MapDistilleryEndpoints();
         app.MapWhiskyBottleEndpoints();
-        app.MapDistilleryNameEndpoints();
-
+        
         await app.RunAsync();
     }
 
@@ -80,8 +80,6 @@ internal static class Program
             .GetRequiredService<MyWhiskyShelfDbContext>();
         var dataLoader = scope.ServiceProvider
             .GetRequiredService<IJsonFileLoader>();
-        var mapper = scope.ServiceProvider
-            .GetRequiredService<IMapper<DistilleryRequest, DistilleryEntity>>();
 
         await dbContext.Database.EnsureCreatedAsync();
 
@@ -91,14 +89,11 @@ internal static class Program
         if (useDataSeeding)
         {
             var distilleries = await dataLoader.GetDistilleriesFromJsonAsync("Resources/distilleries.json");
-            var mappedDistilleries = distilleries.Select(mapper.Map);
+            var mappedDistilleries = distilleries.Select(distillery => distillery.ToEntity());
 
             dbContext.Set<DistilleryEntity>().AddRange(mappedDistilleries);
         }
 
         await dbContext.SaveChangesAsync();
-
-        var cacheService = scope.ServiceProvider.GetRequiredService<IDistilleryNameCacheService>();
-        await cacheService.InitializeFromDatabaseAsync(dbContext);
     }
 }

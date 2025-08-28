@@ -24,4 +24,8 @@
       <ProjectReference Include="..\MyWhiskyShelf.WebApi\MyWhiskyShelf.WebApi.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Contracts\" />
+    </ItemGroup>
+
 </Project>

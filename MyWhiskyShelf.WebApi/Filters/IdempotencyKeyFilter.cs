@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using MyWhiskyShelf.WebApi.ErrorResults;
 using MyWhiskyShelf.WebApi.Interfaces;
-using MyWhiskyShelf.WebApi.Models;
 
 namespace MyWhiskyShelf.WebApi.Filters;
 
@@ -14,11 +13,10 @@ public class IdempotencyKeyFilter(IIdempotencyService idempotencyService) : IEnd
         if (!TryParseIdempotencyKeyHeader(httpContext, out var key))
             return ValidationProblemResults.MissingOrInvalidIdempotencyKey();
         
-        var cachedResult = await idempotencyService.TryGetCachedResultAsync(key.Value);
-        if (cachedResult is not null)
+        var cached = await idempotencyService.TryGetCachedResultAsync(key.Value);
+        if (cached is not null)
         {
-            await WriteResponse(httpContext, cachedResult);
-            return null;
+            return new CachedResponseResult(cached);
         }
 
         var result = await next(context);
@@ -39,6 +37,7 @@ public class IdempotencyKeyFilter(IIdempotencyService idempotencyService) : IEnd
         };
 
         await apiResult.ExecuteAsync(responseContext);
+        
         memoryStream.Position = 0;
         var statusCode = responseContext.Response.StatusCode;
         var content = await new StreamReader(memoryStream).ReadToEndAsync();
@@ -47,34 +46,6 @@ public class IdempotencyKeyFilter(IIdempotencyService idempotencyService) : IEnd
             .ToDictionary(header => header.Key, header => header.Value.ToArray());
 
         await idempotencyService.AddToCacheAsync(idempotencyKey.ToString(), statusCode, content, contentType, headers);
-    }
-
-    private static async ValueTask WriteResponse(HttpContext httpContext, CachedResponse cachedResponse)
-    {
-        httpContext.Response.StatusCode = cachedResponse.StatusCode;
-        foreach (var header in cachedResponse.Headers)
-            httpContext.Response.Headers[header.Key] = header.Value;
-
-        if (string.IsNullOrWhiteSpace(cachedResponse.Content))
-        {
-            httpContext.Response.ContentType = null;
-            httpContext.Response.ContentLength = 0;
-            
-            // This line is required to stop the .NET default content-type headers from being written which would
-            // break the idempotency response when there is no content to return.
-            //Stryker disable once Statement
-            await httpContext.Response.WriteAsync(string.Empty);
-        }
-        else
-        {
-            httpContext.Response.ContentType = cachedResponse.ContentType;
-            httpContext.Response.ContentLength = cachedResponse.Content.Length;
-            await httpContext.Response.WriteAsync(cachedResponse.Content);
-        }
-        
-        
-        
-        
     }
 
     private static bool TryParseIdempotencyKeyHeader(

@@ -55,7 +55,7 @@ public class IdempotencyKeyFilterTests
         var httpContext = CreateHttpContext();
         var context = CreateContext(httpContext);
 
-        var result = await _idempotencyKeyFilter.InvokeAsync(context, _ => ValueTask.FromResult<object?>(Results.Ok()));
+        var result = await _idempotencyKeyFilter.InvokeAsync(context, null!);
 
         var problem = Assert.IsType<ProblemHttpResult>(result);
         Assert.Equivalent(expectedResult, problem.ProblemDetails);
@@ -68,7 +68,7 @@ public class IdempotencyKeyFilterTests
         var httpContext = CreateHttpContext("not-a-guid");
         var context = CreateContext(httpContext);
 
-        var result = await _idempotencyKeyFilter.InvokeAsync(context, _ => ValueTask.FromResult<object?>(Results.Ok()));
+        var result = await _idempotencyKeyFilter.InvokeAsync(context, null!);
 
         var problem = Assert.IsType<ProblemHttpResult>(result);
         Assert.Equivalent(expectedResult, problem.ProblemDetails);
@@ -81,7 +81,7 @@ public class IdempotencyKeyFilterTests
         var httpContext = CreateHttpContext(Guid.Empty.ToString());
         var context = CreateContext(httpContext);
 
-        var result = await _idempotencyKeyFilter.InvokeAsync(context, _ => ValueTask.FromResult<object?>(Results.Ok()));
+        var result = await _idempotencyKeyFilter.InvokeAsync(context, null!);
 
         var problem = Assert.IsType<ProblemHttpResult>(result);
         Assert.Equivalent(expectedResult, problem.ProblemDetails);
@@ -89,7 +89,7 @@ public class IdempotencyKeyFilterTests
     
 
     [Fact]
-    public async Task When_ResultCached_Expect_NullReturnedAndResponseWritten()
+    public async Task When_ResultCached_Expect_IResultReturnedAndResponseWritten()
     {
         var idempotencyKey = Guid.NewGuid();
         var headers = new Dictionary<string, string?[]>
@@ -105,15 +105,15 @@ public class IdempotencyKeyFilterTests
             .Setup(s => s.TryGetCachedResultAsync(idempotencyKey))
             .ReturnsAsync(cachedResponse);
 
-        var result = await _idempotencyKeyFilter
-            .InvokeAsync(context, _ => throw new Exception("next should not be called"));
+        var result = await _idempotencyKeyFilter.InvokeAsync(context, null!);
 
+        var iResult = Assert.IsAssignableFrom<IResult>(result);
+        await iResult.ExecuteAsync(httpContext);
+        
         httpContext.Response.Body.Position = 0;
         var body = await new StreamReader(httpContext.Response.Body).ReadToEndAsync();
 
-        Assert.Null(result);
         Assert.Equal("cached-content", body);
-        Assert.Equal("cached-content".Length, httpContext.Response.ContentLength);
         Assert.Equal("application/json", httpContext.Response.ContentType);
         Assert.Equal(200, httpContext.Response.StatusCode);
     }
@@ -123,7 +123,7 @@ public class IdempotencyKeyFilterTests
     [InlineData("   ")]
     [InlineData("    ")]
     [InlineData("\t \n")]
-    public async Task When_ResultCachedAndContentIsEmpty_Expect_NullReturnedAndResponseWritten(string content)
+    public async Task When_ResultCachedAndContentIsEmpty_Expect_IResultReturnedAndResponseWritten(string content)
     {
         var idempotencyKey = Guid.NewGuid();
         var headers = new Dictionary<string, string?[]>
@@ -140,14 +140,15 @@ public class IdempotencyKeyFilterTests
             .ReturnsAsync(cachedResponse);
 
         var result = await _idempotencyKeyFilter
-            .InvokeAsync(context, _ => throw new Exception("next should not be called"));
+            .InvokeAsync(context, null!);
 
+        var iResult = Assert.IsAssignableFrom<IResult>(result);
+        await iResult.ExecuteAsync(httpContext);
+        
         httpContext.Response.Body.Position = 0;
         var body = await new StreamReader(httpContext.Response.Body).ReadToEndAsync();
 
-        Assert.Null(result);
         Assert.Empty(body);
-        Assert.Equal(0, httpContext.Response.ContentLength);
         Assert.Null(httpContext.Response.ContentType);
         Assert.Equal(200, httpContext.Response.StatusCode);
     }

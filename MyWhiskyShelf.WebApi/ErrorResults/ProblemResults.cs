@@ -4,38 +4,15 @@ namespace MyWhiskyShelf.WebApi.ErrorResults;
 
 internal static class ProblemResults
 {
-    #region DistilleryRequest Problem Results
-
-    public static IResult ResourceAlreadyExists(string resource, string name, HttpContext httpContext)
+    public static ProblemDetails InternalServerError(string name, string action, string traceId, string path)
     {
-        return Results.Problem(
-            new ProblemDetails
-            {
-                Type = $"urn:mywhiskyshelf:errors:{resource}-already-exists",
-                Title = $"{resource} already exists.",
-                Status = StatusCodes.Status409Conflict,
-                Detail = $"Cannot add {resource} '{name}' as it already exists.",
-                Instance = httpContext.Request.Path
-            });
+        return new ProblemDetails
+        {
+            Type = $"urn:mywhiskyshelf:errors:{name}-{action}-failed",
+            Title = $"Failed to created {name}",
+            Status = StatusCodes.Status500InternalServerError,
+            Detail = $"An unexpected error occurred. (TraceId: {traceId})",
+            Instance = path
+        };
     }
-
-
-    public static IResult ResourceNotFound(
-        string name,
-        string action,
-        Guid resourceId,
-        HttpContext httpContext)
-    {
-        return Results.Problem(
-            new ProblemDetails
-            {
-                Type = $"urn:mywhiskyshelf:errors:{name}-does-not-exist",
-                Title = $"{name} does not exist.",
-                Status = StatusCodes.Status404NotFound,
-                Detail = $"Cannot {action} {name} '{resourceId}' as it does not exist.",
-                Instance = httpContext.Request.Path
-            });
-    }
-
-    #endregion
 }

@@ -5,7 +5,8 @@ var builder = DistributedApplication.CreateBuilder(args);
 var postgres = builder
     .AddPostgres("postgres")
     .WithPgWeb();
-var database =postgres.AddDatabase("postgresDb");
+var database = postgres
+    .AddDatabase("myWhiskyShelfDb");
 
 var cache = builder
     .AddRedis("cache")

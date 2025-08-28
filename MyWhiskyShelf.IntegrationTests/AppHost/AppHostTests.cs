@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
-using MyWhiskyShelf.Core.Models;
+using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
+using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 
 namespace MyWhiskyShelf.IntegrationTests.AppHost;
 

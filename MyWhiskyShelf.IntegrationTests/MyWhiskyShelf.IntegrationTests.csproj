@@ -34,7 +34,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\MyWhiskyShelf.AppHost\MyWhiskyShelf.AppHost.csproj"/>
-        <ProjectReference Include="..\MyWhiskyShelf.TestHelpers\MyWhiskyShelf.TestHelpers.csproj"/>
+        <ProjectReference Include="..\MyWhiskyShelf.WebApi\MyWhiskyShelf.WebApi.csproj" />
     </ItemGroup>
 
 </Project>

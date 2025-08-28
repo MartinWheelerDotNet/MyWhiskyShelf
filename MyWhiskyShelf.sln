@@ -6,21 +6,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.ServiceDefaul
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.IntegrationTests", "MyWhiskyShelf.IntegrationTests\MyWhiskyShelf.IntegrationTests.csproj", "{6C1820F2-B28F-4E3A-B40B-F7B5DB0E3EF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.Database", "MyWhiskyShelf.Database\MyWhiskyShelf.Database.csproj", "{9BA97E8D-9E7D-49B3-B093-60153A7DDF76}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.Infrastructure", "MyWhiskyShelf.Infrastructure\MyWhiskyShelf.Infrastructure.csproj", "{9BA97E8D-9E7D-49B3-B093-60153A7DDF76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.Database.Tests", "MyWhiskyShelf.Database.Tests\MyWhiskyShelf.Database.Tests.csproj", "{844E9777-009D-4C7B-8634-72C2DDFDC4AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.Infrastructure.Tests", "MyWhiskyShelf.Infrastructure.Tests\MyWhiskyShelf.Infrastructure.Tests.csproj", "{844E9777-009D-4C7B-8634-72C2DDFDC4AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.WebApi", "MyWhiskyShelf.WebApi\MyWhiskyShelf.WebApi.csproj", "{C3E699CB-88F4-429B-8E89-0136BA78329D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.Core", "MyWhiskyShelf.Core\MyWhiskyShelf.Core.csproj", "{BA8E240C-0852-4EDA-B06A-19854F8FB4F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.DataLoader.Tests", "MyWhiskyShelf.DataLoader.Tests\MyWhiskyShelf.DataLoader.Tests.csproj", "{3C848BBB-F7C5-4FEB-A7C1-444E9853D5BF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.DataLoader", "MyWhiskyShelf.DataLoader\MyWhiskyShelf.DataLoader.csproj", "{EA611A79-E198-4A82-B33C-6DE0F67A099C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.TestHelpers", "MyWhiskyShelf.TestHelpers\MyWhiskyShelf.TestHelpers.csproj", "{97F90BEA-EE8F-4C92-9591-70ED01C23F80}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.WebApi.Tests", "MyWhiskyShelf.WebApi.Tests\MyWhiskyShelf.WebApi.Tests.csproj", "{948DB848-4110-41FB-9C04-59D67739ED9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.Application", "MyWhiskyShelf.Application\MyWhiskyShelf.Application.csproj", "{7F1C3562-21E3-46DA-9D70-33629008D32A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWhiskyShelf.Application.Tests", "MyWhiskyShelf.Application.Tests\MyWhiskyShelf.Application.Tests.csproj", "{E026F824-BC5C-4A27-BF82-4A1602CAB75D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,21 +54,17 @@ Global
 		{BA8E240C-0852-4EDA-B06A-19854F8FB4F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA8E240C-0852-4EDA-B06A-19854F8FB4F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA8E240C-0852-4EDA-B06A-19854F8FB4F1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3C848BBB-F7C5-4FEB-A7C1-444E9853D5BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C848BBB-F7C5-4FEB-A7C1-444E9853D5BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C848BBB-F7C5-4FEB-A7C1-444E9853D5BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C848BBB-F7C5-4FEB-A7C1-444E9853D5BF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA611A79-E198-4A82-B33C-6DE0F67A099C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA611A79-E198-4A82-B33C-6DE0F67A099C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA611A79-E198-4A82-B33C-6DE0F67A099C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA611A79-E198-4A82-B33C-6DE0F67A099C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{97F90BEA-EE8F-4C92-9591-70ED01C23F80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{97F90BEA-EE8F-4C92-9591-70ED01C23F80}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{97F90BEA-EE8F-4C92-9591-70ED01C23F80}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{97F90BEA-EE8F-4C92-9591-70ED01C23F80}.Release|Any CPU.Build.0 = Release|Any CPU
 		{948DB848-4110-41FB-9C04-59D67739ED9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{948DB848-4110-41FB-9C04-59D67739ED9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{948DB848-4110-41FB-9C04-59D67739ED9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{948DB848-4110-41FB-9C04-59D67739ED9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F1C3562-21E3-46DA-9D70-33629008D32A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F1C3562-21E3-46DA-9D70-33629008D32A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F1C3562-21E3-46DA-9D70-33629008D32A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F1C3562-21E3-46DA-9D70-33629008D32A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E026F824-BC5C-4A27-BF82-4A1602CAB75D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E026F824-BC5C-4A27-BF82-4A1602CAB75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E026F824-BC5C-4A27-BF82-4A1602CAB75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E026F824-BC5C-4A27-BF82-4A1602CAB75D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
