@@ -22,7 +22,7 @@ public class RedisIdempotencyServiceTests
 
         _service = new RedisIdempotencyService(mockConnection.Object);
     }
-    
+
     [Fact]
     public async Task When_AddToCache_Expect_DatabaseUpdated()
     {
@@ -45,7 +45,7 @@ public class RedisIdempotencyServiceTests
 
         _mockDatabase.Verify();
     }
-    
+
     [Fact]
     public async Task When_TryGetCachedResultAndKeyExistsAndIsValid_Expect_ResultReturned()
     {
