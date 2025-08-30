@@ -7,9 +7,9 @@ using MyWhiskyShelf.Core.Aggregates;
 namespace MyWhiskyShelf.Application.Services;
 
 public sealed class DistilleryAppService(
-    IDistilleryReadRepository read, 
+    IDistilleryReadRepository read,
     IDistilleryWriteRepository write,
-    ILogger<DistilleryAppService> logger) 
+    ILogger<DistilleryAppService> logger)
     : IDistilleryAppService
 {
     public async Task<Distillery?> GetByIdAsync(Guid id, CancellationToken ct = default)
@@ -21,7 +21,7 @@ public sealed class DistilleryAppService(
             logger.LogWarning("Distillery not found with [Id: {Id}]", id);
             return null;
         }
-        
+
         logger.LogDebug("Retrieved distillery with [Name: {Name}, Id: {Id}]", distillery.Name, id);
         return distillery;
     }
@@ -30,11 +30,11 @@ public sealed class DistilleryAppService(
     public async Task<IReadOnlyList<Distillery>> GetAllAsync(CancellationToken ct = default)
     {
         var distilleries = await read.GetAllAsync(ct);
-        
+
         logger.LogDebug("Retrieved [{Count}] distilleries", distilleries.Count);
         return distilleries;
     }
-        
+
 
     public async Task<CreateDistilleryResult> CreateAsync(Distillery distillery, CancellationToken ct = default)
     {
@@ -48,20 +48,23 @@ public sealed class DistilleryAppService(
         try
         {
             var addedDistillery = await write.AddAsync(distillery, ct);
-            
-            logger.LogDebug("Distillery created with [Name: {Name}, Id: {Id}]", addedDistillery!.Name, addedDistillery.Id);
+
+            logger.LogDebug(
+                "Distillery created with [Name: {Name}, Id: {Id}]",
+                addedDistillery!.Name,
+                addedDistillery.Id);
             return new CreateDistilleryResult(CreateDistilleryOutcome.Created, addedDistillery);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             logger.LogError(ex, "Error creating distillery with [Name: {Name}]", distillery.Name);
             return new CreateDistilleryResult(CreateDistilleryOutcome.Error, Error: ex.Message);
         }
     }
-    
+
     public async Task<UpdateDistilleryResult> UpdateAsync(
-        Guid id, 
-        Distillery distillery, 
+        Guid id,
+        Distillery distillery,
         CancellationToken ct = default)
     {
         var current = await read.GetByIdAsync(id, ct);
@@ -80,6 +83,7 @@ public sealed class DistilleryAppService(
                 return new UpdateDistilleryResult(UpdateDistilleryOutcome.NameConflict);
             }
         }
+
         try
         {
             var updated = await write.UpdateAsync(id, distillery, ct);
@@ -92,7 +96,6 @@ public sealed class DistilleryAppService(
 
             logger.LogWarning("Distillery not found with [id: {Id}]", id);
             return new UpdateDistilleryResult(UpdateDistilleryOutcome.NotFound);
-
         }
         catch (Exception ex)
         {
@@ -111,14 +114,14 @@ public sealed class DistilleryAppService(
                 logger.LogDebug("Distillery deleted with [Id: {Id}]", id);
                 return new DeleteDistilleryResult(DeleteDistilleryOutcome.Deleted);
             }
-            
+
             logger.LogWarning("Distillery not found with [Id: {Id}]", id);
             return new DeleteDistilleryResult(DeleteDistilleryOutcome.NotFound);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error deleting distillery [Id: {Id}]", id);
-            return new DeleteDistilleryResult(DeleteDistilleryOutcome.Error, Error: ex.Message);
+            return new DeleteDistilleryResult(DeleteDistilleryOutcome.Error, ex.Message);
         }
     }
 }

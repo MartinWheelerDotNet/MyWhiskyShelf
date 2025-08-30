@@ -27,7 +27,7 @@ public static class HostApplicationBuilderExtensions
             settings.DisableTracing = false;
         });
     }
-    
+
     public static void UseDataLoader(this IHostApplicationBuilder builder)
     {
         builder.Services.AddSingleton<IJsonFileLoader, JsonFileLoader>();

@@ -21,10 +21,15 @@ public sealed class HttpResponseMessageComparer : IEqualityComparer<HttpResponse
         return string.Equals(sx, sy, StringComparison.Ordinal);
     }
 
-    public int GetHashCode(HttpResponseMessage obj) => (int)obj.StatusCode;
+    public int GetHashCode(HttpResponseMessage obj)
+    {
+        return (int)obj.StatusCode;
+    }
 
     private static string? TryGetHeader(HttpResponseMessage msg, string name)
-        => msg.Headers.TryGetValues(name, out var value) || msg.Content.Headers.TryGetValues(name, out value)
+    {
+        return msg.Headers.TryGetValues(name, out var value) || msg.Content.Headers.TryGetValues(name, out value)
             ? string.Join(",", value)
             : null;
+    }
 }

@@ -6,34 +6,34 @@ namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
 public static class IdempotencyHelpers
 {
-    
     public static HttpRequestMessage CreateRequestWithIdempotencyKey<TRequest>(
-        HttpMethod method, 
+        HttpMethod method,
         string endpoint,
         TRequest? distilleryRequest,
-        string? idempotencyKey = null) 
+        string? idempotencyKey = null)
         where TRequest : class
     {
         var request = new HttpRequestMessage(method, endpoint);
         request.Content = JsonContent.Create(distilleryRequest);
-        
+
         request.Headers.Add("Idempotency-Key", idempotencyKey ?? Guid.NewGuid().ToString());
         return request;
     }
-    
+
     public static HttpRequestMessage CreateNoBodyRequestWithIdempotencyKey(
-        HttpMethod method, 
+        HttpMethod method,
         string endpoint,
-        string? idempotencyKey = null) 
+        string? idempotencyKey = null)
     {
         var request = new HttpRequestMessage(method, endpoint);
-        
+
         request.Headers.Add("Idempotency-Key", idempotencyKey ?? Guid.NewGuid().ToString());
         return request;
     }
-    
-    public static ValidationProblemDetails CreateIdempotencyKeyValidationProblem() =>
-        new()
+
+    public static ValidationProblemDetails CreateIdempotencyKeyValidationProblem()
+    {
+        return new ValidationProblemDetails
         {
             Type = "urn:mywhiskyshelf:validation-errors:idempotency-key",
             Title = "Missing or empty idempotency key",
@@ -43,4 +43,5 @@ public static class IdempotencyHelpers
                 { "idempotencyKey", ["Header value 'idempotency-key' is required and must be an non-empty UUID"] }
             }
         };
+    }
 }

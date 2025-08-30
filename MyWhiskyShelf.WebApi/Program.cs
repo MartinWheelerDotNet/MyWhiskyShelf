@@ -25,10 +25,10 @@ internal static class Program
             .ConfigureDefaultServices();
         builder.UsePostgresDatabase();
         builder.AddRedisClient("cache");
-        
+
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureRepositories();
-        
+
         // If this project is being used as part of an Aspire Environment, the environment variable
         // MYWHISKYSHELF_DATA_SEEDING_ENABLED is configured in <MyWhiskyShelf.AppHost>.
         // This should be forwarded to this project to be used here. Otherwise, the standard configuration resources are
@@ -55,7 +55,7 @@ internal static class Program
 
         app.MapDistilleryEndpoints();
         app.MapWhiskyBottleEndpoints();
-        
+
         await app.RunAsync();
     }
 

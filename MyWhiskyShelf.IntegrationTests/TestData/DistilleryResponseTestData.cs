@@ -4,16 +4,19 @@ namespace MyWhiskyShelf.IntegrationTests.TestData;
 
 public static class DistilleryResponseTestData
 {
-    public static DistilleryResponse GenericResponse(Guid id) => new()
+    public static DistilleryResponse GenericResponse(Guid id)
     {
-        Id = id,
-        Name = "Name",
-        Location = "Location",
-        Region = "Region",
-        Founded = 2000,
-        Owner = "Owner",
-        Type = "Type",
-        FlavourProfile = FlavourProfileTestData.Generic,
-        Active = true
-    };
+        return new DistilleryResponse
+        {
+            Id = id,
+            Name = "Name",
+            Location = "Location",
+            Region = "Region",
+            Founded = 2000,
+            Owner = "Owner",
+            Type = "Type",
+            FlavourProfile = FlavourProfileTestData.Generic,
+            Active = true
+        };
+    }
 }

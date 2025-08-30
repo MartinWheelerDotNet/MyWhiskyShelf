@@ -6,10 +6,13 @@ namespace MyWhiskyShelf.WebApi.Tests.Filters;
 
 public class ValidateNonEmptyQueryParameterFilterTests
 {
-    private static EndpointFilterDelegate NextReturnsResult(object? result) => _ => ValueTask.FromResult(result);
-    
+    private static EndpointFilterDelegate NextReturnsResult(object? result)
+    {
+        return _ => ValueTask.FromResult(result);
+    }
+
     [Fact]
-    public async Task When_InvokeAsyncAndParameterIsPresentAndNotEmpty_Expect_ReturnsNextResult() 
+    public async Task When_InvokeAsyncAndParameterIsPresentAndNotEmpty_Expect_ReturnsNextResult()
     {
         var filter = new ValidateNonEmptyQueryParameterFilter("test");
         var context = CreateContext("validValue");
@@ -36,23 +39,20 @@ public class ValidateNonEmptyQueryParameterFilterTests
             {
                 { "test", ["Query parameter 'test' is required and cannot be empty."] }
             });
-            
+
         var filter = new ValidateNonEmptyQueryParameterFilter("test");
         var context = CreateContext(value);
-            
+
         var filterResult = await filter.InvokeAsync(context, null!);
-        var result = Assert.IsAssignableFrom<IResult>(filterResult);
-            
+        var result = Assert.IsType<IResult>(filterResult, false);
+
         Assert.Equivalent(expectedResult, result);
     }
-        
+
     private static DefaultEndpointFilterInvocationContext CreateContext(string? queryValue = null)
     {
         var httpContext = new DefaultHttpContext();
-        if (queryValue is not null)
-        {
-            httpContext.Request.QueryString = new QueryString($"?test={queryValue}");
-        }
+        if (queryValue is not null) httpContext.Request.QueryString = new QueryString($"?test={queryValue}");
 
         return new DefaultEndpointFilterInvocationContext(httpContext, null, Array.Empty<object>());
     }

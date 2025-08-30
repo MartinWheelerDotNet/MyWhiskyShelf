@@ -8,5 +8,7 @@ namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
 public sealed class WhiskyBottleReadRepository(MyWhiskyShelfDbContext dbContext) : IWhiskyBottleReadRepository
 {
     public async Task<WhiskyBottle?> GetByIdAsync(Guid id, CancellationToken ct = default)
-        => (await dbContext.WhiskyBottles.FindAsync([id], ct))?.ToDomain();
+    {
+        return (await dbContext.WhiskyBottles.FindAsync([id], ct))?.ToDomain();
+    }
 }

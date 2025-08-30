@@ -21,7 +21,7 @@ public static class WhiskyBottleRequestTestData
         ChillFiltered = true,
         FlavourProfile = FlavourProfileTestData.Generic
     };
-    
+
     public static readonly WhiskyBottleUpdateRequest GenericUpdate = new()
     {
         Name = "Name",

@@ -32,6 +32,6 @@ public static class ValidationProblemResults
             errors: new Dictionary<string, string[]>
             {
                 { "idempotencyKey", ["Header value 'idempotency-key' is required and must be an non-empty UUID"] }
-            }); 
+            });
     }
 }

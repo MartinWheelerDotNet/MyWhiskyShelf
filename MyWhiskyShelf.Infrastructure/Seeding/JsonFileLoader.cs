@@ -18,11 +18,11 @@ public class JsonFileLoader(ILogger<JsonFileLoader> logger) : IJsonFileLoader
 
         await using var fileStream = File.OpenRead(filePath);
         var distilleries = await LoadDistilleriesFromStreamAsync(fileStream, filePath, ct);
-        
+
         logger.LogInformation("{Count} distilleries loaded", distilleries.Count);
         return distilleries;
     }
-    
+
     private static async Task<List<Distillery>> LoadDistilleriesFromStreamAsync(
         Stream stream,
         string filePath,
@@ -35,6 +35,6 @@ public class JsonFileLoader(ILogger<JsonFileLoader> logger) : IJsonFileLoader
         catch (JsonException ex)
         {
             throw new InvalidDataException($"'{filePath}' is found, but contains invalid data, {DistilleryPrefix}", ex);
-        } 
+        }
     }
 }

@@ -11,28 +11,29 @@ namespace MyWhiskyShelf.Application.Tests.Services;
 
 public class DistilleryAppServiceTests
 {
-    private readonly Mock<IDistilleryReadRepository> _mockRead =  new();
-    private readonly Mock<IDistilleryWriteRepository> _mockWrite =  new();
-    private readonly FakeLogger<DistilleryAppService> _fakeLogger = new ();
+    private readonly FakeLogger<DistilleryAppService> _fakeLogger = new();
+    private readonly Mock<IDistilleryReadRepository> _mockRead = new();
+    private readonly Mock<IDistilleryWriteRepository> _mockWrite = new();
     private readonly DistilleryAppService _service;
+
     public DistilleryAppServiceTests()
     {
-        _service = new DistilleryAppService(_mockRead.Object, _mockWrite.Object,  _fakeLogger);    
+        _service = new DistilleryAppService(_mockRead.Object, _mockWrite.Object, _fakeLogger);
     }
-    
+
     [Fact]
     public async Task When_GetByIdAndDistilleryNotFound_Expect_NullAndLogWarning()
     {
         var id = Guid.NewGuid();
         _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Distillery?) null);
+            .ReturnsAsync((Distillery?)null);
 
         var result = await _service.GetByIdAsync(id);
 
         Assert.Null(result);
         Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Warning);
     }
-    
+
     [Fact]
     public async Task When_GetByIdAndDistilleryExists_Expect_ReturnDistilleryAndLogDebug()
     {
@@ -46,11 +47,12 @@ public class DistilleryAppServiceTests
         Assert.Equal(id, result.Id);
         Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Debug);
     }
-    
+
     [Fact]
     public async Task When_GetAllAndTwoDistilleriesExist_Expect_ListOfTwoDistilleriesAndLogDebug()
     {
-        List<Distillery> list = [
+        List<Distillery> list =
+        [
             DistilleryTestData.Generic with { Name = "First Distillery" },
             DistilleryTestData.Generic with { Name = "Second Distillery" }
         ];
@@ -73,7 +75,7 @@ public class DistilleryAppServiceTests
         Assert.Empty(result);
         Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Debug);
     }
-    
+
     [Fact]
     public async Task When_CreateAndDistilleryWithThatNameAlreadyExists_Expect_AlreadyExistsAndLogWarning()
     {
@@ -87,25 +89,25 @@ public class DistilleryAppServiceTests
         Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Warning);
         _mockWrite.Verify(w => w.AddAsync(It.IsAny<Distillery>(), It.IsAny<CancellationToken>()), Times.Never);
     }
-    
+
     [Fact]
     public async Task When_CreateAndDistilleryCreated_Expect_CreatedAndLogDebug()
     {
         var newDistillery = DistilleryTestData.Generic with { Name = "New Distillery" };
         var savedDistillery = DistilleryTestData.Generic with { Id = Guid.NewGuid(), Name = "New Distillery" };
-        
+
         _mockRead.Setup(r => r.ExistsByNameAsync(newDistillery.Name, It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
         _mockWrite.Setup(w => w.AddAsync(newDistillery, It.IsAny<CancellationToken>()))
             .ReturnsAsync(savedDistillery);
-    
+
         var result = await _service.CreateAsync(newDistillery);
-    
+
         Assert.Equal(CreateDistilleryOutcome.Created, result.Outcome);
         Assert.Equal(savedDistillery, result.Distillery);
         Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Debug);
     }
-    
+
     [Fact]
     public async Task When_CreateAndExceptionIsThrown_Expect_ErrorAndLogError()
     {
@@ -121,28 +123,28 @@ public class DistilleryAppServiceTests
         Assert.Equal("Exception", result.Error);
         Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Error);
     }
-    
+
     [Fact]
     public async Task When_UpdateAndDistilleryNotFound_Expect_NotFoundAndLogWarning()
     {
         var id = Guid.NewGuid();
         var updatedDistillery = DistilleryTestData.Generic with { Id = id, Name = "Updated Distillery" };
         _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Distillery?) null);
+            .ReturnsAsync((Distillery?)null);
 
         var result = await _service.UpdateAsync(id, updatedDistillery);
 
         Assert.Equal(UpdateDistilleryOutcome.NotFound, result.Outcome);
         Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Warning);
     }
-    
+
     [Fact]
     public async Task When_UpdateAndDistilleryNameChangedToExistingDistilleryName_Expect_NameConflictAndLogWarning()
     {
         var id = Guid.NewGuid();
         var currentDistillery = DistilleryTestData.Generic with { Id = id, Name = "Current Distillery" };
         var updatedDistillery = DistilleryTestData.Generic with { Id = id, Name = "Updated Distillery" };
-        
+
         _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(currentDistillery);
         _mockRead.Setup(r => r.ExistsByNameAsync(updatedDistillery.Name, It.IsAny<CancellationToken>()))
@@ -153,14 +155,14 @@ public class DistilleryAppServiceTests
         Assert.Equal(UpdateDistilleryOutcome.NameConflict, result.Outcome);
         Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Warning);
     }
-    
+
     [Fact]
     public async Task When_UpdateAndDistilleryUpdated_Expect_UpdatedAndLogDebug()
     {
         var id = Guid.NewGuid();
         var currentDistillery = DistilleryTestData.Generic with { Id = id, Name = "Current Distillery" };
         var updatedDistillery = DistilleryTestData.Generic with { Id = id, Name = "Updated Distillery" };
-        
+
         _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(currentDistillery);
         _mockRead.Setup(r => r.ExistsByNameAsync(updatedDistillery.Name, It.IsAny<CancellationToken>()))
@@ -174,7 +176,7 @@ public class DistilleryAppServiceTests
             () => Assert.Equal(UpdateDistilleryOutcome.Updated, result.Outcome),
             () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Debug));
     }
-    
+
     [Fact]
     public async Task When_UpdateAndDistilleryDeletedAfterLookup_Expect_NotFoundAndLogWarning()
     {
@@ -199,7 +201,7 @@ public class DistilleryAppServiceTests
         var id = Guid.NewGuid();
         var currentDistillery = DistilleryTestData.Generic with { Id = id, Name = "Current Distillery" };
         var updatedDistillery = DistilleryTestData.Generic with { Id = id, Name = "Updated Distillery" };
-        
+
         _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(currentDistillery);
         _mockRead.Setup(r => r.ExistsByNameAsync(updatedDistillery.Name, It.IsAny<CancellationToken>()))
@@ -214,7 +216,7 @@ public class DistilleryAppServiceTests
             () => Assert.Equal("Exception", result.Error),
             () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Warning));
     }
-    
+
     [Fact]
     public async Task When_DeleteAndDistilleryFound_Expect_DeletedAndLogDebug()
     {
@@ -237,8 +239,8 @@ public class DistilleryAppServiceTests
         var result = await _service.DeleteAsync(id);
 
         Assert.Multiple(
-        () => Assert.Equal(DeleteDistilleryOutcome.NotFound, result.Outcome),
-        () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Warning));
+            () => Assert.Equal(DeleteDistilleryOutcome.NotFound, result.Outcome),
+            () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), l => l.Level == LogLevel.Warning));
     }
 
     [Fact]

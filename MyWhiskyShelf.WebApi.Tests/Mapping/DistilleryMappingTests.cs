@@ -30,7 +30,7 @@ public class DistilleryMappingTests
     public void When_MappingDistilleryCreateRequestToDomainWithAllFields_Expect_DistilleryMatchesAndIdDefault()
     {
         var distilleryRequest = DistilleryRequestTestData.GenericCreateRequest;
-        
+
         var distillery = distilleryRequest.ToDomain();
 
         Assert.Multiple(
@@ -49,7 +49,7 @@ public class DistilleryMappingTests
     public void When_MappingDistilleryCreateRequestToDomainWithoutFlavourProfile_Expect_EmptyFlavourProfile()
     {
         var distilleryRequest = DistilleryRequestTestData.GenericCreateRequest with { FlavourProfile = null };
-        
+
         var distillery = distilleryRequest.ToDomain();
 
         Assert.Multiple(
@@ -82,7 +82,7 @@ public class DistilleryMappingTests
     {
         var id = Guid.NewGuid();
         var distilleryUpdateRequest = DistilleryRequestTestData.GenericUpdateRequest with { FlavourProfile = null };
-        
+
         var distillery = distilleryUpdateRequest.ToDomain(id);
 
         Assert.Multiple(

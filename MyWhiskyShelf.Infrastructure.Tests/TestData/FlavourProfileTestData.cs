@@ -13,7 +13,7 @@ public static class FlavourProfileTestData
     public const ulong EncodedMax = 39268272420;
 
     public const ulong EncodedMin = 0;
-    
+
     public static readonly FlavourProfile Mixed = new()
     {
         Sweet = 0,
@@ -28,8 +28,8 @@ public static class FlavourProfileTestData
         Malt = 1,
         Nut = 2,
         Honey = 3
-    }; 
-    
+    };
+
     public static readonly FlavourProfile Max = new()
     {
         Sweet = 4,

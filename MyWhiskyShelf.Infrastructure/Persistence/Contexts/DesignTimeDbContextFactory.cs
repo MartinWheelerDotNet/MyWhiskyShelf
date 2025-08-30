@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 
-[UsedImplicitly, ExcludeFromCodeCoverage]
+[UsedImplicitly]
+[ExcludeFromCodeCoverage]
 public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<MyWhiskyShelfDbContext>
 {
     public MyWhiskyShelfDbContext CreateDbContext(string[] args)

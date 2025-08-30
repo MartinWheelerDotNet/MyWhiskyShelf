@@ -5,6 +5,7 @@ namespace MyWhiskyShelf.WebApi.Interfaces;
 public interface IIdempotencyService
 {
     Task<CachedResponse?> TryGetCachedResultAsync(Guid idempotencyKey);
+
     Task AddToCacheAsync(
         string idempotencyKey,
         int statusCode,

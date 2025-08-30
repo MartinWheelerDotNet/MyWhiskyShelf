@@ -78,7 +78,7 @@ public class JsonFileLoaderTests
     {
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/SeedingData/single-distillery.json");
         var fakeLogger = new FakeLogger<JsonFileLoader>();
-        
+
         var dataLoader = new JsonFileLoader(fakeLogger);
         var distilleries = await dataLoader.GetDistilleriesFromJsonAsync(filePath);
 
@@ -99,7 +99,7 @@ public class JsonFileLoaderTests
 
         var filePath = Path.Combine(AppContext.BaseDirectory, "Resources/SeedingData/three-distilleries.json");
         var fakeLogger = new FakeLogger<JsonFileLoader>();
-        
+
         var dataLoader = new JsonFileLoader(fakeLogger);
         var distilleries = await dataLoader.GetDistilleriesFromJsonAsync(filePath);
 

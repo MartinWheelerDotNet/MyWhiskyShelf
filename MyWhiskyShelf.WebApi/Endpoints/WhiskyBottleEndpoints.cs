@@ -2,7 +2,6 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Application.Abstractions.Services;
 using MyWhiskyShelf.Application.Results;
-using MyWhiskyShelf.Application.Services;
 using MyWhiskyShelf.WebApi.Contracts.WhiskyBottles;
 using MyWhiskyShelf.WebApi.ErrorResults;
 using MyWhiskyShelf.WebApi.ExtensionMethods;
@@ -19,8 +18,8 @@ public static class WhiskyBottleEndpoints
             .WithOpenApi();
 
         group.MapPost(
-                pattern: "/",
-                handler: async (
+                "/",
+                async (
                     [FromServices] IWhiskyBottleAppService service,
                     [FromBody] WhiskyBottleCreateRequest request,
                     HttpContext httpContext) =>
@@ -45,27 +44,27 @@ public static class WhiskyBottleEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
             .RequiresIdempotencyKey();
-        
+
         group.MapGet(
-                pattern: "/{id:guid}", handler: async (
-                     [FromServices] IWhiskyBottleAppService service,
-                     [FromRoute] Guid id) =>
-                 {
-                     var whiskyBottle = await service.GetByIdAsync(id);
-                     
-                     return whiskyBottle is null
-                         ? Results.NotFound()
-                         : Results.Ok(whiskyBottle.ToResponse());
-                 })
-             .WithName("Get Whisky Bottle")
-             .Produces<WhiskyBottleResponse>()
-             .ProducesProblem(StatusCodes.Status404NotFound)
-             .ProducesValidationProblem()
-             .RequiresNonEmptyRouteParameter("id");
+                "/{id:guid}", async (
+                    [FromServices] IWhiskyBottleAppService service,
+                    [FromRoute] Guid id) =>
+                {
+                    var whiskyBottle = await service.GetByIdAsync(id);
+
+                    return whiskyBottle is null
+                        ? Results.NotFound()
+                        : Results.Ok(whiskyBottle.ToResponse());
+                })
+            .WithName("Get Whisky Bottle")
+            .Produces<WhiskyBottleResponse>()
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesValidationProblem()
+            .RequiresNonEmptyRouteParameter("id");
 
         group.MapPut(
-                pattern: "/{id:guid}", 
-                handler: async (
+                "/{id:guid}",
+                async (
                     [FromServices] IWhiskyBottleAppService service,
                     [FromRoute] Guid id,
                     [FromBody] WhiskyBottleUpdateRequest request,
@@ -92,32 +91,32 @@ public static class WhiskyBottleEndpoints
             .RequiresNonEmptyRouteParameter("id")
             .RequiresIdempotencyKey();
 
-         group.MapDelete(
-             pattern: "/{id:guid}", 
-             handler: async (
-                 [FromServices] IWhiskyBottleAppService service,
-                 [FromRoute] Guid id,
-                 HttpContext httpContext) =>
-             {
-                 var result = await service.DeleteAsync(id);
+        group.MapDelete(
+                "/{id:guid}",
+                async (
+                    [FromServices] IWhiskyBottleAppService service,
+                    [FromRoute] Guid id,
+                    HttpContext httpContext) =>
+                {
+                    var result = await service.DeleteAsync(id);
 
-                 return result.Outcome switch
-                 {
-                     DeleteWhiskyBottleOutcome.Deleted => Results.NoContent(),
-                     DeleteWhiskyBottleOutcome.NotFound => Results.NotFound(),
-                     _ => Results.Problem(ProblemResults.InternalServerError(
-                         "whisky-bottle",
-                         "delete",
-                         httpContext.TraceIdentifier,
-                         httpContext.Request.Path))
-                 };
-             })
-             .WithName("Delete Whisky Bottle")
-             .Produces(StatusCodes.Status204NoContent)
-             .Produces(StatusCodes.Status404NotFound)
-             .ProducesProblem(StatusCodes.Status500InternalServerError)
-             .ProducesValidationProblem()
-             .RequiresNonEmptyRouteParameter("id")
-             .RequiresIdempotencyKey();
+                    return result.Outcome switch
+                    {
+                        DeleteWhiskyBottleOutcome.Deleted => Results.NoContent(),
+                        DeleteWhiskyBottleOutcome.NotFound => Results.NotFound(),
+                        _ => Results.Problem(ProblemResults.InternalServerError(
+                            "whisky-bottle",
+                            "delete",
+                            httpContext.TraceIdentifier,
+                            httpContext.Request.Path))
+                    };
+                })
+            .WithName("Delete Whisky Bottle")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesValidationProblem()
+            .RequiresNonEmptyRouteParameter("id")
+            .RequiresIdempotencyKey();
     }
 }

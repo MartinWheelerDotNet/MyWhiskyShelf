@@ -18,8 +18,8 @@ public static class DistilleryEndpoints
             .WithOpenApi();
 
         group.MapPost(
-                pattern: "/",
-                handler: async (
+                "/",
+                async (
                     [FromBody] DistilleryCreateRequest request,
                     [FromServices] IDistilleryAppService service,
                     HttpContext httpContext,
@@ -49,8 +49,8 @@ public static class DistilleryEndpoints
             .RequiresIdempotencyKey();
 
         group.MapGet(
-                pattern: "/{id:guid}",
-                handler: async (
+                "/{id:guid}",
+                async (
                     [FromRoute] Guid id,
                     [FromServices] IDistilleryAppService service,
                     CancellationToken ct) =>
@@ -67,8 +67,8 @@ public static class DistilleryEndpoints
             .RequiresNonEmptyRouteParameter("id");
 
         group.MapGet(
-                pattern: "/",
-                handler: async (
+                "/",
+                async (
                     [FromServices] IDistilleryAppService service,
                     CancellationToken ct) =>
                 {
@@ -80,8 +80,8 @@ public static class DistilleryEndpoints
             .ProducesValidationProblem();
 
         group.MapPut(
-                pattern: "/{id:guid}",
-                handler: async (
+                "/{id:guid}",
+                async (
                     [FromRoute] Guid id,
                     [FromBody] DistilleryUpdateRequest request,
                     [FromServices] IDistilleryAppService service,
@@ -113,8 +113,8 @@ public static class DistilleryEndpoints
             .RequiresIdempotencyKey();
 
         group.MapDelete(
-                pattern: "/{id:guid}",
-                handler: async (
+                "/{id:guid}",
+                async (
                     [FromRoute] Guid id,
                     [FromServices] IDistilleryAppService service,
                     HttpContext httpContext,

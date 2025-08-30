@@ -9,19 +9,16 @@ public class IdempotencyKeyFilter(IIdempotencyService idempotencyService) : IEnd
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
         var httpContext = context.HttpContext;
-        
+
         if (!TryParseIdempotencyKeyHeader(httpContext, out var key))
             return ValidationProblemResults.MissingOrInvalidIdempotencyKey();
-        
+
         var cached = await idempotencyService.TryGetCachedResultAsync(key.Value);
-        if (cached is not null)
-        {
-            return new CachedResponseResult(cached);
-        }
+        if (cached is not null) return new CachedResponseResult(cached);
 
         var result = await next(context);
         if (result is not IResult apiResult) return result;
-        
+
         await WriteResultToCache(apiResult, httpContext, key.Value);
 
         return result;
@@ -37,7 +34,7 @@ public class IdempotencyKeyFilter(IIdempotencyService idempotencyService) : IEnd
         };
 
         await apiResult.ExecuteAsync(responseContext);
-        
+
         memoryStream.Position = 0;
         var statusCode = responseContext.Response.StatusCode;
         var content = await new StreamReader(memoryStream).ReadToEndAsync();
@@ -49,14 +46,14 @@ public class IdempotencyKeyFilter(IIdempotencyService idempotencyService) : IEnd
     }
 
     private static bool TryParseIdempotencyKeyHeader(
-        HttpContext httpContext, 
+        HttpContext httpContext,
         [NotNullWhen(true)] out Guid? idempotencyKey)
     {
         idempotencyKey = null;
-        
+
         if (!httpContext.Request.Headers.TryGetValue("Idempotency-Key", out var value)) return false;
         if (!Guid.TryParse(value, out var parsedValue) || parsedValue == Guid.Empty) return false;
-        
+
         idempotencyKey = parsedValue;
         return true;
     }

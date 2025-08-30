@@ -1,6 +1,5 @@
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Core.Enums;
-using MyWhiskyShelf.Core.Models;
 
 namespace MyWhiskyShelf.WebApi.Tests.TestData;
 

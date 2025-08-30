@@ -7,17 +7,22 @@ public sealed class WhiskyBottleEntityBuilder
 {
     private Guid _id;
 
-    public WhiskyBottleEntityBuilder WithId(Guid id) { _id = id; return this; }
-    
-    public WhiskyBottleEntity Build() =>
-        new()
+    public WhiskyBottleEntityBuilder WithId(Guid id)
+    {
+        _id = id;
+        return this;
+    }
+
+    public WhiskyBottleEntity Build()
+    {
+        return new WhiskyBottleEntity
         {
             Id = _id,
             Name = "Name",
             DistilleryId = Guid.Parse("0b432650-9d62-4331-a060-8d138d4a5720"),
             DistilleryName = "DistilleryName",
             Status = BottleStatus.Opened,
-            Bottler =  "Bottler",
+            Bottler = "Bottler",
             YearBottled = 2000,
             BatchNumber = 1234,
             CaskNumber = 10,
@@ -28,4 +33,5 @@ public sealed class WhiskyBottleEntityBuilder
             ChillFiltered = true,
             FlavourProfile = FlavourProfileTestData.Mixed
         };
+    }
 }

@@ -74,7 +74,7 @@ public class WhiskyBottleMappingTests
     {
         var whiskyBottleCreateRequest = WhiskyBottleRequestTestData.GenericCreateRequest with
         {
-            VolumeCl = 50, 
+            VolumeCl = 50,
             VolumeRemainingCl = null
         };
 

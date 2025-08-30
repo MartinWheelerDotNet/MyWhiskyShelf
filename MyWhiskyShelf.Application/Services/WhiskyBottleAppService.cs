@@ -14,13 +14,13 @@ public sealed class WhiskyBottleAppService(
     public async Task<WhiskyBottle?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         var whiskyBottle = await read.GetByIdAsync(id, ct);
-        
+
         if (whiskyBottle is null)
         {
             logger.LogWarning("Whisky bottle not found with [Id: {Id}]", id);
             return null;
         }
-        
+
         logger.LogDebug("Retrieved whisky bottle with [Name: {Name}, Id: {Id}]", whiskyBottle.Name, id);
         return whiskyBottle;
     }
@@ -30,7 +30,7 @@ public sealed class WhiskyBottleAppService(
         try
         {
             var addedWhiskyBottle = await write.AddAsync(whiskyBottle, ct);
-            
+
             logger.LogDebug(
                 "Whisky bottle created with [Name: {Name}, Id: {Id}]",
                 addedWhiskyBottle.Name,
@@ -43,7 +43,7 @@ public sealed class WhiskyBottleAppService(
             return new CreateWhiskyBottleResult(CreateWhiskyBottleOutcome.Error, Error: ex.Message);
         }
     }
-    
+
     public async Task<UpdateWhiskyBottleResult> UpdateAsync(
         Guid id,
         WhiskyBottle whiskyBottle,
@@ -57,10 +57,9 @@ public sealed class WhiskyBottleAppService(
                 logger.LogDebug("Whisky bottle updated with [Name: {Name}, Id: {Id}]", whiskyBottle.Name, id);
                 return new UpdateWhiskyBottleResult(UpdateWhiskyBottleOutcome.Updated, whiskyBottle with { Id = id });
             }
-            
+
             logger.LogWarning("Whisky bottle not found with [id: {Id}]", id);
             return new UpdateWhiskyBottleResult(UpdateWhiskyBottleOutcome.NotFound);
-            
         }
         catch (Exception ex)
         {
@@ -79,15 +78,14 @@ public sealed class WhiskyBottleAppService(
                 logger.LogDebug("Whisky bottle deleted with [Id: {Id}]", id);
                 return new DeleteWhiskyBottleResult(DeleteWhiskyBottleOutcome.Deleted);
             }
-            
+
             logger.LogWarning("Whisky bottle not found with [Id: {Id}]", id);
             return new DeleteWhiskyBottleResult(DeleteWhiskyBottleOutcome.NotFound);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error deleting whisky bottle [Id: {Id}]", id);
-            return new DeleteWhiskyBottleResult(DeleteWhiskyBottleOutcome.Error, Error: ex.Message);
+            return new DeleteWhiskyBottleResult(DeleteWhiskyBottleOutcome.Error, ex.Message);
         }
     }
-        
 }

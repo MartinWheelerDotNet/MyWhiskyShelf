@@ -6,7 +6,6 @@ namespace MyWhiskyShelf.Infrastructure.Tests.Encoding;
 
 public class FlavourProfileEncoderTests
 {
-    
     [Fact]
     public void When_EncodeWithAFlavourProfileWithAllValuesSetToZero_Expect_EncodedMin()
     {
@@ -14,7 +13,7 @@ public class FlavourProfileEncoderTests
 
         Assert.Equal(FlavourProfileTestData.EncodedMin, encodedFlavourProfile);
     }
-    
+
     [Fact]
     public void When_EncodeWithMixedFlavourProfile_Expect_EncodedMixed()
     {
@@ -82,7 +81,7 @@ public class FlavourProfileEncoderTests
             "Value cannot be greater than '39268272420' (Parameter 'encodedFlavourProfile')",
             exception.Message);
     }
-    
+
     [Fact]
     public void When_EncodeThenDecode_Expect_MixedFlavourProfile()
     {

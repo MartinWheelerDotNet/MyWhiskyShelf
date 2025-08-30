@@ -7,20 +7,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MyWhiskyShelf.Application\MyWhiskyShelf.Application.csproj" />
+        <ProjectReference Include="..\MyWhiskyShelf.Application\MyWhiskyShelf.Application.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.4.1" />
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.4.1"/>
         <PackageReference Include="FuzzySharp" Version="2.0.2"/>
-        <PackageReference Include="JetBrains.Annotations" Version="2025.2.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.8" />
-        <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25" />
-        <PackageReference Include="StackExchange.Redis" Version="2.8.58" />
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.8"/>
+        <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25"/>
+        <PackageReference Include="StackExchange.Redis" Version="2.8.58"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
+        <Folder Include="Migrations\"/>
     </ItemGroup>
 
 </Project>

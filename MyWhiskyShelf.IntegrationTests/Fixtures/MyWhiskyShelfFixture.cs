@@ -16,27 +16,14 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
     {
         Distillery,
         WhiskyBottle
-    };
+    }
 
     private readonly List<HttpMethod> _methods = [HttpMethod.Get, HttpMethod.Post, HttpMethod.Put, HttpMethod.Delete];
-    
-    public DistributedApplication Application { get; private set; } = null!;
 
-    private readonly Dictionary<(HttpMethod Method, EntityType Entity), (string Name, Guid Id)> _seededEntityDetails 
+    private readonly Dictionary<(HttpMethod Method, EntityType Entity), (string Name, Guid Id)> _seededEntityDetails
         = new();
 
-    public (string Name, Guid Id) GetSeededEntityDetailByTypeAndMethod(HttpMethod method, EntityType entity)
-    { 
-        var entityDetails = _seededEntityDetails[(method, entity)];
-        return entityDetails;
-    }
-        
-    
-    public List<(HttpMethod Method, string Name, Guid Id)> GetSeededEntityDetailsByType(EntityType entityType) 
-        => _seededEntityDetails
-            .Where((kvp, _) => kvp.Key.Entity == entityType)
-            .Select((kvp, _) => (kvp.Key.Method, kvp.Value.Name, kvp.Value.Id))
-            .ToList();
+    public DistributedApplication Application { get; private set; } = null!;
 
     public virtual async Task InitializeAsync()
     {
@@ -50,6 +37,21 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
     public virtual async Task DisposeAsync()
     {
         await Application.DisposeAsync();
+    }
+
+    public (string Name, Guid Id) GetSeededEntityDetailByTypeAndMethod(HttpMethod method, EntityType entity)
+    {
+        var entityDetails = _seededEntityDetails[(method, entity)];
+        return entityDetails;
+    }
+
+
+    public List<(HttpMethod Method, string Name, Guid Id)> GetSeededEntityDetailsByType(EntityType entityType)
+    {
+        return _seededEntityDetails
+            .Where((kvp, _) => kvp.Key.Entity == entityType)
+            .Select((kvp, _) => (kvp.Key.Method, kvp.Value.Name, kvp.Value.Id))
+            .ToList();
     }
 
     protected virtual async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
@@ -79,18 +81,6 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
         await SeedWhiskyBottlesAsync();
     }
 
-    public async Task ClearDatabaseAsync()
-    {
-        using var httpClient = Application.CreateHttpClient("WebApi");
-        foreach (var kvp in _seededEntityDetails)
-        {
-                var deleteRequest = IdempotencyHelpers
-                    .CreateNoBodyRequestWithIdempotencyKey(HttpMethod.Delete, $"/{kvp.Key.Entity}/{kvp.Value}");
-                await httpClient.SendAsync(deleteRequest);
-        }
-        _seededEntityDetails.Clear();
-    }
-
     public async Task SeedDistilleriesAsync()
     {
         using var httpClient = Application.CreateHttpClient("WebApi");
@@ -105,13 +95,12 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
                 .SendAsync(request);
 
             if (!response.IsSuccessStatusCode) continue;
-            
+
             var entity = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
             _seededEntityDetails[(method, EntityType.Distillery)] = (name, entity!.Id);
-
         }
     }
-    
+
     public async Task SeedWhiskyBottlesAsync()
     {
         using var httpClient = Application.CreateHttpClient("WebApi");
@@ -124,12 +113,11 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
                 .CreateRequestWithIdempotencyKey(HttpMethod.Post, "/whisky-bottles", distilleryCreateRequest);
             var response = await httpClient
                 .SendAsync(request);
-            
+
             if (!response.IsSuccessStatusCode) continue;
-            
+
             var entityResponse = await response.Content.ReadFromJsonAsync<WhiskyBottleResponse>();
             _seededEntityDetails[(method, EntityType.WhiskyBottle)] = (name, entityResponse!.Id);
-
         }
     }
 }

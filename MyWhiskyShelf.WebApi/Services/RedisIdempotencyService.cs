@@ -12,16 +12,16 @@ public class RedisIdempotencyService(IConnectionMultiplexer connectionMultiplexe
     public async Task<CachedResponse?> TryGetCachedResultAsync(Guid idempotencyKey)
     {
         var cachedResultString = await _database.StringGetAsync(idempotencyKey.ToString());
-        return cachedResultString.IsNullOrEmpty 
-                ? null 
-                : JsonSerializer.Deserialize<CachedResponse>(cachedResultString!);
+        return cachedResultString.IsNullOrEmpty
+            ? null
+            : JsonSerializer.Deserialize<CachedResponse>(cachedResultString!);
     }
 
     public async Task AddToCacheAsync(
-        string idempotencyKey, 
-        int statusCode, 
-        string content, 
-        string? contentType, 
+        string idempotencyKey,
+        int statusCode,
+        string content,
+        string? contentType,
         Dictionary<string, string?[]> headers)
     {
         var cachedResponse = new CachedResponse(statusCode, content, contentType, headers);

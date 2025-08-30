@@ -15,7 +15,7 @@ public static class DistilleryRequestTestData
         FlavourProfile = FlavourProfileTestData.Generic,
         Active = true
     };
-    
+
     public static readonly DistilleryUpdateRequest GenericUpdate = new()
     {
         Name = "Name",

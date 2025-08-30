@@ -27,7 +27,7 @@ public static class DistilleryTestData
             Malt = 1,
             Nut = 2,
             Honey = 3
-        }, 
+        },
         Active = true
     };
 }
