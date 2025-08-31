@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 
@@ -11,11 +12,19 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<MyWhiskySh
 {
     public MyWhiskyShelfDbContext CreateDbContext(string[] args)
     {
-        var builder = new DbContextOptionsBuilder<MyWhiskyShelfDbContext>();
+        // Aspire sets this at runtime; for design-time you can provide it via user-secrets or env var
+        var connStr = Environment.GetEnvironmentVariable("ConnectionStrings__MyWhiskyShelf");
 
-        // For migrations creation only; not used at runtime.
-        builder.UseNpgsql("Host=localhost;Port=5432;Database=myWhiskyShelfDb;Username=postgres;Password=postgres");
+        if (string.IsNullOrWhiteSpace(connStr))
+        {
+            throw new InvalidOperationException(
+                "No connection string found. Set 'ConnectionStrings__MyWhiskyShelf' as a user-secret.");
+        }
 
-        return new MyWhiskyShelfDbContext(builder.Options);
+        var options = new DbContextOptionsBuilder<MyWhiskyShelfDbContext>()
+            .UseNpgsql(connStr)
+            .Options;
+
+        return new MyWhiskyShelfDbContext(options);
     }
 }
