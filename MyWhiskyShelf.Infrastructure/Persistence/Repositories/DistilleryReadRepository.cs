@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Core.Aggregates;
@@ -13,7 +14,11 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
         return (await dbContext.Distilleries.FindAsync([id], ct))?.ToDomain();
     }
 
-
+    // Until the work for the migration which will allow us to use the postgres functions for case insensitivity
+    // we need to silence this warning, as EF projections do not allow string comparers.
+    [SuppressMessage(
+        "Performance", 
+        "CA1862:Use the \'StringComparison\' method overloads to perform case-insensitive string comparisons")]
     public async Task<bool> ExistsByNameAsync(string name, CancellationToken ct = default)
     {
         return await dbContext.Distilleries

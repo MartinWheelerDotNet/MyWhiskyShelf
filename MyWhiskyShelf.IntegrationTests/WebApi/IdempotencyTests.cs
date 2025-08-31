@@ -13,21 +13,23 @@ public class IdempotencyTests(MyWhiskyShelfFixture fixture) : IClassFixture<MyWh
 {
     private const string WebApiResourceName = "WebApi";
 
-    private static readonly List<(EntityType EntityType, HttpMethod Method, string Path, object? Body)> EndpointData =
+    private static readonly List<(EntityType EntityType, string Method, string Path, object? Body)> EndpointData =
     [
-        (EntityType.Distillery, HttpMethod.Post, "/distilleries", DistilleryRequestTestData.GenericCreate),
-        (EntityType.Distillery, HttpMethod.Put, "/distilleries/{Id}", DistilleryRequestTestData.GenericUpdate with
-        {
-            Name = "Update"
-        }),
-        (EntityType.Distillery, HttpMethod.Delete, "/distilleries/{Id}", null),
+        (EntityType.Distillery, HttpMethod.Post.Method, "/distilleries", DistilleryRequestTestData.GenericCreate),
+        (EntityType.Distillery, HttpMethod.Put.Method, "/distilleries/{Id}",
+            DistilleryRequestTestData.GenericUpdate with
+            {
+                Name = "Update"
+            }),
+        (EntityType.Distillery, HttpMethod.Delete.Method, "/distilleries/{Id}", null),
 
-        (EntityType.WhiskyBottle, HttpMethod.Post, "/whisky-bottles", WhiskyBottleRequestTestData.GenericCreate),
-        (EntityType.WhiskyBottle, HttpMethod.Put, "/whisky-bottles/{Id}", WhiskyBottleRequestTestData.GenericUpdate with
-        {
-            Name = "Update"
-        }),
-        (EntityType.WhiskyBottle, HttpMethod.Delete, "/whisky-bottles/{Id}", null)
+        (EntityType.WhiskyBottle, HttpMethod.Post.Method, "/whisky-bottles", WhiskyBottleRequestTestData.GenericCreate),
+        (EntityType.WhiskyBottle, HttpMethod.Put.Method, "/whisky-bottles/{Id}",
+            WhiskyBottleRequestTestData.GenericUpdate with 
+            {
+                Name = "Update" 
+            }),
+        (EntityType.WhiskyBottle, HttpMethod.Delete.Method, "/whisky-bottles/{Id}", null)
     ];
 
     private static readonly List<string> InvalidKeys =
@@ -39,26 +41,37 @@ public class IdempotencyTests(MyWhiskyShelfFixture fixture) : IClassFixture<MyWh
         "00000000-0000-0000-0000-000000000000"
     ];
 
-    public static IEnumerable<object?[]> IdempotentEndpointsData
-        => from data in EndpointData
-            select new[] { data.EntityType, data.Method, data.Path, data.Body };
+    public static TheoryData<EntityType, string, string, RequestBodyWrapper> IdempotentEndpointsData()
+    {
+        var data = new TheoryData<EntityType, string, string, RequestBodyWrapper>();
+        foreach (var (entityType, method, path, body) in EndpointData)
+            data.Add(entityType, method, path, new RequestBodyWrapper(body));
+    
+        return data;
+    }
 
-    public static IEnumerable<object?[]> InvalidKeysData
-        => from data in IdempotentEndpointsData
-            from key in InvalidKeys
-            select data.Append(key).ToArray();
-
+    public static TheoryData<EntityType, string, string, RequestBodyWrapper, string> InvalidKeysData()
+    {
+        var data = new TheoryData<EntityType, string, string, RequestBodyWrapper, string>();
+        foreach (var (entityType, method, path, body) in EndpointData)
+            foreach (var key in InvalidKeys)
+                data.Add(entityType, method, path, new RequestBodyWrapper(body), key);
+        
+        return data;
+        
+    }
+    
     [Theory]
     [MemberData(nameof(IdempotentEndpointsData))]
     public async Task When_RequestWithMissingIdempotencyKey_Expect_ValidationProblem(
         EntityType _,
-        HttpMethod method,
+        string method,
         string path,
-        object? body)
+        RequestBodyWrapper body)
     {
         var expectedValidationProblem = CreateIdempotencyKeyValidationProblem();
-        var request = new HttpRequestMessage(method, path.Replace("{Id}", Guid.NewGuid().ToString()));
-        if (body is not null) request.Content = JsonContent.Create(body);
+        var request = new HttpRequestMessage(new HttpMethod(method), path.Replace("{Id}", Guid.NewGuid().ToString()));
+        if (body.Value is not null) request.Content = JsonContent.Create(body.Value);
 
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
 
@@ -73,16 +86,16 @@ public class IdempotencyTests(MyWhiskyShelfFixture fixture) : IClassFixture<MyWh
     [MemberData(nameof(InvalidKeysData))]
     public async Task When_RequestWithInvalidIdempotencyKey_Expect_ValidationProblem(
         EntityType _,
-        HttpMethod httpMethod,
+        string method,
         string path,
-        object? body,
+        RequestBodyWrapper body,
         string key)
     {
         var expectedValidationProblem = CreateIdempotencyKeyValidationProblem();
         var request = CreateRequestWithIdempotencyKey(
-            httpMethod,
+            new HttpMethod(method),
             path.Replace("{Id}", Guid.NewGuid().ToString()),
-            body,
+            body.Value,
             key);
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
 
@@ -97,18 +110,19 @@ public class IdempotencyTests(MyWhiskyShelfFixture fixture) : IClassFixture<MyWh
     [MemberData(nameof(IdempotentEndpointsData))]
     public async Task When_RequestTwiceWithSameIdempotencyKey_Expect_TheSameResultReturned(
         EntityType entityType,
-        HttpMethod method,
+        string method,
         string path,
-        object? body)
+        RequestBodyWrapper body)
     {
+        var httpMethod =  new HttpMethod(method);
         await fixture.SeedDatabase();
 
-        var (_, id) = fixture.GetSeededEntityDetailByTypeAndMethod(method, entityType);
+        var (_, id) = fixture.GetSeededEntityDetailByTypeAndMethod(httpMethod, entityType);
         path = path.Replace("{Id}", id.ToString());
 
         var key = Guid.NewGuid().ToString();
-        var initialRequest = CreateRequestWithIdempotencyKey(method, path, body, key);
-        var resendRequest = CreateRequestWithIdempotencyKey(method, path, body, key);
+        var initialRequest = CreateRequestWithIdempotencyKey(httpMethod, path, body.Value, key);
+        var resendRequest = CreateRequestWithIdempotencyKey(httpMethod, path, body.Value, key);
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
 
         var initialResponse = await httpClient.SendAsync(initialRequest);

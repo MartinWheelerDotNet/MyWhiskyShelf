@@ -2,23 +2,25 @@ namespace MyWhiskyShelf.IntegrationTests.Comparers;
 
 public sealed class HttpResponseMessageComparer : IEqualityComparer<HttpResponseMessage>
 {
-    private static readonly string[] InterestingHeaders = ["Location", "Content-Type", "ETag"];
+    private static readonly string[] PreservedHeaders = ["Location", "Content-Type", "ETag"];
 
-    public bool Equals(HttpResponseMessage? x, HttpResponseMessage? y)
+    public bool Equals(HttpResponseMessage? left, HttpResponseMessage? right)
     {
-        if (x is null || y is null) return x == y;
-        if (x.StatusCode != y.StatusCode) return false;
+        if (left is null || right is null) return left == right;
+        if (left.StatusCode != right.StatusCode) return false;
 
-        foreach (var h in InterestingHeaders)
-        {
-            var hx = TryGetHeader(x, h);
-            var hy = TryGetHeader(y, h);
-            if (!string.Equals(hx, hy, StringComparison.Ordinal)) return false;
-        }
-
-        var sx = x.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-        var sy = y.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-        return string.Equals(sx, sy, StringComparison.Ordinal);
+        var unmatchedHeader = 
+            from header in PreservedHeaders 
+            let leftHeader = TryGetHeader(left, header) 
+            let rightHeader = TryGetHeader(right, header) 
+            where !string.Equals(leftHeader, rightHeader, StringComparison.Ordinal)
+            select leftHeader;
+        
+        if (unmatchedHeader.Any()) return false;
+        
+        var leftContent = left.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+        var rightContent = right.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+        return string.Equals(leftContent, rightContent, StringComparison.Ordinal);
     }
 
     public int GetHashCode(HttpResponseMessage obj)
