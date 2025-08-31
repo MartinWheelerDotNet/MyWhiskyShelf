@@ -91,7 +91,7 @@ internal static class Program
             var distilleries = await dataLoader.GetDistilleriesFromJsonAsync("Resources/distilleries.json");
             var mappedDistilleries = distilleries.Select(distillery => distillery.ToEntity());
 
-            dbContext.Set<DistilleryEntity>().AddRange(mappedDistilleries);
+            await dbContext.Set<DistilleryEntity>().AddRangeAsync(mappedDistilleries);
         }
 
         await dbContext.SaveChangesAsync();
