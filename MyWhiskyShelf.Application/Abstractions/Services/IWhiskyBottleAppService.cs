@@ -1,0 +1,12 @@
+using MyWhiskyShelf.Application.Results;
+using MyWhiskyShelf.Core.Aggregates;
+
+namespace MyWhiskyShelf.Application.Abstractions.Services;
+
+public interface IWhiskyBottleAppService
+{
+    Task<WhiskyBottle?> GetByIdAsync(Guid id, CancellationToken ct = default);
+    Task<CreateWhiskyBottleResult> CreateAsync(WhiskyBottle whiskyBottle, CancellationToken ct = default);
+    Task<UpdateWhiskyBottleResult> UpdateAsync(Guid id, WhiskyBottle whiskyBottle, CancellationToken ct = default);
+    Task<DeleteWhiskyBottleResult> DeleteAsync(Guid id, CancellationToken ct = default);
+}

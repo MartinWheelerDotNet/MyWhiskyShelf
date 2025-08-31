@@ -1,37 +1,7 @@
-using MyWhiskyShelf.Core.Models;
-
 namespace MyWhiskyShelf.WebApi.ErrorResults;
 
 public static class ValidationProblemResults
 {
-    #region WhiskyBottleRequest Validation Problem Results
-
-    public static IResult WhiskyBottleValidationProblemResults()
-    {
-        return Results.ValidationProblem(
-            title: "One or more validation errors occurred.",
-            type: "urn:mywhiskyshelf:validation-errors:whisky-bottle",
-            errors: new Dictionary<string, string[]>
-            {
-                [nameof(WhiskyBottleRequest)] = ["An error occurred trying to add the whisky bottle to the database."]
-            });
-    }
-
-    #endregion
-
-    #region Endpoint Validation Problem Results
-
-    public static IResult MissingOrEmptyQueryParameter(string parameterName)
-    {
-        return Results.ValidationProblem(
-            title: "Missing or empty query parameters",
-            type: "urn:mywhiskyshelf:validation-errors:query-parameter",
-            errors: new Dictionary<string, string[]>
-            {
-                { parameterName, [$"Query parameter '{parameterName}' is required and cannot be empty."] }
-            });
-    }
-
     public static IResult MissingOrEmptyRouteParameter(string parameterName)
     {
         return Results.ValidationProblem(
@@ -51,8 +21,6 @@ public static class ValidationProblemResults
             errors: new Dictionary<string, string[]>
             {
                 { "idempotencyKey", ["Header value 'idempotency-key' is required and must be an non-empty UUID"] }
-            }); 
+            });
     }
-
-    #endregion
 }

@@ -1,18 +1,18 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Routing.Patterns;
 using MyWhiskyShelf.WebApi.Filters;
 
 namespace MyWhiskyShelf.WebApi.Tests.Filters;
 
 public class ValidateNonEmptyRouteParameterFilterTests
 {
-    private static EndpointFilterDelegate NextReturnsResult(object? result) => _ => ValueTask.FromResult(result);
-    private static EndpointFilterDelegate NextThrowsException() => _ => throw new Exception("Should not be called");
+    private static EndpointFilterDelegate NextReturnsResult(object? result)
+    {
+        return _ => ValueTask.FromResult(result);
+    }
 
     [Fact]
-    public async Task When_InvokeAsyncAndParameterIsPresentAndNotEmpty_Expect_ReturnsNextResult() 
+    public async Task When_InvokeAsyncAndParameterIsPresentAndNotEmpty_Expect_ReturnsNextResult()
     {
         var filter = new ValidateNonEmptyRouteParameterFilter("test");
         var context = CreateContext("validValue");
@@ -39,28 +39,21 @@ public class ValidateNonEmptyRouteParameterFilterTests
             {
                 { "test", ["Route parameter 'test' is required and cannot be empty."] }
             });
-            
+
         var filter = new ValidateNonEmptyRouteParameterFilter("test");
         var context = CreateContext(value);
-            
-        var filterResult = await filter.InvokeAsync(context, NextThrowsException());
-        var result = Assert.IsAssignableFrom<IResult>(filterResult);
-            
+
+        var filterResult = await filter.InvokeAsync(context, null!);
+        var result = Assert.IsType<IResult>(filterResult, false);
+
         Assert.Equivalent(expectedResult, result);
     }
-        
+
     private static DefaultEndpointFilterInvocationContext CreateContext(string? routeValue = null)
     {
         var httpContext = new DefaultHttpContext();
         if (routeValue is not null) httpContext.Request.RouteValues["test"] = routeValue;
-            
-        var routeEndpoint = new RouteEndpoint(
-            _ => Task.CompletedTask,
-            RoutePatternFactory.Parse("/{test}"),
-            0,
-            new EndpointMetadataCollection(),
-            "test");
 
-        return new DefaultEndpointFilterInvocationContext(httpContext, routeEndpoint, Array.Empty<object>());
+        return new DefaultEndpointFilterInvocationContext(httpContext, null, Array.Empty<object>());
     }
 }

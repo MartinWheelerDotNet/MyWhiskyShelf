@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using MyWhiskyShelf.WebApi.Filters;
 using MyWhiskyShelf.WebApi.Interfaces;
 
+// ReSharper disable UnusedMethodReturnValue.Global
 namespace MyWhiskyShelf.WebApi.ExtensionMethods;
 
 [ExcludeFromCodeCoverage]
@@ -12,13 +13,6 @@ public static class EndpointFilterExtensions
         string parameterName)
     {
         return routeHandlerBuilder.AddEndpointFilter(new ValidateNonEmptyRouteParameterFilter(parameterName));
-    }
-
-    public static RouteHandlerBuilder RequiresNonEmptyQueryParameter(
-        this RouteHandlerBuilder routeHandlerBuilder,
-        string parameterName)
-    {
-        return routeHandlerBuilder.AddEndpointFilter(new ValidateNonEmptyQueryParameterFilter(parameterName));
     }
 
     public static RouteHandlerBuilder RequiresIdempotencyKey(this RouteHandlerBuilder routeHandlerBuilder)

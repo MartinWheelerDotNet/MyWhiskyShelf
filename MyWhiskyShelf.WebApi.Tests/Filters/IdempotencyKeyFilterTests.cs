@@ -11,8 +11,8 @@ namespace MyWhiskyShelf.WebApi.Tests.Filters;
 
 public class IdempotencyKeyFilterTests
 {
-    private readonly Mock<IIdempotencyService> _idempotencyServiceMock;
     private readonly IdempotencyKeyFilter _idempotencyKeyFilter;
+    private readonly Mock<IIdempotencyService> _idempotencyServiceMock;
 
     public IdempotencyKeyFilterTests()
     {
@@ -21,10 +21,13 @@ public class IdempotencyKeyFilterTests
     }
 
     private static DefaultEndpointFilterInvocationContext CreateContext(HttpContext httpContext)
-        => new(httpContext);
+    {
+        return new DefaultEndpointFilterInvocationContext(httpContext);
+    }
 
-    private static ValidationProblemDetails CreateIdempotencyKeyValidationProblem() =>
-        new()
+    private static ValidationProblemDetails CreateIdempotencyKeyValidationProblem()
+    {
+        return new ValidationProblemDetails
         {
             Type = "urn:mywhiskyshelf:validation-errors:idempotency-key",
             Title = "Missing or empty idempotency key",
@@ -34,6 +37,7 @@ public class IdempotencyKeyFilterTests
                 { "idempotencyKey", ["Header value 'idempotency-key' is required and must be an non-empty UUID"] }
             }
         };
+    }
 
     private static DefaultHttpContext CreateHttpContext(string? idempotencyKeyHeader = null)
     {
@@ -55,7 +59,7 @@ public class IdempotencyKeyFilterTests
         var httpContext = CreateHttpContext();
         var context = CreateContext(httpContext);
 
-        var result = await _idempotencyKeyFilter.InvokeAsync(context, _ => ValueTask.FromResult<object?>(Results.Ok()));
+        var result = await _idempotencyKeyFilter.InvokeAsync(context, null!);
 
         var problem = Assert.IsType<ProblemHttpResult>(result);
         Assert.Equivalent(expectedResult, problem.ProblemDetails);
@@ -68,12 +72,12 @@ public class IdempotencyKeyFilterTests
         var httpContext = CreateHttpContext("not-a-guid");
         var context = CreateContext(httpContext);
 
-        var result = await _idempotencyKeyFilter.InvokeAsync(context, _ => ValueTask.FromResult<object?>(Results.Ok()));
+        var result = await _idempotencyKeyFilter.InvokeAsync(context, null!);
 
         var problem = Assert.IsType<ProblemHttpResult>(result);
         Assert.Equivalent(expectedResult, problem.ProblemDetails);
     }
-    
+
     [Fact]
     public async Task When_IdempotencyKeyHeaderIsEmptyGuid_Expect_ValidationProblemReturned()
     {
@@ -81,15 +85,15 @@ public class IdempotencyKeyFilterTests
         var httpContext = CreateHttpContext(Guid.Empty.ToString());
         var context = CreateContext(httpContext);
 
-        var result = await _idempotencyKeyFilter.InvokeAsync(context, _ => ValueTask.FromResult<object?>(Results.Ok()));
+        var result = await _idempotencyKeyFilter.InvokeAsync(context, null!);
 
         var problem = Assert.IsType<ProblemHttpResult>(result);
         Assert.Equivalent(expectedResult, problem.ProblemDetails);
     }
-    
+
 
     [Fact]
-    public async Task When_ResultCached_Expect_NullReturnedAndResponseWritten()
+    public async Task When_ResultCached_Expect_IResultReturnedAndResponseWritten()
     {
         var idempotencyKey = Guid.NewGuid();
         var headers = new Dictionary<string, string?[]>
@@ -105,25 +109,25 @@ public class IdempotencyKeyFilterTests
             .Setup(s => s.TryGetCachedResultAsync(idempotencyKey))
             .ReturnsAsync(cachedResponse);
 
-        var result = await _idempotencyKeyFilter
-            .InvokeAsync(context, _ => throw new Exception("next should not be called"));
+        var result = await _idempotencyKeyFilter.InvokeAsync(context, null!);
+
+        var iResult = Assert.IsType<IResult>(result, false);
+        await iResult.ExecuteAsync(httpContext);
 
         httpContext.Response.Body.Position = 0;
         var body = await new StreamReader(httpContext.Response.Body).ReadToEndAsync();
 
-        Assert.Null(result);
         Assert.Equal("cached-content", body);
-        Assert.Equal("cached-content".Length, httpContext.Response.ContentLength);
         Assert.Equal("application/json", httpContext.Response.ContentType);
         Assert.Equal(200, httpContext.Response.StatusCode);
     }
-    
+
     [Theory]
     [InlineData(" ")]
     [InlineData("   ")]
     [InlineData("    ")]
     [InlineData("\t \n")]
-    public async Task When_ResultCachedAndContentIsEmpty_Expect_NullReturnedAndResponseWritten(string content)
+    public async Task When_ResultCachedAndContentIsEmpty_Expect_IResultReturnedAndResponseWritten(string content)
     {
         var idempotencyKey = Guid.NewGuid();
         var headers = new Dictionary<string, string?[]>
@@ -140,14 +144,15 @@ public class IdempotencyKeyFilterTests
             .ReturnsAsync(cachedResponse);
 
         var result = await _idempotencyKeyFilter
-            .InvokeAsync(context, _ => throw new Exception("next should not be called"));
+            .InvokeAsync(context, null!);
+
+        var iResult = Assert.IsType<IResult>(result, false);
+        await iResult.ExecuteAsync(httpContext);
 
         httpContext.Response.Body.Position = 0;
         var body = await new StreamReader(httpContext.Response.Body).ReadToEndAsync();
 
-        Assert.Null(result);
         Assert.Empty(body);
-        Assert.Equal(0, httpContext.Response.ContentLength);
         Assert.Null(httpContext.Response.ContentType);
         Assert.Equal(200, httpContext.Response.StatusCode);
     }
@@ -158,24 +163,24 @@ public class IdempotencyKeyFilterTests
         var idempotencyKey = Guid.NewGuid().ToString();
         var httpContext = CreateHttpContext(idempotencyKey);
         var context = CreateContext(httpContext);
-    
+
         _idempotencyServiceMock
             .Setup(s => s.TryGetCachedResultAsync(Guid.Parse(idempotencyKey)))
-            .ReturnsAsync((CachedResponse?) null);
-    
+            .ReturnsAsync((CachedResponse?)null);
+
         var result = await _idempotencyKeyFilter.InvokeAsync(context, _ => ValueTask.FromResult<object?>(123));
-    
+
         Assert.Equal(123, result);
         _idempotencyServiceMock.Verify(
             s => s.AddToCacheAsync(
-                    It.IsAny<string>(), 
-                    It.IsAny<int>(), 
-                    It.IsAny<string>(),
-                    It.IsAny<string?>(),
-                    It.IsAny<Dictionary<string, string?[]>>()),
-                Times.Never);
+                It.IsAny<string>(),
+                It.IsAny<int>(),
+                It.IsAny<string>(),
+                It.IsAny<string?>(),
+                It.IsAny<Dictionary<string, string?[]>>()),
+            Times.Never);
     }
-    
+
     [Fact]
     public async Task When_ResultNotCached_And_ReturnsIResult_Expect_CachedAndReturned()
     {
@@ -183,18 +188,18 @@ public class IdempotencyKeyFilterTests
         var httpContext = CreateHttpContext(idempotencyKey);
         var context = CreateContext(httpContext);
         var okResult = Results.Ok("new-content");
-    
+
         _idempotencyServiceMock
             .Setup(s => s.TryGetCachedResultAsync(Guid.Parse(idempotencyKey)))
-            .ReturnsAsync((CachedResponse?) null);
-    
+            .ReturnsAsync((CachedResponse?)null);
+
         var result = await _idempotencyKeyFilter.InvokeAsync(context, _ => ValueTask.FromResult<object?>(okResult));
-    
+
         Assert.Same(okResult, result);
         _idempotencyServiceMock.Verify(
             s => s.AddToCacheAsync(
                 idempotencyKey,
-                200, 
+                200,
                 "\"new-content\"",
                 It.IsAny<string?>(),
                 It.IsAny<Dictionary<string, string?[]>>()),

@@ -7,15 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql" Version="9.4.1" />
-        <PackageReference Include="Aspire.StackExchange.Redis" Version="9.4.1" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8" />
-        <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25" />
+        <PackageReference Include="Aspire.Npgsql" Version="9.4.1"/>
+        <PackageReference Include="Aspire.StackExchange.Redis" Version="9.4.1"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8"/>
+        <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MyWhiskyShelf.Database\MyWhiskyShelf.Database.csproj"/>
-        <ProjectReference Include="..\MyWhiskyShelf.DataLoader\MyWhiskyShelf.DataLoader.csproj"/>
+        <ProjectReference Include="..\MyWhiskyShelf.Application\MyWhiskyShelf.Application.csproj"/>
+        <ProjectReference Include="..\MyWhiskyShelf.Infrastructure\MyWhiskyShelf.Infrastructure.csproj"/>
         <ProjectReference Include="..\MyWhiskyShelf.ServiceDefaults\MyWhiskyShelf.ServiceDefaults.csproj"/>
     </ItemGroup>
 
