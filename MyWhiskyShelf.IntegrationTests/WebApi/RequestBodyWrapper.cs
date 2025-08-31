@@ -1,15 +1,24 @@
-namespace MyWhiskyShelf.IntegrationTests.WebApi;
-
-using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Xunit.Abstractions;
 
+namespace MyWhiskyShelf.IntegrationTests.WebApi;
+
+[ExcludeFromCodeCoverage]
 public sealed class RequestBodyWrapper : IXunitSerializable
 {
-    public object? Value { get; private set; }
+    // IXunitSerializable requires a parameterless constructor to implement, but this is use inherently
+    // ReSharper disable once UnusedMember.Global
+    public RequestBodyWrapper()
+    {
+    }
 
-    public RequestBodyWrapper() { }
-    public RequestBodyWrapper(object? value) => Value = value;
+    public RequestBodyWrapper(object? value)
+    {
+        Value = value;
+    }
+
+    public object? Value { get; private set; }
 
     public void Serialize(IXunitSerializationInfo info)
     {
@@ -30,11 +39,18 @@ public sealed class RequestBodyWrapper : IXunitSerializable
         var typeName = info.GetValue<string>("Type");
         var json = info.GetValue<string>("Json");
 
-        if (typeName is null) { Value = null; return; }
+        if (typeName is null)
+        {
+            Value = null;
+            return;
+        }
 
-        var type = Type.GetType(typeName, throwOnError: true)!;
+        var type = Type.GetType(typeName, true)!;
         Value = JsonSerializer.Deserialize(json!, type);
     }
 
-    public override string ToString() => Value?.ToString() ?? "<null>";
+    public override string ToString()
+    {
+        return Value?.ToString() ?? "<null>";
+    }
 }

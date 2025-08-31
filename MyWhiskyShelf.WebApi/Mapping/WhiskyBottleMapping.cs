@@ -35,7 +35,7 @@ public static class WhiskyBottleMapping
             Name = whiskyBottleRequest.Name,
             DistilleryName = whiskyBottleRequest.DistilleryName,
             DistilleryId = whiskyBottleRequest.DistilleryId,
-            Status = Enum.TryParse<BottleStatus>(whiskyBottleRequest.Status, ignoreCase: true, out var bottleStatus)
+            Status = Enum.TryParse<BottleStatus>(whiskyBottleRequest.Status, true, out var bottleStatus)
                 ? bottleStatus
                 : BottleStatus.Unknown,
             Bottler = whiskyBottleRequest.Bottler,

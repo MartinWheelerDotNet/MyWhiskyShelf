@@ -9,15 +9,15 @@ public sealed class HttpResponseMessageComparer : IEqualityComparer<HttpResponse
         if (left is null || right is null) return left == right;
         if (left.StatusCode != right.StatusCode) return false;
 
-        var unmatchedHeader = 
-            from header in PreservedHeaders 
-            let leftHeader = TryGetHeader(left, header) 
-            let rightHeader = TryGetHeader(right, header) 
+        var unmatchedHeader =
+            from header in PreservedHeaders
+            let leftHeader = TryGetHeader(left, header)
+            let rightHeader = TryGetHeader(right, header)
             where !string.Equals(leftHeader, rightHeader, StringComparison.Ordinal)
             select leftHeader;
-        
+
         if (unmatchedHeader.Any()) return false;
-        
+
         var leftContent = left.Content.ReadAsStringAsync().GetAwaiter().GetResult();
         var rightContent = right.Content.ReadAsStringAsync().GetAwaiter().GetResult();
         return string.Equals(leftContent, rightContent, StringComparison.Ordinal);

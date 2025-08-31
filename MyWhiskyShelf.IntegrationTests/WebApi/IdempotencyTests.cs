@@ -25,9 +25,9 @@ public class IdempotencyTests(MyWhiskyShelfFixture fixture) : IClassFixture<MyWh
 
         (EntityType.WhiskyBottle, HttpMethod.Post.Method, "/whisky-bottles", WhiskyBottleRequestTestData.GenericCreate),
         (EntityType.WhiskyBottle, HttpMethod.Put.Method, "/whisky-bottles/{Id}",
-            WhiskyBottleRequestTestData.GenericUpdate with 
+            WhiskyBottleRequestTestData.GenericUpdate with
             {
-                Name = "Update" 
+                Name = "Update"
             }),
         (EntityType.WhiskyBottle, HttpMethod.Delete.Method, "/whisky-bottles/{Id}", null)
     ];
@@ -46,7 +46,7 @@ public class IdempotencyTests(MyWhiskyShelfFixture fixture) : IClassFixture<MyWh
         var data = new TheoryData<EntityType, string, string, RequestBodyWrapper>();
         foreach (var (entityType, method, path, body) in EndpointData)
             data.Add(entityType, method, path, new RequestBodyWrapper(body));
-    
+
         return data;
     }
 
@@ -54,13 +54,12 @@ public class IdempotencyTests(MyWhiskyShelfFixture fixture) : IClassFixture<MyWh
     {
         var data = new TheoryData<EntityType, string, string, RequestBodyWrapper, string>();
         foreach (var (entityType, method, path, body) in EndpointData)
-            foreach (var key in InvalidKeys)
-                data.Add(entityType, method, path, new RequestBodyWrapper(body), key);
-        
+        foreach (var key in InvalidKeys)
+            data.Add(entityType, method, path, new RequestBodyWrapper(body), key);
+
         return data;
-        
     }
-    
+
     [Theory]
     [MemberData(nameof(IdempotentEndpointsData))]
     public async Task When_RequestWithMissingIdempotencyKey_Expect_ValidationProblem(
@@ -114,7 +113,7 @@ public class IdempotencyTests(MyWhiskyShelfFixture fixture) : IClassFixture<MyWh
         string path,
         RequestBodyWrapper body)
     {
-        var httpMethod =  new HttpMethod(method);
+        var httpMethod = new HttpMethod(method);
         await fixture.SeedDatabase();
 
         var (_, id) = fixture.GetSeededEntityDetailByTypeAndMethod(httpMethod, entityType);

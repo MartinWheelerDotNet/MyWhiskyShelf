@@ -17,7 +17,7 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
     // Until the work for the migration which will allow us to use the postgres functions for case insensitivity
     // we need to silence this warning, as EF projections do not allow string comparers.
     [SuppressMessage(
-        "Performance", 
+        "Performance",
         "CA1862:Use the \'StringComparison\' method overloads to perform case-insensitive string comparisons")]
     public async Task<bool> ExistsByNameAsync(string name, CancellationToken ct = default)
     {

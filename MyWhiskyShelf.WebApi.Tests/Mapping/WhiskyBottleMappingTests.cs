@@ -56,7 +56,7 @@ public class WhiskyBottleMappingTests
             () => Assert.Equal(createWhiskyBottleRequest.FlavourProfile, whiskyBottle.FlavourProfile));
     }
 
-    
+
     [Theory]
     [InlineData("Not a known status", BottleStatus.Unknown)]
     [InlineData("unknown", BottleStatus.Unknown)]
@@ -67,10 +67,11 @@ public class WhiskyBottleMappingTests
     [InlineData("Opened", BottleStatus.Opened)]
     [InlineData("finished", BottleStatus.Finished)]
     [InlineData("Finished", BottleStatus.Finished)]
-    public void When_MappingWhiskyBottleCreateRequestToDomainWithUnknownStatus_Expect_StatusUnknown(string status, BottleStatus expectedStatus)
+    public void When_MappingWhiskyBottleCreateRequestToDomainWithUnknownStatus_Expect_StatusUnknown(string status,
+        BottleStatus expectedStatus)
     {
         var whiskyBottleCreateRequest = WhiskyBottleRequestTestData.GenericCreateRequest with { Status = status };
-    
+
         var whiskyBottle = whiskyBottleCreateRequest.ToDomain();
 
         Assert.Equal(expectedStatus, whiskyBottle.Status);
