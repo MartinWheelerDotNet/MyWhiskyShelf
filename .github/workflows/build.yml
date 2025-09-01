@@ -137,8 +137,6 @@ jobs:
             project: MyWhiskyShelf.AppHost.csproj
           - name: Application
             project: MyWhiskyShelf.Application.csproj
-          - name: Core
-            project: MyWhiskyShelf.Core.csproj
           - name: Infrastructure
             project: MyWhiskyShelf.Infrastructure.csproj
           - name: WebApi
@@ -164,7 +162,6 @@ jobs:
             |----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
             | Overall        | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }})](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }})                                                |
             | AppHost        | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }}%3Fmodule%3DAppHost)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }}?module=AppHost)              |
-            | Core           | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }}3Fmodule%3DCore)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }}?module=Core)                     |
             | Application    | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }}%3Fmodule%3DApplication)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }}?module=Application)      |
             | Infrastructure | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }}%3Fmodule%3DInfrastructure)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }}?module=Infrastructure) |        
             | WebApi         | [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FMartinWheelerDotNet%2FMyWhiskyShelf%2F${{ env.GITHUB_HEAD_REF }}%3Fmodule%3DWebApi)](https://dashboard.stryker-mutator.io/reports/github.com/MartinWheelerDotNet/MyWhiskyShelf/${{ env.GITHUB_HEAD_REF }}?module=WebApi)                |        

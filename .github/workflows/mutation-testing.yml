@@ -45,40 +45,40 @@ jobs:
 
       - name: Add tool path to environment
         run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
-        
-  - name: Write Stryker config (PR)
-      if: ${{ github.event_name == 'pull_request' }}
-      env:
-        REPO: ${{ github.repository }}
-        HEAD: ${{ github.head_ref }}
-        BASE: ${{ github.base_ref }}
-        MODULE: ${{ inputs.name }}
-      run: |
-        cat <<'EOF' > stryker-config.json
-        {
-          "stryker-config": {
-            "project-info": {
-              "name": "github.com/${REPO}",
-              "version": "${HEAD}",
-              "module": "${MODULE}"
-            },
-            "since": { "target": "${BASE}" },
-            "coverage-analysis": "perTest",
-            "test-projects": [
-              "tests/MyWhiskyShelf.Application.Tests/MyWhiskyShelf.Application.Tests.csproj",
-              "tests/MyWhiskyShelf.Infrastructure.Tests/MyWhiskyShelf.Infrastructure.Tests.csproj",
-              "tests/MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj",
-              "tests/MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"
-            ],
-            "ignored-methods": [
-             "LogDebug",
-             "LogInformation",
-             "LogTrace",
-             "LogWarning"
-           ]
+
+      - name: Write Stryker config (PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          REPO: ${{ github.repository }}
+          HEAD: ${{ github.head_ref }}
+          BASE: ${{ github.base_ref }}
+          MODULE: ${{ inputs.name }}
+        run: |
+          cat <<EOF > stryker-config.json
+          {
+            "stryker-config": {
+              "project-info": {
+                "name": "github.com/${REPO}",
+                "version": "${HEAD}",
+                "module": "${MODULE}"
+              },
+              "since": { "target": "${BASE}" },
+              "coverage-analysis": "perTest",
+              "test-projects": [
+                "tests/MyWhiskyShelf.Application.Tests/MyWhiskyShelf.Application.Tests.csproj",
+                "tests/MyWhiskyShelf.Infrastructure.Tests/MyWhiskyShelf.Infrastructure.Tests.csproj",
+                "tests/MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj",
+                "tests/MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"
+              ],
+              "ignored-methods": [
+                "LogDebug",
+                "LogInformation",
+                "LogTrace",
+                "LogWarning"
+              ]
+            }
           }
-        }
-        EOF
+          EOF
 
       - name: Write Stryker config (push to main/full)
         if: ${{ github.event_name != 'pull_request' }}
@@ -86,7 +86,7 @@ jobs:
           REPO: ${{ github.repository }}
           MODULE: ${{ inputs.name }}
         run: |
-          cat <<'EOF' > stryker-config.json
+          cat <<EOF > stryker-config.json
           {
             "stryker-config": {
               "project-info": {
@@ -120,5 +120,3 @@ jobs:
             --reporter "dashboard" \
             --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" \
             --config-file "stryker-config.json"
-  
-        
