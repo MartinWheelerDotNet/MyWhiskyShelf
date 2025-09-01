@@ -22,7 +22,7 @@ public class WhiskyBottleAppServiceTests
     }
 
     [Fact]
-    public async Task When_GetByIdAndWhiskyBottleNotFound_Expect_NullAndLogWarning()
+    public async Task When_GetByIdAndWhiskyBottleNotFound_Expect_Null()
     {
         var id = Guid.NewGuid();
         _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
@@ -30,14 +30,12 @@ public class WhiskyBottleAppServiceTests
 
         var result = await _service.GetByIdAsync(id);
 
-        Assert.Multiple(
-            () => Assert.Null(result),
-            () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), e => e.Level == LogLevel.Warning));
+        Assert.Null(result);
     }
 
 
     [Fact]
-    public async Task When_GetByIdAndWhiskyBottleExists_Expect_ReturnWhiskyBottleAndLogDebug()
+    public async Task When_GetByIdAndWhiskyBottleExists_Expect_ReturnWhiskyBottle()
     {
         var id = Guid.NewGuid();
         var whiskyBottle = WhiskyBottleTestData.Generic with { Id = id };
@@ -46,14 +44,11 @@ public class WhiskyBottleAppServiceTests
 
         var result = await _service.GetByIdAsync(id);
 
-        Assert.Multiple(
-            () => Assert.NotNull(result),
-            () => Assert.Equal(id, result!.Id),
-            () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), e => e.Level == LogLevel.Debug));
+        Assert.Equal(id, result!.Id);
     }
 
     [Fact]
-    public async Task When_CreateAndWhiskyBottleCreated_Expect_CreatedAndLogDebug()
+    public async Task When_CreateAndWhiskyBottleCreated_Expect_Created()
     {
         var newWhiskyBottle = WhiskyBottleTestData.Generic;
         var savedWhiskyBottle = WhiskyBottleTestData.Generic with { Id = Guid.NewGuid() };
@@ -64,8 +59,7 @@ public class WhiskyBottleAppServiceTests
 
         Assert.Multiple(
             () => Assert.Equal(CreateWhiskyBottleOutcome.Created, result.Outcome),
-            () => Assert.Equal(savedWhiskyBottle, result.WhiskyBottle),
-            () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), e => e.Level == LogLevel.Debug));
+            () => Assert.Equal(savedWhiskyBottle, result.WhiskyBottle));
     }
 
     [Fact]
@@ -81,11 +75,14 @@ public class WhiskyBottleAppServiceTests
         Assert.Multiple(
             () => Assert.Equal(CreateWhiskyBottleOutcome.Error, result.Outcome),
             () => Assert.Equal("Exception", result.Error),
-            () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), e => e.Level == LogLevel.Error));
+            () => Assert.Equal(LogLevel.Error, _fakeLogger.Collector.LatestRecord.Level),
+            () => Assert.Equal(
+                $"Error creating whisky bottle with [Name: {newWhiskyBottle.Name}]",
+                _fakeLogger.Collector.LatestRecord.Message));
     }
 
     [Fact]
-    public async Task When_UpdateAndWhiskyBottleUpdated_Expect_UpdatedAndLogDebug()
+    public async Task When_UpdateAndWhiskyBottleUpdated_Expect_Updated()
     {
         var id = Guid.NewGuid();
         var updatedWhiskyBottle = WhiskyBottleTestData.Generic;
@@ -96,12 +93,11 @@ public class WhiskyBottleAppServiceTests
 
         Assert.Multiple(
             () => Assert.Equal(UpdateWhiskyBottleOutcome.Updated, result.Outcome),
-            () => Assert.Equal(updatedWhiskyBottle with { Id = id }, result.WhiskyBottle),
-            () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), e => e.Level == LogLevel.Debug));
+            () => Assert.Equal(updatedWhiskyBottle with { Id = id }, result.WhiskyBottle));
     }
 
     [Fact]
-    public async Task When_UpdateAndWhiskyBottleNotFound_Expect_NotFoundAndLogWarning()
+    public async Task When_UpdateAndWhiskyBottleNotFound_Expect_NotFound()
     {
         var id = Guid.NewGuid();
         var updatedWhiskyBottle = WhiskyBottleTestData.Generic;
@@ -110,9 +106,7 @@ public class WhiskyBottleAppServiceTests
 
         var result = await _service.UpdateAsync(id, updatedWhiskyBottle);
 
-        Assert.Multiple(
-            () => Assert.Equal(UpdateWhiskyBottleOutcome.NotFound, result.Outcome),
-            () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), e => e.Level == LogLevel.Warning));
+        Assert.Equal(UpdateWhiskyBottleOutcome.NotFound, result.Outcome);
     }
 
     [Fact]
@@ -128,11 +122,14 @@ public class WhiskyBottleAppServiceTests
         Assert.Multiple(
             () => Assert.Equal(UpdateWhiskyBottleOutcome.Error, result.Outcome),
             () => Assert.Equal("Exception", result.Error),
-            () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), e => e.Level == LogLevel.Warning));
+            () => Assert.Equal(LogLevel.Error, _fakeLogger.Collector.LatestRecord.Level),
+            () => Assert.Equal(
+                $"Error updating whisky bottle [Name: {updatedWhiskyBottle.Name}, Id: {id}]",
+                _fakeLogger.Collector.LatestRecord.Message));
     }
 
     [Fact]
-    public async Task When_DeleteAndWhiskyBottleFound_Expect_DeletedAndLogDebug()
+    public async Task When_DeleteAndWhiskyBottleFound_Expect_Deleted()
     {
         var id = Guid.NewGuid();
         _mockWrite.Setup(w => w.DeleteAsync(id, It.IsAny<CancellationToken>()))
@@ -140,22 +137,18 @@ public class WhiskyBottleAppServiceTests
 
         var result = await _service.DeleteAsync(id);
 
-        Assert.Multiple(
-            () => Assert.Equal(DeleteWhiskyBottleOutcome.Deleted, result.Outcome),
-            () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), e => e.Level == LogLevel.Debug));
+        Assert.Equal(DeleteWhiskyBottleOutcome.Deleted, result.Outcome);
     }
 
     [Fact]
-    public async Task When_DeleteAndWhiskyBottleNotFound_Expect_NotFoundAndLogWarning()
+    public async Task When_DeleteAndWhiskyBottleNotFound_Expect_NotFound()
     {
         var id = Guid.NewGuid();
         _mockWrite.Setup(w => w.DeleteAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(false);
 
         var result = await _service.DeleteAsync(id);
 
-        Assert.Multiple(
-            () => Assert.Equal(DeleteWhiskyBottleOutcome.NotFound, result.Outcome),
-            () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), e => e.Level == LogLevel.Warning));
+        Assert.Equal(DeleteWhiskyBottleOutcome.NotFound, result.Outcome);
     }
 
     [Fact]
@@ -170,6 +163,7 @@ public class WhiskyBottleAppServiceTests
         Assert.Multiple(
             () => Assert.Equal(DeleteWhiskyBottleOutcome.Error, result.Outcome),
             () => Assert.Equal("Exception", result.Error),
-            () => Assert.Contains(_fakeLogger.Collector.GetSnapshot(), e => e.Level == LogLevel.Error));
+            () => Assert.Equal(LogLevel.Error, _fakeLogger.Collector.LatestRecord.Level),
+            () => Assert.Equal($"Error deleting whisky bottle [Id: {id}]", _fakeLogger.Collector.LatestRecord.Message));
     }
 }

@@ -15,10 +15,8 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<MyWhiskySh
         var connStr = Environment.GetEnvironmentVariable("ConnectionStrings__MyWhiskyShelf");
 
         if (string.IsNullOrWhiteSpace(connStr))
-        {
             throw new InvalidOperationException(
                 "No connection string found. Set 'ConnectionStrings__MyWhiskyShelf' as a user-secret.");
-        }
 
         var options = new DbContextOptionsBuilder<MyWhiskyShelfDbContext>()
             .UseNpgsql(connStr)
