@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Application.Abstractions.Services;
@@ -9,6 +10,8 @@ using MyWhiskyShelf.WebApi.Mapping;
 
 namespace MyWhiskyShelf.WebApi.Endpoints;
 
+// Endpoints are covered by integration tests which are managed by Aspire, and do not need to be tested independently
+[ExcludeFromCodeCoverage]
 public static class WhiskyBottleEndpoints
 {
     public static void MapWhiskyBottleEndpoints(this IEndpointRouteBuilder app)

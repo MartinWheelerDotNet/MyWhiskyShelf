@@ -7,6 +7,9 @@ using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
 
+// Repository level tests are covered by integration tests, and specific functionality, such as postgres functions
+// cannot be tested against sqlite / in-memory db.
+[ExcludeFromCodeCoverage]
 public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) : IDistilleryReadRepository
 {
     public async Task<Distillery?> GetByIdAsync(Guid id, CancellationToken ct = default)
