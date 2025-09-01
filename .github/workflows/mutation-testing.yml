@@ -70,7 +70,7 @@ jobs:
                 "tests/MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj",
                 "tests/MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"
               ],
-              "ignored-methods": [
+              "ignore-methods": [
                 "LogDebug",
                 "LogInformation",
                 "LogTrace",
@@ -101,7 +101,7 @@ jobs:
                 "tests/MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj",
                 "tests/MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"
               ],
-              "ignored-methods": [
+              "ignore-methods": [
                 "LogDebug",
                 "LogInformation",
                 "LogTrace",

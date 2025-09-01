@@ -7,5 +7,11 @@
     "tests/MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj",
     "tests/MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"
   ],
-  "coverage-analysis": "perTest"
+  "coverage-analysis": "perTest",
+  "ignore-methods": [
+    "LogDebug",
+    "LogInformation",
+    "LogTrace",
+    "LogWarning"
+  ]
 }
