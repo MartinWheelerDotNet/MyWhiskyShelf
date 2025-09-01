@@ -9,7 +9,7 @@ using static MyWhiskyShelf.IntegrationTests.WebApi.IdempotencyHelpers;
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
 [Collection("AspireTests")]
-public class IdempotencyTests(MyWhiskyShelfFixture fixture) : IClassFixture<MyWhiskyShelfFixture>
+public class IdempotencyTests(MyWhiskyShelfFixture fixture)
 {
     private const string WebApiResourceName = "WebApi";
 

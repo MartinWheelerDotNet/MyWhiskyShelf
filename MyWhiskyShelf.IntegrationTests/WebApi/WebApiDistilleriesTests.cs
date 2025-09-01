@@ -7,7 +7,7 @@ using static MyWhiskyShelf.IntegrationTests.Fixtures.MyWhiskyShelfFixture;
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
 [Collection("AspireTests")]
-public class WebApiDistilleriesTests(MyWhiskyShelfFixture fixture) : IClassFixture<MyWhiskyShelfFixture>
+public class WebApiDistilleriesTests(MyWhiskyShelfFixture fixture)
 {
     private const string WebApiResourceName = "WebApi";
 
@@ -126,11 +126,11 @@ public class WebApiDistilleriesTests(MyWhiskyShelfFixture fixture) : IClassFixtu
     {
         await fixture.SeedDistilleriesAsync();
         using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
-        var (_, id) = fixture.GetSeededEntityDetailByTypeAndMethod(HttpMethod.Put, EntityType.Distillery);
+        var (name, id) = fixture.GetSeededEntityDetailByTypeAndMethod(HttpMethod.Put, EntityType.Distillery);
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Put,
             $"/distilleries/{id}",
-            DistilleryRequestTestData.GenericUpdate);
+            DistilleryRequestTestData.GenericUpdate with { Name = name });
 
         var response = await httpClient.SendAsync(request);
 

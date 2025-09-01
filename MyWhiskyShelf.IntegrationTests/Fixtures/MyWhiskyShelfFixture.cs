@@ -57,7 +57,11 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
     protected virtual async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
     {
         var appHost = await DistributedApplicationTestingBuilder.CreateAsync<MyWhiskyShelf_AppHost>(
-            ["MYWHISKYSHELF_DATA_SEEDING_ENABLED=false"]);
+        [
+            "MYWHISKYSHELF_DATA_SEEDING_ENABLED=false",
+            "MYWHISKYSHELF_PG_WEB_ENABLED=false",
+            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
+        ]);
 
         appHost.Services
             .ConfigureHttpClientDefaults(clientBuilder => clientBuilder.AddStandardResilienceHandler());
