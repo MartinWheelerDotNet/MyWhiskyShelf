@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/stryker-mutator/stryker-net/master/src/Stryker.CLI/stryker.schema.json",
+  "project": "<will be overridden by CLI>",
+  "test-projects": [
+    "tests/MyWhiskyShelf.Application.Tests/MyWhiskyShelf.Application.Tests.csproj",
+    "tests/MyWhiskyShelf.Infrastructure.Tests/MyWhiskyShelf.Infrastructure.Tests.csproj",
+    "tests/MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj",
+    "tests/MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"
+  ],
+  "coverage-analysis": "perTest",
+  "ignore-methods": [
+    "LogDebug",
+    "LogInformation",
+    "LogTrace",
+    "LogWarning"
+  ]
+}

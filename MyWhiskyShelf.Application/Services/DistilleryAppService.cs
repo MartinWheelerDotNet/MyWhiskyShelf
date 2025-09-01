@@ -99,7 +99,7 @@ public sealed class DistilleryAppService(
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Error updating distillery [Name: {Name}, Id: {Id}]", distillery.Name, id);
+            logger.LogError(ex, "Error updating distillery [Name: {Name}, Id: {Id}]", distillery.Name, id);
             return new UpdateDistilleryResult(UpdateDistilleryOutcome.Error, Error: ex.Message);
         }
     }

@@ -63,7 +63,7 @@ public sealed class WhiskyBottleAppService(
         }
         catch (Exception ex)
         {
-            logger.LogWarning(ex, "Error updating whisky bottle [Name: {Name}, Id: {Id}]", whiskyBottle.Name, id);
+            logger.LogError(ex, "Error updating whisky bottle [Name: {Name}, Id: {Id}]", whiskyBottle.Name, id);
             return new UpdateWhiskyBottleResult(UpdateWhiskyBottleOutcome.Error, Error: ex.Message);
         }
     }
