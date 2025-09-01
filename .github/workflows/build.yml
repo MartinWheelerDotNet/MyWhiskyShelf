@@ -125,6 +125,7 @@ jobs:
     with:
       name: ${{ matrix.name }}
       project: ${{ matrix.project }}
+      test_projects: ${{ matrix.test_projects }}
     permissions:
        pull-requests: write
     secrets:
@@ -135,12 +136,26 @@ jobs:
         include:
           - name: AppHost
             project: MyWhiskyShelf.AppHost.csproj
+            test_projects: >-
+              ["MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"]
+
           - name: Application
             project: MyWhiskyShelf.Application.csproj
+            test_projects: >-
+              ["MyWhiskyShelf.Application.Tests/MyWhiskyShelf.Application.Tests.csproj",
+               "MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"]
+
           - name: Infrastructure
             project: MyWhiskyShelf.Infrastructure.csproj
+            test_projects: >-
+              ["MyWhiskyShelf.Infrastructure.Tests/MyWhiskyShelf.Infrastructure.Tests.csproj",
+               "MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"]
+
           - name: WebApi
             project: MyWhiskyShelf.WebApi.csproj
+            test_projects: >-
+              ["MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj",
+               "MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"]
             
   post-pr-comment:
     runs-on: ubuntu-latest

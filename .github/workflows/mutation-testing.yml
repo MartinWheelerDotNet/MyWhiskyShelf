@@ -1,6 +1,7 @@
 name: Mutation Testing
-on: 
-  workflow_call: 
+
+on:
+  workflow_call:
     inputs:
       name:
         required: true
@@ -8,15 +9,19 @@ on:
       project:
         required: true
         type: string
+      test_projects:
+        required: true
+        type: string
     secrets:
       STRYKER_DASHBOARD_API_KEY:
         required: true
-           
+
 jobs:
   mutation-tests:
     name: ${{ inputs.name }}
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -46,13 +51,14 @@ jobs:
       - name: Add tool path to environment
         run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
 
-      - name: Write Stryker config (PR)
+      - name: Write Stryker config (PR Changes)
         if: ${{ github.event_name == 'pull_request' }}
         env:
           REPO: ${{ github.repository }}
           HEAD: ${{ github.head_ref }}
           BASE: ${{ github.base_ref }}
           MODULE: ${{ inputs.name }}
+          TEST_PROJECTS_JSON: ${{ inputs.test_projects }}
         run: |
           cat <<EOF > stryker-config.json
           {
@@ -64,12 +70,7 @@ jobs:
               },
               "since": { "target": "${BASE}" },
               "coverage-analysis": "perTest",
-              "test-projects": [
-                "tests/MyWhiskyShelf.Application.Tests/MyWhiskyShelf.Application.Tests.csproj",
-                "tests/MyWhiskyShelf.Infrastructure.Tests/MyWhiskyShelf.Infrastructure.Tests.csproj",
-                "tests/MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj",
-                "tests/MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"
-              ],
+              "test-projects": ${TEST_PROJECTS_JSON},
               "ignore-methods": [
                 "LogDebug",
                 "LogInformation",
@@ -80,11 +81,12 @@ jobs:
           }
           EOF
 
-      - name: Write Stryker config (push to main/full)
+      - name: Write Stryker config (Full)
         if: ${{ github.event_name != 'pull_request' }}
         env:
           REPO: ${{ github.repository }}
           MODULE: ${{ inputs.name }}
+          TEST_PROJECTS_JSON: ${{ inputs.test_projects }}
         run: |
           cat <<EOF > stryker-config.json
           {
@@ -95,12 +97,7 @@ jobs:
                 "module": "${MODULE}"
               },
               "coverage-analysis": "perTest",
-              "test-projects": [
-                "tests/MyWhiskyShelf.Application.Tests/MyWhiskyShelf.Application.Tests.csproj",
-                "tests/MyWhiskyShelf.Infrastructure.Tests/MyWhiskyShelf.Infrastructure.Tests.csproj",
-                "tests/MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj",
-                "tests/MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"
-              ],
+              "test-projects": ${TEST_PROJECTS_JSON},
               "ignore-methods": [
                 "LogDebug",
                 "LogInformation",
