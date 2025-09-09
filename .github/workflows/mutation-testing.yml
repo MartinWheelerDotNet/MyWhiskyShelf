@@ -40,7 +40,7 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore dependencies
-        run: dotnet restore MyWhiskyShelf.sln
+        run: dotnet restore MyWhiskyShelf.NoMigrations.slnf
 
       - name: Setup Dev Credentials
         run: dotnet dev-certs https --trust
@@ -76,6 +76,9 @@ jobs:
                 "LogInformation",
                 "LogTrace",
                 "LogWarning"
+              ],
+              "mutate": [
+                "!**/MyWhiskyShelf.Migrations/**"
               ]
             }
           }
@@ -103,6 +106,9 @@ jobs:
                 "LogInformation",
                 "LogTrace",
                 "LogWarning"
+              ],
+              "mutate": [
+                "!**/MyWhiskyShelf.Migrations/**"
               ]
             }
           }
