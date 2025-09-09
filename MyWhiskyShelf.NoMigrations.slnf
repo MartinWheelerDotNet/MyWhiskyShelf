@@ -1,0 +1,15 @@
+{
+  "solution": {
+    "path": "MyWhiskyShelf.sln",
+    "projects": [
+      "MyWhiskyShelf.AppHost/MyWhiskyShelf.AppHost.csproj",
+      "MyWhiskyShelf.Application/MyWhiskyShelf.Application.csproj",
+      "MyWhiskyShelf.Infrastructure/MyWhiskyShelf.Infrastructure.csproj",
+      "MyWhiskyShelf.WebApi/MyWhiskyShelf.WebApi.csproj",
+      "MyWhiskyShelf.Application.Tests/MyWhiskyShelf.Application.Tests.csproj",
+      "MyWhiskyShelf.Infrastructure.Tests/MyWhiskyShelf.Infrastructure.Tests.csproj",
+      "MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj",
+      "MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj"
+    ]
+  }
+}
