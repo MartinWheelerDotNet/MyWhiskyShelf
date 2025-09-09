@@ -2,8 +2,9 @@ using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 
-namespace MyWhiskyShelf.Infrastructure.Persistence.Contexts;
+namespace MyWhiskyShelf.Migrations;
 
 [UsedImplicitly]
 [ExcludeFromCodeCoverage]

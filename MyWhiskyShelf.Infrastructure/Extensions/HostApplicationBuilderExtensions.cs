@@ -14,9 +14,10 @@ public static class HostApplicationBuilderExtensions
 {
     public static void UsePostgresDatabase(this IHostApplicationBuilder builder)
     {
+        var connectionString = builder.Configuration.GetConnectionString("myWhiskyShelfDb")
+                               ?? throw new InvalidOperationException("Connection string not found");
         builder.Services.AddDbContext<MyWhiskyShelfDbContext>(options =>
-            options.UseNpgsql(builder.Configuration.GetConnectionString("myWhiskyShelfDb")
-                              ?? throw new InvalidOperationException("Connection string not found")));
+            options.UseNpgsql(connectionString, npgsql => npgsql.MigrationsAssembly("MyWhiskyShelf.Migrations")));
 
         builder.EnrichNpgsqlDbContext<MyWhiskyShelfDbContext>(settings =>
         {
