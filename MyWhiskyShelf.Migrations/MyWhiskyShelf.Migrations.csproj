@@ -14,4 +14,9 @@
       <ProjectReference Include="..\MyWhiskyShelf.Infrastructure\MyWhiskyShelf.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Include="Migrations\**\*.cs">
+            <SonarQubeExclude>true</SonarQubeExclude>
+        </Compile>
+    </ItemGroup>
 </Project>
