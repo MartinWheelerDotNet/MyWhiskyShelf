@@ -24,6 +24,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\MyWhiskyShelf.Migrations\MyWhiskyShelf.Migrations.csproj"
+                          PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Content Update="Resources\distilleries.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
