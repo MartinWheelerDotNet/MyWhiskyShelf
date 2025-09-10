@@ -46,24 +46,25 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
     {
         var services = new ServiceCollection();
         services.AddDbContext<MyWhiskyShelfDbContext>(opts =>
-            opts.UseNpgsql(connectionString: connectionString, b => b.MigrationsAssembly("MyWhiskyShelf.Migrations")));
+            opts.UseNpgsql(connectionString, b => b.MigrationsAssembly("MyWhiskyShelf.Migrations")));
 
         await using var sp = services.BuildServiceProvider();
         using var scope = sp.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<MyWhiskyShelfDbContext>();
-        
-        // Assert migrations are visible (fail fast in CI if not)
-        var migAsm = db.GetService<IMigrationsAssembly>().Assembly.GetName().Name;
-        if (migAsm != "MyWhiskyShelf.Migrations")
-            throw new InvalidOperationException($"Migrations assembly not loaded (got '{migAsm}'). " +
-                                                "Ensure IntegrationTests project references MyWhiskyShelf.Migrations.");
 
-        Console.WriteLine(migAsm);
-        Console.WriteLine("Migrations assembly loaded");
+        var migAsm = db.GetService<IMigrationsAssembly>();
+        Console.WriteLine($"Migrations assembly: {migAsm.Assembly.FullName}");
+
+        var compiled = migAsm.Migrations.Keys.ToList();           // <— THIS is what matters
+        Console.WriteLine("Compiled migrations: " + string.Join(", ", compiled.DefaultIfEmpty("<none>")));
 
         var pending = await db.Database.GetPendingMigrationsAsync();
-        // optional: log for debugging
-        Console.WriteLine($"Pending migrations: {string.Join(", ", pending)}");
+        Console.WriteLine("Pending migrations: " + string.Join(", ", pending.DefaultIfEmpty("<none>")));
+
+        if (compiled.Count == 0)
+            throw new InvalidOperationException(
+                "No compiled migrations found. Ensure the IntegrationTests project references MyWhiskyShelf.Migrations " +
+                "and that the DLL is copied to the test output in CI.");
 
         await db.Database.MigrateAsync();
     }
