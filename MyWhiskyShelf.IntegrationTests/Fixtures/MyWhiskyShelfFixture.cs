@@ -33,13 +33,13 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
     {
         var appHost = await CreateDefaultAppHost();
         Application = await appHost.BuildAsync();
-
-        
         await Application.StartAsync();
+
+        await WaitForRunningState(Application, "WebApi");
+        
         var connectionString = await Application.GetConnectionStringAsync("myWhiskyShelfDb");
         await ApplyMigrationsAsync(connectionString!);
 
-        await WaitForRunningState(Application, "WebApi");
     }
 
     private static async Task ApplyMigrationsAsync(string connectionString)
