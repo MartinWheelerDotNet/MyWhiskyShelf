@@ -57,7 +57,8 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
         if (migAsm != "MyWhiskyShelf.Migrations")
             throw new InvalidOperationException($"Migrations assembly not loaded (got '{migAsm}'). " +
                                                 "Ensure IntegrationTests project references MyWhiskyShelf.Migrations.");
-        
+
+        Console.WriteLine(migAsm);
         Console.WriteLine("Migrations assembly loaded");
 
         var pending = await db.Database.GetPendingMigrationsAsync();

@@ -38,8 +38,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MyWhiskyShelf.Migrations\MyWhiskyShelf.Migrations.csproj"
-                          PrivateAssets="all" />
+        <ProjectReference Include="..\MyWhiskyShelf.Migrations\MyWhiskyShelf.Migrations.csproj" />
     </ItemGroup>
 
 </Project>
