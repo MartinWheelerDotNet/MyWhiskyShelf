@@ -19,3 +19,13 @@ A Whisky Shelf app to allow you to add bottles / drams you've had, and store inf
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=MartinWheelerDotNet_MyWhiskyShelf&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=MartinWheelerDotNet_MyWhiskyShelf)<br>
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=MartinWheelerDotNet_MyWhiskyShelf&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=MartinWheelerDotNet_MyWhiskyShelf)<br>
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=MartinWheelerDotNet_MyWhiskyShelf&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=MartinWheelerDotNet_MyWhiskyShelf)<br>
+
+
+### Migrations
+
+
+Create the migrations:
+
+```
+dotnet ef migrations add InitialMigration -p MyWhiskyShelf.Migrations/MyWhiskyShelf.Migrations.csproj -s MyWhiskyShelf.WebApi/MyWhiskyShelf.WebApi.csproj -c MyWhiskyShelf.Infrastructure.Persistence.Contexts.MyWhiskyShelfDbContext -o Migrations
+```
