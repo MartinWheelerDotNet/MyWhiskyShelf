@@ -2,6 +2,8 @@ using System.Net.Http.Json;
 using Aspire.Hosting;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 using MyWhiskyShelf.IntegrationTests.TestData;
 using MyWhiskyShelf.IntegrationTests.WebApi;
@@ -49,6 +51,18 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
         await using var sp = services.BuildServiceProvider();
         using var scope = sp.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<MyWhiskyShelfDbContext>();
+        
+        // Assert migrations are visible (fail fast in CI if not)
+        var migAsm = db.GetService<IMigrationsAssembly>().Assembly.GetName().Name;
+        if (migAsm != "MyWhiskyShelf.Migrations")
+            throw new InvalidOperationException($"Migrations assembly not loaded (got '{migAsm}'). " +
+                                                "Ensure IntegrationTests project references MyWhiskyShelf.Migrations.");
+        
+        Console.WriteLine("Migrations assembly loaded");
+
+        var pending = await db.Database.GetPendingMigrationsAsync();
+        // optional: log for debugging
+        Console.WriteLine($"Pending migrations: {string.Join(", ", pending)}");
 
         await db.Database.MigrateAsync();
     }
