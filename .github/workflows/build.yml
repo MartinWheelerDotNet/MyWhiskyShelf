@@ -45,7 +45,8 @@ jobs:
             project: MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj
           - name: Integration
             project: MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj
-            
+    env:
+      ConnectionStrings__myWhiskyShelfDb: ${{ secrets.MIGRATIONS_CONNECTION_STRING }}
     
     steps:
       - name: Checkout Repository
@@ -130,6 +131,7 @@ jobs:
        pull-requests: write
     secrets:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+      MIGRATIONS_CONNECTION_STRING: ${{ secrets.MIGRATIONS_CONNECTION_STRING }}
     strategy:
       fail-fast: false
       matrix:

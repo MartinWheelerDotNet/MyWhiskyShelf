@@ -15,12 +15,16 @@ on:
     secrets:
       STRYKER_DASHBOARD_API_KEY:
         required: true
+      MIGRATIONS_CONNECTION_STRING:
+        required: true
 
 jobs:
   mutation-tests:
     name: ${{ inputs.name }}
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
+    env:
+      ConnectionStrings__myWhiskyShelfDb: ${{ secrets.MIGRATIONS_CONNECTION_STRING }}
 
     steps:
       - name: Checkout Repository
