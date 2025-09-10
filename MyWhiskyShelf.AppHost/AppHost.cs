@@ -29,10 +29,10 @@ if (runMigrations)
     builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
         .WithEnvironment("MYWHISKYSHELF_DATA_SEEDING_ENABLED", enableDataSeeding)
         .WithReference(database)
-        .WithReference(cache)
-        .WithReference(migrations)
         .WaitFor(database)
+        .WithReference(cache)
         .WaitFor(cache)
+        .WithReference(migrations)
         .WaitForCompletion(migrations);
 }
 else
@@ -40,8 +40,8 @@ else
     builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
         .WithEnvironment("MYWHISKYSHELF_DATA_SEEDING_ENABLED", enableDataSeeding)
         .WithReference(database)
-        .WithReference(cache)
         .WaitFor(database)
+        .WithReference(cache)
         .WaitFor(cache);
 }
 

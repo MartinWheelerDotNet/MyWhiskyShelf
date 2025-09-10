@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 using MyWhiskyShelf.IntegrationTests.TestData;
 using MyWhiskyShelf.IntegrationTests.WebApi;
+using MyWhiskyShelf.Migrations.Migrations;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 using MyWhiskyShelf.WebApi.Contracts.WhiskyBottles;
 using Projects;
@@ -46,7 +47,8 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
     {
         var services = new ServiceCollection();
         services.AddDbContext<MyWhiskyShelfDbContext>(opts =>
-            opts.UseNpgsql(connectionString, b => b.MigrationsAssembly("MyWhiskyShelf.Migrations")));
+            opts.UseNpgsql(connectionString,
+                b => b.MigrationsAssembly(typeof(InitialMigration).Assembly.GetName().Name)));
 
         await using var sp = services.BuildServiceProvider();
         using var scope = sp.CreateScope();
@@ -54,17 +56,10 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
 
         var migAsm = db.GetService<IMigrationsAssembly>();
         Console.WriteLine($"Migrations assembly: {migAsm.Assembly.FullName}");
-
-        var compiled = migAsm.Migrations.Keys.ToList();           // <— THIS is what matters
-        Console.WriteLine("Compiled migrations: " + string.Join(", ", compiled.DefaultIfEmpty("<none>")));
-
-        var pending = await db.Database.GetPendingMigrationsAsync();
-        Console.WriteLine("Pending migrations: " + string.Join(", ", pending.DefaultIfEmpty("<none>")));
-
-        if (compiled.Count == 0)
-            throw new InvalidOperationException(
-                "No compiled migrations found. Ensure the IntegrationTests project references MyWhiskyShelf.Migrations " +
-                "and that the DLL is copied to the test output in CI.");
+        Console.WriteLine("Compiled migrations: " + string.Join(", ", migAsm.Migrations.Keys.DefaultIfEmpty("<none>")));
+        Console.WriteLine("Pending migrations: " + string.Join(", ", (await db.Database.GetPendingMigrationsAsync()).DefaultIfEmpty("<none>")));
+        if (migAsm.Migrations.Count == 0)
+            throw new InvalidOperationException("No compiled migrations found...");
 
         await db.Database.MigrateAsync();
     }
