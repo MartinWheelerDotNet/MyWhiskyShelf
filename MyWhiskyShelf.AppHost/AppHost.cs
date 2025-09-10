@@ -4,8 +4,13 @@ using Projects;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var postgres = builder.AddPostgres("postgres");
+var postgres = builder.AddPostgres("postgres", port: builder.Environment.IsDevelopment() ? 55432 : null);
 var database = postgres.AddDatabase("myWhiskyShelfDb");
+
+var migrations = builder.AddProject<MyWhiskyShelf_MigrationService>("migrations")
+    .WithReference(postgres)
+    .WaitFor(postgres);
+
 var cache = builder.AddRedis("cache");
 
 if (builder.Environment.IsDevelopment())
@@ -23,7 +28,9 @@ builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
     .WithEnvironment("MYWHISKYSHELF_DATA_SEEDING_ENABLED", enableDataSeeding)
     .WithReference(database)
     .WithReference(cache)
+    .WithReference(migrations)
     .WaitFor(database)
-    .WaitFor(cache);
+    .WaitFor(cache)
+    .WaitForCompletion(migrations);
 
 await builder.Build().RunAsync();

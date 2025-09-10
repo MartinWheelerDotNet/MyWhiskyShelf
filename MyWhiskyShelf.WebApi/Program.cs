@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Application.Extensions;
 using MyWhiskyShelf.Infrastructure.Extensions;
 using MyWhiskyShelf.Infrastructure.Interfaces;
@@ -48,7 +47,7 @@ internal static class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
-            await EnsureDatabaseCreated(app.Services, useDataSeeding);
+            if (useDataSeeding) await SeedData(app.Services);
         }
 
         app.UseHttpsRedirection();
@@ -72,7 +71,7 @@ internal static class Program
         return builder;
     }
 
-    private static async Task EnsureDatabaseCreated(IServiceProvider serviceProvider, bool useDataSeeding)
+    private static async Task SeedData(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
 
@@ -81,18 +80,11 @@ internal static class Program
         var dataLoader = scope.ServiceProvider
             .GetRequiredService<IJsonFileLoader>();
 
-        await dbContext.Database.EnsureCreatedAsync();
+        var distilleries = await dataLoader.GetDistilleriesFromJsonAsync("Resources/distilleries.json");
+        var mappedDistilleries = distilleries.Select(distillery => distillery.ToEntity());
 
-        if (await dbContext.Set<DistilleryEntity>().AnyAsync())
-            dbContext.Set<DistilleryEntity>().RemoveRange(dbContext.Set<DistilleryEntity>());
+        await dbContext.Set<DistilleryEntity>().AddRangeAsync(mappedDistilleries);
 
-        if (useDataSeeding)
-        {
-            var distilleries = await dataLoader.GetDistilleriesFromJsonAsync("Resources/distilleries.json");
-            var mappedDistilleries = distilleries.Select(distillery => distillery.ToEntity());
-
-            await dbContext.Set<DistilleryEntity>().AddRangeAsync(mappedDistilleries);
-        }
 
         await dbContext.SaveChangesAsync();
     }

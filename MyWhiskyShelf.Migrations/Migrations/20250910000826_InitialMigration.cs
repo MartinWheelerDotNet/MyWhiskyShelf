@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-
-namespace MyWhiskyShelf.Infrastructure.Migrations
+namespace MyWhiskyShelf.Migrations.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration
@@ -13,13 +12,9 @@ namespace MyWhiskyShelf.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,");
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:pg_unaccent", ",,");
+                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,")
+                .Annotation("Npgsql:PostgresExtension:unaccent", ",,");
 
-            migrationBuilder.Sql("CREATE EXTENSION IF NOT EXISTS pg_trgm");
-            migrationBuilder.Sql("CREATE EXTENSION IF NOT EXISTS unaccent");
-            
             migrationBuilder.CreateTable(
                 name: "Distilleries",
                 columns: table => new
@@ -63,19 +58,12 @@ namespace MyWhiskyShelf.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_WhiskyBottles", x => x.Id);
                 });
-            
-            migrationBuilder.Sql(
-                """
-                CREATE UNIQUE INDEX IF NOT EXISTS ux_distilleries_name_lower_unaccent
-                ON "Distilleries"(lower(unaccent("Name")));
-                """);
 
-            
-            migrationBuilder.Sql(
-                """
-                CREATE UNIQUE INDEX IF NOT EXISTS ux_whiskybottles_name_lower_unaccent
-                ON "WhiskyBottles"(lower(unaccent("Name")));
-                """);
+            migrationBuilder.CreateIndex(
+                name: "IX_Distilleries_Name",
+                table: "Distilleries",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Distilleries_Owner",

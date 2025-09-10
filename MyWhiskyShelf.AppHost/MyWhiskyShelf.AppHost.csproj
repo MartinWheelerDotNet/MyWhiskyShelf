@@ -18,7 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\MyWhiskyShelf.MigrationService\MyWhiskyShelf.MigrationService.csproj" />
         <ProjectReference Include="..\MyWhiskyShelf.WebApi\MyWhiskyShelf.WebApi.csproj"/>
     </ItemGroup>
-
 </Project>
