@@ -1,6 +1,8 @@
 using System.Net.Http.Json;
 using Aspire.Hosting;
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
+using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 using MyWhiskyShelf.IntegrationTests.TestData;
 using MyWhiskyShelf.IntegrationTests.WebApi;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
@@ -24,14 +26,31 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
         = new();
 
     public DistributedApplication Application { get; private set; } = null!;
-
+    
     public virtual async Task InitializeAsync()
     {
         var appHost = await CreateDefaultAppHost();
         Application = await appHost.BuildAsync();
+
+        
         await Application.StartAsync();
+        var connectionString = await Application.GetConnectionStringAsync("myWhiskyShelfDb");
+        await ApplyMigrationsAsync(connectionString!);
 
         await WaitForRunningState(Application, "WebApi");
+    }
+
+    private static async Task ApplyMigrationsAsync(string connectionString)
+    {
+        var services = new ServiceCollection();
+        services.AddDbContext<MyWhiskyShelfDbContext>(opts =>
+            opts.UseNpgsql(connectionString: connectionString, b => b.MigrationsAssembly("MyWhiskyShelf.Migrations")));
+
+        await using var sp = services.BuildServiceProvider();
+        using var scope = sp.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<MyWhiskyShelfDbContext>();
+
+        await db.Database.MigrateAsync();
     }
 
     public virtual async Task DisposeAsync()
@@ -60,7 +79,8 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
         [
             "MYWHISKYSHELF_DATA_SEEDING_ENABLED=false",
             "MYWHISKYSHELF_PG_WEB_ENABLED=false",
-            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
+            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false",
+            "MYWHISKYSHELF_RUN_MIGRATIONS=false"
         ]);
 
         appHost.Services

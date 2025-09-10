@@ -4,7 +4,6 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>dotnet-MyWhiskyShelf.MigrationService-6ab9b3e7-4066-42cd-a6fb-ddc96e9435bc</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
