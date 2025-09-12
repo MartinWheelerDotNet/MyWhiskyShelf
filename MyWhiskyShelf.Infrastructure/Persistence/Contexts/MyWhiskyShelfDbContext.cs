@@ -19,7 +19,6 @@ public class MyWhiskyShelfDbContext(
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.HasPostgresExtension("pg_trgm");
-        modelBuilder.HasPostgresExtension("unaccent");
         modelBuilder.ApplyConfiguration(new DistilleryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new WhiskyBottleEntityConfiguration());
     }
