@@ -39,9 +39,7 @@ public class DistilleryEntityConfiguration : IEntityTypeConfiguration<Distillery
             .IsRequired();
         entity.Property(e => e.Active)
             .IsRequired();
-
-        entity.HasIndex(e => e.Name)
-            .IsUnique();
+        
         entity.HasIndex(e => e.Region)
             .IsUnique(false);
         entity.HasIndex(e => e.Owner)

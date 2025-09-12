@@ -11,12 +11,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,");
-
-            migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS pg_trgm;");
-            migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS unaccent;");
-
             migrationBuilder.CreateTable(
                 name: "Distilleries",
                 columns: table => new
@@ -31,7 +25,10 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     EncodedFlavourProfile = table.Column<long>(type: "bigint", nullable: false),
                     Active = table.Column<bool>(type: "boolean", nullable: false)
                 },
-                constraints: table => { table.PrimaryKey("PK_Distilleries", x => x.Id); });
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Distilleries", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "WhiskyBottles",
@@ -39,23 +36,24 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    DistilleryName = table.Column<string>(type: "character varying(50)", maxLength: 50,
-                        nullable: false),
+                    DistilleryName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     DistilleryId = table.Column<Guid>(type: "uuid", nullable: true),
                     Status = table.Column<int>(type: "integer", maxLength: 15, nullable: false),
                     Bottler = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     YearBottled = table.Column<int>(type: "integer", nullable: true),
                     BatchNumber = table.Column<int>(type: "integer", nullable: true),
                     CaskNumber = table.Column<int>(type: "integer", nullable: true),
-                    AbvPercentage = table.Column<decimal>(type: "numeric(4,1)", precision: 4, scale: 1,
-                        nullable: false),
+                    AbvPercentage = table.Column<decimal>(type: "numeric(4,1)", precision: 4, scale: 1, nullable: false),
                     VolumeCl = table.Column<int>(type: "integer", nullable: false),
                     VolumeRemainingCl = table.Column<int>(type: "integer", nullable: false),
                     AddedColouring = table.Column<bool>(type: "boolean", nullable: true),
                     ChillFiltered = table.Column<bool>(type: "boolean", nullable: true),
                     EncodedFlavourProfile = table.Column<long>(type: "bigint", nullable: false)
                 },
-                constraints: table => { table.PrimaryKey("PK_WhiskyBottles", x => x.Id); });
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WhiskyBottles", x => x.Id);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Distilleries_Owner",
@@ -81,32 +79,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 name: "IX_WhiskyBottles_Status",
                 table: "WhiskyBottles",
                 column: "Status");
-
-            
-            
-            migrationBuilder.Sql(
-                """
-                CREATE INDEX IF NOT EXISTS ux_distilleries_name_lower
-                ON "Distilleries" (lower("Name"));
-                """);
-
-            migrationBuilder.Sql(
-                """
-                CREATE INDEX IF NOT EXISTS ix_distilleries_name_trgm
-                ON "Distilleries" USING gin (lower("Name") gin_trgm_ops);
-                """);
-            
-            migrationBuilder.Sql(
-                """
-                CREATE INDEX IF NOT EXISTS ux_whisky_bottles_name_lower
-                ON "WhiskyBottles" (lower("Name"));
-                """);
-            
-            migrationBuilder.Sql(
-                """
-                CREATE INDEX IF NOT EXISTS ix_whisky_bottles_name_trgm
-                ON "WhiskyBottles" USING gin (lower("Name") gin_trgm_ops);
-                """);
         }
 
         /// <inheritdoc />
@@ -117,10 +89,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
 
             migrationBuilder.DropTable(
                 name: "WhiskyBottles");
-
-            migrationBuilder.Sql(@"DROP EXTENSION IF EXISTS unaccent;");
-            migrationBuilder.Sql(@"DROP EXTENSION IF EXISTS pg_trgm;");
         }
     }
 }
-
