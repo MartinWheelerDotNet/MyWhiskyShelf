@@ -9,7 +9,7 @@
     <ItemGroup>
         <PackageReference Include="Aspire.Npgsql" Version="9.4.2"/>
         <PackageReference Include="Aspire.StackExchange.Redis" Version="9.4.2"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9"/>
         <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
             <PrivateAssets>all</PrivateAssets>
