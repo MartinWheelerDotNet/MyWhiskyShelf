@@ -12,6 +12,32 @@ namespace MyWhiskyShelf.Migrations.Migrations
         {
             migrationBuilder.AlterDatabase()
                 .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,");
+            
+            migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS pg_trgm;");
+            
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS ux_distilleries_name_lower
+                ON "Distilleries" (lower("Name"));
+                """);
+
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS ix_distilleries_name_trgm
+                ON "Distilleries" USING gin (lower("Name") gin_trgm_ops);
+                """);
+            
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS ux_whisky_bottles_name_lower
+                ON "WhiskyBottles" (lower("Name"));
+                """);
+            
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS ix_whisky_bottles_name_trgm
+                ON "WhiskyBottles" USING gin (lower("Name") gin_trgm_ops);
+                """);
         }
 
         /// <inheritdoc />
