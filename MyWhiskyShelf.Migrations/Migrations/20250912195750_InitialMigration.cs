@@ -11,10 +11,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,")
-                .Annotation("Npgsql:PostgresExtension:unaccent", ",,");
-
             migrationBuilder.CreateTable(
                 name: "Distilleries",
                 columns: table => new
@@ -58,12 +54,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 {
                     table.PrimaryKey("PK_WhiskyBottles", x => x.Id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Distilleries_Name",
-                table: "Distilleries",
-                column: "Name",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Distilleries_Owner",

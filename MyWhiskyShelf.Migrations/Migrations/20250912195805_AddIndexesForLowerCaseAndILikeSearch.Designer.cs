@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyWhiskyShelf.Migrations.Migrations
 {
     [DbContext(typeof(MyWhiskyShelfDbContext))]
-    [Migration("20250910182913_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250912195805_AddIndexesForLowerCaseAndILikeSearch")]
+    partial class AddIndexesForLowerCaseAndILikeSearch
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "pg_trgm");
-            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "unaccent");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("MyWhiskyShelf.Infrastructure.Persistence.Entities.DistilleryEntity", b =>
@@ -69,9 +68,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
                         .HasColumnType("character varying(25)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.HasIndex("Owner");
 
