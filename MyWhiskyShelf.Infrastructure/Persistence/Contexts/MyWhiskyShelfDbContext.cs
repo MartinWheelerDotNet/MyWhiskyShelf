@@ -18,7 +18,10 @@ public class MyWhiskyShelfDbContext(
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        
         modelBuilder.HasPostgresExtension("pg_trgm");
+        modelBuilder.HasPostgresExtension("citext");
+        
         modelBuilder.ApplyConfiguration(new DistilleryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new WhiskyBottleEntityConfiguration());
     }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyWhiskyShelf.Migrations.Migrations
 {
     [DbContext(typeof(MyWhiskyShelfDbContext))]
-    [Migration("20250912195805_AddIndexesForLowerCaseAndILikeSearch")]
-    partial class AddIndexesForLowerCaseAndILikeSearch
+    [Migration("20250914124412_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,7 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "pg_trgm");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
@@ -50,7 +51,7 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("citext");
 
                     b.Property<string>("Owner")
                         .IsRequired()
@@ -68,6 +69,10 @@ namespace MyWhiskyShelf.Migrations.Migrations
                         .HasColumnType("character varying(25)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Distilleries_Name_eq");
 
                     b.HasIndex("Owner");
 
@@ -119,7 +124,7 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("citext");
 
                     b.Property<int>("Status")
                         .HasMaxLength(15)
@@ -137,6 +142,9 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DistilleryName");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_WhiskyBottles_Name_eq");
 
                     b.HasIndex("Status");
 

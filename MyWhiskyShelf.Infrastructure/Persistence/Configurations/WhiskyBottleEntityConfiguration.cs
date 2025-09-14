@@ -16,6 +16,7 @@ public class WhiskyBottleEntityConfiguration : IEntityTypeConfiguration<WhiskyBo
         builder.Property(e => e.Id)
             .ValueGeneratedOnAdd();
         builder.Property(e => e.Name)
+            .HasColumnType("citext")
             .HasMaxLength(100)
             .IsRequired();
         builder.Property(e => e.DistilleryName)
@@ -44,6 +45,13 @@ public class WhiskyBottleEntityConfiguration : IEntityTypeConfiguration<WhiskyBo
             .HasColumnType("bigint")
             .IsRequired();
 
+        builder.HasIndex(e=> e.Name)
+            .HasDatabaseName("IX_WhiskyBottles_Name");
+        builder.HasIndex(e=> e.Name)
+            .HasDatabaseName("IX_WhiskyBottles_Name_trgm");
+        builder.HasIndex(e=> e.Name)
+            .HasDatabaseName("IX_WhiskyBottles_Name_eq");
+        
         builder.HasIndex(e => e.DistilleryName)
             .IsUnique(false);
 

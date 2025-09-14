@@ -27,5 +27,6 @@ A Whisky Shelf app to allow you to add bottles / drams you've had, and store inf
 Create the migrations:
 
 ```
+$env:ConnectionStrings__myWhiskyShelfDb = 'Host=localhost;Port=;Database=;Username=;Password='
 dotnet ef migrations add InitialMigration -p MyWhiskyShelf.Migrations/MyWhiskyShelf.Migrations.csproj -s MyWhiskyShelf.WebApi/MyWhiskyShelf.WebApi.csproj -c MyWhiskyShelf.Infrastructure.Persistence.Contexts.MyWhiskyShelfDbContext -o Migrations
 ```

@@ -24,9 +24,10 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
         "CA1862:Use the \'StringComparison\' method overloads to perform case-insensitive string comparisons")]
     public async Task<bool> ExistsByNameAsync(string name, CancellationToken ct = default)
     {
+        var normalizedName = name.ToLowerInvariant();
         return await dbContext.Distilleries
             .AsNoTracking()
-            .AnyAsync(e => e.Name.ToLower() == name.ToLower(), ct);
+            .AnyAsync(e => e.Name.ToLower() == normalizedName, ct);
     }
 
     public async Task<IReadOnlyList<Distillery>> GetAllAsync(CancellationToken ct = default)

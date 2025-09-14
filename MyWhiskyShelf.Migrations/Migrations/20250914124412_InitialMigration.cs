@@ -11,12 +11,19 @@ namespace MyWhiskyShelf.Migrations.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:citext", ",,")
+                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,");
+            
+            migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS citext;");
+            migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS pg_trgm;");
+
             migrationBuilder.CreateTable(
                 name: "Distilleries",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "citext", maxLength: 100, nullable: false),
                     Location = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Region = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Founded = table.Column<int>(type: "integer", nullable: false),
@@ -35,7 +42,7 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "citext", maxLength: 100, nullable: false),
                     DistilleryName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     DistilleryId = table.Column<Guid>(type: "uuid", nullable: true),
                     Status = table.Column<int>(type: "integer", maxLength: 15, nullable: false),
@@ -54,7 +61,19 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 {
                     table.PrimaryKey("PK_WhiskyBottles", x => x.Id);
                 });
-
+            
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS IX_Distilleries_Name_eq
+                ON "Distilleries" (lower("Name"));
+                """);
+            
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS IX_Distilleries_Name_trgm
+                ON "Distilleries" USING gin (lower("Name") gin_trgm_ops);
+                """);
+            
             migrationBuilder.CreateIndex(
                 name: "IX_Distilleries_Owner",
                 table: "Distilleries",
@@ -74,6 +93,18 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 name: "IX_WhiskyBottles_DistilleryName",
                 table: "WhiskyBottles",
                 column: "DistilleryName");
+            
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS IX_WhiskyBottles_Name_eq
+                ON "WhiskyBottles" (lower("Name"));
+                """);
+            
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS IX_WhiskyBottles_Name_trgm
+                ON "WhiskyBottles" USING gin (lower("Name") gin_trgm_ops);
+                """);
 
             migrationBuilder.CreateIndex(
                 name: "IX_WhiskyBottles_Status",
