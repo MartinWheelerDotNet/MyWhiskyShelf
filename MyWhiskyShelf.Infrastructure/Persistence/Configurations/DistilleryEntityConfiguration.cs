@@ -16,6 +16,7 @@ public class DistilleryEntityConfiguration : IEntityTypeConfiguration<Distillery
         entity.Property(e => e.Id)
             .ValueGeneratedOnAdd();
         entity.Property(e => e.Name)
+            .HasColumnType("citext")
             .HasMaxLength(100)
             .IsRequired();
         entity.Property(e => e.Location)
@@ -39,7 +40,14 @@ public class DistilleryEntityConfiguration : IEntityTypeConfiguration<Distillery
             .IsRequired();
         entity.Property(e => e.Active)
             .IsRequired();
-        
+
+        entity.HasIndex(e => e.Name)
+            .HasDatabaseName("IX_WhiskyBottles_Name")
+            .IsUnique();
+        entity.HasIndex(e => e.Name)
+            .HasDatabaseName("IX_Distilleries_Name_trgm");
+        entity.HasIndex(e => e.Name)
+            .HasDatabaseName("IX_Distilleries_Name_eq");
         entity.HasIndex(e => e.Region)
             .IsUnique(false);
         entity.HasIndex(e => e.Owner)

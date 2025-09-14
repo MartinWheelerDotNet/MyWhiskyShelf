@@ -4,6 +4,7 @@ using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Infrastructure.Mapping;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
+using MyWhiskyShelf.Infrastructure.Persistence.Entities;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
 
@@ -19,14 +20,22 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
 
     // Until the work for the migration which will allow us to use the postgres functions for case insensitivity
     // we need to silence this warning, as EF projections do not allow string comparers.
-    [SuppressMessage(
-        "Performance",
-        "CA1862:Use the \'StringComparison\' method overloads to perform case-insensitive string comparisons")]
+    
     public async Task<bool> ExistsByNameAsync(string name, CancellationToken ct = default)
     {
+        var normalizedName = name.ToLowerInvariant();
         return await dbContext.Distilleries
             .AsNoTracking()
-            .AnyAsync(e => e.Name.ToLower() == name.ToLower(), ct);
+            .AnyAsync(e => e.Name.ToLower() == normalizedName, ct);
+    }
+    
+    public Task<List<DistilleryEntity>> SearchByNameAsync(string pattern, CancellationToken ct = default)
+    {
+        var searchTerm = pattern.ToLowerInvariant();
+        return dbContext.Distilleries
+            .AsNoTracking()
+            .Where(d => EF.Functions.ILike(d.Name.ToLower(), $"%{searchTerm}%"))
+            .ToListAsync(ct);
     }
 
     public async Task<IReadOnlyList<Distillery>> GetAllAsync(CancellationToken ct = default)
