@@ -4,7 +4,6 @@ using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Infrastructure.Mapping;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
-using MyWhiskyShelf.Infrastructure.Persistence.Entities;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
 
