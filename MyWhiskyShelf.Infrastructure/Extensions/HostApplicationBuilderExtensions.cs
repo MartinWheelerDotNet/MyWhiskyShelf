@@ -14,6 +14,10 @@ public static class HostApplicationBuilderExtensions
 {
     public static void UsePostgresDatabase(this IHostApplicationBuilder builder)
     {
+        // If this project is being used as part of an Aspire Environment, the connection string is created by Aspire
+        // and forwarded to this project to be used here.
+        // Otherwise, the standard configuration resources are used provide this value.
+        // If this is not found an exception should be thrown.
         var connectionString = builder.Configuration.GetConnectionString("myWhiskyShelfDb")
                                ?? throw new InvalidOperationException("Connection string not found");
         builder.Services.AddDbContext<MyWhiskyShelfDbContext>(options =>

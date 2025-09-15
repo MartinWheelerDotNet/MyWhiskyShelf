@@ -35,6 +35,14 @@ public sealed class DistilleryAppService(
         return distilleries;
     }
 
+    public async Task<IReadOnlyList<DistilleryName>> SearchByNameAsync(string pattern, CancellationToken ct = default)
+    {
+        var distilleryNames = await read.SearchByNameAsync(pattern, ct);
+        
+        logger.LogDebug("Retrieved [{Count}] distilleries", distilleryNames.Count);
+        return distilleryNames;
+    }
+
 
     public async Task<CreateDistilleryResult> CreateAsync(Distillery distillery, CancellationToken ct = default)
     {

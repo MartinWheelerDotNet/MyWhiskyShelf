@@ -76,11 +76,29 @@ public static class DistilleryEndpoints
                     CancellationToken ct) =>
                 {
                     var distilleries = await service.GetAllAsync(ct);
-                    return Results.Ok(distilleries.Select(distillery => distillery.ToResponse()).ToList());
+                    var response = distilleries
+                        .Select(distillery => distillery.ToResponse())
+                        .ToList();
+                    return Results.Ok(response);
                 })
             .WithName("Get All Distilleries")
-            .Produces<List<DistilleryResponse>>(StatusCodes.Status201Created)
-            .ProducesValidationProblem();
+            .Produces<List<DistilleryResponse>>();
+
+        group.MapGet(
+                "/search",
+                async (
+                    [FromQuery] string pattern,
+                    [FromServices] IDistilleryAppService service,
+                    CancellationToken ct) =>
+                {
+                    var distilleryNames = await service.SearchByNameAsync(pattern, ct);
+                    var response = distilleryNames
+                        .Select(distilleryName => distilleryName.ToResponse())
+                        .ToList();
+                    return Results.Ok(response);
+                })
+            .WithName("Search Distilleries")
+            .Produces<List<DistilleryResponse>>();
 
         group.MapPut(
                 "/{id:guid}",
@@ -114,7 +132,7 @@ public static class DistilleryEndpoints
             .ProducesValidationProblem()
             .RequiresNonEmptyRouteParameter("id")
             .RequiresIdempotencyKey();
-
+        
         group.MapDelete(
                 "/{id:guid}",
                 async (
