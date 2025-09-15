@@ -24,18 +24,26 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
         "CA1862:Use the \'StringComparison\' method overloads to perform case-insensitive string comparisons")]
     public async Task<bool> ExistsByNameAsync(string name, CancellationToken ct = default)
     {
-        var normalizedName = name.ToLowerInvariant();
         return await dbContext.Distilleries
             .AsNoTracking()
-            .AnyAsync(e => e.Name.ToLower() == normalizedName, ct);
+            .AnyAsync(entity => entity.Name == name, ct);
+    }
+    
+    public async Task<IReadOnlyList<DistilleryName>> SearchByNameAsync(string pattern, CancellationToken ct = default)
+    {
+        return await dbContext.Distilleries
+            .AsNoTracking()
+            .Where(entity => EF.Functions.ILike(entity.Name, $"%{pattern}%"))
+            .Select(entity => new DistilleryName(entity.Id, entity.Name))
+            .ToListAsync(ct);
     }
 
     public async Task<IReadOnlyList<Distillery>> GetAllAsync(CancellationToken ct = default)
     {
-        return (await dbContext.Distilleries
+        var distilleryEntities = await dbContext.Distilleries
                 .AsNoTracking()
                 .OrderBy(entity => entity.Name)
-                .ToListAsync(ct))
-            .Select(entity => entity.ToDomain()).ToList();
+                .ToListAsync(ct);
+        return distilleryEntities.Select(entity => entity.ToDomain()).ToList();
     }
 }

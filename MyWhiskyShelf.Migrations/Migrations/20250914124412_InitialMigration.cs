@@ -64,15 +64,15 @@ namespace MyWhiskyShelf.Migrations.Migrations
             
             migrationBuilder.Sql(
                 """
-                CREATE INDEX IF NOT EXISTS IX_Distilleries_Name_eq
-                ON "Distilleries" (lower("Name"));
+                CREATE INDEX IF NOT EXISTS IX_Distilleries_Name_trgm
+                ON "Distilleries" USING gin ("Name" gin_trgm_ops);
                 """);
             
-            migrationBuilder.Sql(
-                """
-                CREATE INDEX IF NOT EXISTS IX_Distilleries_Name_trgm
-                ON "Distilleries" USING gin (lower("Name") gin_trgm_ops);
-                """);
+            migrationBuilder.CreateIndex(
+                name: "UX_Distilleries_Name",
+                table: "Distilleries",
+                column: "Name",
+                unique: true);
             
             migrationBuilder.CreateIndex(
                 name: "IX_Distilleries_Owner",
@@ -96,15 +96,15 @@ namespace MyWhiskyShelf.Migrations.Migrations
             
             migrationBuilder.Sql(
                 """
-                CREATE INDEX IF NOT EXISTS IX_WhiskyBottles_Name_eq
-                ON "WhiskyBottles" (lower("Name"));
+                CREATE INDEX IF NOT EXISTS IX_WhiskyBottles_Name_trgm
+                ON "WhiskyBottles" USING gin ("Name" gin_trgm_ops);
                 """);
             
-            migrationBuilder.Sql(
-                """
-                CREATE INDEX IF NOT EXISTS IX_WhiskyBottles_Name_trgm
-                ON "WhiskyBottles" USING gin (lower("Name") gin_trgm_ops);
-                """);
+            
+            migrationBuilder.CreateIndex(
+                name: "IX_WhiskyBottles_Name",
+                table: "WhiskyBottles",
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WhiskyBottles_Status",

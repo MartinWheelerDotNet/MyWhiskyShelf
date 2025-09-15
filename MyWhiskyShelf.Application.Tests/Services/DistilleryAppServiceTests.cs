@@ -64,13 +64,41 @@ public class DistilleryAppServiceTests
     [Fact]
     public async Task When_GetAllAndNoDistilleriesExist_Expect_EmptyList()
     {
-        _mockRead.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<Distillery>());
+        _mockRead.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync([]);
 
         var result = await _service.GetAllAsync();
 
         Assert.Empty(result);
     }
 
+    [Fact]
+    public async Task When_SearchAndTwoDistilleriesFound_ExpectListOfTwoDistilleries()
+    {
+        List<DistilleryName> expectedDistilleryNames =
+        [
+            new(Guid.NewGuid(), "Distillery A"),
+            new(Guid.NewGuid(), "Distillery B")
+        ];
+        _mockRead.Setup(r => r.SearchByNameAsync("Distillery", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedDistilleryNames);
+        
+        
+        var result = await _service.SearchByNameAsync("Distillery");
+        
+        Assert.Equal(expectedDistilleryNames, result);
+    }
+    
+    [Fact]
+    public async Task When_SearchAndNoDistilleriesFound_ExpectEmptyList()
+    {
+        const string pattern = "Distillery";
+        _mockRead.Setup(r => r.SearchByNameAsync(pattern, It.IsAny<CancellationToken>())).ReturnsAsync([]);
+        
+        var result = await _service.SearchByNameAsync(pattern);
+        
+        Assert.Empty(result);
+    }
+    
     [Fact]
     public async Task When_CreateAndDistilleryWithThatNameAlreadyExists_Expect_AlreadyExists()
     {

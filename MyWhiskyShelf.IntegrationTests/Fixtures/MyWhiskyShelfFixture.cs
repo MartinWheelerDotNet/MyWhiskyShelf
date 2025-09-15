@@ -22,7 +22,6 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
     }
 
     private readonly List<HttpMethod> _methods = [HttpMethod.Get, HttpMethod.Post, HttpMethod.Put, HttpMethod.Delete];
-
     private readonly Dictionary<(HttpMethod Method, EntityType Entity), (string Name, Guid Id)> _seededEntityDetails
         = new();
 
@@ -30,6 +29,7 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
     
     public virtual async Task InitializeAsync()
     {
+        _seededEntityDetails.Clear();
         var appHost = await CreateDefaultAppHost();
         Application = await appHost.BuildAsync();
         await Application.StartAsync();
@@ -121,9 +121,30 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
 
             if (!response.IsSuccessStatusCode) continue;
 
-            var entity = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
-            _seededEntityDetails[(method, EntityType.Distillery)] = (name, entity!.Id);
+            var distillery = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
+            _seededEntityDetails[(method, EntityType.Distillery)] = (name, distillery!.Id);
         }
+    }
+
+    public async Task<Dictionary<string, Guid>> SeedDistilleriesAsync(
+        params DistilleryCreateRequest[] createRequests)
+    {
+        Dictionary<string, Guid> seededDistilleries = [];
+        using var httpClient = Application.CreateHttpClient("WebApi");
+        
+        foreach (var createRequest in createRequests)
+        {
+            var request = IdempotencyHelpers
+                .CreateRequestWithIdempotencyKey(HttpMethod.Post, "/distilleries", createRequest);
+            var response = await httpClient
+                .SendAsync(request);
+
+            var distillery = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
+            
+            seededDistilleries.Add(distillery!.Name, distillery.Id);
+        }
+        
+        return seededDistilleries;
     }
 
     public async Task SeedWhiskyBottlesAsync()
