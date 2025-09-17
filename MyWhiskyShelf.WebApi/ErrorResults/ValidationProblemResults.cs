@@ -12,6 +12,17 @@ public static class ValidationProblemResults
                 { parameterName, [$"Route parameter '{parameterName}' is required and cannot be empty."] }
             });
     }
+    
+    public static IResult MissingOrEmptyQueryParameter(string parameterName)
+    {
+        return Results.ValidationProblem(
+            title: "Missing or empty query parameters",
+            type: "urn:mywhiskyshelf:validation-errors:query-parameter",
+            errors: new Dictionary<string, string[]>
+            {
+                { parameterName, [$"Query parameter '{parameterName}' is required and cannot be empty."] }
+            });
+    }
 
     public static IResult MissingOrInvalidIdempotencyKey()
     {
