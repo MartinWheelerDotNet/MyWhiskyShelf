@@ -13,7 +13,7 @@ public class MyWhiskyShelfDataNotSeededFixture : MyWhiskyShelfFixture
             "MYWHISKYSHELF_DATA_SEEDING_ENABLED=false",
             "MYWHISKYSHELF_PG_WEB_ENABLED=false",
             "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false",
-            "MYWHISKYSHELF_RUN_MIGRATIONS=false"
+            "MYWHISKYSHELF_RUN_MIGRATIONS=true"
         ]);
 
         appHost.Services

@@ -10,15 +10,24 @@ var cache = builder.AddRedis("cache");
 
 if (builder.Environment.IsDevelopment())
 {
-    if (builder.Configuration.GetValue("MYWHISKYSHELF_PG_WEB_ENABLED", false))
+    if (builder.Configuration.GetValue("MYWHISKYSHELF_PG_WEB_ENABLED", true))
         postgres.WithPgWeb();
 
-    if (builder.Configuration.GetValue("MYWHISKYSHELF_REDIS_INSIGHT_ENABLED", false))
+    if (builder.Configuration.GetValue("MYWHISKYSHELF_REDIS_INSIGHT_ENABLED", true))
         cache.WithRedisInsight();
 }
 
-var enableDataSeeding = builder.Configuration["MYWHISKYSHELF_DATA_SEEDING_ENABLED"];
+var enableDataSeeding = builder.Configuration.GetValue("MYWHISKYSHELF_DATA_SEEDING_ENABLED", true);
 var runMigrations = builder.Configuration.GetValue("MYWHISKYSHELF_RUN_MIGRATIONS", true);
+
+var webApiProjectBuilder = builder.AddProject<MyWhiskyShelf_WebApi>("WebApi");
+
+webApiProjectBuilder
+    .WithEnvironment("MYWHISKYSHELF_DATA_SEEDING_ENABLED", enableDataSeeding.ToString)
+    .WithReference(database)
+    .WaitFor(database)
+    .WithReference(cache)
+    .WaitFor(cache);
 
 if (runMigrations)
 {
@@ -26,23 +35,9 @@ if (runMigrations)
         .WithReference(database)
         .WaitFor(database);
     
-    builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
-        .WithEnvironment("MYWHISKYSHELF_DATA_SEEDING_ENABLED", enableDataSeeding)
-        .WithReference(database)
-        .WaitFor(database)
-        .WithReference(cache)
-        .WaitFor(cache)
+    webApiProjectBuilder
         .WithReference(migrations)
         .WaitForCompletion(migrations);
-}
-else
-{
-    builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
-        .WithEnvironment("MYWHISKYSHELF_DATA_SEEDING_ENABLED", enableDataSeeding)
-        .WithReference(database)
-        .WaitFor(database)
-        .WithReference(cache)
-        .WaitFor(cache);
 }
 
 await builder.Build().RunAsync();

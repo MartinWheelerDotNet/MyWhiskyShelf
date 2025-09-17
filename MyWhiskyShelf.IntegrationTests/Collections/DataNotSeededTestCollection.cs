@@ -2,5 +2,5 @@ using MyWhiskyShelf.IntegrationTests.Fixtures;
 
 namespace MyWhiskyShelf.IntegrationTests.Collections;
 
-[CollectionDefinition("DataNotSeededTestCollection")]
+[CollectionDefinition("DataNotSeededTestCollection", DisableParallelization = true)]
 public class DataNotSeededTestCollection : ICollectionFixture<MyWhiskyShelfDataNotSeededFixture>;
