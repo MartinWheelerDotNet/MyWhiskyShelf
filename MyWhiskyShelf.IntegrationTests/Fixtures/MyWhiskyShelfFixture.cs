@@ -54,7 +54,7 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
             .ToList();
     }
 
-    protected virtual async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
+    private static async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
     {
         var appHost = await DistributedApplicationTestingBuilder.CreateAsync<MyWhiskyShelf_AppHost>(
         [
@@ -63,9 +63,6 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
             "MYWHISKYSHELF_PG_WEB_ENABLED=false",
             "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
         ]);
-
-        appHost.Services
-            .ConfigureHttpClientDefaults(clientBuilder => clientBuilder.AddStandardResilienceHandler());
 
         return appHost;
     }
