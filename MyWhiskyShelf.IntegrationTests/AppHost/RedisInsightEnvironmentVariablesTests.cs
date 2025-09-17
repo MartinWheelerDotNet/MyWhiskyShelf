@@ -6,6 +6,18 @@ namespace MyWhiskyShelf.IntegrationTests.AppHost;
 public class RedisInsightEnvironmentVariablesTests
 {
     [Fact]
+    public async Task When_RedisInsightEnvironmentVariableIsNotPresent_Expect_RedisInsightContainerIsPresent()
+    {
+        await using var appHostBuilder = await DistributedApplicationTestingBuilder
+            .CreateAsync<MyWhiskyShelf_AppHost>([
+                "--environment=Development"
+            ]);
+
+        Assert.NotEmpty(appHostBuilder.Resources.OfType<RedisInsightResource>());
+    }
+
+    
+    [Fact]
     public async Task When_RedisInsightIsEnabledInDevelopment_Expect_RedisInsightContainerIsPresent()
     {
         await using var appHostBuilder = await DistributedApplicationTestingBuilder
