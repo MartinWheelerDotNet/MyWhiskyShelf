@@ -3,6 +3,7 @@ using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Application.Abstractions.Services;
 using MyWhiskyShelf.Application.Results;
 using MyWhiskyShelf.Core.Aggregates;
+using MyWhiskyShelf.Core.Extensions;
 
 namespace MyWhiskyShelf.Application.Services;
 
@@ -21,7 +22,10 @@ public sealed class WhiskyBottleAppService(
             return null;
         }
 
-        logger.LogDebug("Retrieved whisky bottle with [Name: {Name}, Id: {Id}]", whiskyBottle.Name, id);
+        logger.LogDebug(
+            "Retrieved whisky bottle with [Name: {Name}, Id: {Id}]",
+            whiskyBottle.Name.SanitizeForLog(),
+            id);
         return whiskyBottle;
     }
 
@@ -33,13 +37,13 @@ public sealed class WhiskyBottleAppService(
 
             logger.LogDebug(
                 "Whisky bottle created with [Name: {Name}, Id: {Id}]",
-                addedWhiskyBottle.Name,
+                addedWhiskyBottle.Name.SanitizeForLog(),
                 addedWhiskyBottle.Id);
             return new CreateWhiskyBottleResult(CreateWhiskyBottleOutcome.Created, addedWhiskyBottle);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error creating whisky bottle with [Name: {Name}]", whiskyBottle.Name);
+            logger.LogError(ex, "Error creating whisky bottle with [Name: {Name}]", whiskyBottle.Name.SanitizeForLog());
             return new CreateWhiskyBottleResult(CreateWhiskyBottleOutcome.Error, Error: ex.Message);
         }
     }
@@ -54,7 +58,10 @@ public sealed class WhiskyBottleAppService(
             var updated = await write.UpdateAsync(id, whiskyBottle, ct);
             if (updated)
             {
-                logger.LogDebug("Whisky bottle updated with [Name: {Name}, Id: {Id}]", whiskyBottle.Name, id);
+                logger.LogDebug(
+                    "Whisky bottle updated with [Name: {Name}, Id: {Id}]",
+                    whiskyBottle.Name.SanitizeForLog(),
+                    id);
                 return new UpdateWhiskyBottleResult(UpdateWhiskyBottleOutcome.Updated, whiskyBottle with { Id = id });
             }
 
@@ -63,7 +70,11 @@ public sealed class WhiskyBottleAppService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error updating whisky bottle [Name: {Name}, Id: {Id}]", whiskyBottle.Name, id);
+            logger.LogError(
+                ex,
+                "Error updating whisky bottle [Name: {Name}, Id: {Id}]",
+                whiskyBottle.Name.SanitizeForLog(),
+                id);
             return new UpdateWhiskyBottleResult(UpdateWhiskyBottleOutcome.Error, Error: ex.Message);
         }
     }

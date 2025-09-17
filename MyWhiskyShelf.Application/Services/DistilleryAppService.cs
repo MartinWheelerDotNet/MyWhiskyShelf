@@ -3,6 +3,7 @@ using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Application.Abstractions.Services;
 using MyWhiskyShelf.Application.Results;
 using MyWhiskyShelf.Core.Aggregates;
+using MyWhiskyShelf.Core.Extensions;
 
 namespace MyWhiskyShelf.Application.Services;
 
@@ -22,7 +23,7 @@ public sealed class DistilleryAppService(
             return null;
         }
 
-        logger.LogDebug("Retrieved distillery with [Name: {Name}, Id: {Id}]", distillery.Name, id);
+        logger.LogDebug("Retrieved distillery with [Name: {Name}, Id: {Id}]", distillery.Name.SanitizeForLog(), id);
         return distillery;
     }
 
@@ -49,7 +50,7 @@ public sealed class DistilleryAppService(
         var exists = await read.ExistsByNameAsync(distillery.Name, ct);
         if (exists)
         {
-            logger.LogWarning("Distillery already exists with [Name: {Name}]", distillery.Name);
+            logger.LogWarning("Distillery already exists with [Name: {Name}]", distillery.Name.SanitizeForLog());
             return new CreateDistilleryResult(CreateDistilleryOutcome.AlreadyExists);
         }
 
@@ -65,7 +66,7 @@ public sealed class DistilleryAppService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error creating distillery with [Name: {Name}]", distillery.Name);
+            logger.LogError(ex, "Error creating distillery with [Name: {Name}]", distillery.Name.SanitizeForLog());
             return new CreateDistilleryResult(CreateDistilleryOutcome.Error, Error: ex.Message);
         }
     }
@@ -87,7 +88,7 @@ public sealed class DistilleryAppService(
             var exists = await read.ExistsByNameAsync(distillery.Name, ct);
             if (exists)
             {
-                logger.LogWarning("Distillery already exists with [Name: {Name}]", distillery.Name);
+                logger.LogWarning("Distillery already exists with [Name: {Name}]", distillery.Name.SanitizeForLog());
                 return new UpdateDistilleryResult(UpdateDistilleryOutcome.NameConflict);
             }
         }
@@ -98,7 +99,10 @@ public sealed class DistilleryAppService(
 
             if (updated)
             {
-                logger.LogDebug("Distillery updated with [Name: {Name}, Id: {Id}]", distillery.Name, id);
+                logger.LogDebug(
+                    "Distillery updated with [Name: {Name}, Id: {Id}]",
+                    distillery.Name.SanitizeForLog(),
+                    id);
                 return new UpdateDistilleryResult(UpdateDistilleryOutcome.Updated, distillery);
             }
 
@@ -107,7 +111,9 @@ public sealed class DistilleryAppService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error updating distillery [Name: {Name}, Id: {Id}]", distillery.Name, id);
+            logger.LogError(ex, "Error updating distillery [Name: {Name}, Id: {Id}]",
+                distillery.Name.SanitizeForLog(),
+                id);
             return new UpdateDistilleryResult(UpdateDistilleryOutcome.Error, Error: ex.Message);
         }
     }
