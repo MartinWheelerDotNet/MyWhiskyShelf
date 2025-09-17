@@ -3,9 +3,9 @@ using Projects;
 
 namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 
-public sealed class MyWhiskyShelfDataSeedingFixtureFactory
+public static class MyWhiskyShelfDataSeedingFixtureFactory
 {
-    public async Task<DistributedApplication> StartAsync(params string[] args)
+    public static async Task<DistributedApplication> StartAsync(params string[] args)
     {
         var builder = await DistributedApplicationTestingBuilder
             .CreateAsync<MyWhiskyShelf_AppHost>(args);

@@ -54,7 +54,7 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
             .ToList();
     }
 
-    protected virtual async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
+    private static async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
     {
         var appHost = await DistributedApplicationTestingBuilder.CreateAsync<MyWhiskyShelf_AppHost>(
         [

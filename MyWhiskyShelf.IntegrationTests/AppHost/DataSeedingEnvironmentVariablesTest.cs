@@ -5,7 +5,7 @@ using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 namespace MyWhiskyShelf.IntegrationTests.AppHost;
 
 [Collection("DataSeedingTestCollection")]
-public class DataSeedingEnvironmentVariablesTest(MyWhiskyShelfDataSeedingFixtureFactory fixtureFactory)
+public class DataSeedingEnvironmentVariablesTest
 {
     [Fact]
     public async Task When_AppHostDataSeedingIsTrue_Expect_DistilleryEntriesReturned()
@@ -19,7 +19,7 @@ public class DataSeedingEnvironmentVariablesTest(MyWhiskyShelfDataSeedingFixture
             "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
         };
 
-        await using var application = await fixtureFactory.StartAsync(args);
+        await using var application = await MyWhiskyShelfDataSeedingFixtureFactory.StartAsync(args);
         using var httpClient = application.CreateHttpClient("WebApi");
 
         var response = await httpClient.GetAsync("/distilleries");
@@ -39,7 +39,7 @@ public class DataSeedingEnvironmentVariablesTest(MyWhiskyShelfDataSeedingFixture
             "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
         };
 
-        await using var application = await fixtureFactory.StartAsync(args);
+        await using var application = await MyWhiskyShelfDataSeedingFixtureFactory.StartAsync(args);
         using var httpClient = application.CreateHttpClient("WebApi");
 
         var response = await httpClient.GetAsync("/distilleries");
@@ -60,7 +60,7 @@ public class DataSeedingEnvironmentVariablesTest(MyWhiskyShelfDataSeedingFixture
             "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
         };
 
-        await using var application = await fixtureFactory.StartAsync(args);
+        await using var application = await MyWhiskyShelfDataSeedingFixtureFactory.StartAsync(args);
         using var httpClient = application.CreateHttpClient("WebApi");
 
         var response = await httpClient.GetAsync("/distilleries");
