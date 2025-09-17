@@ -16,9 +16,6 @@ public class MyWhiskyShelfDataNotSeededFixture : MyWhiskyShelfFixture
             "MYWHISKYSHELF_RUN_MIGRATIONS=true"
         ]);
 
-        appHost.Services
-            .ConfigureHttpClientDefaults(clientBuilder => clientBuilder.AddStandardResilienceHandler());
-
         return appHost;
     }
 }

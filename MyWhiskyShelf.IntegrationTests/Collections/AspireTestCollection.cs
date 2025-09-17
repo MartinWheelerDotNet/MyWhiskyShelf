@@ -2,5 +2,5 @@ using MyWhiskyShelf.IntegrationTests.Fixtures;
 
 namespace MyWhiskyShelf.IntegrationTests.Collections;
 
-[CollectionDefinition("AspireTests", DisableParallelization = true)]
+[CollectionDefinition("AspireTests")]
 public class AspireTestCollection : ICollectionFixture<MyWhiskyShelfFixture>;

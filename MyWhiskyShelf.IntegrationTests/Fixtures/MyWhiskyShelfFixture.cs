@@ -64,9 +64,6 @@ public class MyWhiskyShelfFixture : IAsyncLifetime
             "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
         ]);
 
-        appHost.Services
-            .ConfigureHttpClientDefaults(clientBuilder => clientBuilder.AddStandardResilienceHandler());
-
         return appHost;
     }
 
