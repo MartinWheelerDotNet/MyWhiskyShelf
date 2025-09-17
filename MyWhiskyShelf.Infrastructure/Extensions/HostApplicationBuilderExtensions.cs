@@ -3,9 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MyWhiskyShelf.Infrastructure.Interfaces;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
-using MyWhiskyShelf.Infrastructure.Seeding;
 
 namespace MyWhiskyShelf.Infrastructure.Extensions;
 
@@ -31,10 +29,5 @@ public static class HostApplicationBuilderExtensions
             settings.DisableMetrics = false;
             settings.DisableTracing = false;
         });
-    }
-
-    public static void UseDataLoader(this IHostApplicationBuilder builder)
-    {
-        builder.Services.AddSingleton<IJsonFileLoader, JsonFileLoader>();
     }
 }

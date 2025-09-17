@@ -1,7 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
+using MyWhiskyShelf.Infrastructure.Interfaces;
 using MyWhiskyShelf.Infrastructure.Persistence.Repositories;
+using MyWhiskyShelf.Infrastructure.Seeding;
 
 namespace MyWhiskyShelf.Infrastructure.Extensions;
 
@@ -14,5 +16,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDistilleryWriteRepository, DistilleryWriteRepository>();
         services.AddScoped<IWhiskyBottleReadRepository, WhiskyBottleReadRepository>();
         services.AddScoped<IWhiskyBottleWriteRepository, WhiskyBottleWriteRepository>();
+    }
+
+    public static void AddOptionalDataSeeding(this IServiceCollection services)
+    {
+        services.AddHostedService<DataSeederHostedService>();
+        services.AddSingleton<IJsonFileLoader, JsonFileLoader>();
     }
 }
