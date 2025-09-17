@@ -1,7 +1,6 @@
 name: Mutation Testing
 permissions:
-  contents: read
-  pull-requests: write
+  contents: none
 
 on:
   workflow_call:
