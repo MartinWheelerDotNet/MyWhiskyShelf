@@ -108,3 +108,18 @@ flowchart LR
   %% Service defaults (common hosting, health, etc.)
   SD --> WAPI
 ```
+
+### Environment Variables
+
+#### Database
+
+`MYWHISKYSHELF_DATA_SEEDING_ENABLED`: Enables seeding of test data (default: true)
+
+`MYWHISKYSHELF_RUN_MIGRATIONS`: Runs the migrations against the database in Aspire (default: true)
+
+#### Tools
+
+`MYWHISKYSHELF_REDIS_INSIGHT_ENABLED`: Enables `Redis Insight` container in Asipre (default: true)
+
+`MYWHISKYSHELF_PG_WEB_ENABLED`: Enables PgWeb container in Aspire (default: true)
+

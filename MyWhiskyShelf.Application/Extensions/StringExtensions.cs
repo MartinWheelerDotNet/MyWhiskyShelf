@@ -1,4 +1,4 @@
-namespace MyWhiskyShelf.Core.Extensions;
+namespace MyWhiskyShelf.Application.Extensions;
 
 public static class StringExtensions
 {

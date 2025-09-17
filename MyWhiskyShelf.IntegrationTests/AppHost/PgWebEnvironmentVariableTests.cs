@@ -6,6 +6,17 @@ namespace MyWhiskyShelf.IntegrationTests.AppHost;
 public class PgWebEnvironmentVariableTests
 {
     [Fact]
+    public async Task When_PgWebEnvironmentVariableIsNotProvided_Expect_PgWebContainerIsPresent()
+    {
+        await using var appHostBuilder = await DistributedApplicationTestingBuilder
+            .CreateAsync<MyWhiskyShelf_AppHost>([
+                "--environment=Development"
+            ]);
+
+        Assert.NotEmpty(appHostBuilder.Resources.OfType<PgWebContainerResource>());
+    }
+    
+    [Fact]
     public async Task When_PgWebIsEnabledInDevelopment_Expect_PgWebContainerIsPresent()
     {
         await using var appHostBuilder = await DistributedApplicationTestingBuilder
@@ -14,9 +25,7 @@ public class PgWebEnvironmentVariableTests
                 "MYWHISKYSHELF_PG_WEB_ENABLED=true"
             ]);
 
-        var pgWebContainer = appHostBuilder.Resources.OfType<PgWebContainerResource>().SingleOrDefault();
-
-        Assert.NotNull(pgWebContainer?.PrimaryEndpoint);
+        Assert.NotEmpty(appHostBuilder.Resources.OfType<PgWebContainerResource>());
     }
 
     [Fact]

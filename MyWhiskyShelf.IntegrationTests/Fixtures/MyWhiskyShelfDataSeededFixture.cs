@@ -11,9 +11,9 @@ public class MyWhiskyShelfDataSeededFixture : MyWhiskyShelfFixture
         var appHost = await DistributedApplicationTestingBuilder.CreateAsync<MyWhiskyShelf_AppHost>(
         [
             "MYWHISKYSHELF_DATA_SEEDING_ENABLED=true",
+            "MYWHISKYSHELF_RUN_MIGRATIONS=true",
             "MYWHISKYSHELF_PG_WEB_ENABLED=false",
-            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false",
-            "MYWHISKYSHELF_RUN_MIGRATIONS=false"
+            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
         ]);
 
         appHost.Services

@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Logging;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Application.Abstractions.Services;
+using MyWhiskyShelf.Application.Extensions;
 using MyWhiskyShelf.Application.Results;
 using MyWhiskyShelf.Core.Aggregates;
-using MyWhiskyShelf.Core.Extensions;
 
 namespace MyWhiskyShelf.Application.Services;
 
