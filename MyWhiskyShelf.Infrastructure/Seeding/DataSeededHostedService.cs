@@ -18,23 +18,23 @@ public sealed class DataSeederHostedService(
     IConfiguration configuration,
     IServiceScopeFactory scopeFactory) : IHostedService
 {
-    public async Task StartAsync(CancellationToken ct)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
         var enabled = configuration.GetValue("MYWHISKYSHELF_DATA_SEEDING_ENABLED", false);
 
         if (!enabled || !environment.IsDevelopment()) return;
 
         using var scope = scopeFactory.CreateScope();
-        var distilleries = await loader.GetDistilleriesFromJsonAsync("Resources/distilleries.json", ct);
+        var distilleries = await loader.GetDistilleriesFromJsonAsync("Resources/distilleries.json", cancellationToken);
         var dbContext = scope.ServiceProvider.GetRequiredService<MyWhiskyShelfDbContext>();
         var entities = distilleries.Select(d => d.ToEntity()).ToList();
         dbContext.Distilleries.AddRange(entities);
-        await dbContext.SaveChangesAsync(ct);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation("Seeded {Count} distilleries.", entities.Count);
     }
 
-    public Task StopAsync(CancellationToken ct) => Task.CompletedTask;
+    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }
 
     
