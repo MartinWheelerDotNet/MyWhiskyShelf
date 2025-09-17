@@ -98,7 +98,9 @@ public static class DistilleryEndpoints
                     return Results.Ok(response);
                 })
             .WithName("Search Distilleries")
-            .Produces<List<DistilleryResponse>>();
+            .Produces<List<DistilleryResponse>>()
+            .ProducesValidationProblem()
+            .RequiresNonEmptyQueryParameter("pattern");
 
         group.MapPut(
                 "/{id:guid}",
