@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.IntegrationTests.Comparers;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 using MyWhiskyShelf.IntegrationTests.TestData;
-using static MyWhiskyShelf.IntegrationTests.Fixtures.MyWhiskyShelfFixture;
+using static MyWhiskyShelf.IntegrationTests.Fixtures.WorkingFixture;
 using static MyWhiskyShelf.IntegrationTests.WebApi.IdempotencyHelpers;
 
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
-[Collection("AspireTests")]
-public class IdempotencyTests(MyWhiskyShelfFixture fixture)
+[Collection(nameof(WorkingFixture))]
+public class IdempotencyTests(WorkingFixture fixture)
 {
     private const string WebApiResourceName = "WebApi";
 

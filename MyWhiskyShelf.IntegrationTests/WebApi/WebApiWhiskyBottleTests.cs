@@ -1,11 +1,11 @@
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 using MyWhiskyShelf.IntegrationTests.TestData;
-using static MyWhiskyShelf.IntegrationTests.Fixtures.MyWhiskyShelfFixture;
+using static MyWhiskyShelf.IntegrationTests.Fixtures.WorkingFixture;
 
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
-[Collection("AspireTests")]
-public class WebApiWhiskyBottleTests(MyWhiskyShelfFixture fixture)
+[Collection(nameof(WorkingFixture))]
+public class WebApiWhiskyBottleTests(WorkingFixture fixture)
 {
     private const string WebApiResourceName = "WebApi";
 

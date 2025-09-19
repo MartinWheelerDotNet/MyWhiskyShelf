@@ -2,8 +2,8 @@ using MyWhiskyShelf.IntegrationTests.Fixtures;
 
 namespace MyWhiskyShelf.IntegrationTests.Status;
 
-[Collection("AspireTests")]
-public class ServiceStatusTests(MyWhiskyShelfFixture fixture)
+[Collection(nameof(WorkingFixture))]
+public class ServiceStatusTests(WorkingFixture fixture)
 {
     [Theory]
     [InlineData("WebApi")]

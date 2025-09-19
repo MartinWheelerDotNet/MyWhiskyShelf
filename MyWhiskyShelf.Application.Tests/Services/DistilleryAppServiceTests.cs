@@ -46,29 +46,45 @@ public class DistilleryAppServiceTests
     }
 
     [Fact]
-    public async Task When_GetAllAndTwoDistilleriesExist_Expect_ListOfTwoDistilleries()
+    public async Task When_GetAllAndTwoDistilleriesExist_Expect_SuccessWithListOfTwoDistilleries()
     {
-        List<Distillery> list =
+        List<Distillery> expectedDistilleries =
         [
             DistilleryTestData.Generic with { Name = "First Distillery" },
             DistilleryTestData.Generic with { Name = "Second Distillery" }
         ];
         _mockRead.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(list);
+            .ReturnsAsync(expectedDistilleries);
 
         var result = await _service.GetAllAsync();
 
-        Assert.Equal(list, result);
+        Assert.Multiple(
+            () => Assert.Equal(GetAllDistilleryOutcome.Success, result.Outcome),
+            () => Assert.Equal(expectedDistilleries, result.Distilleries));
     }
 
     [Fact]
-    public async Task When_GetAllAndNoDistilleriesExist_Expect_EmptyList()
+    public async Task When_GetAllAndNoDistilleriesExist_Expect_SuccessWithEmptyList()
     {
         _mockRead.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ReturnsAsync([]);
 
         var result = await _service.GetAllAsync();
 
-        Assert.Empty(result);
+        Assert.Multiple(
+            () => Assert.Equal(GetAllDistilleryOutcome.Success, result.Outcome),
+            () => Assert.Empty(result.Distilleries!));
+    }
+    
+    [Fact]
+    public async Task When_GetAllAndErrorOccurs_Expect_ErrorWithMessage()
+    {
+        _mockRead.Setup(r => r.GetAllAsync(It.IsAny<CancellationToken>())).ThrowsAsync(new Exception("Exception"));
+
+        var result = await _service.GetAllAsync();
+
+        Assert.Multiple(
+            () => Assert.Equal(GetAllDistilleryOutcome.Error, result.Outcome),
+            () => Assert.Equal("Exception", result.Error));
     }
 
     [Fact]

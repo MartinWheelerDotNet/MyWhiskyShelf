@@ -9,7 +9,7 @@ internal static class ProblemResults
         return new ProblemDetails
         {
             Type = $"urn:mywhiskyshelf:errors:{name}-{action}-failed",
-            Title = $"Failed to created {name}",
+            Title = $"Failed to {action} {name}",
             Status = StatusCodes.Status500InternalServerError,
             Detail = $"An unexpected error occurred. (TraceId: {traceId})",
             Instance = path

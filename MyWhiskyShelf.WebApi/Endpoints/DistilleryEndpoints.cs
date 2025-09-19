@@ -73,13 +73,22 @@ public static class DistilleryEndpoints
                 "/",
                 async (
                     [FromServices] IDistilleryAppService service,
+                    HttpContext httpContext,
                     CancellationToken ct) =>
                 {
-                    var distilleries = await service.GetAllAsync(ct);
-                    var response = distilleries
-                        .Select(distillery => distillery.ToResponse())
-                        .ToList();
-                    return Results.Ok(response);
+                    var result = await service.GetAllAsync(ct);
+
+                    return result.Outcome switch
+                    {
+                        GetAllDistilleryOutcome.Success => Results.Ok(
+                            result.Distilleries!.Select(distillery => distillery.ToResponse())),
+                        _ => Results.Problem(
+                            ProblemResults.InternalServerError(
+                                "distilleries",
+                                "get-all",
+                                httpContext.TraceIdentifier,
+                                httpContext.Request.Path))
+                    };
                 })
             .WithName("Get All Distilleries")
             .Produces<List<DistilleryResponse>>();

@@ -2,12 +2,12 @@ using System.Net.Http.Json;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 using MyWhiskyShelf.IntegrationTests.TestData;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
-using static MyWhiskyShelf.IntegrationTests.Fixtures.MyWhiskyShelfFixture;
+using static MyWhiskyShelf.IntegrationTests.Fixtures.WorkingFixture;
 
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
-[Collection("AspireTests")]
-public class WebApiDistilleriesTests(MyWhiskyShelfFixture fixture)
+[Collection(nameof(WorkingFixture))]
+public class WebApiDistilleriesTests(WorkingFixture fixture)
 {
     private const string WebApiResourceName = "WebApi";
 
