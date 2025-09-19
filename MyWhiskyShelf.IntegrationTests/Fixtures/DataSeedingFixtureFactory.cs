@@ -3,7 +3,7 @@ using Projects;
 
 namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 
-public static class MyWhiskyShelfDataSeedingFixtureFactory
+public static class DataSeedingFixtureFactory
 {
     public static async Task<DistributedApplication> StartAsync(params string[] args)
     {

@@ -10,7 +10,7 @@ using Projects;
 namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 
 [UsedImplicitly]
-public class MyWhiskyShelfFixture : IAsyncLifetime
+public class WorkingFixture : IAsyncLifetime
 {
     public enum EntityType
     {

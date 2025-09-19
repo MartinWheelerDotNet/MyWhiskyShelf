@@ -28,12 +28,20 @@ public sealed class DistilleryAppService(
     }
 
 
-    public async Task<IReadOnlyList<Distillery>> GetAllAsync(CancellationToken ct = default)
+    public async Task<GetAllDistilleriesResult> GetAllAsync(CancellationToken ct = default)
     {
-        var distilleries = await read.GetAllAsync(ct);
-
-        logger.LogDebug("Retrieved [{Count}] distilleries", distilleries.Count);
-        return distilleries;
+        try
+        {
+            var distilleries = await read.GetAllAsync(ct);
+            
+            logger.LogDebug("Retrieved [{Count}] distilleries", distilleries.Count);
+            return new GetAllDistilleriesResult(GetAllDistilleryOutcome.Success, distilleries);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occured whilst retrieving all distilleries");
+            return new GetAllDistilleriesResult(GetAllDistilleryOutcome.Error, Error: ex.Message); 
+        }
     }
 
     public async Task<IReadOnlyList<DistilleryName>> SearchByNameAsync(string pattern, CancellationToken ct = default)
