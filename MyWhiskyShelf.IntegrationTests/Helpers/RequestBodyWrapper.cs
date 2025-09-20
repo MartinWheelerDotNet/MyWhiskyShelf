@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Xunit.Abstractions;
 
-namespace MyWhiskyShelf.IntegrationTests.WebApi;
+namespace MyWhiskyShelf.IntegrationTests.Helpers;
 
 [ExcludeFromCodeCoverage]
 public sealed class RequestBodyWrapper : IXunitSerializable

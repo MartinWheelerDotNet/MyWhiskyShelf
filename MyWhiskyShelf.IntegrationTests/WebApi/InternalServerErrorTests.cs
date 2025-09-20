@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
+using MyWhiskyShelf.IntegrationTests.Helpers;
 
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
@@ -60,8 +61,7 @@ public class InternalServerErrorTests(BrokenFixture fixture)
         string httpMethod,
         RequestBodyWrapper? requestBody)
     {
-        
-        using var httpClient = fixture.Application.CreateHttpClient("WebApi");
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         
         var request = requestBody is null 
             ? IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(HttpMethod.Parse(httpMethod), instance)

@@ -1,4 +1,5 @@
 using MyWhiskyShelf.IntegrationTests.Fixtures;
+using MyWhiskyShelf.IntegrationTests.Helpers;
 using MyWhiskyShelf.IntegrationTests.TestData;
 using static MyWhiskyShelf.IntegrationTests.Fixtures.WorkingFixture;
 
@@ -7,16 +8,14 @@ namespace MyWhiskyShelf.IntegrationTests.WebApi;
 [Collection(nameof(WorkingFixture))]
 public class WebApiWhiskyBottleTests(WorkingFixture fixture)
 {
-    private const string WebApiResourceName = "WebApi";
-
     [Fact]
     public async Task When_AddingWhiskyBottleAndBottleDoesNotExist_Expect_CreatedWithLocationHeaderSet()
     {
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Post,
             "/whisky-bottles",
             WhiskyBottleRequestTestData.GenericCreate);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var postResponse = await httpClient.SendAsync(request);
 
@@ -29,10 +28,10 @@ public class WebApiWhiskyBottleTests(WorkingFixture fixture)
     public async Task When_DeleteWhiskyBottleAndWhiskyBottleExists_Expect_NoContent()
     {
         var (_, id) = fixture.GetSeededEntityDetailByTypeAndMethod(HttpMethod.Post, EntityType.WhiskyBottle);
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
             HttpMethod.Delete,
             $"/whisky-bottles/{id}");
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.SendAsync(request);
 
@@ -42,10 +41,10 @@ public class WebApiWhiskyBottleTests(WorkingFixture fixture)
     [Fact]
     public async Task When_DeleteWhiskyBottleAndWhiskyBottleDoesNotExists_Expect_NotFound()
     {
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
             HttpMethod.Delete,
             $"/whisky-bottles/{Guid.NewGuid()}");
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.SendAsync(request);
 
@@ -61,7 +60,7 @@ public class WebApiWhiskyBottleTests(WorkingFixture fixture)
             HttpMethod.Put,
             $"/whisky-bottles/{id}",
             WhiskyBottleRequestTestData.GenericUpdate with { Name = name, VolumeRemainingCl = 20 });
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.SendAsync(request);
 
@@ -75,7 +74,7 @@ public class WebApiWhiskyBottleTests(WorkingFixture fixture)
             HttpMethod.Put,
             $"/whisky-bottles/{Guid.NewGuid()}",
             WhiskyBottleRequestTestData.GenericUpdate);
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.SendAsync(request);
 
