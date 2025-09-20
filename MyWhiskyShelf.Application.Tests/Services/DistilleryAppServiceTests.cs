@@ -59,7 +59,11 @@ public class DistilleryAppServiceTests
 
         Assert.Multiple(
             () => Assert.Equal(GetDistilleryByIdOutcome.Error, result.Outcome),
-            () => Assert.Equal("Exception", result.Error));
+            () => Assert.Equal("Exception", result.Error),
+            () => Assert.Equal(LogLevel.Error, _fakeLogger.Collector.LatestRecord.Level),
+            () => Assert.Equal(
+                $"Error retrieving distillery with [Id: {id}]",
+                _fakeLogger.Collector.LatestRecord.Message));
     }
 
     [Fact]
@@ -103,7 +107,11 @@ public class DistilleryAppServiceTests
 
         Assert.Multiple(
             () => Assert.Equal(GetAllDistilleriesOutcome.Error, result.Outcome),
-            () => Assert.Equal("Exception", result.Error));
+            () => Assert.Equal("Exception", result.Error),
+            () => Assert.Equal(LogLevel.Error, _fakeLogger.Collector.LatestRecord.Level),
+            () => Assert.Equal(
+                "An error occured whilst retrieving all distilleries",
+                _fakeLogger.Collector.LatestRecord.Message));
     }
 
     [Fact]
@@ -149,7 +157,11 @@ public class DistilleryAppServiceTests
         
         Assert.Multiple(
             () => Assert.Equal(SearchDistilleriesOutcome.Error, result.Outcome),
-            () => Assert.Equal("Exception", result.Error));
+            () => Assert.Equal("Exception", result.Error),
+            () => Assert.Equal(LogLevel.Error, _fakeLogger.Collector.LatestRecord.Level),
+            () => Assert.Equal(
+                $"An error occured whilst searching for distilleries with [Pattern: {pattern}",
+                _fakeLogger.Collector.LatestRecord.Message));
     }
     
     [Fact]

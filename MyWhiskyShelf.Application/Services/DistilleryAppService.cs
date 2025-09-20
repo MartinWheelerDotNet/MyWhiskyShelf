@@ -62,7 +62,10 @@ public sealed class DistilleryAppService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An error occured whilst searching for distilleries with [Pattern: {Pattern}", pattern);
+            logger.LogError(
+                ex,
+                "An error occured whilst searching for distilleries with [Pattern: {Pattern}",
+                pattern.SanitizeForLog());
             return new SearchDistilleriesResult(SearchDistilleriesOutcome.Error, Error: ex.Message);
         }
         
@@ -73,6 +76,13 @@ public sealed class DistilleryAppService(
     {
         try
         {
+            var exists = await read.ExistsByNameAsync(distillery.Name, ct);
+            if (exists)
+            {
+                logger.LogWarning("Distillery already exists with [Name: {Name}]", distillery.Name.SanitizeForLog());
+                return new CreateDistilleryResult(CreateDistilleryOutcome.AlreadyExists);
+            }
+            
             var addedDistillery = await write.AddAsync(distillery, ct);
 
             logger.LogDebug(
@@ -80,12 +90,7 @@ public sealed class DistilleryAppService(
                 addedDistillery!.Name.SanitizeForLog(),
                 addedDistillery.Id);
             
-            var exists = await read.ExistsByNameAsync(distillery.Name, ct);
-            if (!exists) return new CreateDistilleryResult(CreateDistilleryOutcome.Created, addedDistillery);
-            
-            logger.LogWarning("Distillery already exists with [Name: {Name}]", distillery.Name.SanitizeForLog());
-            return new CreateDistilleryResult(CreateDistilleryOutcome.AlreadyExists);
-
+           return new CreateDistilleryResult(CreateDistilleryOutcome.Created, addedDistillery);
         }
         catch (Exception ex)
         {
