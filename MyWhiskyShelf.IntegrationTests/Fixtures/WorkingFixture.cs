@@ -27,16 +27,14 @@ public class WorkingFixture : IAsyncLifetime
     public virtual async Task InitializeAsync()
     {
         _seededEntityDetails.Clear();
-        var appHost = await CreateDefaultAppHost();
-        Application = await appHost.BuildAsync();
-        await Application.StartAsync();
-
-        await WaitForRunningState(Application, "WebApi");
-    }
-
-    public virtual async Task DisposeAsync()
-    {
-        await Application.DisposeAsync();
+        string[] args =
+        [
+            "MYWHISKYSHELF_RUN_MIGRATIONS=true",
+            "MYWHISKYSHELF_DATA_SEEDING_ENABLED=false",
+            "MYWHISKYSHELF_PG_WEB_ENABLED=false",
+            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
+        ];
+        Application = await FixtureFactory.StartAsync(args);
     }
 
     public (string Name, Guid Id) GetSeededEntityDetailByTypeAndMethod(HttpMethod method, EntityType entity)
@@ -52,29 +50,6 @@ public class WorkingFixture : IAsyncLifetime
             .Where((kvp, _) => kvp.Key.Entity == entityType)
             .Select((kvp, _) => (kvp.Key.Method, kvp.Value.Name, kvp.Value.Id))
             .ToList();
-    }
-
-    private static async Task<IDistributedApplicationTestingBuilder> CreateDefaultAppHost()
-    {
-        var appHost = await DistributedApplicationTestingBuilder.CreateAsync<MyWhiskyShelf_AppHost>(
-        [
-            "MYWHISKYSHELF_RUN_MIGRATIONS=true",
-            "MYWHISKYSHELF_DATA_SEEDING_ENABLED=false",
-            "MYWHISKYSHELF_PG_WEB_ENABLED=false",
-            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
-        ]);
-
-        return appHost;
-    }
-
-    private static async Task WaitForRunningState(
-        DistributedApplication application,
-        string serviceName,
-        TimeSpan? timeout = null)
-    {
-        await application.Services.GetRequiredService<ResourceNotificationService>()
-            .WaitForResourceAsync(serviceName, KnownResourceStates.Running)
-            .WaitAsync(timeout ?? TimeSpan.FromSeconds(30));
     }
 
     public async Task SeedDatabase()
@@ -143,4 +118,10 @@ public class WorkingFixture : IAsyncLifetime
             _seededEntityDetails[(method, EntityType.WhiskyBottle)] = (name, entityResponse!.Id);
         }
     }
+    
+    public virtual async Task DisposeAsync()
+    {
+        await Application.DisposeAsync();
+    }
+
 }
