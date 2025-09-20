@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MyWhiskyShelf.WebApi.ErrorResults;
 
-internal static class ProblemResults
+public static class ProblemResults
 {
     public static IResult InternalServerError(string name, string action, string traceId, string path)
     {
