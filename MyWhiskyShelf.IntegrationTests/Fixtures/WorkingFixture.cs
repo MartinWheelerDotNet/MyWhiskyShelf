@@ -5,7 +5,6 @@ using MyWhiskyShelf.IntegrationTests.TestData;
 using MyWhiskyShelf.IntegrationTests.WebApi;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 using MyWhiskyShelf.WebApi.Contracts.WhiskyBottles;
-using Projects;
 
 namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 
