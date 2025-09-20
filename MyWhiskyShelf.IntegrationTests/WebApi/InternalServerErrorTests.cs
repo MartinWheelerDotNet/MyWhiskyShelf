@@ -49,7 +49,7 @@ public class InternalServerErrorTests(BrokenFixture fixture)
     }
     
     [Theory]
-    [MemberData(nameof(InvalidRequestData))]
+    [MemberData(nameof(InvalidRequestData), DisableDiscoveryEnumeration = true)]
     public async Task When_InternalServerErrorOccurs_Expect_Problem(
         string name,
         string action,
