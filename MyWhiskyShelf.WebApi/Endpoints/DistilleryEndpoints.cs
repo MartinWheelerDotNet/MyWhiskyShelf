@@ -39,11 +39,11 @@ public static class DistilleryEndpoints
                             $"/distilleries/{result.Distillery!.Id}",
                             result.Distillery.ToResponse()),
                         CreateDistilleryOutcome.AlreadyExists => Results.Conflict(),
-                        _ => Results.Problem(ProblemResults.InternalServerError(
+                        _ => ProblemResults.InternalServerError(
                             EndpointGroup,
                             "create",
                             httpContext.TraceIdentifier,
-                            httpContext.Request.Path))
+                            httpContext.Request.Path)
                     };
                 })
             .WithName("Create Distillery")
@@ -68,12 +68,11 @@ public static class DistilleryEndpoints
                     {
                         GetDistilleryByIdOutcome.Success => Results.Ok(result.Distillery!.ToResponse()),
                         GetDistilleryByIdOutcome.NotFound => Results.NotFound(),
-                        _ => Results.Problem(
-                            ProblemResults.InternalServerError(
+                        _ => ProblemResults.InternalServerError(
                                 EndpointGroup,
                                 "get-by-id",
                                 httpContext.TraceIdentifier,
-                                httpContext.Request.Path))
+                                httpContext.Request.Path)
                     };
 
                 })
@@ -97,12 +96,11 @@ public static class DistilleryEndpoints
                     {
                         GetAllDistilleriesOutcome.Success => Results.Ok(
                             result.Distilleries!.Select(distillery => distillery.ToResponse())),
-                        _ => Results.Problem(
-                            ProblemResults.InternalServerError(
+                        _ => ProblemResults.InternalServerError(
                                 EndpointGroup,
                                 "get-all",
                                 httpContext.TraceIdentifier,
-                                httpContext.Request.Path))
+                                httpContext.Request.Path)
                     };
                 })
             .WithName("Get All Distilleries")
@@ -122,12 +120,11 @@ public static class DistilleryEndpoints
                     {
                         SearchDistilleriesOutcome.Success => Results.Ok(
                             result.DistilleryNames!.Select(distillery => distillery.ToResponse())),
-                        _ => Results.Problem(
-                            ProblemResults.InternalServerError(
+                        _ => ProblemResults.InternalServerError(
                                 EndpointGroup,
                                 "search",
                                 httpContext.TraceIdentifier,
-                                httpContext.Request.Path))
+                                httpContext.Request.Path)
 
                     };
                 })
@@ -153,12 +150,11 @@ public static class DistilleryEndpoints
                         UpdateDistilleryOutcome.Updated => Results.Ok(result.Distillery!.ToResponse()),
                         UpdateDistilleryOutcome.NotFound => Results.NotFound(),
                         UpdateDistilleryOutcome.NameConflict => Results.Conflict(),
-                        _ => Results.Problem(
-                            ProblemResults.InternalServerError(
+                        _ => ProblemResults.InternalServerError(
                                 EndpointGroup,
                                 "update",
                                 httpContext.TraceIdentifier,
-                                httpContext.Request.Path))
+                                httpContext.Request.Path)
                     };
                 })
             .WithName("Update Distillery")
@@ -184,12 +180,11 @@ public static class DistilleryEndpoints
                     {
                         DeleteDistilleryOutcome.Deleted => Results.NoContent(),
                         DeleteDistilleryOutcome.NotFound => Results.NotFound(),
-                        _ => Results.Problem(
-                            ProblemResults.InternalServerError(
+                        _ => ProblemResults.InternalServerError(
                                 EndpointGroup,
                                 "delete",
                                 httpContext.TraceIdentifier,
-                                httpContext.Request.Path))
+                                httpContext.Request.Path)
                     };
                 })
             .WithName("Delete Distillery")

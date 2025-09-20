@@ -23,6 +23,9 @@ jobs:
     name: ${{ inputs.name }}
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
+    env:
+      DOTNET_ENVIRONMENT: CI
+      ASPNETCORE_ENVIRONMENT: CI
     
     steps:
       - name: Checkout Repository

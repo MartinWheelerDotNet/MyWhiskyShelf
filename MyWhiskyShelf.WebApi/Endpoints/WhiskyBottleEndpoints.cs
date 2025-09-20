@@ -34,11 +34,11 @@ public static class WhiskyBottleEndpoints
                         CreateWhiskyBottleOutcome.Created => Results.Created(
                             $"/whisky-bottles/{result.WhiskyBottle!.Id}",
                             result.WhiskyBottle!.ToResponse()),
-                        _ => Results.Problem(ProblemResults.InternalServerError(
+                        _ => ProblemResults.InternalServerError(
                             "whisky-bottle",
                             "create",
                             httpContext.TraceIdentifier,
-                            httpContext.Request.Path))
+                            httpContext.Request.Path)
                     };
                 })
             .WithName("Add Whisky Bottle")
@@ -79,11 +79,11 @@ public static class WhiskyBottleEndpoints
                     {
                         UpdateWhiskyBottleOutcome.Updated => Results.Ok(result.WhiskyBottle!.ToResponse()),
                         UpdateWhiskyBottleOutcome.NotFound => Results.NotFound(),
-                        _ => Results.Problem(ProblemResults.InternalServerError(
+                        _ => ProblemResults.InternalServerError(
                             "whisky-bottle",
                             "update",
                             httpContext.TraceIdentifier,
-                            httpContext.Request.Path))
+                            httpContext.Request.Path)
                     };
                 })
             .WithName("Update Whisky Bottle")
@@ -107,11 +107,11 @@ public static class WhiskyBottleEndpoints
                     {
                         DeleteWhiskyBottleOutcome.Deleted => Results.NoContent(),
                         DeleteWhiskyBottleOutcome.NotFound => Results.NotFound(),
-                        _ => Results.Problem(ProblemResults.InternalServerError(
+                        _ => ProblemResults.InternalServerError(
                             "whisky-bottle",
                             "delete",
                             httpContext.TraceIdentifier,
-                            httpContext.Request.Path))
+                            httpContext.Request.Path)
                     };
                 })
             .WithName("Delete Whisky Bottle")
