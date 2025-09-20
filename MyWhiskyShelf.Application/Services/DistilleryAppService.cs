@@ -70,8 +70,7 @@ public sealed class DistilleryAppService(
         }
         
     }
-
-
+    
     public async Task<CreateDistilleryResult> CreateAsync(Distillery distillery, CancellationToken ct = default)
     {
         try

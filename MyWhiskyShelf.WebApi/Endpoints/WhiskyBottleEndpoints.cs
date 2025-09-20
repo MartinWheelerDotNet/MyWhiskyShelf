@@ -14,6 +14,8 @@ namespace MyWhiskyShelf.WebApi.Endpoints;
 [ExcludeFromCodeCoverage]
 public static class WhiskyBottleEndpoints
 {
+    private const string EndpointGroup = "whisky-bottle";
+    
     public static void MapWhiskyBottleEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/whisky-bottles")
@@ -35,7 +37,7 @@ public static class WhiskyBottleEndpoints
                             $"/whisky-bottles/{result.WhiskyBottle!.Id}",
                             result.WhiskyBottle!.ToResponse()),
                         _ => ProblemResults.InternalServerError(
-                            "whisky-bottle",
+                            EndpointGroup,
                             "create",
                             httpContext.TraceIdentifier,
                             httpContext.Request.Path)
@@ -51,13 +53,22 @@ public static class WhiskyBottleEndpoints
         group.MapGet(
                 "/{id:guid}", async (
                     [FromServices] IWhiskyBottleAppService service,
+                    HttpContext httpContext,
                     [FromRoute] Guid id) =>
                 {
-                    var whiskyBottle = await service.GetByIdAsync(id);
+                    var result = await service.GetByIdAsync(id);
 
-                    return whiskyBottle is null
-                        ? Results.NotFound()
-                        : Results.Ok(whiskyBottle.ToResponse());
+                    return result.Outcome switch
+                    {
+                        GetWhiskyBottleByIdOutcome.Success => Results.Ok(result.WhiskyBottle!.ToResponse()),
+                        GetWhiskyBottleByIdOutcome.NotFound => Results.NotFound(),
+                        _ => ProblemResults.InternalServerError(
+                            EndpointGroup,
+                            "get-by-id",
+                            httpContext.TraceIdentifier,
+                            httpContext.Request.Path)
+                    };
+
                 })
             .WithName("Get Whisky Bottle")
             .Produces<WhiskyBottleResponse>()
@@ -80,7 +91,7 @@ public static class WhiskyBottleEndpoints
                         UpdateWhiskyBottleOutcome.Updated => Results.Ok(result.WhiskyBottle!.ToResponse()),
                         UpdateWhiskyBottleOutcome.NotFound => Results.NotFound(),
                         _ => ProblemResults.InternalServerError(
-                            "whisky-bottle",
+                            EndpointGroup,
                             "update",
                             httpContext.TraceIdentifier,
                             httpContext.Request.Path)
@@ -108,7 +119,7 @@ public static class WhiskyBottleEndpoints
                         DeleteWhiskyBottleOutcome.Deleted => Results.NoContent(),
                         DeleteWhiskyBottleOutcome.NotFound => Results.NotFound(),
                         _ => ProblemResults.InternalServerError(
-                            "whisky-bottle",
+                            EndpointGroup,
                             "delete",
                             httpContext.TraceIdentifier,
                             httpContext.Request.Path)

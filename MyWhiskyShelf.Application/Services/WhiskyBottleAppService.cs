@@ -12,21 +12,29 @@ public sealed class WhiskyBottleAppService(
     IWhiskyBottleWriteRepository write,
     ILogger<WhiskyBottleAppService> logger) : IWhiskyBottleAppService
 {
-    public async Task<WhiskyBottle?> GetByIdAsync(Guid id, CancellationToken ct = default)
+    public async Task<GetWhiskyBottleByIdResult> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        var whiskyBottle = await read.GetByIdAsync(id, ct);
-
-        if (whiskyBottle is null)
+        try
         {
-            logger.LogWarning("Whisky bottle not found with [Id: {Id}]", id);
-            return null;
-        }
+            var whiskyBottle = await read.GetByIdAsync(id, ct);
 
-        logger.LogDebug(
-            "Retrieved whisky bottle with [Name: {Name}, Id: {Id}]",
-            whiskyBottle.Name.SanitizeForLog(),
-            id);
-        return whiskyBottle;
+            if (whiskyBottle is null)
+            {
+                logger.LogWarning("Whisky bottle not found with [Id: {Id}]", id);
+                return new GetWhiskyBottleByIdResult(GetWhiskyBottleByIdOutcome.NotFound);
+            }
+
+            logger.LogDebug(
+                "Retrieved whisky bottle with [Name: {Name}, Id: {Id}]",
+                whiskyBottle.Name.SanitizeForLog(),
+                id);
+            return new GetWhiskyBottleByIdResult(GetWhiskyBottleByIdOutcome.Success, whiskyBottle);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error retrieving distillery with [Id: {Id}]", id);
+            return new GetWhiskyBottleByIdResult(GetWhiskyBottleByIdOutcome.Error, Error: ex.Message);
+        }
     }
 
     public async Task<CreateWhiskyBottleResult> CreateAsync(WhiskyBottle whiskyBottle, CancellationToken ct = default)
