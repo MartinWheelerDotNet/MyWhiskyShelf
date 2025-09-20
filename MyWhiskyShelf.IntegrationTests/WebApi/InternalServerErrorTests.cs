@@ -33,6 +33,9 @@ public class InternalServerErrorTests(BrokenFixture fixture)
                 new RequestBodyWrapper(TestData.DistilleryRequestTestData.GenericUpdate with { Name = "Update Error"}) 
             },
             {
+                "whisky-bottle", "get-by-id", $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Get.Method, null
+            },
+            {
                 "whisky-bottle", "delete", $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Delete.Method, null
             },
             {

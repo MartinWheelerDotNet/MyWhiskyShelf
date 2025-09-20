@@ -22,7 +22,7 @@ public class WhiskyBottleAppServiceTests
     }
 
     [Fact]
-    public async Task When_GetByIdAndWhiskyBottleNotFound_Expect_Null()
+    public async Task When_GetByIdAndWhiskyBottleNotFound_Expect_NotFound()
     {
         var id = Guid.NewGuid();
         _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
@@ -30,12 +30,12 @@ public class WhiskyBottleAppServiceTests
 
         var result = await _service.GetByIdAsync(id);
 
-        Assert.Null(result);
+        Assert.Equal(GetWhiskyBottleByIdOutcome.NotFound, result.Outcome);
     }
 
 
     [Fact]
-    public async Task When_GetByIdAndWhiskyBottleExists_Expect_ReturnWhiskyBottle()
+    public async Task When_GetByIdAndWhiskyBottleExists_Expect_SuccessWithWhiskyBottle()
     {
         var id = Guid.NewGuid();
         var whiskyBottle = WhiskyBottleTestData.Generic with { Id = id };
@@ -44,11 +44,31 @@ public class WhiskyBottleAppServiceTests
 
         var result = await _service.GetByIdAsync(id);
 
-        Assert.Equal(id, result!.Id);
+        Assert.Multiple(
+            () => Assert.Equal(GetWhiskyBottleByIdOutcome.Success, result.Outcome),
+            () => Assert.Equal(whiskyBottle, result.WhiskyBottle));
+    }
+    
+    [Fact]
+    public async Task When_GetByIdAndExceptionIsThrown_Expect_ErrorAndLogError()
+    {
+        var id = Guid.NewGuid();
+        _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new Exception("Exception"));
+
+        var result = await _service.GetByIdAsync(id);
+
+        Assert.Multiple(
+            () => Assert.Equal(GetWhiskyBottleByIdOutcome.Error, result.Outcome),
+            () => Assert.Equal("Exception", result.Error),
+            () => Assert.Equal(LogLevel.Error, _fakeLogger.Collector.LatestRecord.Level),
+            () => Assert.Equal(
+                $"Error retrieving distillery with [Id: {id}]",
+                _fakeLogger.Collector.LatestRecord.Message));
     }
 
     [Fact]
-    public async Task When_CreateAndWhiskyBottleCreated_Expect_Created()
+    public async Task When_CreateAndWhiskyBottleCreated_Expect_CreatedWithWhiskyBottle()
     {
         var newWhiskyBottle = WhiskyBottleTestData.Generic;
         var savedWhiskyBottle = WhiskyBottleTestData.Generic with { Id = Guid.NewGuid() };
@@ -82,7 +102,7 @@ public class WhiskyBottleAppServiceTests
     }
 
     [Fact]
-    public async Task When_UpdateAndWhiskyBottleUpdated_Expect_Updated()
+    public async Task When_UpdateAndWhiskyBottleUpdated_Expect_UpdatedWithWhiskyBottle()
     {
         var id = Guid.NewGuid();
         var updatedWhiskyBottle = WhiskyBottleTestData.Generic;
@@ -110,7 +130,7 @@ public class WhiskyBottleAppServiceTests
     }
 
     [Fact]
-    public async Task When_UpdateAndExceptionIsThrown_Expect_ErrorAndLogWarning()
+    public async Task When_UpdateAndExceptionIsThrown_Expect_ErrorAndLogError()
     {
         var id = Guid.NewGuid();
         var updatedWhiskyBottle = WhiskyBottleTestData.Generic;
