@@ -1,6 +1,5 @@
 using Aspire.Hosting;
 using JetBrains.Annotations;
-using Projects;
 
 namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 
@@ -11,30 +10,30 @@ public class BrokenFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        var appHost = await DistributedApplicationTestingBuilder.CreateAsync<MyWhiskyShelf_AppHost>(
+        string[] args = 
         [
-            "MYWHISKYSHELF_RUN_MIGRATIONS=false",
+            "MYWHISKYSHELF_RUN_MIGRATIONS=true",
             "MYWHISKYSHELF_DATA_SEEDING_ENABLED=false",
             "MYWHISKYSHELF_PG_WEB_ENABLED=false",
             "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
-        ]);
+        ];
+        Application = await FixtureFactory.StartAsync(args);
 
-        Application = await appHost.BuildAsync();
-        await Application.StartAsync();
+        await BreakDatabaseAsync();
+    }
+
+    private async Task BreakDatabaseAsync()
+    {
+        var connectionString = await Application.GetConnectionStringAsync("myWhiskyShelfDb");
+        await using var npgsqlConnection = new Npgsql.NpgsqlConnection(connectionString);
+        await npgsqlConnection.OpenAsync();
         
-        await WaitForRunningState(Application, "WebApi");
+        const string sql = "ALTER SCHEMA public RENAME TO broken;";
+
+        await using var cmd = new Npgsql.NpgsqlCommand(sql, npgsqlConnection);
+        await cmd.ExecuteNonQueryAsync();
     }
     
-    private static async Task WaitForRunningState(
-        DistributedApplication application,
-        string serviceName,
-        TimeSpan? timeout = null)
-    {
-        await application.Services.GetRequiredService<ResourceNotificationService>()
-            .WaitForResourceAsync(serviceName, KnownResourceStates.Running)
-            .WaitAsync(timeout ?? TimeSpan.FromSeconds(30));
-    }
-
     public async Task DisposeAsync()
     {
         await Application.DisposeAsync();  

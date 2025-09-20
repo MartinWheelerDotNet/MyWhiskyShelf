@@ -13,20 +13,27 @@ public sealed class DistilleryAppService(
     ILogger<DistilleryAppService> logger)
     : IDistilleryAppService
 {
-    public async Task<Distillery?> GetByIdAsync(Guid id, CancellationToken ct = default)
+    public async Task<GetDistilleryByIdResult> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        var distillery = await read.GetByIdAsync(id, ct);
-
-        if (distillery is null)
+        try
         {
-            logger.LogWarning("Distillery not found with [Id: {Id}]", id);
-            return null;
+            var distillery = await read.GetByIdAsync(id, ct);
+
+            if (distillery is null)
+            {
+                logger.LogWarning("Distillery not found with [Id: {Id}]", id);
+                return new GetDistilleryByIdResult(GetDistilleryByIdOutcome.NotFound);
+            }
+
+            logger.LogDebug("Retrieved distillery with [Name: {Name}, Id: {Id}]", distillery.Name.SanitizeForLog(), id);
+            return new  GetDistilleryByIdResult(GetDistilleryByIdOutcome.Success, distillery);
         }
-
-        logger.LogDebug("Retrieved distillery with [Name: {Name}, Id: {Id}]", distillery.Name.SanitizeForLog(), id);
-        return distillery;
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error retrieving distillery with [Id: {Id}]", id);
+            return new GetDistilleryByIdResult(GetDistilleryByIdOutcome.Error, Error: ex.Message);
+        }
     }
-
 
     public async Task<GetAllDistilleriesResult> GetAllAsync(CancellationToken ct = default)
     {
@@ -35,42 +42,55 @@ public sealed class DistilleryAppService(
             var distilleries = await read.GetAllAsync(ct);
             
             logger.LogDebug("Retrieved [{Count}] distilleries", distilleries.Count);
-            return new GetAllDistilleriesResult(GetAllDistilleryOutcome.Success, distilleries);
+            return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Success, distilleries);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An error occured whilst retrieving all distilleries");
-            return new GetAllDistilleriesResult(GetAllDistilleryOutcome.Error, Error: ex.Message); 
+            return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Error, Error: ex.Message); 
         }
     }
 
-    public async Task<IReadOnlyList<DistilleryName>> SearchByNameAsync(string pattern, CancellationToken ct = default)
+    public async Task<SearchDistilleriesResult> SearchByNameAsync(string pattern, CancellationToken ct = default)
     {
-        var distilleryNames = await read.SearchByNameAsync(pattern, ct);
+        try
+        {
+            var distilleryNames = await read.SearchByNameAsync(pattern, ct);
+
+            logger.LogDebug("Retrieved [{Count}] distilleries", distilleryNames.Count);
+            return new SearchDistilleriesResult(SearchDistilleriesOutcome.Success, distilleryNames);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(
+                ex,
+                "An error occured whilst searching for distilleries with [Pattern: {Pattern}",
+                pattern.SanitizeForLog());
+            return new SearchDistilleriesResult(SearchDistilleriesOutcome.Error, Error: ex.Message);
+        }
         
-        logger.LogDebug("Retrieved [{Count}] distilleries", distilleryNames.Count);
-        return distilleryNames;
     }
 
 
     public async Task<CreateDistilleryResult> CreateAsync(Distillery distillery, CancellationToken ct = default)
     {
-        var exists = await read.ExistsByNameAsync(distillery.Name, ct);
-        if (exists)
-        {
-            logger.LogWarning("Distillery already exists with [Name: {Name}]", distillery.Name.SanitizeForLog());
-            return new CreateDistilleryResult(CreateDistilleryOutcome.AlreadyExists);
-        }
-
         try
         {
+            var exists = await read.ExistsByNameAsync(distillery.Name, ct);
+            if (exists)
+            {
+                logger.LogWarning("Distillery already exists with [Name: {Name}]", distillery.Name.SanitizeForLog());
+                return new CreateDistilleryResult(CreateDistilleryOutcome.AlreadyExists);
+            }
+            
             var addedDistillery = await write.AddAsync(distillery, ct);
 
             logger.LogDebug(
                 "Distillery created with [Name: {Name}, Id: {Id}]",
                 addedDistillery!.Name.SanitizeForLog(),
                 addedDistillery.Id);
-            return new CreateDistilleryResult(CreateDistilleryOutcome.Created, addedDistillery);
+            
+           return new CreateDistilleryResult(CreateDistilleryOutcome.Created, addedDistillery);
         }
         catch (Exception ex)
         {
@@ -84,25 +104,27 @@ public sealed class DistilleryAppService(
         Distillery distillery,
         CancellationToken ct = default)
     {
-        var current = await read.GetByIdAsync(id, ct);
-        if (current is null)
-        {
-            logger.LogWarning("Distillery not found with [id: {Id}]", id);
-            return new UpdateDistilleryResult(UpdateDistilleryOutcome.NotFound);
-        }
-
-        if (!string.Equals(current.Name, distillery.Name, StringComparison.Ordinal))
-        {
-            var exists = await read.ExistsByNameAsync(distillery.Name, ct);
-            if (exists)
-            {
-                logger.LogWarning("Distillery already exists with [Name: {Name}]", distillery.Name.SanitizeForLog());
-                return new UpdateDistilleryResult(UpdateDistilleryOutcome.NameConflict);
-            }
-        }
-
         try
         {
+            var current = await read.GetByIdAsync(id, ct);
+            if (current is null)
+            {
+                logger.LogWarning("Distillery not found with [id: {Id}]", id);
+                return new UpdateDistilleryResult(UpdateDistilleryOutcome.NotFound);
+            }
+
+            if (!string.Equals(current.Name, distillery.Name, StringComparison.Ordinal))
+            {
+                var exists = await read.ExistsByNameAsync(distillery.Name, ct);
+                if (exists)
+                {
+                    logger.LogWarning(
+                        "Distillery already exists with [Name: {Name}]",
+                        distillery.Name.SanitizeForLog());
+                    return new UpdateDistilleryResult(UpdateDistilleryOutcome.NameConflict);
+                }
+            }
+            
             var updated = await write.UpdateAsync(id, distillery, ct);
 
             if (updated)

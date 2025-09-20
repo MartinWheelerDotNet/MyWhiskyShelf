@@ -14,6 +14,9 @@ namespace MyWhiskyShelf.WebApi.Endpoints;
 [ExcludeFromCodeCoverage]
 public static class DistilleryEndpoints
 {
+
+    private const string EndpointGroup = "distillery";
+    
     public static void MapDistilleryEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/distilleries")
@@ -37,7 +40,7 @@ public static class DistilleryEndpoints
                             result.Distillery.ToResponse()),
                         CreateDistilleryOutcome.AlreadyExists => Results.Conflict(),
                         _ => Results.Problem(ProblemResults.InternalServerError(
-                            "distillery",
+                            EndpointGroup,
                             "create",
                             httpContext.TraceIdentifier,
                             httpContext.Request.Path))
@@ -56,16 +59,28 @@ public static class DistilleryEndpoints
                 async (
                     [FromRoute] Guid id,
                     [FromServices] IDistilleryAppService service,
+                    HttpContext httpContext,
                     CancellationToken ct) =>
                 {
-                    var distillery = await service.GetByIdAsync(id, ct);
-                    return distillery is null
-                        ? Results.NotFound()
-                        : Results.Ok(distillery.ToResponse());
+                    var result = await service.GetByIdAsync(id, ct);
+
+                    return result.Outcome switch
+                    {
+                        GetDistilleryByIdOutcome.Success => Results.Ok(result.Distillery!.ToResponse()),
+                        GetDistilleryByIdOutcome.NotFound => Results.NotFound(),
+                        _ => Results.Problem(
+                            ProblemResults.InternalServerError(
+                                EndpointGroup,
+                                "get-by-id",
+                                httpContext.TraceIdentifier,
+                                httpContext.Request.Path))
+                    };
+
                 })
             .WithName("Get Distillery")
             .Produces<DistilleryResponse>()
-            .ProducesProblem(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
             .RequiresNonEmptyRouteParameter("id");
 
@@ -80,11 +95,11 @@ public static class DistilleryEndpoints
 
                     return result.Outcome switch
                     {
-                        GetAllDistilleryOutcome.Success => Results.Ok(
+                        GetAllDistilleriesOutcome.Success => Results.Ok(
                             result.Distilleries!.Select(distillery => distillery.ToResponse())),
                         _ => Results.Problem(
                             ProblemResults.InternalServerError(
-                                "distilleries",
+                                EndpointGroup,
                                 "get-all",
                                 httpContext.TraceIdentifier,
                                 httpContext.Request.Path))
@@ -98,16 +113,27 @@ public static class DistilleryEndpoints
                 async (
                     [FromQuery] string pattern,
                     [FromServices] IDistilleryAppService service,
+                    HttpContext httpContext,
                     CancellationToken ct) =>
                 {
-                    var distilleryNames = await service.SearchByNameAsync(pattern, ct);
-                    var response = distilleryNames
-                        .Select(distilleryName => distilleryName.ToResponse())
-                        .ToList();
-                    return Results.Ok(response);
+                    var result = await service.SearchByNameAsync(pattern, ct);
+
+                    return result.Outcome switch
+                    {
+                        SearchDistilleriesOutcome.Success => Results.Ok(
+                            result.DistilleryNames!.Select(distillery => distillery.ToResponse())),
+                        _ => Results.Problem(
+                            ProblemResults.InternalServerError(
+                                EndpointGroup,
+                                "search",
+                                httpContext.TraceIdentifier,
+                                httpContext.Request.Path))
+
+                    };
                 })
             .WithName("Search Distilleries")
             .Produces<List<DistilleryResponse>>()
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
             .RequiresNonEmptyQueryParameter("pattern");
 
@@ -129,7 +155,7 @@ public static class DistilleryEndpoints
                         UpdateDistilleryOutcome.NameConflict => Results.Conflict(),
                         _ => Results.Problem(
                             ProblemResults.InternalServerError(
-                                "distilleries",
+                                EndpointGroup,
                                 "update",
                                 httpContext.TraceIdentifier,
                                 httpContext.Request.Path))
@@ -160,8 +186,8 @@ public static class DistilleryEndpoints
                         DeleteDistilleryOutcome.NotFound => Results.NotFound(),
                         _ => Results.Problem(
                             ProblemResults.InternalServerError(
-                                "distilleries",
-                                "update",
+                                EndpointGroup,
+                                "delete",
                                 httpContext.TraceIdentifier,
                                 httpContext.Request.Path))
                     };

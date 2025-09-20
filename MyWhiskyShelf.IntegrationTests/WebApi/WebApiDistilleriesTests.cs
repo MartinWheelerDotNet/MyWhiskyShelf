@@ -14,7 +14,6 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     [Fact]
     public async Task When_GettingAllDistilleries_Expect_AllDistilleriesReturned()
     {
-        await fixture.SeedDistilleriesAsync();
         const string endpoint = "/distilleries";
         var expectedDistilleryResponses = fixture
             .GetSeededEntityDetailsByType(EntityType.Distillery)
