@@ -7,7 +7,7 @@ namespace MyWhiskyShelf.IntegrationTests.WebApi;
 [ExcludeFromCodeCoverage]
 public sealed class RequestBodyWrapper : IXunitSerializable
 {
-    // IXunitSerializable requires a parameterless constructor to implement, but this is use inherently
+    // IXunitSerializable requires a parameterless constructor to implement, but this is used inherently
     // ReSharper disable once UnusedMember.Global
     public RequestBodyWrapper()
     {
