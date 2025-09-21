@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using static MyWhiskyShelf.WebApi.Constants.Authentication;
 
-namespace MyWhiskyShelf.WebApi.ExtensionMethods;
+namespace MyWhiskyShelf.WebApi.Extensions;
 
 public static class WebApplicationBuilderExtensions
 {
@@ -13,7 +13,12 @@ public static class WebApplicationBuilderExtensions
             .AddPolicy(Policies.ReadWhiskyBottles,  policy => policy.RequireRole(Roles.User, Roles.Admin))
             .AddPolicy(Policies.WriteWhiskyBottles, policy => policy.RequireRole(Roles.User, Roles.Admin));
 
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddKeycloakJwtBearer(
                 serviceName: "keycloak",
                 realm: "mywhiskyshelf",
@@ -33,9 +38,15 @@ public static class WebApplicationBuilderExtensions
                     }
                     else
                     {
-                        options.Authority = "<LOAD THIS FROM SECRETS>";
+                        var authority = builder.Configuration["Authentication:Authority"];
+                        if (string.IsNullOrWhiteSpace(authority))
+                            throw new InvalidOperationException(
+                                "Authentication:Authority must be configured in Production.");
+                        if (!authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                            throw new InvalidOperationException(
+                                "Authentication:Authority must be HTTPS in Production.");
+                        options.Authority = authority;
                     }
-                        
 
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
