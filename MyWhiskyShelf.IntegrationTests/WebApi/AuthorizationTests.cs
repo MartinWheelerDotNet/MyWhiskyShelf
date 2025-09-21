@@ -36,7 +36,7 @@ public class AuthorizationTests(WorkingFixture fixture)
     }
 
     [Theory]
-    [MemberData(nameof(AuthorizationData))]
+    [MemberData(nameof(AuthorizationData), DisableDiscoveryEnumeration = true)]
     public async Task When_AuthenticateAsRole_Expect_ShouldAuthenticateResult(
         string role,
         bool shouldAuthenticate,
@@ -58,7 +58,7 @@ public class AuthorizationTests(WorkingFixture fixture)
     }
     
     [Theory]
-    [MemberData(nameof(EndpointData))]
+    [MemberData(nameof(EndpointData), DisableDiscoveryEnumeration = true)]
     public async Task When_CreateWhiskyBottleWithoutBearerToken_Expect_Unauthorized(string endpoint, string method)
     {
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(HttpMethod.Parse(method), endpoint);
