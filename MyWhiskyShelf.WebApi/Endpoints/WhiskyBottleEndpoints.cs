@@ -5,7 +5,7 @@ using MyWhiskyShelf.Application.Abstractions.Services;
 using MyWhiskyShelf.Application.Results;
 using MyWhiskyShelf.WebApi.Contracts.WhiskyBottles;
 using MyWhiskyShelf.WebApi.ErrorResults;
-using MyWhiskyShelf.WebApi.ExtensionMethods;
+using MyWhiskyShelf.WebApi.Extensions;
 using MyWhiskyShelf.WebApi.Mapping;
 using static MyWhiskyShelf.WebApi.Constants.Authentication;
 

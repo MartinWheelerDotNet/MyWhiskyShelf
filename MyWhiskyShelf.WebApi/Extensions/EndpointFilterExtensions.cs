@@ -3,7 +3,7 @@ using MyWhiskyShelf.WebApi.Filters;
 using MyWhiskyShelf.WebApi.Interfaces;
 
 // ReSharper disable UnusedMethodReturnValue.Global
-namespace MyWhiskyShelf.WebApi.ExtensionMethods;
+namespace MyWhiskyShelf.WebApi.Extensions;
 
 [ExcludeFromCodeCoverage]
 public static class EndpointFilterExtensions

@@ -5,7 +5,7 @@ using MyWhiskyShelf.Application.Abstractions.Services;
 using MyWhiskyShelf.Application.Results;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 using MyWhiskyShelf.WebApi.ErrorResults;
-using MyWhiskyShelf.WebApi.ExtensionMethods;
+using MyWhiskyShelf.WebApi.Extensions;
 using MyWhiskyShelf.WebApi.Mapping;
 
 namespace MyWhiskyShelf.WebApi.Endpoints;
