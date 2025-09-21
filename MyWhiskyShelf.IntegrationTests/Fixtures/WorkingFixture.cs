@@ -81,7 +81,7 @@ public class WorkingFixture : IAsyncLifetime
         params DistilleryCreateRequest[] createRequests)
     {
         Dictionary<string, Guid> seededDistilleries = [];
-        using var httpClient = Application.CreateHttpClient("WebApi");
+        using var httpClient = await Application.CreateAdminHttpsClientAsync();
         
         foreach (var createRequest in createRequests)
         {
