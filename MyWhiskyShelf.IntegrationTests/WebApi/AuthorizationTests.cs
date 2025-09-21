@@ -11,9 +11,21 @@ public class AuthorizationTests(WorkingFixture fixture)
     {
         return new TheoryData<string, bool, string, string>
         {
+            //distilleries
+            { Roles.User, true, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Get.Method },
+            { Roles.Admin, true, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Get.Method },
+            { Roles.User, true, "/distilleries", HttpMethod.Get.Method },
+            { Roles.Admin, true, "/distilleries", HttpMethod.Get.Method },
+            { Roles.User, false, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Delete.Method },
+            { Roles.Admin, true, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Delete.Method },
+            { Roles.User, false, "/distilleries", HttpMethod.Post.Method },
+            { Roles.Admin, true, "/distilleries", HttpMethod.Post.Method },
+            { Roles.User, false, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Put.Method },
+            { Roles.Admin, true, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Put.Method },
+            // whisky-bottles
             { Roles.User, true, $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Get.Method },
             { Roles.Admin, true, $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Get.Method },
-            { Roles.User, true, $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Get.Method },
+            { Roles.User, true, $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Delete.Method },
             { Roles.Admin, true, $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Delete.Method },
             { Roles.User, true, "/whisky-bottles", HttpMethod.Post.Method },
             { Roles.Admin, true, "/whisky-bottles", HttpMethod.Post.Method },

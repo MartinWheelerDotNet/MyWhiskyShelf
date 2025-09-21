@@ -10,6 +10,8 @@ public static class WebApplicationBuilderExtensions
     public static void SetupAuthorization(this WebApplicationBuilder builder)
     {
         builder.Services.AddAuthorizationBuilder()
+            .AddPolicy(Policies.ReadDistilleries,  policy => policy.RequireRole(Roles.User, Roles.Admin))
+            .AddPolicy(Policies.WriteDistilleries, policy => policy.RequireRole(Roles.Admin))
             .AddPolicy(Policies.ReadWhiskyBottles,  policy => policy.RequireRole(Roles.User, Roles.Admin))
             .AddPolicy(Policies.WriteWhiskyBottles, policy => policy.RequireRole(Roles.User, Roles.Admin));
 

@@ -10,8 +10,6 @@ namespace MyWhiskyShelf.IntegrationTests.WebApi;
 [Collection(nameof(WorkingFixture))]
 public class WebApiDistilleriesTests(WorkingFixture fixture)
 {
-    private const string WebApiResourceName = "WebApi";
-
     [Fact]
     public async Task When_GettingAllDistilleries_Expect_AllDistilleriesReturned()
     {
@@ -20,7 +18,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
             .GetSeededEntityDetailsByType(EntityType.Distillery)
             .Select((kvp, _) => DistilleryResponseTestData.GenericResponse(kvp.Id) with { Name = kvp.Name });
 
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.GetAsync(endpoint);
         var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
@@ -41,7 +39,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
 
         var expectedResponse = DistilleryResponseTestData.GenericResponse(id) with { Name = name };
 
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/{id}");
         var distilleryResponse = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
 
@@ -54,7 +52,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     public async Task When_GettingDistilleryByIdAndDistilleryDoesNotExist_Expect_NotFoundResponse()
     {
         var endpoint = $"/distilleries/{Guid.NewGuid()}";
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.GetAsync(endpoint);
 
@@ -67,7 +65,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
         await fixture.SeedDistilleriesAsync(
             DistilleryRequestTestData.GenericCreate with { Name = "Any Distillery" });
         
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync("/distilleries/search?pattern=Else");
         var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameResponse>>();
 
@@ -89,7 +87,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
         seededDistilleries.TryGetValue(expectedName, out var expectedId);
         var expectedResponse = new DistilleryNameResponse(expectedId, expectedName);
 
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/search?pattern={pattern}");
         var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameResponse>>();
 
@@ -112,7 +110,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
 
         var expectedResponse = new DistilleryNameResponse(expectedId, expectedName);
 
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/search?pattern={expectedName}");
         var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameResponse>>();
 
@@ -129,7 +127,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
 
         var expectedDistilleryNames = seededDistilleries.Select(d => new DistilleryNameResponse(d.Value, d.Key));
 
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/search?pattern={searchPattern}");
         var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameResponse>>();
 
@@ -143,7 +141,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
             HttpMethod.Post,
             "/distilleries",
             DistilleryRequestTestData.GenericCreate with { Name = "Distillery D" });
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.SendAsync(request);
 
@@ -161,7 +159,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
             HttpMethod.Post,
             "/distilleries",
             DistilleryRequestTestData.GenericCreate with { Name = name });
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.SendAsync(request);
 
@@ -172,7 +170,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     public async Task When_DeletingDistilleryAndDistilleryExists_Expect_NoContent()
     {
         await fixture.SeedDistilleriesAsync();
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var (_, id) = fixture.GetSeededEntityDetailByTypeAndMethod(HttpMethod.Delete, EntityType.Distillery);
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
             HttpMethod.Delete,
@@ -186,7 +184,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     [Fact]
     public async Task When_DeletingDistilleryAndDistilleryDoesNotExist_Expect_NotFound()
     {
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
             HttpMethod.Delete,
             $"/distilleries/{Guid.NewGuid()}");
@@ -200,7 +198,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     public async Task When_UpdatingDistilleryAndDistilleryExists_Expect_OkResponse()
     {
         await fixture.SeedDistilleriesAsync();
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var (name, id) = fixture.GetSeededEntityDetailByTypeAndMethod(HttpMethod.Put, EntityType.Distillery);
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Put,
@@ -216,7 +214,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     public async Task When_UpdatingDistilleryAndDistilleryDoesNotExist_Expect_NotFoundResponse()
     {
         var distilleryId = Guid.NewGuid();
-        using var httpClient = fixture.Application.CreateHttpClient(WebApiResourceName);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Put,
             $"/distilleries/{distilleryId}",

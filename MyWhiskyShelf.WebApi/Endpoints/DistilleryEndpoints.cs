@@ -7,6 +7,7 @@ using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 using MyWhiskyShelf.WebApi.ErrorResults;
 using MyWhiskyShelf.WebApi.Extensions;
 using MyWhiskyShelf.WebApi.Mapping;
+using static MyWhiskyShelf.WebApi.Constants.Authentication;
 
 namespace MyWhiskyShelf.WebApi.Endpoints;
 
@@ -52,7 +53,8 @@ public static class DistilleryEndpoints
             .Produces(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
-            .RequiresIdempotencyKey();
+            .RequiresIdempotencyKey()
+            .RequireAuthorization(Policies.WriteDistilleries);
 
         group.MapGet(
                 "/{id:guid}",
@@ -81,7 +83,8 @@ public static class DistilleryEndpoints
             .Produces(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
-            .RequiresNonEmptyRouteParameter("id");
+            .RequiresNonEmptyRouteParameter("id")
+            .RequireAuthorization(Policies.ReadDistilleries);
 
         group.MapGet(
                 "/",
@@ -104,7 +107,9 @@ public static class DistilleryEndpoints
                     };
                 })
             .WithName("Get All Distilleries")
-            .Produces<List<DistilleryResponse>>();
+            .Produces<List<DistilleryResponse>>()
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .RequireAuthorization(Policies.ReadDistilleries);
 
         group.MapGet(
                 "/search",
@@ -132,8 +137,9 @@ public static class DistilleryEndpoints
             .Produces<List<DistilleryResponse>>()
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
-            .RequiresNonEmptyQueryParameter("pattern");
-
+            .RequiresNonEmptyQueryParameter("pattern")
+            .RequireAuthorization(Policies.ReadDistilleries);
+        
         group.MapPut(
                 "/{id:guid}",
                 async (
@@ -164,7 +170,8 @@ public static class DistilleryEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
             .RequiresNonEmptyRouteParameter("id")
-            .RequiresIdempotencyKey();
+            .RequiresIdempotencyKey()
+            .RequireAuthorization(Policies.WriteDistilleries);
         
         group.MapDelete(
                 "/{id:guid}",
@@ -193,6 +200,7 @@ public static class DistilleryEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
             .RequiresNonEmptyRouteParameter("id")
-            .RequiresIdempotencyKey();
+            .RequiresIdempotencyKey()
+            .RequireAuthorization(Policies.WriteDistilleries);
     }
 }
