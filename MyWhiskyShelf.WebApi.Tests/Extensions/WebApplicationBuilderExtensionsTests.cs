@@ -1,12 +1,15 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MyWhiskyShelf.WebApi.Extensions;
+using static MyWhiskyShelf.WebApi.Constants.Authentication;
 
 namespace MyWhiskyShelf.WebApi.Tests.Extensions;
 
@@ -23,8 +26,14 @@ public class WebApplicationBuilderExtensionsTests
         var jwt = sp
             .GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
             .Get(JwtBearerDefaults.AuthenticationScheme);
+        
+        var authOptions = sp.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
 
         Assert.Multiple(
+            () => AssertRoles(authOptions.GetPolicy(Policies.ReadWhiskyBottles), Roles.User, Roles.Admin),
+            () => AssertRoles(authOptions.GetPolicy(Policies.WriteWhiskyBottles), Roles.User, Roles.Admin),
+            () => AssertRoles(authOptions.GetPolicy(Policies.ReadDistilleries), Roles.User, Roles.Admin),
+            () => AssertRoles(authOptions.GetPolicy(Policies.WriteDistilleries), Roles.Admin),
             () => Assert.Equal("mywhiskyshelf-api", jwt.Audience),
             () => Assert.False(jwt.RequireHttpsMetadata),
             () => Assert.Equal(ClaimTypes.Role, jwt.TokenValidationParameters.RoleClaimType));
@@ -85,13 +94,25 @@ public class WebApplicationBuilderExtensionsTests
             .Get(JwtBearerDefaults.AuthenticationScheme);
         
         var authScheme = sp.GetRequiredService<IOptions<AuthenticationOptions>>().Value;
+        var authOptions = sp.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
 
         Assert.Multiple(
+            () => AssertRoles(authOptions.GetPolicy(Policies.ReadWhiskyBottles), Roles.User, Roles.Admin),
+            () => AssertRoles(authOptions.GetPolicy(Policies.WriteWhiskyBottles), Roles.User, Roles.Admin),
+            () => AssertRoles(authOptions.GetPolicy(Policies.ReadDistilleries), Roles.User, Roles.Admin),
+            () => AssertRoles(authOptions.GetPolicy(Policies.WriteDistilleries), Roles.Admin),
             () => Assert.Equal("mywhiskyshelf-api", jwt.Audience),
             () => Assert.True(jwt.RequireHttpsMetadata),
             () => Assert.Equal(ClaimTypes.Role, jwt.TokenValidationParameters.RoleClaimType),
             () => Assert.Equal(authority, jwt.Authority),
             () => Assert.Equal(JwtBearerDefaults.AuthenticationScheme, authScheme.DefaultAuthenticateScheme),
             () => Assert.Equal(JwtBearerDefaults.AuthenticationScheme, authScheme.DefaultChallengeScheme));
+    }
+
+    private static void AssertRoles(AuthorizationPolicy? policy, params string[] expected)
+    {
+        var req = policy!.Requirements.OfType<RolesAuthorizationRequirement>().Single();
+        foreach (var role in expected)
+            Assert.Contains(role, req.AllowedRoles);
     }
 }

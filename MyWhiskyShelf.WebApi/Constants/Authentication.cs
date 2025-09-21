@@ -10,7 +10,10 @@ public static class Authentication
 
     public static class Policies
     {
+        public const string ReadDistilleries = "Distilleries.Read";
+        public const string WriteDistilleries = "Distilleries.Write";
         public const string ReadWhiskyBottles = "WhiskyBottles.Read";
         public const string WriteWhiskyBottles = "WhiskyBottles.Write";
+        
     }
 }
