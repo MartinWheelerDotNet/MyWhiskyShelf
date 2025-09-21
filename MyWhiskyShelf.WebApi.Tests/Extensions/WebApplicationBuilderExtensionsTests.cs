@@ -103,10 +103,10 @@ public class WebApplicationBuilderExtensionsTests
             () => AssertRoles(authOptions.GetPolicy(Policies.WriteDistilleries), Roles.Admin),
             () => Assert.Equal("mywhiskyshelf-api", jwt.Audience),
             () => Assert.True(jwt.RequireHttpsMetadata),
-            () => Assert.Equal(ClaimTypes.Role, jwt.TokenValidationParameters.RoleClaimType),
             () => Assert.Equal(authority, jwt.Authority),
             () => Assert.Equal(JwtBearerDefaults.AuthenticationScheme, authScheme.DefaultAuthenticateScheme),
-            () => Assert.Equal(JwtBearerDefaults.AuthenticationScheme, authScheme.DefaultChallengeScheme));
+            () => Assert.Equal(JwtBearerDefaults.AuthenticationScheme, authScheme.DefaultChallengeScheme),
+            () => Assert.Equal(ClaimTypes.Role, jwt.TokenValidationParameters.RoleClaimType));
     }
 
     private static void AssertRoles(AuthorizationPolicy? policy, params string[] expected)

@@ -1,6 +1,4 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using static MyWhiskyShelf.WebApi.Constants.Authentication;
 
 namespace MyWhiskyShelf.WebApi.Extensions;
@@ -49,14 +47,6 @@ public static class WebApplicationBuilderExtensions
                                 "Authentication:Authority must be HTTPS in Production.");
                         options.Authority = authority;
                     }
-
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        RoleClaimType = ClaimTypes.Role
-                    };
                 });
-        
-        builder.Logging.AddFilter("Microsoft.IdentityModel", LogLevel.Debug);
-        builder.Logging.AddFilter("Microsoft.AspNetCore.Authentication", LogLevel.Debug);
     }
 }
