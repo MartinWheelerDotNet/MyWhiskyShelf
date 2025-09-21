@@ -7,6 +7,8 @@ var builder = DistributedApplication.CreateBuilder(args);
 var postgres = builder.AddPostgres("postgres");
 var database = postgres.AddDatabase("myWhiskyShelfDb");
 var cache = builder.AddRedis("cache");
+var keycloak = builder.AddKeycloak("keycloak", 8080)
+    .WithRealmImport("./Realms");
 
 if (builder.Environment.IsDevelopment())
 {
@@ -20,10 +22,12 @@ if (builder.Environment.IsDevelopment())
 var enableDataSeeding = builder.Configuration.GetValue("MYWHISKYSHELF_DATA_SEEDING_ENABLED", true);
 var runMigrations = builder.Configuration.GetValue("MYWHISKYSHELF_RUN_MIGRATIONS", true);
 
-var webApiProjectBuilder = builder.AddProject<MyWhiskyShelf_WebApi>("WebApi");
+var webApiProjectBuilder = builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
+    .WithReference(keycloak)
+    .WaitFor(keycloak);
 
 webApiProjectBuilder
-    .WithEnvironment("MYWHISKYSHELF_DATA_SEEDING_ENABLED", enableDataSeeding.ToString)
+    .WithEnvironment("MYWHISKYSHELF_DATA_SEEDING_ENABLED", enableDataSeeding.ToString())
     .WithReference(database)
     .WaitFor(database)
     .WithReference(cache)

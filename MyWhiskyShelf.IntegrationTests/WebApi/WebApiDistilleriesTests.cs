@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
+using MyWhiskyShelf.IntegrationTests.Helpers;
 using MyWhiskyShelf.IntegrationTests.TestData;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 using static MyWhiskyShelf.IntegrationTests.Fixtures.WorkingFixture;

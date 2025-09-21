@@ -42,7 +42,6 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <!-- Ensures referenced assemblies are copied to the test output folder -->
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
 

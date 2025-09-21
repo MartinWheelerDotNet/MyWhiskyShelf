@@ -4,6 +4,7 @@ using MyWhiskyShelf.Application.Extensions;
 using MyWhiskyShelf.Infrastructure.Extensions;
 using MyWhiskyShelf.ServiceDefaults;
 using MyWhiskyShelf.WebApi.Endpoints;
+using MyWhiskyShelf.WebApi.ExtensionMethods;
 using MyWhiskyShelf.WebApi.Interfaces;
 using MyWhiskyShelf.WebApi.Services;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
@@ -24,6 +25,9 @@ internal static class Program
         
         if (builder.Environment.IsDevelopment())
             builder.Services.AddOpenApi();
+
+        builder.SetupAuthorization();
+
         
         var app = builder.Build();
 
@@ -35,6 +39,8 @@ internal static class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapDistilleryEndpoints();
         app.MapWhiskyBottleEndpoints();

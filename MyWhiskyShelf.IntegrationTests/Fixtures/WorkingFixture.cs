@@ -1,8 +1,8 @@
 using System.Net.Http.Json;
 using Aspire.Hosting;
 using JetBrains.Annotations;
+using MyWhiskyShelf.IntegrationTests.Helpers;
 using MyWhiskyShelf.IntegrationTests.TestData;
-using MyWhiskyShelf.IntegrationTests.WebApi;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 using MyWhiskyShelf.WebApi.Contracts.WhiskyBottles;
 
@@ -59,7 +59,7 @@ public class WorkingFixture : IAsyncLifetime
 
     public async Task SeedDistilleriesAsync()
     {
-        using var httpClient = Application.CreateHttpClient("WebApi");
+        using var httpClient = await Application.CreateAdminHttpsClientAsync();
 
         foreach (var method in _methods)
         {
@@ -100,7 +100,7 @@ public class WorkingFixture : IAsyncLifetime
 
     public async Task SeedWhiskyBottlesAsync()
     {
-        using var httpClient = Application.CreateHttpClient("WebApi");
+        using var httpClient = await Application.CreateAdminHttpsClientAsync();
 
         foreach (var method in _methods)
         {

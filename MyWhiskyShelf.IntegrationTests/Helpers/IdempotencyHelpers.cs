@@ -2,7 +2,7 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MyWhiskyShelf.IntegrationTests.WebApi;
+namespace MyWhiskyShelf.IntegrationTests.Helpers;
 
 public static class IdempotencyHelpers
 {

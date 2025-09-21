@@ -7,6 +7,7 @@ using MyWhiskyShelf.WebApi.Contracts.WhiskyBottles;
 using MyWhiskyShelf.WebApi.ErrorResults;
 using MyWhiskyShelf.WebApi.ExtensionMethods;
 using MyWhiskyShelf.WebApi.Mapping;
+using static MyWhiskyShelf.WebApi.Constants.Authentication;
 
 namespace MyWhiskyShelf.WebApi.Endpoints;
 
@@ -48,7 +49,8 @@ public static class WhiskyBottleEndpoints
             .Produces<WhiskyBottleResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
-            .RequiresIdempotencyKey();
+            .RequiresIdempotencyKey()
+            .RequireAuthorization(Policies.WriteWhiskyBottles);
 
         group.MapGet(
                 "/{id:guid}", async (
@@ -72,9 +74,10 @@ public static class WhiskyBottleEndpoints
                 })
             .WithName("Get Whisky Bottle")
             .Produces<WhiskyBottleResponse>()
-            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
-            .RequiresNonEmptyRouteParameter("id");
+            .RequiresNonEmptyRouteParameter("id")
+            .RequireAuthorization(Policies.ReadWhiskyBottles);
 
         group.MapPut(
                 "/{id:guid}",
@@ -103,7 +106,8 @@ public static class WhiskyBottleEndpoints
             .Produces(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .RequiresNonEmptyRouteParameter("id")
-            .RequiresIdempotencyKey();
+            .RequiresIdempotencyKey()
+            .RequireAuthorization(Policies.WriteWhiskyBottles);
 
         group.MapDelete(
                 "/{id:guid}",
@@ -131,6 +135,7 @@ public static class WhiskyBottleEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
             .RequiresNonEmptyRouteParameter("id")
-            .RequiresIdempotencyKey();
+            .RequiresIdempotencyKey()
+            .RequireAuthorization(Policies.WriteWhiskyBottles);
     }
 }
