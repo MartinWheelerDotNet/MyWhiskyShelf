@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
+using MyWhiskyShelf.IntegrationTests.Helpers;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 
 namespace MyWhiskyShelf.IntegrationTests.AppHost;
@@ -20,7 +21,7 @@ public class DataSeedingEnvironmentVariablesTest
         };
 
         await using var application = await FixtureFactory.StartAsync(args);
-        using var httpClient = application.CreateHttpClient("WebApi");
+        using var httpClient = await application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.GetAsync("/distilleries");
         var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
@@ -40,7 +41,7 @@ public class DataSeedingEnvironmentVariablesTest
         };
 
         await using var application = await FixtureFactory.StartAsync(args);
-        using var httpClient = application.CreateHttpClient("WebApi");
+        using var httpClient = await application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.GetAsync("/distilleries");
         var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
@@ -61,7 +62,7 @@ public class DataSeedingEnvironmentVariablesTest
         };
 
         await using var application = await FixtureFactory.StartAsync(args);
-        using var httpClient = application.CreateHttpClient("WebApi");
+        using var httpClient = await application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.GetAsync("/distilleries");
         var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
