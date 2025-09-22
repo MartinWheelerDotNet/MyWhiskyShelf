@@ -119,9 +119,10 @@ jobs:
       - name: Run mutation tests for ${{ inputs.name }}
         env:
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+          PROJECT_NAME: ${{ inputs.project }}
         run: |
           dotnet stryker \
-            --project "${{ inputs.project }}" \
+            --project "$PROJECT_NAME" \
             --reporter "dashboard" \
             --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" \
             --config-file "stryker-config.json"
