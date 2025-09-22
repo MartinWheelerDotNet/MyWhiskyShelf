@@ -47,7 +47,7 @@ public class RedisInsightEnvironmentVariablesTests
         await using var appHostBuilder = await DistributedApplicationTestingBuilder
             .CreateAsync<MyWhiskyShelf_AppHost>([
                 "--environment=Production",
-                "MYWHISKYSHELF_PG_WEB_ENABLED=true"
+                "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=true"
             ]);
 
         Assert.Empty(appHostBuilder.Resources.OfType<RedisInsightResource>());

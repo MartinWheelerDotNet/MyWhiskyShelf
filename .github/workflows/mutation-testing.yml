@@ -23,9 +23,6 @@ jobs:
     name: ${{ inputs.name }}
     if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
-    env:
-      DOTNET_ENVIRONMENT: CI
-      ASPNETCORE_ENVIRONMENT: CI
     
     steps:
       - name: Checkout Repository
@@ -119,12 +116,25 @@ jobs:
           }
           EOF
 
+      - name: Resolve project directory
+        id: project-directory
+        env:
+          PROJECT_NAME: ${{ inputs.project }}
+        run: |
+          directory="$(dirname "$PROJECT_NAME")"
+          if [ "$directory" = "." ]; 
+            then directory="$GITHUB_WORKSPACE"; 
+          fi
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
+
       - name: Run mutation tests for ${{ inputs.name }}
+        working-directory: ${{ steps.project-directory.outputs.directory }}
         env:
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+          PROJECT_NAME: ${{ inputs.project }}
         run: |
           dotnet stryker \
-            --project "${{ inputs.project }}" \
+            --project "$PROJECT_NAME" \
             --reporter "dashboard" \
             --dashboard-api-key "$STRYKER_DASHBOARD_API_KEY" \
             --config-file "stryker-config.json"
