@@ -116,7 +116,19 @@ jobs:
           }
           EOF
 
+      - name: Resolve project directory
+        id: project-directory
+        env:
+          PROJECT_NAME: ${{ inputs.project }}
+        run: |
+          directory="$(dirname "$PROJECT_NAME")"
+          if [ "$directory" = "." ]; 
+            then directory="$GITHUB_WORKSPACE"; 
+          fi
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
+
       - name: Run mutation tests for ${{ inputs.name }}
+        working-directory: ${{ steps.project-directory.outputs.directory }}
         env:
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
           PROJECT_NAME: ${{ inputs.project }}
