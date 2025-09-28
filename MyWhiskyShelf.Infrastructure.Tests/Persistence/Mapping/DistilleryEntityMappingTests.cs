@@ -1,4 +1,4 @@
-using MyWhiskyShelf.Infrastructure.Mapping;
+using MyWhiskyShelf.Infrastructure.Persistence.Mapping;
 using MyWhiskyShelf.Infrastructure.Tests.TestData;
 
 namespace MyWhiskyShelf.Infrastructure.Tests.Mapping;

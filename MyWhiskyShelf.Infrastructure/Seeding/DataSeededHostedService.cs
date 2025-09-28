@@ -4,8 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MyWhiskyShelf.Infrastructure.Interfaces;
-using MyWhiskyShelf.Infrastructure.Mapping;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
+using MyWhiskyShelf.Infrastructure.Persistence.Mapping;
 
 namespace MyWhiskyShelf.Infrastructure.Seeding;
 
