@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Keycloak.Authentication" Version="9.4.2-preview.1.25428.12" />
-        <PackageReference Include="Aspire.Npgsql" Version="9.5.0"/>
-        <PackageReference Include="Aspire.StackExchange.Redis" Version="9.4.2"/>
+        <PackageReference Include="Aspire.Keycloak.Authentication" Version="9.5.0-preview.1.25474.7" />
+        <PackageReference Include="Aspire.Npgsql" Version="9.5.0" />
+        <PackageReference Include="Aspire.StackExchange.Redis" Version="9.5.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.9" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9"/>
-        <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+        <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -20,14 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MyWhiskyShelf.Application\MyWhiskyShelf.Application.csproj"/>
-        <ProjectReference Include="..\MyWhiskyShelf.Infrastructure\MyWhiskyShelf.Infrastructure.csproj"/>
-        <ProjectReference Include="..\MyWhiskyShelf.ServiceDefaults\MyWhiskyShelf.ServiceDefaults.csproj"/>
+        <ProjectReference Include="..\MyWhiskyShelf.Application\MyWhiskyShelf.Application.csproj" />
+        <ProjectReference Include="..\MyWhiskyShelf.Infrastructure\MyWhiskyShelf.Infrastructure.csproj" />
+        <ProjectReference Include="..\MyWhiskyShelf.ServiceDefaults\MyWhiskyShelf.ServiceDefaults.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MyWhiskyShelf.Migrations\MyWhiskyShelf.Migrations.csproj"
-                          PrivateAssets="all" />
+        <ProjectReference Include="..\MyWhiskyShelf.Migrations\MyWhiskyShelf.Migrations.csproj" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>

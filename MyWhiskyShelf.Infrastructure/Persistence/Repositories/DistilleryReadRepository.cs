@@ -2,8 +2,8 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Core.Aggregates;
-using MyWhiskyShelf.Infrastructure.Mapping;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
+using MyWhiskyShelf.Infrastructure.Persistence.Projections;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
 
@@ -14,14 +14,13 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
 {
     public async Task<Distillery?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        return (await dbContext.Distilleries.FindAsync([id], ct))?.ToDomain();
+        return await dbContext.Distilleries
+            .AsNoTracking()
+            .Where(d => d.Id == id)
+            .Select(DistilleryProjections.ToDistilleryDomain)
+            .SingleOrDefaultAsync(ct);
     }
 
-    // Until the work for the migration which will allow us to use the postgres functions for case insensitivity
-    // we need to silence this warning, as EF projections do not allow string comparers.
-    [SuppressMessage(
-        "Performance",
-        "CA1862:Use the \'StringComparison\' method overloads to perform case-insensitive string comparisons")]
     public async Task<bool> ExistsByNameAsync(string name, CancellationToken ct = default)
     {
         return await dbContext.Distilleries
@@ -34,16 +33,18 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
         return await dbContext.Distilleries
             .AsNoTracking()
             .Where(entity => EF.Functions.ILike(entity.Name, $"%{pattern}%"))
-            .Select(entity => new DistilleryName(entity.Id, entity.Name))
+            .Select(DistilleryProjections.ToDistilleryNameDomain)
             .ToListAsync(ct);
     }
 
     public async Task<IReadOnlyList<Distillery>> GetAllAsync(CancellationToken ct = default)
     {
-        var distilleryEntities = await dbContext.Distilleries
+        return await dbContext.Distilleries
                 .AsNoTracking()
                 .OrderBy(entity => entity.Name)
+                .ThenBy(entity => entity.Id)
+                .Select(DistilleryProjections.ToDistilleryDomain)
                 .ToListAsync(ct);
-        return distilleryEntities.Select(entity => entity.ToDomain()).ToList();
+        
     }
 }

@@ -20,16 +20,12 @@ A Whisky Shelf app to allow you to add bottles / drams you've had, and store inf
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=MartinWheelerDotNet_MyWhiskyShelf&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=MartinWheelerDotNet_MyWhiskyShelf)<br>
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=MartinWheelerDotNet_MyWhiskyShelf&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=MartinWheelerDotNet_MyWhiskyShelf)<br>
 
+### Setup
 
-### Migrations
-
-
-Create the migrations:
-
-```
-$env:ConnectionStrings__myWhiskyShelfDb = 'Host=localhost;Port=;Database=;Username=;Password='
-dotnet ef migrations add InitialMigration -p MyWhiskyShelf.Migrations/MyWhiskyShelf.Migrations.csproj -s MyWhiskyShelf.WebApi/MyWhiskyShelf.WebApi.csproj -c MyWhiskyShelf.Infrastructure.Persistence.Contexts.MyWhiskyShelfDbContext -o Migrations
-```
+* Ensure .NET 9 is installed: `https://learn.microsoft.com/en-us/dotnet/core/install/`
+* Ensure EF Tools is installed: `dotnet tool install --global dotnet-ef`
+* Ensure Aspire CLI is installed: `dotnet tool install --global Aspire.Cli`
+* Ensure docker is installed: `https://docs.docker.com/desktop/` 
 
 ### Project Dependency Diagram
 
@@ -123,3 +119,16 @@ flowchart LR
 
 `MYWHISKYSHELF_PG_WEB_ENABLED`: Enables PgWeb container in Aspire (default: true)
 
+
+### Useful commands
+
+### Migrations
+
+Create the migrations:
+
+```
+$env:ConnectionStrings__myWhiskyShelfDb = 'Host=localhost;Port=;Database=;Username=;Password='
+dotnet ef migrations add InitialMigration -p MyWhiskyShelf.Migrations/MyWhiskyShelf.Migrations.csproj -s MyWhiskyShelf.WebApi/MyWhiskyShelf.WebApi.csproj -c MyWhiskyShelf.Infrastructure.Persistence.Contexts.MyWhiskyShelfDbContext -o Migrations
+```
+
+Update all aspire packages accross all projects in the solution: `aspire update`
