@@ -1,7 +1,7 @@
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Infrastructure.Persistence.Entities;
 
-namespace MyWhiskyShelf.Infrastructure.Mapping;
+namespace MyWhiskyShelf.Infrastructure.Persistence.Mapping;
 
 public static class DistilleryEntityMapping
 {
