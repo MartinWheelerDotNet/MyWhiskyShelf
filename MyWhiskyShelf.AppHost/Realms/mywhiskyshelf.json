@@ -1,12 +1,23 @@
 {
   "realm": "mywhiskyshelf",
   "enabled": true,
+  "registrationAllowed": true,
+  "loginWithEmailAllowed": true,
+  "resetPasswordAllowed": true,
+  "verifyEmail": false,
   "roles": {
     "realm": [
       { "name": "admin" },
       { "name": "user" }
     ]
   },
+  "groups": [
+    {
+      "name": "users",
+      "realmRoles": ["user"]
+    }
+  ],
+  "defaultGroups": ["/users"],
   "clients": [
     {
       "clientId": "mywhiskyshelf-api",
@@ -81,6 +92,34 @@
             "multivalued": "true",
             "id.token.claim": "false",
             "userinfo.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "mywhiskyshelf-frontend",
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "+"
+      },
+      "redirectUris": ["http://localhost:5173/*"],
+      "webOrigins": ["http://localhost:5173"],
+      "rootUrl": "http://localhost",
+      "baseUrl": "/",
+      "protocolMappers": [
+        {
+          "name": "audience-mywhiskyshelf-api",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.client.audience": "mywhiskyshelf-api",
+            "id.token.claim": "false",
             "access.token.claim": "true"
           }
         }
