@@ -1,8 +1,8 @@
 import { Container, Typography } from "@mui/material";
-import { useAuth } from "../auth/AuthProvider";
+import {useUser} from "../hooks/useUser.ts";
 
 export default function MainContent() {
-    const { initialized, authenticated } = useAuth();
+    const { initialized, authenticated } = useUser();
 
     if (!initialized) {
         return (
@@ -15,7 +15,10 @@ export default function MainContent() {
     return (
         <Container sx={{ py: 4 }}>
         {authenticated ? (
-            <Typography variant="h5">You’re signed in. Next step: call protected APIs.</Typography>
+            <div>
+                <Typography variant="h5">You’re signed in. Next step: call protected APIs.</Typography>
+            </div>
+            
         ) : (
             <Typography variant="h5">Welcome to MyWhiskyShelf</Typography>
         )}

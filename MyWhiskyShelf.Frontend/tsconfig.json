@@ -1,7 +1,15 @@
 {
   "files": [],
+  "compilerOptions": {
+    "moduleResolution": "bundler", 
+    "module": "esnext",
+    "target": "esnext",
+    "jsx": "react-jsx",
+    "types": ["vitest", "vite/client", "@testing-library/jest-dom"]
+  },
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "include": ["src", "vite.config.ts"]
 }
