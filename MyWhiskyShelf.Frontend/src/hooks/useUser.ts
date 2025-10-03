@@ -1,57 +1,78 @@
-import { describe, it, expect, vi } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
+import {useEffect, useMemo, useState} from "react";
+import {useKeycloak} from "@react-keycloak/web";
 
-describe("useUser", () => {
-    it("returns merged user fields from token + userinfo", async () => {
-        // 1️⃣ mock BEFORE importing the hook
-        vi.doMock("@react-keycloak/web", () => {
-            const fakeTokenParsed = {
-                given_name: "Grace",
-                family_name: "Hopper",
-                preferred_username: "grace",
-                email: "grace@example.com",
-                sub: "sub-123",
-            };
+type FreshProfile = {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    preferredUsername?: string;
+};
 
-            const keycloak = {
-                authenticated: true,
-                token: "token-abc",
-                idTokenParsed: fakeTokenParsed,
-                tokenParsed: fakeTokenParsed,
-                login: vi.fn(),
-                logout: vi.fn(),
-                register: vi.fn(),
-                loadUserInfo: vi.fn().mockResolvedValue({
-                    given_name: "Grace",
-                    family_name: "Hopper",
-                    email: "grace@example.com",
-                    preferred_username: "grace",
-                }),
-            };
+export function useUser() {
+    const { keycloak, initialized } = useKeycloak();
+    const authenticated = !!keycloak.authenticated;
 
-            return {
-                useKeycloak: () => ({ keycloak, initialized: true }),
-            };
-        });
+    const idp = (keycloak.idTokenParsed ?? {}) as Record<string, any>;
+    const atp = (keycloak.tokenParsed ?? {}) as Record<string, any>;
 
-        // 2️⃣ fresh import AFTER the mock
-        const { useUser } = await import("./useUser");
+    const tokenFirstName = idp.given_name ?? atp.given_name;
+    const tokenLastName = idp.family_name ?? atp.family_name;
+    const tokenEmail = idp.email ?? atp.email;
+    const tokenPreferredUsername =
+        idp.preferred_username ?? atp.preferred_username;
 
-        // 3️⃣ now run the hook
-        const { result } = renderHook(() => useUser());
+    const [fresh, setFresh] = useState<FreshProfile>({});
 
-        // immediate token-derived values
-        expect(result.current.initialized).toBe(true);
-        expect(result.current.authenticated).toBe(true);
-        expect(result.current.firstName).toBe("Grace");
-        expect(result.current.lastName).toBe("Hopper");
-        expect(result.current.email).toBe("grace@example.com");
-        expect(result.current.username).toBe("grace");
-        expect(result.current.sub).toBe("sub-123");
+    useEffect(() => {
+        let cancelled = false;
 
-        // after loadUserInfo resolves
-        await waitFor(() => {
-            expect(result.current.firstName).toBe("Grace");
-        });
-    });
-});
+        if (!authenticated) {
+            setFresh({});
+            return;
+        }
+
+        keycloak
+            .loadUserInfo()
+            .then((u) => {
+                if (cancelled) return;
+                const obj = u as Record<string, any>;
+                setFresh({
+                    firstName: obj.given_name ?? obj.firstName,
+                    lastName: obj.family_name ?? obj.lastName,
+                    email: obj.email,
+                    preferredUsername: obj.preferred_username ?? obj.username,
+                });
+            })
+            .catch(() => {});
+
+        return () => {
+            cancelled = true;
+        };
+    }, [authenticated, keycloak]);
+
+    const firstName = fresh.firstName ?? (tokenFirstName as string | undefined);
+    const lastName = fresh.lastName ?? (tokenLastName as string | undefined);
+    const email = fresh.email ?? (tokenEmail as string | undefined);
+    const username =
+        fresh.preferredUsername ??
+        (tokenPreferredUsername as string | undefined) ??
+        firstName ??
+        email;
+
+    return useMemo(
+        () => ({
+            initialized,
+            authenticated,
+            sub: (idp.sub ?? atp.sub) as string | undefined,
+            username,
+            firstName,
+            lastName,
+            email,
+            token: keycloak.token,
+            login: () => keycloak.login({redirectUri: globalThis.location.origin}),
+            logout: () => keycloak.logout({redirectUri: globalThis.location.origin}),
+            register: () => keycloak.register({redirectUri: globalThis.location.origin}),
+        }),
+        [initialized, authenticated, idp.sub, atp.sub, username, firstName, lastName, email, keycloak.token]
+    );
+}

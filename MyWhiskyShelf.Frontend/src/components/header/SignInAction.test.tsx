@@ -58,7 +58,6 @@ describe("SignInAction (desktop > sm)", () => {
         const textBtn = screen.getByRole("button", { name: "Sign in / Register" });
         expect(textBtn).toBeInTheDocument();
 
-        // icon-only button with exact name 'Sign in' should not be present
         expect(screen.queryByRole("button", { name: "Sign in" })).toBeNull();
     });
 

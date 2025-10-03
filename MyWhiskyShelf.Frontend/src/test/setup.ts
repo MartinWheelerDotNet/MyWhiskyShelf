@@ -1,18 +1,41 @@
-import "@testing-library/jest-dom/vitest";
-import { afterEach, beforeAll, afterAll } from "vitest";
-import { cleanup } from "@testing-library/react";
+import { vi } from "vitest";
+import '@testing-library/jest-dom/vitest';
 
-import "@testing-library/jest-dom";
+export const TEST_KEYCLOAK = {
+    login: vi.fn().mockResolvedValue(undefined),
+    token: "test.jwt.token" as string | undefined,
+    authenticated: true as boolean | undefined,
+};
 
-const origError = console.error;
-beforeAll(() => {
-    console.error = (...args) => {
-        const msg = args[0] as string | undefined;
-        if (msg?.includes("act(")) return;
-        origError(...args);
+export function makeMockLocalStorage() {
+    let store = new Map<string, string>();
+    return {
+        getItem: vi.fn((k: string) => (store.has(k) ? store.get(k)! : null)),
+        setItem: vi.fn((k: string, v: string) => void store.set(k, v)),
+        removeItem: vi.fn((k: string) => void store.delete(k)),
+        clear: vi.fn(() => void store.clear()),
     };
-});
-afterAll(() => { console.error = origError; });
-afterEach(() => {
-    cleanup();
+}
+
+export function stubLocation() {
+    const realLocation = window.location;
+    delete (window as any).location;
+    // @ts-expect-error minimal test double
+    window.location = {
+        ...realLocation,
+        href: "http://localhost/",
+        assign: vi.fn(),
+        replace: vi.fn(),
+    };
+    return () => {
+        delete (window as any).location;
+        // @ts-expect-error restore
+        window.location = realLocation;
+    };
+}
+
+Object.assign(globalThis, {
+    TEST_KEYCLOAK,
+    makeMockLocalStorage,
+    stubLocation,
 });

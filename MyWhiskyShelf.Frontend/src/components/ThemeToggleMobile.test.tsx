@@ -34,7 +34,7 @@ describe("ThemeToggleMobile", () => {
         await user.hover(button);
         expect(await screen.findByText("Switch to dark mode")).toBeInTheDocument();
 
-        const darkIcon = container.querySelector('[data-testid="LightModeRoundedIcon"]') as SVGElement;
+        const darkIcon = container.querySelector('[data-testid="DarkModeRoundedIcon"]') as SVGElement;
         expect(darkIcon).toBeTruthy();
         expect(getComputedStyle(darkIcon).color).toBe(hexToRgb(COLOURS.dark.modeToggle));
 

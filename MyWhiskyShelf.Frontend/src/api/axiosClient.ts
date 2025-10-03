@@ -1,67 +1,68 @@
-import axios, { AxiosError, type AxiosInstance, type AxiosRequestConfig } from "axios";
+import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from "axios";
 import { keycloak } from "../auth/keycloak";
 
-const API_BASE = import.meta.env.VITE_API_BASE;
-
-export type ApiConfig = AxiosRequestConfig & {
-    autoLoginOn401?: boolean;
-};
-
-export const api: AxiosInstance = axios.create({
-    baseURL: API_BASE
+export const axiosInstance: AxiosInstance = axios.create({
+    baseURL: import.meta.env?.VITE_API_BASE_URL,
+    timeout: 30000,
 });
 
-const RETRY_MARKER = "__kc_retry__";
+export type TokenProvider = () => string | undefined;
+export type LoginAction = (redirectUri: string) => void | Promise<void>;
 
-api.interceptors.request.use(async (config) => {
-    if (keycloak.authenticated) {
-        try {
-            await keycloak.updateToken(30);
-        } catch {}
-    }
+export interface InstallInterceptorsOptions {
+    getToken?: TokenProvider;
+    login?: LoginAction;
+    shouldAutoLogin401?: (err: AxiosError) => boolean;
+}
 
-    const token = keycloak.token;
-    if (token) {
-        config.headers = config.headers ?? {};
-        config.headers.Authorization = `Bearer ${token}`;
-    }
+export interface InstalledInterceptors {
+    request: (config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig>;
+    response: {
+        onFulfilled?: (value: any) => any;
+        onRejected: (error: any) => Promise<never> | Promise<void>;
+    };
+}
 
-    const isFormData =
-        typeof config.data === "object" &&
-        config.data != null &&
-        typeof (config.data).append === "function";
+export function installInterceptors(opts: InstallInterceptorsOptions = {}): InstalledInterceptors {
+    const {
+        getToken = () => (keycloak?.authenticated ? keycloak?.token : undefined),
+        login = (redirectUri: string) => keycloak?.login?.({ redirectUri }),
+        shouldAutoLogin401 = (err: AxiosError) =>
+            Boolean((err as any)?.config?.autoLoginOn401 === true)
+    } = opts;
 
-    if (!isFormData) {
-        const headers = config.headers as Record<string, any>;
-        if (!headers["Content-Type"] && config.data !== undefined) {
-            headers["Content-Type"] = "application/json";
+    const onRequest = (config: InternalAxiosRequestConfig) => {
+        const lsToken = (typeof localStorage !== "undefined") ? localStorage.getItem("token") ?? undefined : undefined;
+        const token = lsToken ?? getToken();
+        if (token) {
+            config.headers = config.headers ?? {};
+            (config.headers as any).Authorization = (String(token).startsWith("Bearer "))
+                ? String(token)
+                : `Bearer ${token}`;
         }
-    }
+        return config;
+    };
 
-    return config;
-});
-
-api.interceptors.response.use(
-    (res) => res,
-    async (error: AxiosError) => {
-        const cfg = (error.config ?? {}) as ApiConfig & { [RETRY_MARKER]?: boolean };
-
-        if (error.response?.status === 401 && !cfg[RETRY_MARKER]) {
-            cfg[RETRY_MARKER] = true;
-
-            if (keycloak.authenticated) {
-                try {
-                    await keycloak.updateToken(60);
-                    return api.request(cfg);
-                } catch {}
-            }
-
-            if (cfg.autoLoginOn401) {
-                await keycloak.login({ redirectUri: globalThis.location.href });
-                return new Promise(() => {});
-            }
+    const onResponseRejected = async (error: AxiosError) => {
+        if (error?.response?.status === 401 && shouldAutoLogin401(error)) {
+            const redirectUri = globalThis?.location?.href ?? "/";
+            await Promise.resolve();
+            await Promise.resolve(login(redirectUri));
+            return new Promise<never>(() => {});
         }
+        return Promise.reject(error);
+    };
 
-        throw error;
-    }
-);
+    axiosInstance.interceptors.request.use(onRequest);
+    axiosInstance.interceptors.response.use(undefined, onResponseRejected);
+
+    return {
+        request: onRequest,
+        response: { onRejected: onResponseRejected },
+    };
+}
+
+export function initAxiosClient(): void {
+    installInterceptors();
+}
+export default axiosInstance;

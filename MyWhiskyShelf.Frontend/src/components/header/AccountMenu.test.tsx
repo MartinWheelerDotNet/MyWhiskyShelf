@@ -16,12 +16,12 @@ describe("AccountMenu", () => {
     it("opens menu and logs out", async () => {
         const user = userEvent.setup();
         const onLogout = vi.fn();
-        const { container } = renderWithTheme(<AccountMenu username="AdaLovelace" initials="AL" onLogout={onLogout} />);
+        const { container } = renderWithTheme(<AccountMenu username="SidVicious" initials="SV" onLogout={onLogout} />);
         const chip = within(container).getByRole("button", { name: "Account"});
         await user.click(chip);
         
         const accountMenu = await screen.findByRole("menu", { name: "Account" });
-        expect(within(accountMenu).getByText("AdaLovelace")).toBeInTheDocument();
+        expect(within(accountMenu).getByText("SidVicious")).toBeInTheDocument();
         
         await user.click(within(accountMenu).getByRole("menuitem", { name: "Logout" }));
         expect(onLogout).toHaveBeenCalled();
@@ -29,7 +29,7 @@ describe("AccountMenu", () => {
 
     it("uses light chip in light mode", () => {
         const { container } = renderWithTheme(
-            <AccountMenu username="AdaLovelace" initials="AL" onLogout={() => {}} />,
+            <AccountMenu username="JohnLydon" initials="JL" onLogout={() => {}} />,
             "light"
         );
         
@@ -44,7 +44,7 @@ describe("AccountMenu", () => {
 
     it("uses dark chip in dark mode", () => {
         const { container } = renderWithTheme(
-            <AccountMenu username="AdaLovelace" initials="AL" onLogout={() => {}} />,
+            <AccountMenu username="SteveJones" initials="SJ" onLogout={() => {}} />,
             "dark"
         );
 

@@ -7,7 +7,6 @@ import { hexToRgb } from "@mui/material";
 
 let toggleModeMock = vi.fn();
 
-// noinspection JSUnusedGlobalSymbols
 vi.mock("../theme/ThemeModeProvider", () => ({
     __esModule: true,
     useThemeMode: () => ({ toggleMode: toggleModeMock }),
