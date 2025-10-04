@@ -56,7 +56,6 @@ jobs:
       
       - name: Run Vitest
         run: |
-          mkdir -p TestResults
           npx vitest run \
             --reporter=default \
             --reporter=junit --outputFile=/TestResults/vitest-junit.xml \
