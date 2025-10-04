@@ -1,4 +1,4 @@
 namespace MyWhiskyShelf.IntegrationTests.Collections;
 
-[CollectionDefinition("DataSeeding")]
+[CollectionDefinition("DataSeeding", DisableParallelization = true)]
 public class DataSeedingCollection;

@@ -8,12 +8,16 @@ var postgres = builder.AddPostgres("postgres");
 
 var database = postgres.AddDatabase("myWhiskyShelfDb");
 
-var cache = builder.AddRedis("cache");
+var cache = builder
+    .AddRedis("cache")
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithContainerName("mws-redis");
 
 var keycloak = builder
     .AddKeycloak("keycloak", 8080)
     .WithRealmImport("./Realms")
-    .WithDataVolume();
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithContainerName("mws-keycloak");
 
 if (builder.Environment.IsDevelopment())
 {
@@ -36,19 +40,22 @@ var webApi = builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
     .WithReference(cache)
     .WaitFor(cache);
 
-builder
-    .AddNpmApp("UI", "../MyWhiskyShelf.Frontend")
-    .WithHttpEndpoint(env: "VITE_PORT")
-    .WithReference(webApi)
-    .WaitFor(webApi)
-    .WithReference(keycloak)
-    .WaitFor(keycloak)
-    .WithEnvironment("BROWSER", "none")
-    .WithExternalHttpEndpoints()
-    .WithEnvironment("VITE_KEYCLOAK_URL", keycloak.GetEndpoint("http"))
-    .WithEnvironment("VITE_KEYCLOAK_REALM", "mywhiskyshelf")
-    .WithEnvironment("VITE_KEYCLOAK_CLIENT_ID", "mywhiskyshelf-frontend")
-    .WithEnvironment("VITE_PORT", "5173");
+if (builder.Configuration.GetValue("MYWHISKYSHELF_UI_ENABLED", true))
+{
+    builder
+        .AddNpmApp("UI", "../MyWhiskyShelf.Frontend")
+        .WithHttpEndpoint(env: "VITE_PORT")
+        .WithReference(webApi)
+        .WaitFor(webApi)
+        .WithReference(keycloak)
+        .WaitFor(keycloak)
+        .WithEnvironment("BROWSER", "none")
+        .WithExternalHttpEndpoints()
+        .WithEnvironment("VITE_KEYCLOAK_URL", keycloak.GetEndpoint("http"))
+        .WithEnvironment("VITE_KEYCLOAK_REALM", "mywhiskyshelf")
+        .WithEnvironment("VITE_KEYCLOAK_CLIENT_ID", "mywhiskyshelf-frontend")
+        .WithEnvironment("VITE_PORT", "5173");
+}
 
 
 if (runMigrations)

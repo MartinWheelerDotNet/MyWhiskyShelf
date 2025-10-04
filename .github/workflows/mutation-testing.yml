@@ -80,7 +80,8 @@ jobs:
                 "LogWarning"
               ],
               "mutate": [
-                "!**/MyWhiskyShelf.Migrations/**"
+                "!**/MyWhiskyShelf.Migrations/**",
+                "!**/MyWhiskyShelf.Frontend/**"
               ]
             }
           }
@@ -110,7 +111,8 @@ jobs:
                 "LogWarning"
               ],
               "mutate": [
-                "!**/MyWhiskyShelf.Migrations/**"
+                "!**/MyWhiskyShelf.Migrations/**",
+                "!**/MyWhiskyShelf.Frontend/**"
               ]
             }
           }

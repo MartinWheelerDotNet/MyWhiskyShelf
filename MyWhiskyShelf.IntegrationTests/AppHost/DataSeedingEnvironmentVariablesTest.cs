@@ -8,19 +8,25 @@ namespace MyWhiskyShelf.IntegrationTests.AppHost;
 [Collection("DataSeeding")]
 public class DataSeedingEnvironmentVariablesTest
 {
+    private static string[] GetArgs(bool? enableDataSeeding) {
+        List<string> args = [
+            "--no-launch-profile",
+            "MYWHISKYSHELF_UI_ENABLED=false",
+            "MYWHISKYSHELF_PG_WEB_ENABLED=false",
+            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false",
+            "MYWHISKYSHELF_RUN_MIGRATIONS=true",
+          
+        ];
+        if (enableDataSeeding.HasValue) {
+            args.Add($"MYWHISKYSHELF_DATA_SEEDING_ENABLED={enableDataSeeding}");
+        }
+        return args.ToArray();
+    } 
+    
     [Fact]
     public async Task When_AppHostDataSeedingIsTrue_Expect_DistilleryEntriesReturned()
     {
-        var args = new[]
-        {
-            "--no-launch-profile",
-            "MYWHISKYSHELF_RUN_MIGRATIONS=true",
-            "MYWHISKYSHELF_DATA_SEEDING_ENABLED=true",
-            "MYWHISKYSHELF_PG_WEB_ENABLED=false",
-            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
-        };
-
-        await using var application = await FixtureFactory.StartAsync(args);
+        await using var application = await FixtureFactory.StartAsync(GetArgs(true));
         using var httpClient = await application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.GetAsync("/distilleries");
@@ -32,15 +38,7 @@ public class DataSeedingEnvironmentVariablesTest
     [Fact]
     public async Task When_AppHostDataSeedingNotSet_Expect_DistilleryEntriesReturned()
     {
-        var args = new[]
-        {
-            "--no-launch-profile",
-            "MYWHISKYSHELF_RUN_MIGRATIONS=true",
-            "MYWHISKYSHELF_PG_WEB_ENABLED=false",
-            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
-        };
-
-        await using var application = await FixtureFactory.StartAsync(args);
+        await using var application = await FixtureFactory.StartAsync(GetArgs(null));
         using var httpClient = await application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.GetAsync("/distilleries");
@@ -52,16 +50,7 @@ public class DataSeedingEnvironmentVariablesTest
     [Fact]
     public async Task When_AppHostDataSeedingIsFalse_Expect_NoDistilleryEntriesReturned()
     {
-        var args = new[]
-        {
-            "--no-launch-profile",
-            "MYWHISKYSHELF_RUN_MIGRATIONS=true",
-            "MYWHISKYSHELF_DATA_SEEDING_ENABLED=false",
-            "MYWHISKYSHELF_PG_WEB_ENABLED=false",
-            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
-        };
-
-        await using var application = await FixtureFactory.StartAsync(args);
+        await using var application = await FixtureFactory.StartAsync(GetArgs(false));
         using var httpClient = await application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.GetAsync("/distilleries");

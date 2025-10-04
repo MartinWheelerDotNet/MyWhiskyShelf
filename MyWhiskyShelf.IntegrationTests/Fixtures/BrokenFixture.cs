@@ -10,15 +10,7 @@ public class BrokenFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        string[] args = 
-        [
-            "MYWHISKYSHELF_RUN_MIGRATIONS=true",
-            "MYWHISKYSHELF_DATA_SEEDING_ENABLED=false",
-            "MYWHISKYSHELF_PG_WEB_ENABLED=false",
-            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
-        ];
-        Application = await FixtureFactory.StartAsync(args);
-
+        Application = await FixtureFactory.StartAsync(FixtureFactory.DefaultTestingArguments);
         await BreakDatabaseAsync();
     }
 

@@ -25,15 +25,7 @@ public class WorkingFixture : IAsyncLifetime
     
     public virtual async Task InitializeAsync()
     {
-        _seededEntityDetails.Clear();
-        string[] args =
-        [
-            "MYWHISKYSHELF_RUN_MIGRATIONS=true",
-            "MYWHISKYSHELF_DATA_SEEDING_ENABLED=false",
-            "MYWHISKYSHELF_PG_WEB_ENABLED=false",
-            "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
-        ];
-        Application = await FixtureFactory.StartAsync(args);
+        Application = await FixtureFactory.StartAsync(FixtureFactory.DefaultTestingArguments);
     }
 
     public (string Name, Guid Id) GetSeededEntityDetailByTypeAndMethod(HttpMethod method, EntityType entity)

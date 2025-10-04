@@ -15,6 +15,7 @@
     "LogWarning"
   ],
   "mutate": [
-    "!**/MyWhiskyShelf.Migrations/**"
+    "!**/MyWhiskyShelf.Migrations/**",
+    "!**/MyWhiskyShelf.Frontend/**"
   ]
 }
