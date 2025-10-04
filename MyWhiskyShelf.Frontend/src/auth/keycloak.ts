@@ -4,9 +4,10 @@ export const KC_INIT_OPTIONS: KeycloakInitOptions = {
     onLoad: "check-sso",
     pkceMethod: "S256",
     silentCheckSsoRedirectUri:
-        typeof window !== "undefined"
-            ? `${window.location.origin}/silent-check-sso.html`
-            : undefined,
+        typeof globalThis === "undefined"
+            ? undefined
+            : `${globalThis.location.origin}/silent-check-sso.html`
+            
 };
 
 function createKeycloak(): Keycloak {
