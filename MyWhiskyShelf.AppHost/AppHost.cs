@@ -5,10 +5,19 @@ using Projects;
 var builder = DistributedApplication.CreateBuilder(args);
 
 var postgres = builder.AddPostgres("postgres");
+
 var database = postgres.AddDatabase("myWhiskyShelfDb");
-var cache = builder.AddRedis("cache");
-var keycloak = builder.AddKeycloak("keycloak", 8080)
-    .WithRealmImport("./Realms");
+
+var cache = builder
+    .AddRedis("cache")
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithContainerName("mws-redis");
+
+var keycloak = builder
+    .AddKeycloak("keycloak", 8080)
+    .WithRealmImport("./Realms")
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithContainerName("mws-keycloak");
 
 if (builder.Environment.IsDevelopment())
 {
@@ -22,16 +31,32 @@ if (builder.Environment.IsDevelopment())
 var enableDataSeeding = builder.Configuration.GetValue("MYWHISKYSHELF_DATA_SEEDING_ENABLED", true);
 var runMigrations = builder.Configuration.GetValue("MYWHISKYSHELF_RUN_MIGRATIONS", true);
 
-var webApiProjectBuilder = builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
+var webApi = builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
     .WithReference(keycloak)
-    .WaitFor(keycloak);
-
-webApiProjectBuilder
+    .WaitFor(keycloak)
     .WithEnvironment("MYWHISKYSHELF_DATA_SEEDING_ENABLED", enableDataSeeding.ToString())
     .WithReference(database)
     .WaitFor(database)
     .WithReference(cache)
     .WaitFor(cache);
+
+if (builder.Configuration.GetValue("MYWHISKYSHELF_UI_ENABLED", true))
+{
+    builder
+        .AddNpmApp("UI", "../MyWhiskyShelf.Frontend")
+        .WithHttpEndpoint(env: "VITE_PORT")
+        .WithReference(webApi)
+        .WaitFor(webApi)
+        .WithReference(keycloak)
+        .WaitFor(keycloak)
+        .WithEnvironment("BROWSER", "none")
+        .WithExternalHttpEndpoints()
+        .WithEnvironment("VITE_KEYCLOAK_URL", keycloak.GetEndpoint("http"))
+        .WithEnvironment("VITE_KEYCLOAK_REALM", "mywhiskyshelf")
+        .WithEnvironment("VITE_KEYCLOAK_CLIENT_ID", "mywhiskyshelf-frontend")
+        .WithEnvironment("VITE_PORT", "5173");
+}
+
 
 if (runMigrations)
 {
@@ -39,7 +64,7 @@ if (runMigrations)
         .WithReference(database)
         .WaitFor(database);
     
-    webApiProjectBuilder
+    webApi
         .WithReference(migrations)
         .WaitForCompletion(migrations);
 }
