@@ -59,23 +59,23 @@ jobs:
           mkdir -p TestResults
           npx vitest run \
             --reporter=default \
-            --reporter=junit --outputFile=./TestResults/vitest-junit.xml \
+            --reporter=junit --outputFile=MyWhiskyShelf.Frontend/TestResults/vitest-junit.xml \
             --coverage.enabled=true --coverage.reporter=lcov --coverage.reporter=html
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
         with:
           name: frontend-test-results
-          path: ./TestResults
+          path: MyWhiskyShelf.Frontend/TestResults
 
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage
           path: |
-            coverage/lcov.info
-            coverage/index.html
-            coverage/**/*
+            MyWhiskyShelf.Frontend/coverage/lcov.info
+            MyWhiskyShelf.Frontend/coverage/index.html
+            MyWhiskyShelf.Frontend/coverage/**/*
           if-no-files-found: ignore
   
   test:
