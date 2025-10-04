@@ -5,7 +5,7 @@ namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 
 public static class FixtureFactory
 {
-    public static string[] DefaultTestingArguments =
+    public static readonly string[] DefaultTestingArguments =
     [
         "--no-launch-profile",
         "MYWHISKYSHELF_RUN_MIGRATIONS=true",

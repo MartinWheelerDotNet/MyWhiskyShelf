@@ -14,7 +14,7 @@ public class DataSeedingEnvironmentVariablesTest
             "MYWHISKYSHELF_UI_ENABLED=false",
             "MYWHISKYSHELF_PG_WEB_ENABLED=false",
             "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false",
-            "MYWHISKYSHELF_RUN_MIGRATIONS=true",
+            "MYWHISKYSHELF_RUN_MIGRATIONS=true"
           
         ];
         if (enableDataSeeding.HasValue) {
