@@ -12,6 +12,6 @@ export default function AccountMenuActions() {
     return authenticated ? (
         <AccountMenu username={username || email || "Account" } initials={initials} onLogout={logout} />
     ) : (
-        <SignInAction onLogin={() => void login()} />
+        <SignInAction onLogin={() => login()} />
     );
 }

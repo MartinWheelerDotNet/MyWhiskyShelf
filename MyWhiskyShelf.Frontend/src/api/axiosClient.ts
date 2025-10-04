@@ -32,7 +32,10 @@ export function installInterceptors(opts: InstallInterceptorsOptions = {}): Inst
     } = opts;
 
     const onRequest = (config: InternalAxiosRequestConfig) => {
-        const lsToken = (typeof localStorage !== "undefined") ? localStorage.getItem("token") ?? undefined : undefined;
+        const lsToken = (typeof localStorage === "undefined") 
+            ? undefined 
+            : localStorage.getItem("token") ?? undefined;
+        
         const token = lsToken ?? getToken();
         if (token) {
             config.headers = config.headers ?? {};
@@ -50,7 +53,7 @@ export function installInterceptors(opts: InstallInterceptorsOptions = {}): Inst
             await Promise.resolve(login(redirectUri));
             return new Promise<never>(() => {});
         }
-        return Promise.reject(error);
+        throw error;
     };
 
     axiosInstance.interceptors.request.use(onRequest);
