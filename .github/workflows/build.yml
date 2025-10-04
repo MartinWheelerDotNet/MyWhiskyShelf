@@ -56,9 +56,10 @@ jobs:
       
       - name: Run Vitest
         run: |
+          mkdir -p TestResults
           npx vitest run \
             --reporter=default \
-            --reporter=junit --outputFile=/TestResults/vitest-junit.xml \
+            --reporter=junit --outputFile=./TestResults/vitest-junit.xml \
             --coverage.enabled=true --coverage.reporter=lcov --coverage.reporter=html
 
       - name: Upload test results
