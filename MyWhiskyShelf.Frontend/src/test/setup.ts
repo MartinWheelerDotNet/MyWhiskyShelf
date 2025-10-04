@@ -18,7 +18,7 @@ export function makeMockLocalStorage() {
 }
 
 export function stubLocation() {
-    const realLocation = window.location;
+    const realLocation = globalThis.location;
     delete (globalThis as any).location;
     globalThis.location = {
         ...realLocation,
