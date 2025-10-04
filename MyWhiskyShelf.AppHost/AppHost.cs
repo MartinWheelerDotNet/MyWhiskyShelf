@@ -42,19 +42,19 @@ var webApi = builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
 
 if (builder.Configuration.GetValue("MYWHISKYSHELF_UI_ENABLED", true))
 {
+    const int vitePort = 5173; 
     builder
         .AddNpmApp("UI", "../MyWhiskyShelf.Frontend")
-        .WithHttpEndpoint(env: "VITE_PORT")
-        .WithReference(webApi)
-        .WaitFor(webApi)
-        .WithReference(keycloak)
-        .WaitFor(keycloak)
         .WithEnvironment("BROWSER", "none")
-        .WithExternalHttpEndpoints()
         .WithEnvironment("VITE_KEYCLOAK_URL", keycloak.GetEndpoint("http"))
         .WithEnvironment("VITE_KEYCLOAK_REALM", "mywhiskyshelf")
         .WithEnvironment("VITE_KEYCLOAK_CLIENT_ID", "mywhiskyshelf-frontend")
-        .WithEnvironment("VITE_PORT", "5173");
+        .WithEnvironment("VITE_PORT", vitePort.ToString())
+        .WithHttpEndpoint(port: vitePort, env: "VITE_PORT")
+        .WithReference(webApi)
+        .WaitFor(webApi)
+        .WithReference(keycloak)
+        .WaitFor(keycloak);
 }
 
 
