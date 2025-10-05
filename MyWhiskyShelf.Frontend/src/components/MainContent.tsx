@@ -1,5 +1,8 @@
 import { Container, Typography } from "@mui/material";
-import {useUser} from "../hooks/useUser.ts";
+
+// @ts-ignore
+import {useUser} from "@/hooks/useUser";
+import DistilleriesDashboard from "../pages/DistilleriesDashboard";
 
 export default function MainContent() {
     const { initialized, authenticated } = useUser();
@@ -15,10 +18,7 @@ export default function MainContent() {
     return (
         <Container sx={{ py: 4 }}>
         {authenticated ? (
-            <div>
-                <Typography variant="h5">You’re signed in. Next step: call protected APIs.</Typography>
-            </div>
-            
+            <DistilleriesDashboard />
         ) : (
             <Typography variant="h5">Welcome to MyWhiskyShelf</Typography>
         )}

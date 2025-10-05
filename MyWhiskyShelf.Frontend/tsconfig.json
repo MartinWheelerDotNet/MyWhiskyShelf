@@ -5,7 +5,11 @@
     "module": "esnext",
     "target": "esnext",
     "jsx": "react-jsx",
-    "types": ["vitest", "vite/client", "@testing-library/jest-dom"]
+    "types": ["vitest", "vite/client", "@testing-library/jest-dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "references": [
     { "path": "./tsconfig.app.json" },

@@ -1,7 +1,8 @@
 import LoadingAction from "./header/LoadingAction";
 import SignInAction from "./header/SignInAction";
 import AccountMenu from "./header/AccountMenu";
-import {useUser} from "../hooks/useUser.ts";
+// @ts-ignore
+import {useUser} from "@/hooks/useUser";
 
 export default function AccountMenuActions() {
     const { initialized, authenticated, username, firstName, lastName, email, login, logout } = useUser();
