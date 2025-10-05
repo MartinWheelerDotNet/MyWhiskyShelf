@@ -8,12 +8,24 @@ export default defineConfig({
         globals: true,
         reporters: ["default", "junit"],
         outputFile: "./TestResults/vitest-junit.xml",
+        includeSource: ["src/**/*.{ts,tsx}"],
         coverage: {
             provider: "v8",
+            all: true,
+            include: ["src/**/*.{ts,tsx}"],
+            exclude: [
+                "src/**/__tests__/**",
+                "src/**/*.test.*",
+                "src/test/**",
+                "src/**/stories/**",
+                "**/node_modules/**",
+                "**/dist/**",
+            ],
             reporter: ["lcov", "html", "text-summary"],
             reportsDirectory: "coverage",
-            include: ["src/**/*.{ts,tsx}"],
-            exclude: ["**/*.test.*", "**/__tests__/**", "test/**"],
+        },
+        environmentOptions: {
+            jsdom: { url: "http://localhost/" },
         },
     },
     resolve: {
