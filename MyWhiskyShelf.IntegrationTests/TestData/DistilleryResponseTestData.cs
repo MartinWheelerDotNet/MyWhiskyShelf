@@ -15,6 +15,8 @@ public static class DistilleryResponseTestData
             Founded = 2000,
             Owner = "Owner",
             Type = "Type",
+            Description = "Description",
+            TastingNotes = "TastingNotes",
             FlavourProfile = FlavourProfileTestData.Generic,
             Active = true
         };

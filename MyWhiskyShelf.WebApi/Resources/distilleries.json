@@ -1,55 +1,55 @@
 [
   {
     "Name": "Aberargie",
-    "Country": "Aberargie",
+    "Country": "Scotland",
     "Region": "Lowland",
     "Founded": 2017,
     "Owner": "Perth Distilling Co",
     "Type": "Malt",
-    "Description": "Description",
-    "TastingNotes": "TastingNotes",
+    "Description": "Farm-to-bottle distillery near Perth crafting rich, fruity spirit with a gentle waxy texture and soft Highland character.",
+    "TastingNotes": "Fresh pear, vanilla, and honeyed malt with a smooth, mellow palate and a light oak-spiced finish.",
     "FlavourProfile": {
-      "Sweet": 10,
-      "Fruit": 8,
-      "Peat": 6,
-      "Spice": 4,
-      "Body": 0
+      "Sweet": 6,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 3,
+      "Body": 5
     },
     "Active": true
   },
   {
     "Name": "Aberfeldy",
-    "Country": "Aberfeldy",
+    "Country": "Scotland",
     "Region": "Highland",
     "Founded": 1896,
     "Owner": "John Dewar & Sons",
     "Type": "Malt",
-    "Description": "Description",
-    "TastingNotes": "TastingNotes",
+    "Description": "Known as “The Golden Dram,” Aberfeldy produces honey-rich Highland whisky with smooth fruit and gentle spice.",
+    "TastingNotes": "Honeycomb, apple, and citrus over buttery malt; soft spice and oak warmth on the finish.",
     "FlavourProfile": {
-      "Sweet": 6,
-      "Fruit": 2,
+      "Sweet": 7,
+      "Fruit": 6,
       "Peat": 1,
-      "Spice": 3,
-      "Body": 9
+      "Spice": 4,
+      "Body": 6
     },
     "Active": true
   },
   {
     "Name": "Aberlour",
-    "Country": "Aberlour",
+    "Country": "Scotland",
     "Region": "Speyside",
     "Founded": 1879,
     "Owner": "Chivas Brothers",
     "Type": "Malt",
-    "Description": "Description",
-    "TastingNotes": "TastingNotes",
+    "Description": "Speyside distillery famed for rich, sherried malts combining fruit sweetness with deep oak spice.",
+    "TastingNotes": "Red apple, toffee, and orange zest with warming cinnamon, vanilla, and a smooth, lingering finish.",
     "FlavourProfile": {
-      "Sweet": 0,
-      "Fruit": 0,
-      "Peat": 0,
-      "Spice": 0,
-      "Body": 0
+      "Sweet": 7,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 5,
+      "Body": 7
     },
     "Active": true
   }

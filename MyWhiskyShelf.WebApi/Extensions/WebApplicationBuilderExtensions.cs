@@ -1,4 +1,7 @@
+using System.Security.Claims;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using static MyWhiskyShelf.WebApi.Constants.Authentication;
 
 namespace MyWhiskyShelf.WebApi.Extensions;
@@ -25,7 +28,7 @@ public static class WebApplicationBuilderExtensions
                 options =>
                 {
                     options.Audience = "mywhiskyshelf-api";
-                    
+
                     /*
                      * When using RequireHttpsMetadata = true (the default), the JWT Bearer authentication requires
                      * the Authority URL to use HTTPS. However, .NET Aspire service discovery uses the
@@ -47,6 +50,58 @@ public static class WebApplicationBuilderExtensions
                                 "Authentication:Authority must be HTTPS in Production.");
                         options.Authority = authority;
                     }
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        RoleClaimType = ClaimTypes.Role,
+                        NameClaimType = ClaimTypes.Name
+                    };
+
+                    options.Events = JwtEvents;
                 });
+    }
+
+    private static JwtBearerEvents JwtEvents =>
+         new()
+         {
+            OnTokenValidated = ctx =>
+            {
+                if (ctx.Principal?.Identity is not ClaimsIdentity identity) 
+                    return Task.CompletedTask;
+
+                
+
+                var realmAccessJson = ctx.Principal!.FindFirst("realm_access")?.Value;
+                if (string.IsNullOrWhiteSpace(realmAccessJson)) 
+                    return Task.CompletedTask;
+                
+                try
+                {
+                    using var doc = JsonDocument.Parse(realmAccessJson);
+                    if (doc.RootElement.TryGetProperty("roles", out var rolesEl) &&
+                        rolesEl.ValueKind == JsonValueKind.Array)
+                    {
+                        var roles = rolesEl.EnumerateArray()
+                            .Where(x => x.ValueKind == JsonValueKind.String)
+                            .Select(x => x.GetString()!)
+                            .ToArray();
+                        AddRoles(identity, roles);
+                    }
+                }
+                catch
+                {
+                    // ignore malformed JSON
+                }
+
+                return Task.CompletedTask;
+            }
+        };
+    
+    private static void AddRoles(ClaimsIdentity id, IEnumerable<string>? roles)
+    {
+        if (roles == null) return;
+        
+        foreach (var role in roles.Where(role => !string.IsNullOrWhiteSpace(role)))
+            id.AddClaim(new Claim(ClaimTypes.Role, role));
     }
 }

@@ -1,96 +1,105 @@
 import * as React from "react";
-import {Container, Grid} from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 // @ts-ignore
-import DistilleryCard, {DistilleryCardProps} from "@/components/DistilleryCard";
+import DistilleryCard from "@/components/DistilleryCard";
 // @ts-ignore
 import DistilleriesToolbar from "@/components/DistilleriesToolbar";
-
-type FilterMenuOptions = {
-    value: string;
-    label: string;
-}
-
-const MOCK_DISTILLERY_CARD_PROPS: DistilleryCardProps[] = [
-    {
-        id: "ardbeg",
-        name: "Ardbeg",
-        region: "Islay",
-        country: "Scotland",
-        founded: 1815,
-        isFavorite: true,
-        whiskiesCount: 17,
-        about: "Renowned for intensely peated single malts with maritime character.",
-        notes: "Smoke, iodine, sea spray, citrus.",
-        logoUrl: "/media/images/distilleries/ardbeg-logo.png",
-    },
-    {
-        id: "yamazaki",
-        name: "Yamazaki",
-        region: "Kansai",
-        country: "Japan",
-        founded: 1923,
-        whiskiesCount: 9,
-        about: "Japan’s first and oldest malt whisky distillery; elegant, complex style.",
-        logoUrl: "/media/images/distilleries/yamazaki-logo.png",
-    },
-];
-
-const MOCK_COUNTRY_OPTIONS: FilterMenuOptions[] = [
-    { 
-        value: "japan", 
-        label: "Japan" 
-    },
-    { 
-        value: "scotland",
-        label: "Scotland" 
-    },
-]
-
-const MOCK_REGION_OPTIONS: FilterMenuOptions[] = [
-    {
-        value: "islay",
-        label: "Islay"
-    },
-    {
-        value: "kansai",
-        label: "Kansai"
-    },
-]
+// @ts-ignore
+import { useFetchAllDistilleries } from "@/hooks/useFetchAllDistilleries";
+// @ts-ignore
+import { toCardProps } from "@/hooks/mapDistillery";
 
 export default function DistilleriesDashboard() {
-    const [pattern, setPattern] = React.useState("");
+    const { data, loading, error, refresh } = useFetchAllDistilleries();
+
+    const [query, setQuery] = React.useState("");
     const [region, setRegion] = React.useState<string>("all");
     const [country, setCountry] = React.useState<string>("all");
 
+    const cards = React.useMemo(() => data.map(toCardProps), [data]);
+
     const filtered = React.useMemo(() => {
-        const query = pattern.trim().toLowerCase();
-        return MOCK_DISTILLERY_CARD_PROPS.filter((d) => {
+        const q = query.trim().toLowerCase();
+        return cards.filter((d : any) => {
             const okRegion = region === "all" || d.region?.toLowerCase() === region;
             const okCountry = country === "all" || d.country?.toLowerCase() === country;
             const okQuery =
-                !query ||
-                d.name.toLowerCase().includes(query) ||
-                d.region?.toLowerCase().includes(query) ||
-                d.country?.toLowerCase().includes(query);
+                !q ||
+                d.name.toLowerCase().includes(q) ||
+                d.region?.toLowerCase().includes(q) ||
+                d.country?.toLowerCase().includes(q);
             return okRegion && okCountry && okQuery;
         });
-    }, [pattern, region, country]);
+    }, [query, region, country, cards]);
+
+    const countryOptions = React.useMemo(
+        () => [
+            { value: "all", label: "All" },
+            ...Array.from(new Set(cards.map((d : any) => d.country).filter(Boolean))).map((c) => ({
+                value: String(c).toLowerCase(),
+                label: String(c),
+            })),
+        ],
+        [cards]
+    );
+
+    const regionOptions = React.useMemo(
+        () => [
+            { value: "all", label: "All" },
+            ...Array.from(new Set(cards.map((d : any) => d.region).filter(Boolean))).map((r) => ({
+                value: String(r).toLowerCase(),
+                label: String(r),
+            })),
+        ],
+        [cards]
+    );
+
+    if (loading) {
+        return (
+            <Container maxWidth="lg" sx={{ py: 3 }}>
+                <Typography>Loading distilleries…</Typography>
+            </Container>
+        );
+    }
+
+    if (error) {
+        return (
+            <Container maxWidth="lg" sx={{ py: 3 }}>
+                <Typography color="error" sx={{ mb: 2 }}>
+                    Failed to load distilleries.
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 2 }}>
+                    {(error as any)?.message ?? "Please try again."}
+                </Typography>
+                <Typography
+                    role="button"
+                    tabIndex={0}
+                    sx={{ textDecoration: "underline", cursor: "pointer" }}
+                    onClick={() => refresh()}
+                    onKeyDown={(e) => e.key === "Enter" && refresh()}
+                >
+                    Retry
+                </Typography>
+            </Container>
+        );
+    }
 
     return (
         <Container maxWidth="lg" sx={{ py: 3 }}>
             <DistilleriesToolbar
                 title="Distilleries"
-                query={pattern}
-                onQueryChange={setPattern}
+                query={query}
+                onQueryChange={setQuery}
                 country={country}
                 onCountryChange={setCountry}
                 region={region}
                 onRegionChange={setRegion}
-                countryOptions={MOCK_COUNTRY_OPTIONS}
-                regionOptions={MOCK_REGION_OPTIONS}
+                countryOptions={countryOptions}
+                regionOptions={regionOptions}
             />
+
             <Grid container spacing={1}>
-                {filtered.map((d) => (
+                {filtered.map((d : any) => (
                     <Grid key={d.id} size={{ xs: 12, sm: 6, md: 12 }}>
                         <DistilleryCard {...d} />
                     </Grid>
