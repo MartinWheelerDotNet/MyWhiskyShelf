@@ -1,53 +1,36 @@
-import {
-    AppBar,
-    Toolbar,
-    Box
-} from "@mui/material";
-
-import AccountMenuActions from "./components/AccountMenuActions.tsx";
-import MainContent from "./components/MainContent.tsx";
-import ThemeToggle from "./components/ThemeToggle.tsx";
-import ThemeToggleMobile from "./components/ThemeToggleMobile.tsx";
+import { Box, Link } from "@mui/material";
+// @ts-ignore
+import MainContent from "@/components/MainContent";
+// @ts-ignore
+import HeaderBar from "@/components/header/HeaderBar";
 
 export default function App() {
     return (
-        <Box sx={{ minHeight: "100vh" }}>
-            <AppBar position="static" elevation={1} color="transparent">
-                <Toolbar sx={{ bgcolor: "transparent", position: "relative" }} variant="dense">
-                    <Box
-                        component="img"
-                        src="/media/images/mywhiskyshelf-logo-horizontal.png"
-                        alt="MyWhiskyShelf Logo"
-                        sx={(theme) => ({
-                            position: "absolute",
-                            left: 0,
-                            pl: 2,
-                            height: 32,
-                            objectFit: "contain",
-                            pointerEvents: "none",
-                            userSelect: "none",
-                            filter:
-                                theme.palette.mode === "dark"
-                                    ? "brightness(1) invert(1)"
-                                    : "none",
-                        })}
-                    />
-
-                    
-                    <Box sx={{ ml: "auto", display: "flex", alignItems: "center", gap: 0.5 }}>
-                        <Box sx={{ display: { xs: "inline-flex", sm: "none" } }}>
-                            <ThemeToggleMobile />
-                        </Box>
-
-                        <Box sx={{ display: { xs: "none", sm: "inline-flex" } }}>
-                            <ThemeToggle />
-                        </Box>
-
-                        <AccountMenuActions />
-                    </Box>
-                </Toolbar>
-            </AppBar>
-            <MainContent />
+        <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+            {/* Skip link for keyboard users */}
+            <Link
+                href="#main"
+                underline="none"
+                sx={{
+                    position: "absolute",
+                    left: -9999,
+                    top: 0,
+                    p: 1,
+                    bgcolor: "background.paper",
+                    borderRadius: 1,
+                    "&:focus": { left: 8, top: 8, zIndex: 1200, boxShadow: 3 },
+                }}
+            >
+                Skip to content
+            </Link>
+            <HeaderBar />
+            <Box
+                component="main"
+                id="main"
+                sx={{ outline: 0, flex: 1 }}
+            >
+                <MainContent />
+            </Box>
         </Box>
     );
 }

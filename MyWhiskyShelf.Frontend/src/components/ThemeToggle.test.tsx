@@ -15,7 +15,29 @@ vi.mock("../theme/ThemeModeProvider", () => ({
 import ThemeToggle from "./ThemeToggle";
 
 function renderWithMode(ui: React.ReactNode, mode: "light" | "dark") {
-    const theme = createTheme({ palette: { mode } });
+    const thumb = mode === "dark" ? "#1a1e38" : "#ebe713";
+
+    const theme = createTheme({
+        palette: { mode },
+        app: {
+            controls: {
+                modeToggle: {
+                    thumb,
+                    icon: "#ffffff",
+                    track: {
+                        light: "linear-gradient(90deg, #f0b429 0%, #ff8ba7 100%)",
+                        dark: "linear-gradient(90deg, #34b1eb 0%, #0e4f6e 100%)",
+                    },
+                    width: 70,
+                    height: 46,
+                    padding: 10,
+                    thumbSize: 20,
+                    leftThumbPos: 12,
+                },
+            },
+        },
+    } as any);
+
     return render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
 }
 

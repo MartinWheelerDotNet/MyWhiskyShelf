@@ -4,7 +4,7 @@ import {COLOURS} from "./tokens";
 
 export function createAppTheme(mode: PaletteMode) {
     const themeColours = COLOURS[mode];
-    const gradientLight    = lighten(themeColours.base, 0.15);
+    const gradientLight  = lighten(themeColours.base, 0.15);
     const gradientDark = darken(themeColours.base, 0.5);
 
     return createTheme({
@@ -25,7 +25,39 @@ export function createAppTheme(mode: PaletteMode) {
                 active: themeColours.accent,
             },
         },
-        
+        app: {
+            brand: {
+                logoSrc: "/media/images/mywhiskyshelf-logo-horizontal.png",
+                logoHeight: 32,
+                logoFilterLight: "none",
+                logoFilterDark: "brightness(1) invert(1)",
+            },
+            layout: {
+                appBarPosition: "static",
+                appBarElevation: 1,
+                appBarColor: "transparent",
+                appBarBg: "transparent",
+            },
+            controls: {
+                modeToggle: {
+                    thumb: themeColours.modeToggle,
+                    icon: "#ffffff",
+                    track: {
+                        light: "linear-gradient(90deg, #f0b429 0%, #ff8ba7 100%)",
+                        dark:  "linear-gradient(90deg, #34b1eb 0%, #0e4f6e 100%)",
+                    },
+                    palette: {
+                        lightThumb: COLOURS.light.modeToggle,
+                        darkThumb:  COLOURS.dark.modeToggle,
+                    },
+                    width: 70,
+                    height: 46,
+                    padding: 10,
+                    thumbSize: 20,
+                    leftThumbPos: 12,
+                },
+            },
+        },
         components: {
             MuiCssBaseline: {
                 styleOverrides: {
