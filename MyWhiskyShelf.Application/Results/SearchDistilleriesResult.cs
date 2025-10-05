@@ -10,5 +10,5 @@ public enum SearchDistilleriesOutcome
 
 public sealed record SearchDistilleriesResult(
     SearchDistilleriesOutcome Outcome,
-    IReadOnlyList<DistilleryName>? DistilleryNames = null,
+    IReadOnlyList<Distillery>? Distilleries = null,
     string? Error = null);

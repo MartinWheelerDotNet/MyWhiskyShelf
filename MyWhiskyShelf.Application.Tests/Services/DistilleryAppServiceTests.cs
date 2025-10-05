@@ -117,19 +117,20 @@ public class DistilleryAppServiceTests
     [Fact]
     public async Task When_SearchAndTwoDistilleriesFound_Expect_SuccessWithListOfTwoDistilleriesNames()
     {
-        List<DistilleryName> expectedDistilleryNames =
+        List<Distillery> expectedDistilleries =
         [
-            new(Guid.NewGuid(), "Distillery A"),
-            new(Guid.NewGuid(), "Distillery B")
+            DistilleryTestData.Generic with { Name = "First Distillery" },
+            DistilleryTestData.Generic with { Name = "Second Distillery" }
         ];
+        
         _mockRead.Setup(r => r.SearchByNameAsync("Distillery", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(expectedDistilleryNames);
+            .ReturnsAsync(expectedDistilleries);
         
         var result = await _service.SearchByNameAsync("Distillery");
         
         Assert.Multiple(
             () => Assert.Equal(SearchDistilleriesOutcome.Success, result.Outcome),
-            () => Assert.Equal(expectedDistilleryNames, result.DistilleryNames));
+            () => Assert.Equal(expectedDistilleries, result.Distilleries));
     }
     
     [Fact]
@@ -142,7 +143,7 @@ public class DistilleryAppServiceTests
         
         Assert.Multiple(
             () => Assert.Equal(SearchDistilleriesOutcome.Success, result.Outcome),
-            () => Assert.Empty(result.DistilleryNames!));
+            () => Assert.Empty(result.Distilleries!));
     }
     
     [Fact]

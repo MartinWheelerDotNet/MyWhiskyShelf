@@ -38,7 +38,6 @@ declare module "@mui/material/styles" {
         };
     }
 
-    /** Allow partial values at theme creation */
     interface ThemeOptions {
         app?: {
             brand?: AppBrand;

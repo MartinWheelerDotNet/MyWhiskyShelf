@@ -6,7 +6,7 @@ namespace MyWhiskyShelf.Infrastructure.Tests.Persistence.Mapping;
 public class DistilleryEntityMappingTests
 {
     [Fact]
-    public void When_MappingDistilleryEntityToDomainWithAllFields_Expect_DistilleryMatchesMatches()
+    public void When_MappingDistilleryEntityToDomainWithAllFields_Expect_DistilleryMatches()
     {
         var distilleryEntity = new DistilleryEntityBuilder().WithId(Guid.NewGuid()).Build();
 
@@ -15,12 +15,12 @@ public class DistilleryEntityMappingTests
         Assert.Multiple(
             () => Assert.Equal(distilleryEntity.Id, domain.Id),
             () => Assert.Equal(distilleryEntity.Name, domain.Name),
-            () => Assert.Equal(distilleryEntity.Location, domain.Location),
+            () => Assert.Equal(distilleryEntity.Country, domain.Country),
             () => Assert.Equal(distilleryEntity.Region, domain.Region),
             () => Assert.Equal(distilleryEntity.Founded, domain.Founded),
             () => Assert.Equal(distilleryEntity.Owner, domain.Owner),
             () => Assert.Equal(distilleryEntity.Type, domain.Type),
-            () => Assert.Equal(distilleryEntity.FlavourProfile, domain.FlavourProfile),
+            () => Assert.Equal(distilleryEntity.FlavourVector, domain.FlavourProfile.ToVector()),
             () => Assert.Equal(distilleryEntity.Active, domain.Active));
     }
 

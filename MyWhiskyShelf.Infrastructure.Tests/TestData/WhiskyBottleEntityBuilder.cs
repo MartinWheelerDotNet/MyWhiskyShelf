@@ -31,7 +31,7 @@ public sealed class WhiskyBottleEntityBuilder
             VolumeRemainingCl = 35,
             AddedColouring = true,
             ChillFiltered = true,
-            FlavourProfile = FlavourProfileTestData.Mixed
+            FlavourVector = FlavourProfileTestData.GenericVector
         };
     }
 }

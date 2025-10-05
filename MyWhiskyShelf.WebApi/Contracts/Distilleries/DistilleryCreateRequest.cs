@@ -6,11 +6,13 @@ namespace MyWhiskyShelf.WebApi.Contracts.Distilleries;
 public record DistilleryCreateRequest
 {
     public required string Name { get; init; }
-    public required string Location { get; init; }
+    public required string Country { get; init; }
     public required string Region { get; init; }
     public required int Founded { get; init; }
     public required string Owner { get; init; }
     public required string Type { get; init; }
+    public required string Description { get; init; }
+    public required string TastingNotes { get; init; }
     public FlavourProfile? FlavourProfile { get; init; }
     public required bool Active { get; init; }
 }

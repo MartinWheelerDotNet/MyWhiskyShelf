@@ -27,7 +27,7 @@ public class WhiskyBottleEntityMappingTests
             () => Assert.Equal(whiskyBottleEntity.VolumeRemainingCl, domain.VolumeRemainingCl),
             () => Assert.Equal(whiskyBottleEntity.AddedColouring, domain.AddedColouring),
             () => Assert.Equal(whiskyBottleEntity.ChillFiltered, domain.ChillFiltered),
-            () => Assert.Equal(whiskyBottleEntity.FlavourProfile, domain.FlavourProfile)
+            () => Assert.Equal(whiskyBottleEntity.FlavourVector, domain.FlavourProfile.ToVector())
         );
     }
 
@@ -52,7 +52,7 @@ public class WhiskyBottleEntityMappingTests
             () => Assert.Equal(domain.VolumeRemainingCl, entity.VolumeRemainingCl),
             () => Assert.Equal(domain.AddedColouring, entity.AddedColouring),
             () => Assert.Equal(domain.ChillFiltered, entity.ChillFiltered),
-            () => Assert.Equal(domain.FlavourProfile, entity.FlavourProfile)
+            () => Assert.Equal(domain.FlavourProfile, entity.FlavourVector.ToFlavourProfile())
         );
     }
 }

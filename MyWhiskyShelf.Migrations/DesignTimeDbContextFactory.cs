@@ -20,7 +20,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<MyWhiskySh
                 "No connection string found. Set 'ConnectionStrings__MyWhiskyShelf' as a user-secret.");
 
         var options = new DbContextOptionsBuilder<MyWhiskyShelfDbContext>()
-            .UseNpgsql(connStr)
+            .UseNpgsql(connStr, npgsql => npgsql.UseVector())
             .Options;
 
         return new MyWhiskyShelfDbContext(options);

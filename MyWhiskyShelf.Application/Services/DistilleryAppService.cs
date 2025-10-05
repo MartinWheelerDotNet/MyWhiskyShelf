@@ -55,10 +55,10 @@ public sealed class DistilleryAppService(
     {
         try
         {
-            var distilleryNames = await read.SearchByNameAsync(pattern, ct);
+            var distilleries = await read.SearchByNameAsync(pattern, ct);
 
-            logger.LogDebug("Retrieved [{Count}] distilleries", distilleryNames.Count);
-            return new SearchDistilleriesResult(SearchDistilleriesOutcome.Success, distilleryNames);
+            logger.LogDebug("Retrieved [{Count}] distilleries", distilleries.Count);
+            return new SearchDistilleriesResult(SearchDistilleriesOutcome.Success, distilleries);
         }
         catch (Exception ex)
         {

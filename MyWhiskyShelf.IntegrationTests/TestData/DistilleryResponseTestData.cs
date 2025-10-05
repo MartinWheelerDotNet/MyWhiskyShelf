@@ -10,7 +10,7 @@ public static class DistilleryResponseTestData
         {
             Id = id,
             Name = "Name",
-            Location = "Location",
+            Country = "Country",
             Region = "Region",
             Founded = 2000,
             Owner = "Owner",

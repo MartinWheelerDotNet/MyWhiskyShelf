@@ -20,6 +20,6 @@ public static class WhiskyBottleTestData
         VolumeRemainingCl = 35,
         AddedColouring = true,
         ChillFiltered = true,
-        FlavourProfile = FlavourProfileTestData.Mixed
+        FlavourProfile = FlavourProfileTestData.Generic
     };
 }

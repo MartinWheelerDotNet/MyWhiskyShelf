@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MyWhiskyShelf.Infrastructure.Persistence.Converters;
 using MyWhiskyShelf.Infrastructure.Persistence.Entities;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Configurations;
@@ -39,10 +38,9 @@ public class WhiskyBottleEntityConfiguration : IEntityTypeConfiguration<WhiskyBo
             .IsRequired();
         builder.Property(e => e.AddedColouring);
         builder.Property(e => e.ChillFiltered);
-        builder.Property(e => e.FlavourProfile)
-            .HasConversion<FlavourProfileValueConverter>()
-            .HasColumnName("EncodedFlavourProfile")
-            .HasColumnType("bigint")
+        builder.Property(e => e.FlavourVector)
+            .HasColumnName("FlavourVector")
+            .HasColumnType("vector(5)")
             .IsRequired();
 
         builder.HasIndex(e=> e.Name)
@@ -51,11 +49,13 @@ public class WhiskyBottleEntityConfiguration : IEntityTypeConfiguration<WhiskyBo
             .HasDatabaseName("IX_WhiskyBottles_Name_trgm");
         builder.HasIndex(e=> e.Name)
             .HasDatabaseName("IX_WhiskyBottles_Name_eq");
-        
         builder.HasIndex(e => e.DistilleryName)
             .IsUnique(false);
-
         builder.HasIndex(e => e.Status)
             .IsUnique(false);
+        builder.HasIndex(e => e.FlavourVector)
+            .HasMethod("ivfflat")
+            .HasOperators("vector_cosine_ops")
+            .HasStorageParameter("lists", 100);
     }
 }

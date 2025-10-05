@@ -18,12 +18,14 @@ public sealed class DistilleryEntityBuilder
         {
             Id = _id,
             Name = "Name",
-            Location = "Location",
+            Country = "Country",
             Region = "Region",
             Founded = 2000,
             Owner = "Owner",
             Type = "Type",
-            FlavourProfile = FlavourProfileTestData.Mixed,
+            Description = "Description",
+            TastingNotes = "TastingNotes",
+            FlavourVector = FlavourProfileTestData.GenericVector,
             Active = true
         };
     }

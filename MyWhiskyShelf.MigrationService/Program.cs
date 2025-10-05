@@ -16,7 +16,10 @@ var connStr = builder.Configuration.GetConnectionString("myWhiskyShelfDb")
 
 builder.Services.AddDbContext<MyWhiskyShelfDbContext>(options =>
     options.UseNpgsql(connStr, npgsql =>
-        npgsql.MigrationsAssembly("MyWhiskyShelf.Migrations")));
+    {
+        npgsql.MigrationsAssembly("MyWhiskyShelf.Migrations");
+        npgsql.UseVector();
+    }));
 
 var host = builder.Build();
 await host.RunAsync();

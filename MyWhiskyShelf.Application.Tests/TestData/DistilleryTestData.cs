@@ -8,25 +8,20 @@ public static class DistilleryTestData
     public static readonly Distillery Generic = new()
     {
         Name = "Name",
-        Location = "Location",
+        Country = "Country",
         Region = "Region",
         Founded = 2000,
         Owner = "Owner",
         Type = "Type",
+        Description = "Description",
+        TastingNotes = "TastingNotes",
         FlavourProfile = new FlavourProfile
         {
             Sweet = 0,
-            Fruit = 1,
-            Floral = 2,
-            Body = 3,
-            Smoke = 4,
-            Tobacco = 3,
-            Medicinal = 2,
-            Wine = 1,
-            Spice = 0,
-            Malt = 1,
-            Nut = 2,
-            Honey = 3
+            Fruit = 2,
+            Peat = 4,
+            Spice = 6,
+            Body = 8
         },
         Active = true
     };

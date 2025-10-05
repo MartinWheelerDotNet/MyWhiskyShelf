@@ -60,16 +60,16 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     }
     
     [Fact]
-    public async Task When_SearchingByNameAndNotFound_Expect_EmptyDistilleryNameResponse()
+    public async Task When_SearchingByNameAndNotFound_Expect_EmptyDistilleryResponse()
     {
         await fixture.SeedDistilleriesAsync(
             DistilleryRequestTestData.GenericCreate with { Name = "Any Distillery" });
         
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync("/distilleries/search?pattern=Else");
-        var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameResponse>>();
+        var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
 
-        Assert.Empty(distilleryNames!);
+        Assert.Empty(distilleries!);
     }
     
     [Theory]
@@ -77,7 +77,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     [InlineData("CASE test")]
     [InlineData("CaSe TeSt")]
     [InlineData("case test")]
-    public async Task When_SearchingByNameInsensitiveCase_Expect_DistilleryNameResponseWithJustThatDistillery(
+    public async Task When_SearchingByNameInsensitiveCase_Expect_DistilleryResponseWithJustThatDistillery(
         string pattern)
     {
         const string expectedName = "Case Test";
@@ -85,13 +85,13 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
             DistilleryRequestTestData.GenericCreate with { Name = expectedName });
             
         seededDistilleries.TryGetValue(expectedName, out var expectedId);
-        var expectedResponse = new DistilleryNameResponse(expectedId, expectedName);
+        var expectedResponse = DistilleryResponseTestData.GenericResponse(expectedId) with { Name = expectedName };
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/search?pattern={pattern}");
-        var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameResponse>>();
+        var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
 
-        Assert.Single(distilleryNames!, actual => expectedResponse == actual);
+        Assert.Single(distilleries!, actual => expectedResponse == actual);
         
         var deleteRequest = IdempotencyHelpers
             .CreateNoBodyRequestWithIdempotencyKey(HttpMethod.Delete, $"/distilleries/{expectedId}");
@@ -99,7 +99,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     }
     
     [Fact]
-    public async Task When_SearchingByNameAndOneFound_Expect_DistilleryNameResponseWithJustThatDistillery()
+    public async Task When_SearchingByNameAndOneFound_Expect_DistilleryResponseWithJustThatDistillery()
     {
         const string expectedName = "One";
         var seededDistilleries = await fixture.SeedDistilleriesAsync(
@@ -107,29 +107,29 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
             DistilleryRequestTestData.GenericCreate with { Name = "Another" });
         
         seededDistilleries.TryGetValue(expectedName, out var expectedId);
-
-        var expectedResponse = new DistilleryNameResponse(expectedId, expectedName);
+        var expectedResponse = DistilleryResponseTestData.GenericResponse(expectedId) with { Name = expectedName };
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/search?pattern={expectedName}");
-        var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameResponse>>();
+        var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
 
-        Assert.Single(distilleryNames!, actual => expectedResponse == actual);
+        Assert.Single(distilleries!, actual => expectedResponse == actual);
     }
     
     [Fact]
-    public async Task When_SearchingByNameAndMultipleFound_Expect_DistilleryNameResponseWithThoseDistilleries()
+    public async Task When_SearchingByNameAndMultipleFound_Expect_DistilleryResponseWithThoseDistilleries()
     {
         const string searchPattern = "Two";
         var seededDistilleries = await fixture.SeedDistilleriesAsync(
             DistilleryRequestTestData.GenericCreate with { Name = "Two" },
             DistilleryRequestTestData.GenericCreate with { Name = "Also Two" });
 
-        var expectedDistilleryNames = seededDistilleries.Select(d => new DistilleryNameResponse(d.Value, d.Key));
+        var expectedDistilleryNames = seededDistilleries
+            .Select(dr => DistilleryResponseTestData.GenericResponse(dr.Value) with { Name = dr.Key });
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/search?pattern={searchPattern}");
-        var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryNameResponse>>();
+        var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
 
         Assert.Equal(expectedDistilleryNames, distilleryNames);
     }

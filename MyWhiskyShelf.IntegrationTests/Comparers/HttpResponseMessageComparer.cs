@@ -2,7 +2,7 @@ namespace MyWhiskyShelf.IntegrationTests.Comparers;
 
 public sealed class HttpResponseMessageComparer : IEqualityComparer<HttpResponseMessage>
 {
-    private static readonly string[] PreservedHeaders = ["Location", "Content-Type", "ETag"];
+    private static readonly string[] PreservedHeaders = ["Country", "Content-Type", "ETag"];
 
     public bool Equals(HttpResponseMessage? left, HttpResponseMessage? right)
     {
