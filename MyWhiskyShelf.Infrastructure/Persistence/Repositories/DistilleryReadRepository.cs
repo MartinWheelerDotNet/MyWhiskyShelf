@@ -28,12 +28,12 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
             .AnyAsync(entity => entity.Name == name, ct);
     }
     
-    public async Task<IReadOnlyList<DistilleryName>> SearchByNameAsync(string pattern, CancellationToken ct = default)
+    public async Task<IReadOnlyList<Distillery>> SearchByNameAsync(string pattern, CancellationToken ct = default)
     {
         return await dbContext.Distilleries
             .AsNoTracking()
             .Where(entity => EF.Functions.ILike(entity.Name, $"%{pattern}%"))
-            .Select(DistilleryProjections.ToDistilleryNameDomain)
+            .Select(DistilleryProjections.ToDistilleryDomain)
             .ToListAsync(ct);
     }
 

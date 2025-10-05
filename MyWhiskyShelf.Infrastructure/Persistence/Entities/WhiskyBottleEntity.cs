@@ -2,7 +2,7 @@
 // ReSharper disable PropertyCanBeMadeInitOnly.Global
 
 using MyWhiskyShelf.Core.Enums;
-using MyWhiskyShelf.Core.Models;
+using Pgvector;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Entities;
 
@@ -22,5 +22,5 @@ public class WhiskyBottleEntity
     public required int VolumeRemainingCl { get; set; }
     public bool? AddedColouring { get; set; }
     public bool? ChillFiltered { get; set; }
-    public required FlavourProfile FlavourProfile { get; set; }
+    public required Vector FlavourVector { get; set; }
 }

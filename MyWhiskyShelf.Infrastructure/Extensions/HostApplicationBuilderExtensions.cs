@@ -19,7 +19,11 @@ public static class HostApplicationBuilderExtensions
         var connectionString = builder.Configuration.GetConnectionString("myWhiskyShelfDb")
                                ?? throw new InvalidOperationException("Connection string not found");
         builder.Services.AddDbContext<MyWhiskyShelfDbContext>(options =>
-            options.UseNpgsql(connectionString, npgsql => npgsql.MigrationsAssembly("MyWhiskyShelf.Migrations")));
+            options.UseNpgsql(connectionString, npgsql =>
+            {
+                npgsql.MigrationsAssembly("MyWhiskyShelf.Migrations");
+                npgsql.UseVector();
+            }));
 
         builder.EnrichNpgsqlDbContext<MyWhiskyShelfDbContext>(settings =>
         {

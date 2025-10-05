@@ -7,7 +7,7 @@ public record DistilleryResponse
 {
     public required Guid Id { get; init; }
     public required string Name { get; init; }
-    public required string Location { get; init; }
+    public required string Country { get; init; }
     public required string Region { get; init; }
     public required int Founded { get; init; }
     public required string Owner { get; init; }

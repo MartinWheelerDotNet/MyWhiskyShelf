@@ -17,7 +17,7 @@ public class DistilleryMappingTests
         Assert.Multiple(
             () => Assert.Equal(distillery.Id, response.Id),
             () => Assert.Equal(distillery.Name, response.Name),
-            () => Assert.Equal(distillery.Location, response.Location),
+            () => Assert.Equal(distillery.Country, response.Country),
             () => Assert.Equal(distillery.Region, response.Region),
             () => Assert.Equal(distillery.Founded, response.Founded),
             () => Assert.Equal(distillery.Owner, response.Owner),
@@ -36,7 +36,7 @@ public class DistilleryMappingTests
         Assert.Multiple(
             () => Assert.Equal(Guid.Empty, distillery.Id),
             () => Assert.Equal(distilleryRequest.Name, distillery.Name),
-            () => Assert.Equal(distilleryRequest.Location, distillery.Location),
+            () => Assert.Equal(distilleryRequest.Country, distillery.Country),
             () => Assert.Equal(distilleryRequest.Region, distillery.Region),
             () => Assert.Equal(distilleryRequest.Founded, distillery.Founded),
             () => Assert.Equal(distilleryRequest.Owner, distillery.Owner),
@@ -68,7 +68,7 @@ public class DistilleryMappingTests
         Assert.Multiple(
             () => Assert.Equal(id, distillery.Id),
             () => Assert.Equal(distilleryUpdateRequest.Name, distillery.Name),
-            () => Assert.Equal(distilleryUpdateRequest.Location, distillery.Location),
+            () => Assert.Equal(distilleryUpdateRequest.Country, distillery.Country),
             () => Assert.Equal(distilleryUpdateRequest.Region, distillery.Region),
             () => Assert.Equal(distilleryUpdateRequest.Founded, distillery.Founded),
             () => Assert.Equal(distilleryUpdateRequest.Owner, distillery.Owner),

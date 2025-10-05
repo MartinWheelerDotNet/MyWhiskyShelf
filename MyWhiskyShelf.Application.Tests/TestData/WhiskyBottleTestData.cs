@@ -23,18 +23,11 @@ public static class WhiskyBottleTestData
         ChillFiltered = false,
         FlavourProfile = new FlavourProfile
         {
-            Sweet = 0,
-            Fruit = 1,
-            Floral = 2,
-            Body = 3,
-            Smoke = 4,
-            Tobacco = 3,
-            Medicinal = 2,
-            Wine = 1,
-            Spice = 0,
-            Malt = 1,
-            Nut = 2,
-            Honey = 3
+            Sweet = 1,
+            Fruit = 3,
+            Peat = 5,
+            Spice = 7,
+            Body = 9
         }
     };
 }

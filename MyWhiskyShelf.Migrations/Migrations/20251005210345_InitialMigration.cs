@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Pgvector;
 
 #nullable disable
 
@@ -13,8 +14,10 @@ namespace MyWhiskyShelf.Migrations.Migrations
         {
             migrationBuilder.AlterDatabase()
                 .Annotation("Npgsql:PostgresExtension:citext", ",,")
-                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,");
+                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,")
+                .Annotation("Npgsql:PostgresExtension:vector", ",,");
             
+            migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS vector;");
             migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS citext;");
             migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS pg_trgm;");
 
@@ -24,12 +27,14 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "citext", maxLength: 100, nullable: false),
-                    Location = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Country = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Region = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Founded = table.Column<int>(type: "integer", nullable: false),
                     Owner = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Type = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
-                    EncodedFlavourProfile = table.Column<long>(type: "bigint", nullable: false),
+                    Description = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    TastingNotes = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    FlavourVector = table.Column<Vector>(type: "vector(5)", nullable: false),
                     Active = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -55,25 +60,27 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     VolumeRemainingCl = table.Column<int>(type: "integer", nullable: false),
                     AddedColouring = table.Column<bool>(type: "boolean", nullable: true),
                     ChillFiltered = table.Column<bool>(type: "boolean", nullable: true),
-                    EncodedFlavourProfile = table.Column<long>(type: "bigint", nullable: false)
+                    FlavourVector = table.Column<Vector>(type: "vector(5)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WhiskyBottles", x => x.Id);
                 });
-            
-            migrationBuilder.Sql(
-                """
-                CREATE INDEX IF NOT EXISTS IX_Distilleries_Name_trgm
-                ON "Distilleries" USING gin ("Name" gin_trgm_ops);
-                """);
-            
+
             migrationBuilder.CreateIndex(
-                name: "UX_Distilleries_Name",
+                name: "IX_Distilleries_FlavourVector",
+                table: "Distilleries",
+                column: "FlavourVector")
+                .Annotation("Npgsql:IndexMethod", "ivfflat")
+                .Annotation("Npgsql:IndexOperators", new[] { "vector_cosine_ops" })
+                .Annotation("Npgsql:StorageParameter:lists", 100);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Distilleries_Name_eq",
                 table: "Distilleries",
                 column: "Name",
                 unique: true);
-            
+
             migrationBuilder.CreateIndex(
                 name: "IX_Distilleries_Owner",
                 table: "Distilleries",
@@ -88,21 +95,34 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 name: "IX_Distilleries_Type",
                 table: "Distilleries",
                 column: "Type");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WhiskyBottles_DistilleryName",
-                table: "WhiskyBottles",
-                column: "DistilleryName");
+            
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS IX_Distilleries_Name_trgm
+                ON "Distilleries" USING gin ("Name" gin_trgm_ops);
+                """);
             
             migrationBuilder.Sql(
                 """
                 CREATE INDEX IF NOT EXISTS IX_WhiskyBottles_Name_trgm
                 ON "WhiskyBottles" USING gin ("Name" gin_trgm_ops);
                 """);
-            
-            
+
             migrationBuilder.CreateIndex(
-                name: "IX_WhiskyBottles_Name",
+                name: "IX_WhiskyBottles_DistilleryName",
+                table: "WhiskyBottles",
+                column: "DistilleryName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WhiskyBottles_FlavourVector",
+                table: "WhiskyBottles",
+                column: "FlavourVector")
+                .Annotation("Npgsql:IndexMethod", "ivfflat")
+                .Annotation("Npgsql:IndexOperators", new[] { "vector_cosine_ops" })
+                .Annotation("Npgsql:StorageParameter:lists", 100);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WhiskyBottles_Name_eq",
                 table: "WhiskyBottles",
                 column: "Name");
 

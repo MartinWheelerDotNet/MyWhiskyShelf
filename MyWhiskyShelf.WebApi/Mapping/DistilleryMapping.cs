@@ -12,7 +12,7 @@ public static class DistilleryMapping
         {
             Id = distillery.Id,
             Name = distillery.Name,
-            Location = distillery.Location,
+            Country = distillery.Country,
             Region = distillery.Region,
             Founded = distillery.Founded,
             Owner = distillery.Owner,
@@ -27,11 +27,13 @@ public static class DistilleryMapping
         return new Distillery
         {
             Name = distilleryCreateRequest.Name,
-            Location = distilleryCreateRequest.Location,
+            Country = distilleryCreateRequest.Country,
             Region = distilleryCreateRequest.Region,
             Founded = distilleryCreateRequest.Founded,
             Owner = distilleryCreateRequest.Owner,
             Type = distilleryCreateRequest.Type,
+            Description = distilleryCreateRequest.Description,
+            TastingNotes = distilleryCreateRequest.TastingNotes,
             FlavourProfile = distilleryCreateRequest.FlavourProfile ?? new FlavourProfile(),
             Active = distilleryCreateRequest.Active
         };
@@ -43,11 +45,13 @@ public static class DistilleryMapping
         {
             Id = id,
             Name = distilleryCreateRequest.Name,
-            Location = distilleryCreateRequest.Location,
+            Country = distilleryCreateRequest.Country,
             Region = distilleryCreateRequest.Region,
             Founded = distilleryCreateRequest.Founded,
             Owner = distilleryCreateRequest.Owner,
             Type = distilleryCreateRequest.Type,
+            Description = distilleryCreateRequest.Description,
+            TastingNotes = distilleryCreateRequest.TastingNotes,
             FlavourProfile = distilleryCreateRequest.FlavourProfile ?? new FlavourProfile(),
             Active = distilleryCreateRequest.Active
         };

@@ -7,11 +7,13 @@ public static class DistilleryRequestTestData
     public static readonly DistilleryCreateRequest GenericCreateRequest = new()
     {
         Name = "Name",
-        Location = "Location",
+        Country = "Country",
         Region = "Region",
         Founded = 2000,
         Owner = "Owner",
         Type = "Type",
+        Description = "Description",
+        TastingNotes = "TastingNotes",
         FlavourProfile = FlavourProfileTestData.Generic,
         Active = true
     };
@@ -19,11 +21,13 @@ public static class DistilleryRequestTestData
     public static readonly DistilleryUpdateRequest GenericUpdateRequest = new()
     {
         Name = "Name",
-        Location = "Location",
+        Country = "Country",
         Region = "Region",
         Founded = 2000,
         Owner = "Owner",
         Type = "Type",
+        Description = "Description",
+        TastingNotes = "TastingNotes",
         FlavourProfile = FlavourProfileTestData.Generic,
         Active = true
     };

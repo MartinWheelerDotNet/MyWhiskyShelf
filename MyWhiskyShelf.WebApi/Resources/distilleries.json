@@ -1,58 +1,56 @@
 [
   {
     "Name": "Aberargie",
-    "Location": "Aberargie",
+    "Country": "Aberargie",
     "Region": "Lowland",
     "Founded": 2017,
     "Owner": "Perth Distilling Co",
     "Type": "Malt",
+    "Description": "Description",
+    "TastingNotes": "TastingNotes",
     "FlavourProfile": {
-      "Sweet": 0,
-      "Fruit": 1,
-      "Floral": 2,
-      "Body": 3,
-      "Smoke": 4,
-      "Tobacco": 3,
-      "Medicinal": 2,
-      "Wine": 1,
-      "Spice": 0,
-      "Malt": 1,
-      "Nut": 2,
-      "Honey": 3
+      "Sweet": 10,
+      "Fruit": 8,
+      "Peat": 6,
+      "Spice": 4,
+      "Body": 0
     },
     "Active": true
   },
   {
     "Name": "Aberfeldy",
-    "Location": "Aberfeldy",
+    "Country": "Aberfeldy",
     "Region": "Highland",
     "Founded": 1896,
     "Owner": "John Dewar & Sons",
     "Type": "Malt",
+    "Description": "Description",
+    "TastingNotes": "TastingNotes",
     "FlavourProfile": {
-      "Sweet": 2,
+      "Sweet": 6,
       "Fruit": 2,
-      "Floral": 2,
-      "Body": 2,
-      "Smoke": 2,
-      "Tobacco": 2,
-      "Medicinal": 2,
-      "Wine": 2,
-      "Spice": 2,
-      "Malt": 2,
-      "Nut": 2,
-      "Honey": 2
+      "Peat": 1,
+      "Spice": 3,
+      "Body": 9
     },
     "Active": true
   },
   {
     "Name": "Aberlour",
-    "Location": "Aberlour",
+    "Country": "Aberlour",
     "Region": "Speyside",
     "Founded": 1879,
     "Owner": "Chivas Brothers",
     "Type": "Malt",
-    "FlavourProfile": {},
+    "Description": "Description",
+    "TastingNotes": "TastingNotes",
+    "FlavourProfile": {
+      "Sweet": 0,
+      "Fruit": 0,
+      "Peat": 0,
+      "Spice": 0,
+      "Body": 0
+    },
     "Active": true
   }
 ]

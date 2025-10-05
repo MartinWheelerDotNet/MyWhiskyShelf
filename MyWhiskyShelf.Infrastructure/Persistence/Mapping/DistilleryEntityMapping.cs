@@ -11,12 +11,14 @@ public static class DistilleryEntityMapping
         {
             Id = distilleryEntity.Id,
             Name = distilleryEntity.Name,
-            Location = distilleryEntity.Location,
+            Country = distilleryEntity.Country,
             Region = distilleryEntity.Region,
             Founded = distilleryEntity.Founded,
             Owner = distilleryEntity.Owner,
             Type = distilleryEntity.Type,
-            FlavourProfile = distilleryEntity.FlavourProfile,
+            Description = distilleryEntity.Description,
+            TastingNotes = distilleryEntity.TastingNotes,
+            FlavourProfile = distilleryEntity.FlavourVector.ToFlavourProfile(),
             Active = distilleryEntity.Active
         };
     }
@@ -26,12 +28,14 @@ public static class DistilleryEntityMapping
         return new DistilleryEntity
         {
             Name = distillery.Name.Trim(),
-            Location = distillery.Location,
+            Country = distillery.Country,
             Region = distillery.Region,
             Founded = distillery.Founded,
             Owner = distillery.Owner,
             Type = distillery.Type,
-            FlavourProfile = distillery.FlavourProfile,
+            Description = distillery.Description,
+            TastingNotes = distillery.TastingNotes,
+            FlavourVector = distillery.FlavourProfile.ToVector(),
             Active = distillery.Active
         };
     }

@@ -23,7 +23,7 @@ public static class WhiskyBottleEntityMapping
             VolumeRemainingCl = whiskyBottleEntity.VolumeRemainingCl,
             AddedColouring = whiskyBottleEntity.AddedColouring,
             ChillFiltered = whiskyBottleEntity.ChillFiltered,
-            FlavourProfile = whiskyBottleEntity.FlavourProfile
+            FlavourProfile = whiskyBottleEntity.FlavourVector.ToFlavourProfile()
         };
     }
 
@@ -44,7 +44,7 @@ public static class WhiskyBottleEntityMapping
             VolumeRemainingCl = whiskyBottle.VolumeRemainingCl,
             AddedColouring = whiskyBottle.AddedColouring,
             ChillFiltered = whiskyBottle.ChillFiltered,
-            FlavourProfile = whiskyBottle.FlavourProfile
+            FlavourVector = whiskyBottle.FlavourProfile.ToVector()
         };
     }
 }

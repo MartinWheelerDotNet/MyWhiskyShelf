@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Infrastructure.Persistence.Entities;
+using MyWhiskyShelf.Infrastructure.Persistence.Mapping;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Projections;
 
@@ -11,15 +12,14 @@ public static class DistilleryProjections
         {
             Id = distilleryEntity.Id,
             Name = distilleryEntity.Name,
-            Location = distilleryEntity.Location,
+            Country = distilleryEntity.Country,
             Region = distilleryEntity.Region,
             Founded = distilleryEntity.Founded,
             Owner = distilleryEntity.Owner,
             Type = distilleryEntity.Type,
-            FlavourProfile = distilleryEntity.FlavourProfile,
+            Description = distilleryEntity.Description,
+            TastingNotes = distilleryEntity.TastingNotes,
+            FlavourProfile = distilleryEntity.FlavourVector.ToFlavourProfile(),
             Active = distilleryEntity.Active
         };
-
-    public static readonly Expression<Func<DistilleryEntity, DistilleryName>> ToDistilleryNameDomain =
-        distilleryEntity => new DistilleryName(distilleryEntity.Id, distilleryEntity.Name);
 }

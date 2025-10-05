@@ -124,7 +124,7 @@ public static class DistilleryEndpoints
                     return result.Outcome switch
                     {
                         SearchDistilleriesOutcome.Success => Results.Ok(
-                            result.DistilleryNames!.Select(distillery => distillery.ToResponse())),
+                            result.Distilleries!.Select(distillery => distillery.ToResponse())),
                         _ => ProblemResults.InternalServerError(
                                 EndpointGroup,
                                 "search",

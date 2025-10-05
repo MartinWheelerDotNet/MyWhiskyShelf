@@ -21,6 +21,7 @@ public class MyWhiskyShelfDbContext(
         
         modelBuilder.HasPostgresExtension("pg_trgm");
         modelBuilder.HasPostgresExtension("citext");
+        modelBuilder.HasPostgresExtension("vector");
         
         modelBuilder.ApplyConfiguration(new DistilleryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new WhiskyBottleEntityConfiguration());

@@ -4,19 +4,12 @@ namespace MyWhiskyShelf.Core.Models;
 public record FlavourProfile(
     int Sweet,
     int Fruit,
-    int Floral,
-    int Body,
-    int Smoke,
-    int Tobacco,
-    int Medicinal,
-    int Wine,
+    int Peat,
     int Spice,
-    int Malt,
-    int Nut,
-    int Honey
+    int Body
 )
 {
-    public FlavourProfile() : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    public FlavourProfile() : this(0, 0, 0, 0, 0)
     {
     }
 }
