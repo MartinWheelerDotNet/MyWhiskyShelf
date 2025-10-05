@@ -4,10 +4,10 @@ export type DistilleriesToolbarProps = {
     title?: string;
     query: string;
     onQueryChange: (value: string) => void;
-    country: string | "all";
-    onCountryChange: (value: string | "all") => void;
-    region: string | "all";
-    onRegionChange: (value: string | "all") => void;
+    country: string;
+    onCountryChange: (value: string) => void;
+    region: string;
+    onRegionChange: (value: string) => void;
     countryOptions?: Array<{ value: string; label: string }>;
     regionOptions?: Array<{ value: string; label: string }>;
 };
@@ -50,7 +50,7 @@ export default function DistilleriesToolbar(
                     label="Country"
                     select
                     value={country}
-                    onChange={(e) => onCountryChange(e.target.value as any)}
+                    onChange={(e) => onCountryChange(e.target.value)}
                     sx={{ minWidth: 180 }}
                 >
                     <MenuItem value="all">All</MenuItem>
@@ -66,7 +66,7 @@ export default function DistilleriesToolbar(
                     label="Region"
                     select
                     value={region}
-                    onChange={(e) => onRegionChange(e.target.value as any)}
+                    onChange={(e) => onRegionChange(e.target.value)}
                     sx={{ minWidth: 180 }}
                 >
                     <MenuItem value="all">All</MenuItem>

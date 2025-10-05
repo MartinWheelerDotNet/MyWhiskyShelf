@@ -12,7 +12,8 @@ import {
     Typography,
     Tooltip,
     Stack,
-    alpha,
+    alpha, 
+    type IconButtonProps
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FavoriteIcon from "@mui/icons-material/FavoriteBorder";
@@ -21,7 +22,7 @@ import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import { styled } from "@mui/material/styles";
 
-export type DistilleryCardProps = {
+export type DistilleryCardProps = Readonly<{
     id: string;
     name: string;
     region?: string;
@@ -33,9 +34,13 @@ export type DistilleryCardProps = {
     about?: string;
     notes?: string;
     whiskiesCount?: number;
-};
+}>;
 
-const ExpandMore = styled((props: any) => {
+type ExpandMoreProps = {
+    expand?: boolean;
+} & Omit<IconButtonProps, "color">;
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
     const { expand, ...other } = props;
     return <IconButton {...other} />;
 })(({ theme, expand }: any) => ({
@@ -45,19 +50,21 @@ const ExpandMore = styled((props: any) => {
     }),
 }));
 
-export default function DistilleryCard({
-                                           id,
-                                           name,
-                                           region,
-                                           country,
-                                           founded,
-                                           isFavorite = false,
-                                           logoUrl,
-                                           onToggleFavorite,
-                                           about,
-                                           notes,
-                                           whiskiesCount,
-                                       }: DistilleryCardProps) {
+export default function DistilleryCard(
+    {
+        id, 
+        name,
+        region,
+        country,
+        founded,
+        isFavorite = false,
+        logoUrl,
+        onToggleFavorite,
+        about,
+        notes,
+        whiskiesCount 
+    }: DistilleryCardProps) {
+    
     const [expanded, setExpanded] = React.useState(false);
 
     return (
@@ -68,7 +75,7 @@ export default function DistilleryCard({
                 overflow: "hidden",
                 bgcolor: alpha(theme.palette.background.paper, 0.9),
                 backdropFilter: "blur(6px)",
-                border: `2px solid ${alpha(theme.palette.divider, 1.0)}`,
+                border: `2px solid ${alpha(theme.palette.divider, 1)}`,
                 boxShadow: `0 8px 30px ${alpha(theme.palette.common.black, 0.25)}`,
                 transition: "transform 150ms ease, box-shadow 200ms ease",
                 "&:hover": {
@@ -138,7 +145,7 @@ export default function DistilleryCard({
                         </Tooltip>
                         <Tooltip title={expanded ? "Collapse" : "Expand"}>
                             <ExpandMore
-                                expand={expanded ? 1 : 0}
+                                expand={expanded}
                                 aria-expanded={expanded}
                                 aria-label="show more"
                                 onClick={() => setExpanded((v) => !v)}

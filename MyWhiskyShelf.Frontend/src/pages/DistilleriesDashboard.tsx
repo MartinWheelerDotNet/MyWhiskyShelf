@@ -59,8 +59,8 @@ const MOCK_REGION_OPTIONS: FilterMenuOptions[] = [
 
 export default function DistilleriesDashboard() {
     const [pattern, setPattern] = React.useState("");
-    const [region, setRegion] = React.useState<string | "all">("all");
-    const [country, setCountry] = React.useState<string | "all">("all");
+    const [region, setRegion] = React.useState<string>("all");
+    const [country, setCountry] = React.useState<string>("all");
 
     const filtered = React.useMemo(() => {
         const query = pattern.trim().toLowerCase();
