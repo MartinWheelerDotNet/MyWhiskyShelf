@@ -9,7 +9,7 @@ export const axiosClient: AxiosInstance = axios.create({
     headers: { "Content-Type": "application/json" },
 });
 
-const INSTALLED = Symbol.for("mws:axios:installed");
+const INSTALLED = Symbol.for("mws:axios:installed:1");
 
 function installInterceptors(client: AxiosInstance, auth: AuthProvider) {
     if ((client as any)[INSTALLED]) return;
