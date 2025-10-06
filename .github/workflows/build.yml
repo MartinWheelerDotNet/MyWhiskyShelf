@@ -98,7 +98,7 @@ jobs:
           if-no-files-found: ignore
   
   test:
-    name: .NET Tests
+    name: Backend Tests
     if: ${{ needs.changes.outputs.backend == 'true' }}
     uses: ./.github/workflows/dotnet-testing.yml
     with:
@@ -120,7 +120,7 @@ jobs:
   
   code-inspection:
     if: ${{ github.actor != 'dependabot[bot]' }}
-    name: Code Inspection
+    name: Backend Code Inspection
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -150,7 +150,7 @@ jobs:
           extensions: ReSharperPlugin.CognitiveComplexity
   
   mutation-testing:
-    name: ${{ matrix.name }} Mutations
+    name: Backend Mutations
     if: ${{ needs.changes.outputs.backend == 'true' && github.actor != 'dependabot[bot]' }}
     uses: ./.github/workflows/mutation-testing.yml
     with:
