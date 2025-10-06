@@ -16,7 +16,7 @@
         <PackageReference Include="Aspire.Hosting.NodeJs" Version="9.5.0" />
         <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="9.5.0" />
         <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25" />
-        <PackageReference Include="Aspire.Hosting.Redis" Version="9.5.0" />
+        <PackageReference Include="Aspire.Hosting.Redis" Version="9.5.1" />
     </ItemGroup>
 
     <ItemGroup>
