@@ -10,8 +10,27 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  changes:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36
+        id: filter
+        with:
+          filters: |
+            backend:
+              - '!MyWhiskyShelf.Frontend/**'
+            frontend:
+              - 'MyWhiskyShelf.Frontend/**'
+  
+  build:
+    name: Backend Build
+    runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -35,6 +54,8 @@ jobs:
   
   frontend-tests:
     name: Frontend Tests
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -79,8 +100,12 @@ jobs:
           if-no-files-found: ignore
   
   test:
-    name: ${{ matrix.name }} Tests
-    runs-on: ubuntu-latest
+    name: Backend Tests
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    uses: ./.github/workflows/dotnet-testing.yml
+    with:
+      name: ${{ matrix.name }}
+      project: ${{ matrix.project }}
     strategy:
       fail-fast: true
       matrix:
@@ -93,49 +118,11 @@ jobs:
             project: MyWhiskyShelf.WebApi.Tests/MyWhiskyShelf.WebApi.Tests.csproj
           - name: Integration
             project: MyWhiskyShelf.IntegrationTests/MyWhiskyShelf.IntegrationTests.csproj
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-
-      - name: Cache NuGet packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Dependencies
-        run: dotnet restore ${{ matrix.project }}
-
-      - name: Build solution
-        run: dotnet build  ${{ matrix.project }} --configuration Release --no-restore
-
-      - name: Setup Dev Credentials
-        run: dotnet dev-certs https --trust
-        if: ${{ matrix.name == 'Integration' }}
-
-      - name: Run tests
-        run: |
-          dotnet test  ${{ matrix.project }} \
-            --collect:"XPlat Code Coverage" \
-            --results-directory ./TestResults \
-            --configuration Release \
-            --no-build \
-            --verbosity normal
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results-${{ matrix.name }}
-          path: ./TestResults
+    
   
   code-inspection:
-    if: ${{ github.actor != 'dependabot[bot]' }}
-    name: Code Inspection
+    if: ${{ github.actor != 'dependabot[bot]' && needs.changes.outputs.backend == 'true'}}
+    name: Backend Code Inspection
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -165,8 +152,8 @@ jobs:
           extensions: ReSharperPlugin.CognitiveComplexity
   
   mutation-testing:
-    name: ${{ matrix.name }} Mutations
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    name: Backend Mutations
+    if: ${{ needs.changes.outputs.backend == 'true' && github.actor != 'dependabot[bot]' }}
     uses: ./.github/workflows/mutation-testing.yml
     with:
       name: ${{ matrix.name }}
@@ -177,7 +164,7 @@ jobs:
     secrets:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
           - name: AppHost

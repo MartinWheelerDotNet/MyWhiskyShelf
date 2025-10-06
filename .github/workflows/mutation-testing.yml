@@ -21,7 +21,6 @@ on:
 jobs:
   mutation-tests:
     name: ${{ inputs.name }}
-    if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     
     steps:
