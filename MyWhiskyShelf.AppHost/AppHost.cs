@@ -9,6 +9,7 @@ var postgres = builder
     .WithImage("pgvector/pgvector:pg18-trixie");
 
 var database = postgres.AddDatabase("myWhiskyShelfDb");
+var x = 1;
 
 var cache = builder
     .AddRedis("cache")
