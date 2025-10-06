@@ -1,4 +1,4 @@
-name: ${{ inputs.name }}
+name: .NET testing
 permissions:
   contents: none
 
