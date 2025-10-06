@@ -32,18 +32,25 @@ jobs:
             ${{ runner.os }}-nuget-
     
       - name: Restore Dependencies
-        run: dotnet restore ${{ inputs.project }}
+        env:
+          INPUT_PROJECT: ${{ inputs.project }}
+        run: dotnet restore $INPUT_PROJECT
     
       - name: Build solution
-        run: dotnet build  ${{ inputs.project }} --configuration Release --no-restore
+        env:
+          INPUT_PROJECT: ${{ inputs.project }}
+        run: dotnet build $INPUT_PROJECT --configuration Release --no-restore
     
       - name: Setup Dev Credentials
         run: dotnet dev-certs https --trust
         if: ${{ inputs.name == 'Integration' }}
 
       - name: Run tests
+        env:
+          INPUT_PROJECT: ${{ inputs.project }}
+          INPUT_NAME: ${{ inputs.project }}
         run: |
-          dotnet test  ${{ inputs.project }} \
+          dotnet test  $INPUT_PROJECT \
             --collect:"XPlat Code Coverage" \
             --results-directory ./TestResults \
             --configuration Release \
@@ -52,6 +59,8 @@ jobs:
       
       - name: Upload test results
         uses: actions/upload-artifact@v4
+        env:
+          INPUT_NAME: ${{ inputs.project }}
         with:
-          name: test-results-${{ inputs.name }}
+          name: test-results-$INPUT_NAME
           path: ./TestResults
