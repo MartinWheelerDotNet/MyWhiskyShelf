@@ -17,6 +17,9 @@ on:
     secrets:
       STRYKER_DASHBOARD_API_KEY:
         required: true
+    paths:
+      - '!MyWhiskyShelf.Frontend/**'
+      - '!MyWhiskyShelf.Migrations/**'
 
 jobs:
   mutation-tests:
