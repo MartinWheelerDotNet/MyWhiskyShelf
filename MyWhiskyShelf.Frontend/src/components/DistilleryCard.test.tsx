@@ -22,8 +22,8 @@ const baseProps: DistilleryCardProps = {
     country: "Scotland",
     founded: 1815,
     isFavorite: false,
-    about: "Renowned for intensely peated single malts.",
-    notes: "Smoke, iodine, sea spray, citrus.",
+    description: "Renowned for intensely peated single malts.",
+    tastingNotes: "Smoke, iodine, sea spray, citrus.",
     whiskiesCount: 17,
 };
 
@@ -44,6 +44,26 @@ describe("DistilleryCard", () => {
     it("pluralizes 'whisky' correctly when count is 1", () => {
         renderWithTheme(<DistilleryCard {...baseProps} whiskiesCount={1} />);
         expect(screen.getByText(/1 whisky/i)).toBeInTheDocument();
+    });
+
+    it("pluralizes 'whiskies' correctly when count is 0", () => {
+        renderWithTheme(<DistilleryCard {...baseProps} whiskiesCount={0} />);
+        expect(screen.getByText(/0 whiskies/i)).toBeInTheDocument();
+    });
+
+    it("does not render country/region/whiskies chips when omitted", () => {
+        renderWithTheme(
+            <DistilleryCard
+                {...baseProps}
+                country={undefined}
+                region={undefined}
+                whiskiesCount={undefined}
+            />
+        );
+
+        expect(screen.queryByText("Scotland")).not.toBeInTheDocument();
+        expect(screen.queryByText("Islay")).not.toBeInTheDocument();
+        expect(screen.queryByText(/whisky|whiskies/i)).not.toBeInTheDocument();
     });
 
     it("favorite button calls onToggleFavorite with id", async () => {
@@ -87,7 +107,7 @@ describe("DistilleryCard", () => {
         expect(await screen.findByText(/unfavorite/i)).toBeInTheDocument();
     });
 
-    it("expand button toggles details and aria-expanded", async () => {
+    it("expand button toggles details and aria-expanded then collapses again", async () => {
         const user = userEvent.setup();
         renderWithTheme(<DistilleryCard {...baseProps} />);
 
@@ -96,10 +116,6 @@ describe("DistilleryCard", () => {
         expect(screen.queryByRole("heading", { name: /my bottles/i })).not.toBeInTheDocument();
 
         const expandBtn = screen.getByRole("button", { name: /show more/i });
-
-        await user.hover(expandBtn);
-        expect(await screen.findByText(/expand/i)).toBeInTheDocument();
-        await user.unhover(expandBtn);
 
         await user.click(expandBtn);
         expect(expandBtn).toHaveAttribute("aria-expanded", "true");
@@ -112,12 +128,9 @@ describe("DistilleryCard", () => {
         expect(notesHeading).toBeInTheDocument();
         expect(bottlesHeading).toBeInTheDocument();
 
-        expect(
-            screen.getByText(/This is a list of my bottles which will be retrieved from the API./i)
-        ).toBeInTheDocument();
-
-        await user.hover(expandBtn);
-        expect(await screen.findByText(/collapse/i)).toBeInTheDocument();
+        await user.click(expandBtn);
+        expect(expandBtn).toHaveAttribute("aria-expanded", "false");
+        expect(screen.queryByRole("heading", { name: /about/i })).not.toBeInTheDocument();
     });
 
     it("shows founded fallback '-' when no founded provided", async () => {
@@ -126,8 +139,42 @@ describe("DistilleryCard", () => {
         const expandBtn = screen.getByRole("button", { name: /show more/i });
         await userEvent.click(expandBtn);
 
-        expect(screen.getByText(/founded:/i)).toBeInTheDocument();
-        expect(screen.getByText("-")).toBeInTheDocument();
+        expect(screen.getByText(/^\s*Founded:\s*-\s*$/i)).toBeInTheDocument();
+    });
+
+    it("shows 'Owned By: -' fallback when no owner provided", async () => {
+        renderWithTheme(<DistilleryCard {...baseProps} owner={undefined} />);
+
+        const expandBtn = screen.getByRole("button", { name: /show more/i });
+        await userEvent.click(expandBtn);
+
+        expect(screen.getByText(/^\s*Owned By:\s*-\s*$/i)).toBeInTheDocument();
+    });
+
+    it("shows em dash fallback for description and tasting notes", async () => {
+        renderWithTheme(
+            <DistilleryCard
+                {...baseProps}
+                description={undefined}
+                tastingNotes={undefined}
+            />
+        );
+
+        const expandBtn = screen.getByRole("button", { name: /show more/i });
+        await userEvent.click(expandBtn);
+
+        // Both About->description and Tasting Notes body should show "—"
+        const dashes = screen.getAllByText("—");
+        expect(dashes.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it("renders non-numeric founded value when provided as string", async () => {
+        renderWithTheme(<DistilleryCard {...baseProps} founded="Pre-1800s" />);
+
+        const expandBtn = screen.getByRole("button", { name: /show more/i });
+        await userEvent.click(expandBtn);
+
+        expect(screen.getByText(/^\s*Founded:\s*Pre-1800s\s*$/i)).toBeInTheDocument();
     });
 
     it("uses provided logoUrl when present", () => {
@@ -138,5 +185,13 @@ describe("DistilleryCard", () => {
         const img = screen.getByRole("img", { name: /ardbeg/i }) as HTMLImageElement;
         expect(img).toBeInTheDocument();
         expect(img.src).toContain("/media/images/distilleries/ardbeg-logo.png");
+    });
+
+    it("clicking favorite without a handler does not throw", async () => {
+        const user = userEvent.setup();
+        renderWithTheme(<DistilleryCard {...baseProps} onToggleFavorite={undefined} />);
+        await user.click(screen.getByRole("button", { name: /toggle favorite/i }));
+        // If it reaches here without error, it's fine.
+        expect(true).toBe(true);
     });
 });

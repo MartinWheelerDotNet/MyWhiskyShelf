@@ -1,71 +1,50 @@
 import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from "axios";
-import { keycloak } from "../auth/keycloak";
+// @ts-ignore
+import { keycloakAuthProvider, type AuthProvider } from "@/auth/keycloakAdapter";
 
-export const axiosInstance: AxiosInstance = axios.create({
-    baseURL: import.meta.env?.VITE_API_BASE_URL,
-    timeout: 30000,
+const apiBaseUrl = import.meta.env?.VITE_WEBAPI_URL as string | undefined;
+
+export const axiosClient: AxiosInstance = axios.create({
+    baseURL: apiBaseUrl,
+    headers: { "Content-Type": "application/json" },
 });
 
-export type TokenProvider = () => string | undefined;
-export type LoginAction = (redirectUri: string) => void | Promise<void>;
+const INSTALLED = Symbol.for("mws:axios:installed");
 
-export interface InstallInterceptorsOptions {
-    getToken?: TokenProvider;
-    login?: LoginAction;
-    shouldAutoLogin401?: (err: AxiosError) => boolean;
-}
+function installInterceptors(client: AxiosInstance, auth: AuthProvider) {
+    if ((client as any)[INSTALLED]) return;
+    (client as any)[INSTALLED] = true;
 
-export interface InstalledInterceptors {
-    request: (config: InternalAxiosRequestConfig) => InternalAxiosRequestConfig | Promise<InternalAxiosRequestConfig>;
-    response: {
-        onFulfilled?: (value: any) => any;
-        onRejected: (error: any) => Promise<never> | Promise<void>;
-    };
-}
-
-export function installInterceptors(opts: InstallInterceptorsOptions = {}): InstalledInterceptors {
-    const {
-        getToken = () => (keycloak?.authenticated ? keycloak?.token : undefined),
-        login = (redirectUri: string) => keycloak?.login?.({ redirectUri }),
-        shouldAutoLogin401 = (err: AxiosError) =>
-            Boolean((err as any)?.config?.autoLoginOn401 === true)
-    } = opts;
-
-    const onRequest = (config: InternalAxiosRequestConfig) => {
-        const lsToken = (typeof localStorage === "undefined") 
-            ? undefined 
-            : localStorage.getItem("token") ?? undefined;
-        
-        const token = lsToken ?? getToken();
+    client.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
+        const token = auth.getToken?.();
         if (token) {
             config.headers = config.headers ?? {};
-            (config.headers as any).Authorization = (String(token).startsWith("Bearer "))
-                ? String(token)
-                : `Bearer ${token}`;
+            (config.headers as any).Authorization = `Bearer ${token}`;
         }
         return config;
-    };
+    });
 
-    const onResponseRejected = async (error: AxiosError) => {
-        if (error?.response?.status === 401 && shouldAutoLogin401(error)) {
-            const redirectUri = globalThis?.location?.href ?? "/";
-            await Promise.resolve();
-            await Promise.resolve(login(redirectUri));
-            return new Promise<never>(() => {});
+    client.interceptors.response.use(
+        (resp) => resp,
+        async (error: AxiosError) => {
+            const status = error.response?.status ?? 0;
+            const original = error.config as (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined;
+
+            if (original && !original._retry && (status === 401 || status === 403)) {
+                original._retry = true;
+
+                const refreshed = await auth.refreshToken?.(10);
+                if (refreshed) {
+                    return client.request(original);
+                }
+
+                auth.clearStorage?.();
+                auth.loginRedirect?.();
+            }
+
+            return Promise.reject(error);
         }
-        throw error;
-    };
-
-    axiosInstance.interceptors.request.use(onRequest);
-    axiosInstance.interceptors.response.use(undefined, onResponseRejected);
-
-    return {
-        request: onRequest,
-        response: { onRejected: onResponseRejected },
-    };
+    );
 }
 
-export function initAxiosClient(): void {
-    installInterceptors();
-}
-export default axiosInstance;
+installInterceptors(axiosClient, keycloakAuthProvider);

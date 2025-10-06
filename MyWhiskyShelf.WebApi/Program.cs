@@ -22,13 +22,30 @@ internal static class Program
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureRepositories();
         builder.Services.AddOptionalDataSeeding();
-        
+
         if (builder.Environment.IsDevelopment())
-            builder.Services.AddOpenApi();
+        {
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("UiCors", policy =>
+                {
+                    policy
+                        .WithOrigins(
+                            "http://localhost:5173",
+                            "https://localhost:5173",
+                            "http://127.0.0.1:5173",
+                            "https://127.0.0.1:5173"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+        }
+
+        builder.Services.AddOpenApi();
 
         builder.SetupAuthorization();
 
-        
         var app = builder.Build();
 
         app.MapDefaultEndpoints();
@@ -36,6 +53,7 @@ internal static class Program
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.UseCors("UiCors");
         }
 
         app.UseHttpsRedirection();

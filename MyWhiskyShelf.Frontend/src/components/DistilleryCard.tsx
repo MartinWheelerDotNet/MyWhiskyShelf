@@ -25,14 +25,15 @@ import { styled } from "@mui/material/styles";
 export type DistilleryCardProps = Readonly<{
     id: string;
     name: string;
-    region?: string;
     country?: string;
+    region?: string;
     founded?: number | string;
+    owner?: string;
     isFavorite?: boolean;
     logoUrl?: string;
     onToggleFavorite?: (id: string) => void;
-    about?: string;
-    notes?: string;
+    description?: string;
+    tastingNotes?: string;
     whiskiesCount?: number;
 }>;
 
@@ -57,11 +58,12 @@ export default function DistilleryCard(
         region,
         country,
         founded,
+        owner,
         isFavorite = false,
         logoUrl,
         onToggleFavorite,
-        about,
-        notes,
+        description,
+        tastingNotes,
         whiskiesCount 
     }: DistilleryCardProps) {
     
@@ -162,17 +164,19 @@ export default function DistilleryCard(
                 <CardContent>
                     <Stack spacing={3}>
                         <Section title="About">
-                            <Typography variant="overline" sx={{ whiteSpace: "pre-wrap" }}>
-                                <b>Founded:</b> {founded ?? "-"}
+                            <Typography variant="subtitle2" sx={{ whiteSpace: "pre-wrap" }}>
+                                <i>Founded: {founded ?? "-"}</i>
                             </Typography>
-                            <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                                {about ?? "—"}
+                            <Typography variant="subtitle2" sx={{ whiteSpace: "pre-wrap" }}>
+                                <i>Owned By: {owner ?? "-"}</i>
+                            </Typography>
+                            <Typography variant="body2" sx={{ whiteSpace: "pre-wrap", paddingTop: 1 }}>
+                                {description ?? "—"}
                             </Typography>
                         </Section>
-
                         <Section title="Tasting Notes">
                             <Typography variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
-                                {notes ?? "—"}
+                                {tastingNotes ?? "—"}
                             </Typography>
                         </Section>
 

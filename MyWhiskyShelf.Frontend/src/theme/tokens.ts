@@ -1,6 +1,6 @@
 export const COLOURS = {
     light: {
-        base: "#f2fbfc",
+        base: "#e6f3f5",
         text: "#000000",
         border: "#444444",
         modeToggle: "#ebe713",

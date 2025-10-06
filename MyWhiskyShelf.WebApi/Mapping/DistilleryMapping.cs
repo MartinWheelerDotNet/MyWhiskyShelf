@@ -17,6 +17,8 @@ public static class DistilleryMapping
             Founded = distillery.Founded,
             Owner = distillery.Owner,
             Type = distillery.Type,
+            Description = distillery.Description,
+            TastingNotes = distillery.TastingNotes,
             FlavourProfile = distillery.FlavourProfile,
             Active = distillery.Active
         };
