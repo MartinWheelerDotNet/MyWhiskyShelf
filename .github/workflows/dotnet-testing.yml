@@ -48,7 +48,6 @@ jobs:
       - name: Run tests
         env:
           INPUT_PROJECT: ${{ inputs.project }}
-          INPUT_NAME: ${{ inputs.project }}
         run: |
           dotnet test  $INPUT_PROJECT \
             --collect:"XPlat Code Coverage" \
@@ -60,7 +59,7 @@ jobs:
       - name: Upload test results
         uses: actions/upload-artifact@v4
         env:
-          INPUT_NAME: ${{ inputs.project }}
+          INPUT_NAME: ${{ inputs.name }}
         with:
           name: test-results-$INPUT_NAME
           path: ./TestResults

@@ -33,6 +33,7 @@ jobs:
               - '!MyWhiskyShelf.Frontend/**'
             frontend:
               - 'MyWhiskyShelf.Frontend/**'
+              - './github/workflows/**'
   
   build:
     name: Backend Build
