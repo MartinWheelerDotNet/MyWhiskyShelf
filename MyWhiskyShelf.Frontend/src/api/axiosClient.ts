@@ -28,7 +28,7 @@ function installInterceptors(client: AxiosInstance, auth: AuthProvider) {
         (resp) => resp,
         async (error: AxiosError) => {
             const status = error.response?.status ?? 0;
-            const original = error.config as (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined;
+            const original = error.config as (InternalAxiosRequestConfig & { _retry?: boolean });
 
             if (original && !original._retry && (status === 401 || status === 403)) {
                 original._retry = true;
@@ -42,7 +42,7 @@ function installInterceptors(client: AxiosInstance, auth: AuthProvider) {
                 auth.loginRedirect?.();
             }
 
-            return Promise.reject(error);
+            throw error;
         }
     );
 }

@@ -5,14 +5,14 @@ import { getAllDistilleries } from "@/api/distilleriesApi";
 export interface UseDistilleriesResult<T> {
   data: T[];
   loading: boolean;
-  error: unknown | null;
+  error: unknown;
   refresh: () => Promise<void>;
 }
 
 export function useFetchAllDistilleries<T = any>(): UseDistilleriesResult<T> {
   const [data, setData] = React.useState<T[]>([]);
   const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<unknown | null>(null);
+  const [error, setError] = React.useState<unknown>(null);
 
   const load = React.useCallback(async () => {
     setLoading(true);

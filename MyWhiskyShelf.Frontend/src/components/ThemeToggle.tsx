@@ -8,7 +8,7 @@ import { useThemeMode } from "@/theme/ThemeModeProvider";
 type Props = { sx?: SxProps };
 
 const GradientSwitch = styled(Switch)(({ theme }) => {
-    const mode = (theme as any).app?.controls?.modeToggle ?? {};
+    const mode = theme.app?.controls?.modeToggle ?? {};
     const isDark = theme.palette.mode === "dark";
 
     const WIDTH = mode.width ?? 70;
