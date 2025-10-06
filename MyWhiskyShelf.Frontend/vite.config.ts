@@ -1,5 +1,5 @@
 import { defineConfig } from "vite";
-import path from "path";
+import path from "node:path";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig(() => {
@@ -13,7 +13,7 @@ export default defineConfig(() => {
         plugins: [react()],
         server: {
             port,
-            strictPort: true, // ✅ do not hop to a new port; keeps redirect_uri + CORS stable
+            strictPort: true,
             host: true,
             proxy: apiTarget
                 ? {

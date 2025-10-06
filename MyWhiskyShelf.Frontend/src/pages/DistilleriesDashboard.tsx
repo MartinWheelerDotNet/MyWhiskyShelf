@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Container, Grid, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
 // @ts-ignore
 import DistilleryCard from "@/components/DistilleryCard";
 // @ts-ignore
@@ -71,15 +72,14 @@ export default function DistilleriesDashboard() {
                 <Typography variant="body2" sx={{ mb: 2 }}>
                     {(error as any)?.message ?? "Please try again."}
                 </Typography>
-                <Typography
-                    role="button"
-                    tabIndex={0}
-                    sx={{ textDecoration: "underline", cursor: "pointer" }}
-                    onClick={() => refresh()}
-                    onKeyDown={(e) => e.key === "Enter" && refresh()}
+                <Button
+                    variant="text"
+                    type="button"
+                    onClick={refresh}
+                    sx={{ textDecoration: "underline", p: 0, minWidth: 0, textTransform: "none" }}
                 >
                     Retry
-                </Typography>
+                </Button>
             </Container>
         );
     }
