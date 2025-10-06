@@ -61,5 +61,6 @@ jobs:
         env:
           INPUT_NAME: ${{ inputs.name }}
         with:
-          name: test-results-$INPUT_NAME
+          name: test-results-${{ env.INPUT_NAME }}
           path: ./TestResults
+          overwrite: true
