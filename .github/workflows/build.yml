@@ -10,6 +10,23 @@ on:
     branches: [ "main" ]
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - '!MyWhiskyShelf.Frontend/**'
+            frontend:
+              - 'MyWhiskyShelf.Frontend/**'
+  
   build:
     runs-on: ubuntu-latest
     steps:
@@ -35,6 +52,8 @@ jobs:
   
   frontend-tests:
     name: Frontend Tests
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -80,8 +99,11 @@ jobs:
   
   test:
     name: .NET Tests
+    if: ${{ needs.changes.outputs.backend == 'true' }}
     uses: ./.github/workflows/dotnet-testing.yml
-    runs-on: ubuntu-latest
+    with:
+      name: ${{ matrix.name }}
+      project: ${{ matrix.project }}
     strategy:
       fail-fast: true
       matrix:
@@ -129,7 +151,7 @@ jobs:
   
   mutation-testing:
     name: ${{ matrix.name }} Mutations
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: ${{ needs.changes.outputs.backend == 'true' && github.actor != 'dependabot[bot]' }}
     uses: ./.github/workflows/mutation-testing.yml
     with:
       name: ${{ matrix.name }}

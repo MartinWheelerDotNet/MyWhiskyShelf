@@ -11,8 +11,6 @@ on:
       project:
         required: true
         type: string
-    paths:
-      - '!MyWhiskyShelf.Frontend/**'
     
 jobs:
   if: ${{ github.actor != 'dependabot[bot]' }}
