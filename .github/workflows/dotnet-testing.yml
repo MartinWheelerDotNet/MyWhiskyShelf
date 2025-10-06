@@ -14,6 +14,7 @@ on:
     
 jobs:
   dotnet-tests:
+    name: ${{ inputs.name }}
     runs-on: ubuntu-latest
       
     steps:
