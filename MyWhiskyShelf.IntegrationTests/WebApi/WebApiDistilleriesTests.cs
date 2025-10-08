@@ -130,7 +130,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
-        var response = await httpClient.GetAsync($"/distilleries?page=0&amount=0");
+        var response = await httpClient.GetAsync("/distilleries?page=0&amount=0");
         var validationProblem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
         
         Assert.Equivalent(expectedValidationProblemDetails, validationProblem);
