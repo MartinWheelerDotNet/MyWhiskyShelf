@@ -33,4 +33,13 @@ public static class EndpointFilterExtensions
             return await filter.InvokeAsync(context, next);
         });
     }
+
+    public static RouteHandlerBuilder UsesPagingResponse(this RouteHandlerBuilder routeHandlerBuilder)
+    {
+        return routeHandlerBuilder.AddEndpointFilter(async (context, next) =>
+        {
+            var filter = new ValidatePagingQueryInRangeFilter();
+            return await filter.InvokeAsync(context, next);
+        }); 
+    }
 }

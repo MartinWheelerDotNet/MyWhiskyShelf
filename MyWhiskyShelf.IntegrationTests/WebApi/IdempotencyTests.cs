@@ -14,14 +14,18 @@ public class IdempotencyTests(WorkingFixture fixture)
 {
     private static readonly List<(EntityType EntityType, string Method, string Path, object? Body)> EndpointData =
     [
-        (EntityType.Distillery, HttpMethod.Post.Method, "/distilleries", DistilleryRequestTestData.GenericCreate),
+        (EntityType.Distillery, HttpMethod.Post.Method, "/distilleries",
+            DistilleryRequestTestData.GenericCreate),
         (EntityType.Distillery, HttpMethod.Put.Method, "/distilleries/{Id}",
             DistilleryRequestTestData.GenericUpdate with { Name = "Update" }),
-        (EntityType.Distillery, HttpMethod.Delete.Method, "/distilleries/{Id}", null),
-        (EntityType.WhiskyBottle, HttpMethod.Post.Method, "/whisky-bottles", WhiskyBottleRequestTestData.GenericCreate),
+        (EntityType.Distillery, HttpMethod.Delete.Method, "/distilleries/{Id}", 
+            null),
+        (EntityType.WhiskyBottle, HttpMethod.Post.Method, "/whisky-bottles", 
+            WhiskyBottleRequestTestData.GenericCreate),
         (EntityType.WhiskyBottle, HttpMethod.Put.Method, "/whisky-bottles/{Id}",
             WhiskyBottleRequestTestData.GenericUpdate with { Name = "Update" }),
-        (EntityType.WhiskyBottle, HttpMethod.Delete.Method, "/whisky-bottles/{Id}", null)
+        (EntityType.WhiskyBottle, HttpMethod.Delete.Method, "/whisky-bottles/{Id}",
+            null)
     ];
 
     private static readonly List<string> InvalidKeys =
@@ -106,7 +110,7 @@ public class IdempotencyTests(WorkingFixture fixture)
         RequestBodyWrapper body)
     {
         var httpMethod = new HttpMethod(method);
-        await fixture.SeedDatabase();
+        await fixture.SeedDatabaseWithMethodTestData();
 
         var (_, id) = fixture.GetSeededEntityDetailByTypeAndMethod(httpMethod, entityType);
         path = path.Replace("{Id}", id.ToString());

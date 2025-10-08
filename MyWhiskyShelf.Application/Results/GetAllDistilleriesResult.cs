@@ -11,4 +11,8 @@ public enum GetAllDistilleriesOutcome
 public sealed record GetAllDistilleriesResult(
     GetAllDistilleriesOutcome Outcome,
     IReadOnlyList<Distillery>? Distilleries = null,
+    int Page = 0,
+    int Amount = 0,
+    int TotalItems = 0,
+    int TotalPages = 0,
     string? Error = null);

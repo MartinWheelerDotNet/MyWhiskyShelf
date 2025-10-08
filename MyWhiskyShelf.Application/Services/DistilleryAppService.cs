@@ -35,14 +35,23 @@ public sealed class DistilleryAppService(
         }
     }
 
-    public async Task<GetAllDistilleriesResult> GetAllAsync(CancellationToken ct = default)
+    public async Task<GetAllDistilleriesResult> GetAllAsync(int page, int amount, CancellationToken ct = default)
     {
         try
         {
-            var distilleries = await read.GetAllAsync(ct);
+            var distilleries = await read.GetAllAsync(page, amount, ct);
             
-            logger.LogDebug("Retrieved [{Count}] distilleries", distilleries.Count);
-            return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Success, distilleries);
+            logger.LogDebug("Retrieved [{Count}] distilleries (page {Page} / amount {Amount})",
+                distilleries.Count,
+                page,
+                amount);
+
+            return new GetAllDistilleriesResult(
+                Outcome: GetAllDistilleriesOutcome.Success,
+                Distilleries: distilleries,
+                Page: page,
+                Amount: amount
+            );
         }
         catch (Exception ex)
         {

@@ -34,4 +34,12 @@ public static class ValidationProblemResults
                 { "idempotencyKey", ["Header value 'idempotency-key' is required and must be an non-empty UUID"] }
             });
     }
+
+    public static IResult PagingParametersAreOutOfRange(Dictionary<string, string[]> errors)
+    {
+        return Results.ValidationProblem(
+            title: "Paging parameters are out of range",
+            type: "urn:mywhiskyshelf:validation-errors:paging",
+            errors: errors);
+    } 
 }

@@ -17,6 +17,7 @@ export default function DistilleriesDashboard() {
     const [region, setRegion] = React.useState<string>("all");
     const [country, setCountry] = React.useState<string>("all");
 
+    console.log(data);
     const cards = React.useMemo(() => data.map(toCardProps), [data]);
 
     const filtered = React.useMemo(() => {

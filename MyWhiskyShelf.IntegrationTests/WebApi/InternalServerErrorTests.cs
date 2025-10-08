@@ -17,7 +17,7 @@ public class InternalServerErrorTests(BrokenFixture fixture)
                 "distillery", "get-by-id", $"/distilleries/{Guid.NewGuid()}", HttpMethod.Get.Method, null
             },
             {
-                "distillery", "get-all", "/distilleries", HttpMethod.Get.Method, null
+                "distillery", "get-all", "/distilleries?page=1&amount=10", HttpMethod.Get.Method, null
             },
             {
                 "distillery", "search", "/distilleries/search?pattern=anything", HttpMethod.Get.Method, null
