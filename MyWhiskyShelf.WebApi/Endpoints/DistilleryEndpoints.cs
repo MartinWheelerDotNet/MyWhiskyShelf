@@ -3,6 +3,7 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Application.Abstractions.Services;
 using MyWhiskyShelf.Application.Results;
+using MyWhiskyShelf.WebApi.Contracts.Common;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 using MyWhiskyShelf.WebApi.ErrorResults;
 using MyWhiskyShelf.WebApi.Extensions;
@@ -86,29 +87,39 @@ public static class DistilleryEndpoints
             .RequiresNonEmptyRouteParameter("id")
             .RequireAuthorization(Policies.ReadDistilleries);
 
-        group.MapGet(
+        group
+            .MapGet(
                 "/",
                 async (
                     [FromServices] IDistilleryAppService service,
                     HttpContext httpContext,
-                    CancellationToken ct) =>
+                    CancellationToken ct,
+                    [FromQuery(Name = "page")] int page = 1,
+                    [FromQuery(Name = "amount")] int amount = 10) =>
                 {
-                    var result = await service.GetAllAsync(ct);
+                    var result = await service.GetAllAsync(page, amount, ct);
 
                     return result.Outcome switch
                     {
                         GetAllDistilleriesOutcome.Success => Results.Ok(
-                            result.Distilleries!.Select(distillery => distillery.ToResponse())),
+                            new PagedResponse<DistilleryResponse>(
+                                Items: result.Distilleries!.Select(d => d.ToResponse()).ToList(),
+                                Page: result.Page,
+                                Amount: result.Amount
+                            )
+                        ),
                         _ => ProblemResults.InternalServerError(
-                                EndpointGroup,
-                                "get-all",
-                                httpContext.TraceIdentifier,
-                                httpContext.Request.Path)
+                            "distillery",
+                            "get-all",
+                            httpContext.TraceIdentifier,
+                            httpContext.Request.Path)
                     };
                 })
             .WithName("Get All Distilleries")
-            .Produces<List<DistilleryResponse>>()
+            .Produces<PagedResponse<DistilleryResponse>>()
             .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesValidationProblem()
+            .UsesPagingResponse()
             .RequireAuthorization(Policies.ReadDistilleries);
 
         group.MapGet(

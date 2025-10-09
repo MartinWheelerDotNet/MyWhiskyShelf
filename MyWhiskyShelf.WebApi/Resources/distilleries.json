@@ -52,5 +52,185 @@
       "Body": 7
     },
     "Active": true
+  },
+  {
+    "Name": "Aberlour0",
+    "Country": "Scotland",
+    "Region": "Speyside",
+    "Founded": 1879,
+    "Owner": "Chivas Brothers",
+    "Type": "Malt",
+    "Description": "Speyside distillery famed for rich, sherried malts combining fruit sweetness with deep oak spice.",
+    "TastingNotes": "Red apple, toffee, and orange zest with warming cinnamon, vanilla, and a smooth, lingering finish.",
+    "FlavourProfile": {
+      "Sweet": 7,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 5,
+      "Body": 7
+    },
+    "Active": true
+  },
+  {
+    "Name": "Aberlour9",
+    "Country": "Scotland",
+    "Region": "Speyside",
+    "Founded": 1879,
+    "Owner": "Chivas Brothers",
+    "Type": "Malt",
+    "Description": "Speyside distillery famed for rich, sherried malts combining fruit sweetness with deep oak spice.",
+    "TastingNotes": "Red apple, toffee, and orange zest with warming cinnamon, vanilla, and a smooth, lingering finish.",
+    "FlavourProfile": {
+      "Sweet": 7,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 5,
+      "Body": 7
+    },
+    "Active": true
+  },
+  {
+    "Name": "Aberlour8",
+    "Country": "Scotland",
+    "Region": "Speyside",
+    "Founded": 1879,
+    "Owner": "Chivas Brothers",
+    "Type": "Malt",
+    "Description": "Speyside distillery famed for rich, sherried malts combining fruit sweetness with deep oak spice.",
+    "TastingNotes": "Red apple, toffee, and orange zest with warming cinnamon, vanilla, and a smooth, lingering finish.",
+    "FlavourProfile": {
+      "Sweet": 7,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 5,
+      "Body": 7
+    },
+    "Active": true
+  },
+  {
+    "Name": "Aberlour7",
+    "Country": "Scotland",
+    "Region": "Speyside",
+    "Founded": 1879,
+    "Owner": "Chivas Brothers",
+    "Type": "Malt",
+    "Description": "Speyside distillery famed for rich, sherried malts combining fruit sweetness with deep oak spice.",
+    "TastingNotes": "Red apple, toffee, and orange zest with warming cinnamon, vanilla, and a smooth, lingering finish.",
+    "FlavourProfile": {
+      "Sweet": 7,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 5,
+      "Body": 7
+    },
+    "Active": true
+  },
+  {
+    "Name": "Aberlour6",
+    "Country": "Scotland",
+    "Region": "Speyside",
+    "Founded": 1879,
+    "Owner": "Chivas Brothers",
+    "Type": "Malt",
+    "Description": "Speyside distillery famed for rich, sherried malts combining fruit sweetness with deep oak spice.",
+    "TastingNotes": "Red apple, toffee, and orange zest with warming cinnamon, vanilla, and a smooth, lingering finish.",
+    "FlavourProfile": {
+      "Sweet": 7,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 5,
+      "Body": 7
+    },
+    "Active": true
+  },
+  {
+    "Name": "Aberlour5",
+    "Country": "Scotland",
+    "Region": "Speyside",
+    "Founded": 1879,
+    "Owner": "Chivas Brothers",
+    "Type": "Malt",
+    "Description": "Speyside distillery famed for rich, sherried malts combining fruit sweetness with deep oak spice.",
+    "TastingNotes": "Red apple, toffee, and orange zest with warming cinnamon, vanilla, and a smooth, lingering finish.",
+    "FlavourProfile": {
+      "Sweet": 7,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 5,
+      "Body": 7
+    },
+    "Active": true
+  },
+  {
+    "Name": "Aberlour4",
+    "Country": "Scotland",
+    "Region": "Speyside",
+    "Founded": 1879,
+    "Owner": "Chivas Brothers",
+    "Type": "Malt",
+    "Description": "Speyside distillery famed for rich, sherried malts combining fruit sweetness with deep oak spice.",
+    "TastingNotes": "Red apple, toffee, and orange zest with warming cinnamon, vanilla, and a smooth, lingering finish.",
+    "FlavourProfile": {
+      "Sweet": 7,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 5,
+      "Body": 7
+    },
+    "Active": true
+  },
+  {
+    "Name": "Aberlour3",
+    "Country": "Scotland",
+    "Region": "Speyside",
+    "Founded": 1879,
+    "Owner": "Chivas Brothers",
+    "Type": "Malt",
+    "Description": "Speyside distillery famed for rich, sherried malts combining fruit sweetness with deep oak spice.",
+    "TastingNotes": "Red apple, toffee, and orange zest with warming cinnamon, vanilla, and a smooth, lingering finish.",
+    "FlavourProfile": {
+      "Sweet": 7,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 5,
+      "Body": 7
+    },
+    "Active": true
+  },
+  {
+    "Name": "Aberlour2",
+    "Country": "Scotland",
+    "Region": "Speyside",
+    "Founded": 1879,
+    "Owner": "Chivas Brothers",
+    "Type": "Malt",
+    "Description": "Speyside distillery famed for rich, sherried malts combining fruit sweetness with deep oak spice.",
+    "TastingNotes": "Red apple, toffee, and orange zest with warming cinnamon, vanilla, and a smooth, lingering finish.",
+    "FlavourProfile": {
+      "Sweet": 7,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 5,
+      "Body": 7
+    },
+    "Active": true
+  },
+  {
+    "Name": "Aberlour1",
+    "Country": "Scotland",
+    "Region": "Speyside",
+    "Founded": 1879,
+    "Owner": "Chivas Brothers",
+    "Type": "Malt",
+    "Description": "Speyside distillery famed for rich, sherried malts combining fruit sweetness with deep oak spice.",
+    "TastingNotes": "Red apple, toffee, and orange zest with warming cinnamon, vanilla, and a smooth, lingering finish.",
+    "FlavourProfile": {
+      "Sweet": 7,
+      "Fruit": 7,
+      "Peat": 1,
+      "Spice": 5,
+      "Body": 7
+    },
+    "Active": true
   }
 ]

@@ -37,14 +37,19 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
             .ToListAsync(ct);
     }
 
-    public async Task<IReadOnlyList<Distillery>> GetAllAsync(CancellationToken ct = default)
+    public async Task<IReadOnlyList<Distillery>> GetAllAsync(int page, int amount, CancellationToken ct = default)
     {
-        return await dbContext.Distilleries
-                .AsNoTracking()
-                .OrderBy(entity => entity.Name)
-                .ThenBy(entity => entity.Id)
-                .Select(DistilleryProjections.ToDistilleryDomain)
-                .ToListAsync(ct);
-        
+        var query = dbContext.Distilleries
+            .AsNoTracking()
+            .OrderBy(entity => entity.Name)
+            .ThenBy(entity => entity.Id);
+
+        var entities = await query
+            .Skip((page - 1) * amount)
+            .Take(amount)
+            .Select(DistilleryProjections.ToDistilleryDomain)
+            .ToListAsync(ct);
+
+        return entities;
     }
 }

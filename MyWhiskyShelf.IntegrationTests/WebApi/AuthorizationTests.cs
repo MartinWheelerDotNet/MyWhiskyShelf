@@ -14,7 +14,7 @@ public class AuthorizationTests(WorkingFixture fixture)
             //distilleries
             { Roles.User, true, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Get.Method },
             { Roles.Admin, true, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Get.Method },
-            { Roles.User, true, "/distilleries", HttpMethod.Get.Method },
+            { Roles.User, true, "/distilleries?page=1&amount=10", HttpMethod.Get.Method },
             { Roles.Admin, true, "/distilleries", HttpMethod.Get.Method },
             { Roles.User, false, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Delete.Method },
             { Roles.Admin, true, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Delete.Method },

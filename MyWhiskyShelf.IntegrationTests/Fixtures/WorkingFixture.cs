@@ -3,6 +3,7 @@ using Aspire.Hosting;
 using JetBrains.Annotations;
 using MyWhiskyShelf.IntegrationTests.Helpers;
 using MyWhiskyShelf.IntegrationTests.TestData;
+using MyWhiskyShelf.WebApi.Contracts.Common;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 using MyWhiskyShelf.WebApi.Contracts.WhiskyBottles;
 
@@ -34,22 +35,21 @@ public class WorkingFixture : IAsyncLifetime
         return entityDetails;
     }
 
-
-    public List<(HttpMethod Method, string Name, Guid Id)> GetSeededEntityDetailsByType(EntityType entityType)
-    {
-        return _seededEntityDetails
-            .Where((kvp, _) => kvp.Key.Entity == entityType)
-            .Select((kvp, _) => (kvp.Key.Method, kvp.Value.Name, kvp.Value.Id))
-            .ToList();
-    }
-
-    public async Task SeedDatabase()
+public async Task SeedDatabaseWithMethodTestData()
     {
         await SeedDistilleriesAsync();
         await SeedWhiskyBottlesAsync();
     }
 
-    public async Task SeedDistilleriesAsync()
+    public async Task ClearDistilleriesAsync()
+    {
+        using var httpClient = await Application.CreateAdminHttpsClientAsync();
+        var distilleries = await httpClient.GetFromJsonAsync<PagedResponse<DistilleryResponse>>(
+            "/distilleries?page=1&amount=200");
+        await DeleteDistilleriesAsync(distilleries!.Items.Select(x => x.Id));
+    }
+
+    private async Task SeedDistilleriesAsync()
     {
         using var httpClient = await Application.CreateAdminHttpsClientAsync();
 
@@ -88,6 +88,35 @@ public class WorkingFixture : IAsyncLifetime
         }
         
         return seededDistilleries;
+    }
+
+    public async Task<List<DistilleryResponse>> SeedDistilleriesAsync(int count)
+    {
+        var createRequests = Enumerable.Range(0, count)
+            .Select(i => DistilleryRequestTestData.GenericCreate with { Name = $"Distillery Number {i}" })
+            .ToArray();
+        
+        var seededDistilleryDetails = await SeedDistilleriesAsync(createRequests);
+        
+        return seededDistilleryDetails
+            .Select(details => DistilleryResponseTestData.GenericResponse(details.Value) with { Name = details.Key })
+            .OrderBy(response => response.Name)
+            .ThenBy(response => response.Id)
+            .ToList();
+    }
+
+    private async Task DeleteDistilleriesAsync(IEnumerable<Guid> ids)
+    {
+        using var httpClient = await Application.CreateAdminHttpsClientAsync();
+        
+        foreach (var id in ids)
+        {
+            var deleteRequest = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
+                HttpMethod.Delete,
+                $"/distilleries/{id}");
+            
+            await httpClient.SendAsync(deleteRequest);
+        }
     }
 
     public async Task SeedWhiskyBottlesAsync()
