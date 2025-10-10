@@ -1,11 +1,13 @@
 import * as React from "react";
+// @ts-ignore
+import {Distillery} from "@/lib/domain/types";
 
 export type SelectOption = { value: string; label: string };
 
-function norm(v: unknown) {
-    return String(v ?? "").trim();
+function norm(v: string) {
+    return String(v).trim();
 }
-function normLower(v: unknown) {
+function normLower(v: string) {
     return norm(v).toLowerCase();
 }
 
@@ -33,22 +35,22 @@ export function useDistilleryFilters<T extends { name?: string; region?: string;
         return [{ value: "all", label: "All" }, ...opts.map((r) => ({ value: r.toLowerCase(), label: r }))];
     }, [items]);
 
-    const filteredItems = React.useMemo(() => {
+    const filteredItems: Distillery = React.useMemo(() => {
         const normalQuery = normLower(query);
         const countryFilter = country;
         const regionFilter = region;
 
         return items.filter((d) => {
-            const normalDistilleryName = normLower(d.name);
-            const normalDistilleryRegion = normLower(d.region);
-            const normalDistiileryCountry = normLower(d.country);
+            const normalDistilleryName = normLower(d.name as string);
+            const normalDistilleryRegion = normLower(d.region as string);
+            const normalDistilleryCountry = normLower(d.country as string);
 
-            const okCountry = countryFilter === "all" || normalDistiileryCountry === countryFilter;
+            const okCountry = countryFilter === "all" || normalDistilleryCountry === countryFilter;
             const okRegion = regionFilter === "all" || normalDistilleryRegion === regionFilter;
             const okQuery = !normalQuery 
                 || normalDistilleryName.includes(normalQuery) 
                 || normalDistilleryRegion.includes(normalQuery) 
-                || normalDistiileryCountry.includes(normalQuery);
+                || normalDistilleryCountry.includes(normalQuery);
 
             return okCountry && okRegion && okQuery;
         });

@@ -5,7 +5,7 @@ import SkeletonDistilleryCard from "@/components/distilleries/SkeletonDistillery
 // @ts-ignore
 import DistilleryCard from "@/components/distilleries/DistilleryCard";
 // @ts-ignore
-import {mapToDistillery, mapToDistilleryCardProps} from "@/lib/mappers/distillery";
+import { mapToDistilleryCardProps } from "@/lib/mappers/distillery";
 // @ts-ignore
 import { Distillery } from "@/lib/domain/types";
 
@@ -30,19 +30,25 @@ export default function DistilleriesList(
         initialSkeletonCount = 6,
         moreSkeletonCount = 3,
         setSentinel
-    }: DistilleryListProps) {
+    }: Readonly<DistilleryListProps>) {
     
     if (initialLoading) {
+        const initialSkeletonKeys = Array.from({ length: initialSkeletonCount })
+            .map((_, i) => `init-sk-${i}`);
+        
         return (
             <Grid container spacing={1} sx={{ mt: 1 }}>
                 {Array.from({ length: initialSkeletonCount }).map((_, i) => (
-                    <Grid key={`init-sk-${i}`} size={{ xs: 12, sm: 6, md: 12 }}>
+                    <Grid key={initialSkeletonKeys[i]} size={{ xs: 12, sm: 6, md: 12 }}>
                         <SkeletonDistilleryCard />
                     </Grid>
                 ))}
             </Grid>
         );
     }
+
+    const moreSkeletonKeys = Array.from({ length: moreSkeletonCount })
+        .map((_, i) => `more-sk-${i}`);
 
     return (
         <>
@@ -58,10 +64,10 @@ export default function DistilleriesList(
                         </Grid>
                     );
                 })}
-
+                
                 {showMoreSkeletons &&
                     Array.from({ length: moreSkeletonCount }).map((_, i) => (
-                        <Grid key={`more-sk-${i}`} size={{ xs: 12, sm: 6, md: 12 }}>
+                        <Grid key={moreSkeletonKeys[i]} size={{ xs: 12, sm: 6, md: 12 }}>
                             <SkeletonDistilleryCard />
                         </Grid>
                     ))}

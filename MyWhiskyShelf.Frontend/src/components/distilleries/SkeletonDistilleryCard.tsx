@@ -3,6 +3,8 @@ import { Card, CardHeader, Skeleton, Stack, alpha, useMediaQuery } from "@mui/ma
 export default function SkeletonDistilleryCard() {
     const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
     const animation: "wave" | false = reduceMotion ? false : "wave";
+    const skeletonKeys = Array.from({ length: 3 })
+        .map((_, i) => `sk-${i}`);
 
     return (
         <Card
@@ -23,7 +25,7 @@ export default function SkeletonDistilleryCard() {
                     <Stack pt={1} direction="row" gap={1} flexWrap="wrap" alignItems="center">
                         {[90, 80, 110].map((w, i) => (
                             <Skeleton
-                                key={i}
+                                key={skeletonKeys[i]}
                                 variant="rounded"
                                 width={w}
                                 height={24}
