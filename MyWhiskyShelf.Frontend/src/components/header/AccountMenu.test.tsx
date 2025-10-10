@@ -4,8 +4,9 @@ import {render, screen, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import AccountMenu from "./AccountMenu";
-import {COLOURS} from "../../theme/tokens.ts";
 import {hexToRgb} from "@mui/material";
+// @ts-ignore
+import {COLOURS} from "@/theme/tokens";
 
 function renderWithTheme(ui: React.ReactNode, mode: "light" | "dark" = "light") {
     const theme = createTheme({ palette: { mode } });

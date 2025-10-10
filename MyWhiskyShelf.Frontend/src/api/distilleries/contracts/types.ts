@@ -1,5 +1,3 @@
-import { axiosClient } from "./axiosClient";
-
 export interface DistilleryResponse {
     id: string;
     name: string;
@@ -18,9 +16,4 @@ export interface DistilleryResponse {
         malty: number;
     };
     active: boolean;
-}
-
-export async function getAllDistilleries(): Promise<DistilleryResponse[]> {
-    const response = await axiosClient.get<DistilleryResponse[]>("/distilleries");
-    return response.data;
 }
