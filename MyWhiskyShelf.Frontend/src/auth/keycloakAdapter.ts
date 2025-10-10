@@ -1,5 +1,5 @@
 // @ts-ignore
-import keycloak from "@/auth/keycloak"; // your existing singleton instance
+import keycloak from "@/auth/keycloak";
 
 export interface AuthProvider {
     getToken(): string | undefined;

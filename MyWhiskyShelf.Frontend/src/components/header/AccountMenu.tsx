@@ -2,7 +2,9 @@ import * as React from "react";
 import { Avatar, Chip, Menu, MenuItem } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import {COLOURS} from "../../theme/tokens.ts";
+
+// @ts-ignore
+import {COLOURS} from "@/theme/tokens";
 
 type Props = {
     username: string;

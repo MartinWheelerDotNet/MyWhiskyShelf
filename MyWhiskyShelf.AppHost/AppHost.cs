@@ -44,6 +44,7 @@ var webApi = builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
 
 if (builder.Configuration.GetValue("MYWHISKYSHELF_UI_ENABLED", true))
 {
+    // Stryker disable all: Frontend environment wiring isn’t covered by mutation tests
     const int vitePort = 5173; 
     builder
         .AddNpmApp("UI", "../MyWhiskyShelf.Frontend")
@@ -58,6 +59,7 @@ if (builder.Configuration.GetValue("MYWHISKYSHELF_UI_ENABLED", true))
         .WaitFor(webApi)
         .WithReference(keycloak)
         .WaitFor(keycloak);
+    // Stryker restore all
 }
 
 

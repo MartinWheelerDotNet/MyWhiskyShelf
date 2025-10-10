@@ -29,10 +29,9 @@ public class ValidatePagingQueryInRangeFilter : IEndpointFilter
     private static Dictionary<string, string[]> ValidatePagingParameters(bool hasPage, bool hasAmount, int page, int amount)
     {
         Dictionary<string, string[]> errors = new();
+        
         if (hasPage && !hasAmount || !hasPage && hasAmount)
-        {
-            errors.Add("paging", ["Either page and amount should be omitted, or both should be provided"]);
-        }
+            errors["paging"] = ["Either page and amount should be omitted, or both should be provided"];
         if (hasPage && page < 1) 
             errors["page"] = ["page must be greater than or equal to 1"];
         if (hasAmount && amount is < 1 or > 200) 

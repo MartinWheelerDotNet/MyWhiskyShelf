@@ -1,17 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
-// Spies to confirm interceptor registration
 const requestUseSpy = vi.fn();
 const responseUseSpy = vi.fn();
 
-// We capture the installed handlers so we can invoke them directly
 const requestHandlerRef: { onFulfilled?: (cfg: any) => any } = {};
 const responseHandlerRef: {
     onRejected?: (err: any) => Promise<any>,
     onFulfilled?: (resp: any) => any
 } = {};
 
-// Minimal AxiosInstance double
 const mockAxiosInstance = {
     interceptors: {
         request: {
@@ -31,7 +28,6 @@ const mockAxiosInstance = {
     request: vi.fn((cfg: any) => Promise.resolve({ data: "retried-ok", config: cfg })),
 } as any;
 
-// Mock axios.create to return our instance
 vi.mock("axios", () => {
     const create = vi.fn(() => mockAxiosInstance);
     return {
@@ -40,7 +36,6 @@ vi.mock("axios", () => {
     };
 });
 
-// Mock the Keycloak auth adapter
 const authProvider = {
     getToken: vi.fn<() => string | undefined>(),
     refreshToken: vi.fn<(minValiditySeconds?: number) => Promise<boolean>>(),
@@ -54,8 +49,6 @@ vi.mock("@/auth/keycloakAdapter", () => ({
 
 beforeEach(async () => {
     vi.resetModules();
-
-    // reset spies & handlers
     requestUseSpy.mockClear();
     responseUseSpy.mockClear();
     mockAxiosInstance.request.mockClear();
@@ -65,8 +58,7 @@ beforeEach(async () => {
     authProvider.clearStorage.mockReset();
     authProvider.loginRedirect.mockReset();
 
-    // Import the module under test for side-effects (installs interceptors)
-    await import("./axiosClient"); // NOTE: no unused variable assignment
+    await import("./axiosClient");
 });
 
 describe("axiosClient interceptors", () => {
