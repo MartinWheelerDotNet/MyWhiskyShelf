@@ -78,14 +78,16 @@ export function useInfiniteDistilleries(initialAmount = 10, opts: Options = {}) 
             fetchingRef.current = false;
         }
     }, []);
-    
-    React.useEffect(() => { void load(1); }, [load]);
+
+    React.useEffect(() => {
+        load(1).catch(() => {});
+    }, [load]);
 
     const loadNext = React.useCallback(() => {
-        setState(s => {
-            if (fetchingRef.current || !s.hasMore) return s;
-            const next = s.page + 1;
-            void load(next);
+        setState((s) => {
+            if (!fetchingRef.current && s.hasMore) {
+                load(s.page + 1).catch(() => {});
+            }
             return s;
         });
     }, [load]);
@@ -103,7 +105,7 @@ export function useInfiniteDistilleries(initialAmount = 10, opts: Options = {}) 
             error: null,
             hasMore: true,
         });
-        void load(1);
+        load(1).catch(() => {});
     }, [initialAmount, load]);
 
     React.useEffect(() => {

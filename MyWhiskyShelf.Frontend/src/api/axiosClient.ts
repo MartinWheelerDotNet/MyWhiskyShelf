@@ -43,7 +43,7 @@ function installInterceptors(client: AxiosInstance, auth: AuthProvider) {
         (resp) => resp,
         async (error: AxiosError) => {
             const status = error.response?.status ?? 0;
-            const original = error.config as RetriableConfig | undefined;
+            const original = error.config as RetriableConfig;
             if (!original) throw error;
 
             if (!original._retry && (status === 401 || status === 403)) {

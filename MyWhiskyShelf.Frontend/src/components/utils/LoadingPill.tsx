@@ -7,9 +7,9 @@ type Props = {
     hasMore: boolean;
 };
 
-export default function LoadingPill({ loading, hasMore }: Props) {
+export default function LoadingPill({ loading, hasMore }: Readonly<Props>) {
     return (
-        <div aria-live="polite" role="status">
+        <output aria-live="polite">
             <Delayed show={loading && hasMore}>
                 <Paper
                     elevation={3}
@@ -54,6 +54,6 @@ export default function LoadingPill({ loading, hasMore }: Props) {
                     </Typography>
                 </Paper>
             )}
-        </div>
+        </output>
     );
 }

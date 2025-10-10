@@ -1,8 +1,6 @@
 import { Container, Typography } from "@mui/material";
 
 // @ts-ignore
-import DistilleryCard from "@/components/distilleries/DistilleryCard";
-// @ts-ignore
 import DistilleriesToolbar from "@/components/distilleries/DistilleriesToolbar";
 // @ts-ignore
 import { useInfiniteDistilleries } from "@/hooks/distilleries/useInfiniteDistilleries";
@@ -11,13 +9,11 @@ import { useDistilleryFilters } from "@/hooks/distilleries/useDistilleryFilters"
 // @ts-ignore
 import DistilleriesList from "@/components/distilleries/DistilleriesList";
 // @ts-ignore
-import SkeletonDistilleryCard from "@/components/distilleries/SkeletonDistilleryCard";
-// @ts-ignore
 import LoadingPill from "@/components/utils/LoadingPill";
 // @ts-ignore
-import {mapToDistilleryCardProps} from "@/lib/mappers/distillery";
+import { mapToDistilleryCardProps } from "@/lib/mappers/distillery";
 // @ts-ignore
-import {Distillery} from "@/lib/domain/types";
+import { Distillery } from "@/lib/domain/types";
 
 export default function DistilleriesDashboard() {
     const {
