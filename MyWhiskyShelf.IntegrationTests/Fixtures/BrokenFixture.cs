@@ -31,9 +31,6 @@ public class BrokenFixture : IAsyncLifetime
         try
         {
             await Application.StopAsync();
-            await Application.ResourceNotifications
-                .WaitForResourceAsync("WebApi")
-                .WaitAsync(TimeSpan.FromSeconds(20));
         }
         finally
         {

@@ -39,6 +39,12 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
+            
+      - name: Update Aspire
+        run: |
+          dotnet workload config --update-mode manifests
+          dotnet workload update
+          dotnet new install Aspire.ProjectTemplates
 
       - name: Restore dependencies
         run: dotnet restore MyWhiskyShelf.NoMigrations.slnf

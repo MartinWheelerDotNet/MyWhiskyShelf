@@ -142,9 +142,6 @@ public class WorkingFixture : IAsyncLifetime
         {
             await ClearDatabaseAsync();
             await Application.StopAsync();
-            await Application.ResourceNotifications
-                .WaitForResourceAsync("WebApi")
-                .WaitAsync(TimeSpan.FromSeconds(20));
         }
         finally
         {
