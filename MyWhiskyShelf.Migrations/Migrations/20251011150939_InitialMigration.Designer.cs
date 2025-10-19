@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Pgvector;
 namespace MyWhiskyShelf.Migrations.Migrations
 {
     [DbContext(typeof(MyWhiskyShelfDbContext))]
-    partial class MyWhiskyShelfDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251011150939_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,6 +28,36 @@ namespace MyWhiskyShelf.Migrations.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "pg_trgm");
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "vector");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("MyWhiskyShelf.Infrastructure.Persistence.Entities.CountryEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("citext");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("citext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("Countries");
+                });
 
             modelBuilder.Entity("MyWhiskyShelf.Infrastructure.Persistence.Entities.DistilleryEntity", b =>
                 {
@@ -97,6 +130,39 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     b.HasIndex("Type");
 
                     b.ToTable("Distilleries");
+                });
+
+            modelBuilder.Entity("MyWhiskyShelf.Infrastructure.Persistence.Entities.RegionEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CountryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("citext");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("citext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId", "Name")
+                        .IsUnique();
+
+                    b.HasIndex("CountryId", "Slug")
+                        .IsUnique();
+
+                    b.ToTable("Regions");
                 });
 
             modelBuilder.Entity("MyWhiskyShelf.Infrastructure.Persistence.Entities.WhiskyBottleEntity", b =>
@@ -172,6 +238,22 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("WhiskyBottles");
+                });
+
+            modelBuilder.Entity("MyWhiskyShelf.Infrastructure.Persistence.Entities.RegionEntity", b =>
+                {
+                    b.HasOne("MyWhiskyShelf.Infrastructure.Persistence.Entities.CountryEntity", "Country")
+                        .WithMany("Regions")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("MyWhiskyShelf.Infrastructure.Persistence.Entities.CountryEntity", b =>
+                {
+                    b.Navigation("Regions");
                 });
 #pragma warning restore 612, 618
         }

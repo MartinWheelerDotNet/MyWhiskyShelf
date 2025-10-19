@@ -21,12 +21,13 @@ public static class FixtureFactory
             .CreateAsync<MyWhiskyShelf_AppHost>(args);
 
         var app = await builder.BuildAsync();
+        
         await app.StartAsync();
 
         await app.Services.GetRequiredService<ResourceNotificationService>()
             .WaitForResourceAsync("WebApi", KnownResourceStates.Running)
             .WaitAsync(TimeSpan.FromSeconds(60));
-
+        
         return app;
     }
 }

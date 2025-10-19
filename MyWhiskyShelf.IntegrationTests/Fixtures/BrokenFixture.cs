@@ -28,6 +28,13 @@ public class BrokenFixture : IAsyncLifetime
     
     public async Task DisposeAsync()
     {
-        await Application.DisposeAsync();  
+        try
+        {
+            await Application.StopAsync();
+        }
+        finally
+        {
+            await Application.DisposeAsync();
+        }
     } 
 }

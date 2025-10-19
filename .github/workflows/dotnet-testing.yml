@@ -36,6 +36,12 @@ jobs:
         env:
           INPUT_PROJECT: ${{ inputs.project }}
         run: dotnet restore $INPUT_PROJECT
+        
+      - name: Update Aspire
+        run: |
+          dotnet workload config --update-mode manifests
+          dotnet workload update
+          dotnet new install Aspire.ProjectTemplates
     
       - name: Build solution
         env:

@@ -17,9 +17,24 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,")
                 .Annotation("Npgsql:PostgresExtension:vector", ",,");
             
-            migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS vector;");
-            migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS citext;");
-            migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS pg_trgm;");
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:citext", ",,")
+                .Annotation("Npgsql:PostgresExtension:pg_trgm", ",,")
+                .Annotation("Npgsql:PostgresExtension:vector", ",,");
+
+            migrationBuilder.CreateTable(
+                name: "Countries",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "citext", maxLength: 50, nullable: false),
+                    Slug = table.Column<string>(type: "citext", maxLength: 50, nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Distilleries",
@@ -67,6 +82,39 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     table.PrimaryKey("PK_WhiskyBottles", x => x.Id);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Regions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "citext", maxLength: 50, nullable: false),
+                    Slug = table.Column<string>(type: "citext", maxLength: 50, nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    CountryId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Regions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Regions_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Countries_Name",
+                table: "Countries",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Countries_Slug",
+                table: "Countries",
+                column: "Slug",
+                unique: true);
+
             migrationBuilder.CreateIndex(
                 name: "IX_Distilleries_FlavourVector",
                 table: "Distilleries",
@@ -95,18 +143,18 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 name: "IX_Distilleries_Type",
                 table: "Distilleries",
                 column: "Type");
-            
-            migrationBuilder.Sql(
-                """
-                CREATE INDEX IF NOT EXISTS IX_Distilleries_Name_trgm
-                ON "Distilleries" USING gin ("Name" gin_trgm_ops);
-                """);
-            
-            migrationBuilder.Sql(
-                """
-                CREATE INDEX IF NOT EXISTS IX_WhiskyBottles_Name_trgm
-                ON "WhiskyBottles" USING gin ("Name" gin_trgm_ops);
-                """);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Regions_CountryId_Name",
+                table: "Regions",
+                columns: new[] { "CountryId", "Name" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Regions_CountryId_Slug",
+                table: "Regions",
+                columns: new[] { "CountryId", "Slug" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_WhiskyBottles_DistilleryName",
@@ -130,6 +178,18 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 name: "IX_WhiskyBottles_Status",
                 table: "WhiskyBottles",
                 column: "Status");
+            
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS IX_Distilleries_Name_trgm
+                ON "Distilleries" USING gin ("Name" gin_trgm_ops);
+                """);
+            
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS IX_WhiskyBottles_Name_trgm
+                ON "WhiskyBottles" USING gin ("Name" gin_trgm_ops);
+                """); 
         }
 
         /// <inheritdoc />
@@ -139,7 +199,13 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 name: "Distilleries");
 
             migrationBuilder.DropTable(
+                name: "Regions");
+
+            migrationBuilder.DropTable(
                 name: "WhiskyBottles");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
         }
     }
 }

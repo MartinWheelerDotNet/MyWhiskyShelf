@@ -11,6 +11,7 @@ on:
 
 jobs:
   changes:
+    name: Assess Changes
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -31,9 +32,10 @@ jobs:
             backend:
               - '**'
               - '!MyWhiskyShelf.Frontend/**'
+              - '!.github/dependabot'
             frontend:
               - 'MyWhiskyShelf.Frontend/**'
-              - './github/workflows/**'
+              - '!.github/dependabot'
   
   build:
     name: Backend Build

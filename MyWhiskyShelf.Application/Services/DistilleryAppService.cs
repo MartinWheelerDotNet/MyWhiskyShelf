@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Application.Abstractions.Services;
 using MyWhiskyShelf.Application.Extensions;
-using MyWhiskyShelf.Application.Results;
+using MyWhiskyShelf.Application.Results.Distillery;
 using MyWhiskyShelf.Core.Aggregates;
 
 namespace MyWhiskyShelf.Application.Services;
@@ -95,7 +95,7 @@ public sealed class DistilleryAppService(
 
             logger.LogDebug(
                 "Distillery created with [Name: {Name}, Id: {Id}]",
-                addedDistillery!.Name.SanitizeForLog(),
+                addedDistillery.Name.SanitizeForLog(),
                 addedDistillery.Id);
             
            return new CreateDistilleryResult(CreateDistilleryOutcome.Created, addedDistillery);

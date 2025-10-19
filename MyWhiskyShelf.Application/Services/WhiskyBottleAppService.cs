@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Application.Abstractions.Services;
 using MyWhiskyShelf.Application.Extensions;
-using MyWhiskyShelf.Application.Results;
+using MyWhiskyShelf.Application.Results.WhiskyBottle;
 using MyWhiskyShelf.Core.Aggregates;
 
 namespace MyWhiskyShelf.Application.Services;

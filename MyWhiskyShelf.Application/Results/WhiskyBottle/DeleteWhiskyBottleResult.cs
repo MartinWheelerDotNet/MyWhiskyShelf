@@ -1,4 +1,4 @@
-namespace MyWhiskyShelf.Application.Results;
+namespace MyWhiskyShelf.Application.Results.WhiskyBottle;
 
 public enum DeleteWhiskyBottleOutcome
 {

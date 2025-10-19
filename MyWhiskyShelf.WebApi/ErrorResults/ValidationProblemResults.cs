@@ -41,5 +41,16 @@ public static class ValidationProblemResults
             title: "Paging parameters are out of range",
             type: "urn:mywhiskyshelf:validation-errors:paging",
             errors: errors);
-    } 
+    }
+    
+    public static IResult CountryNotFound(Guid countryId)
+    {
+        return Results.ValidationProblem(
+            title: "Provided country not found by Id",
+            type: "urn:mywhiskyshelf:validation-errors:country-not-found",
+            errors: new Dictionary<string, string[]>
+            {
+                { "countryId", [$"The provided countryId {countryId} does not exist in the database."] }
+            });
+    }
 }

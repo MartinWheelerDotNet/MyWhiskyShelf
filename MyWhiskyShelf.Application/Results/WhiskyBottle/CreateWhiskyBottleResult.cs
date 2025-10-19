@@ -1,6 +1,4 @@
-using MyWhiskyShelf.Core.Aggregates;
-
-namespace MyWhiskyShelf.Application.Results;
+namespace MyWhiskyShelf.Application.Results.WhiskyBottle;
 
 public enum CreateWhiskyBottleOutcome
 {
@@ -10,5 +8,5 @@ public enum CreateWhiskyBottleOutcome
 
 public sealed record CreateWhiskyBottleResult(
     CreateWhiskyBottleOutcome Outcome,
-    WhiskyBottle? WhiskyBottle = null,
+    Core.Aggregates.WhiskyBottle? WhiskyBottle = null,
     string? Error = null);

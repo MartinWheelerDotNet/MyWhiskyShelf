@@ -14,6 +14,9 @@ public class MyWhiskyShelfDbContext(
 {
     internal DbSet<DistilleryEntity> Distilleries { get; set; }
     internal DbSet<WhiskyBottleEntity> WhiskyBottles { get; set; }
+    internal DbSet<CountryEntity> Countries { get; set; }
+    internal DbSet<RegionEntity> Regions { get; set; }
+    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,8 +25,12 @@ public class MyWhiskyShelfDbContext(
         modelBuilder.HasPostgresExtension("pg_trgm");
         modelBuilder.HasPostgresExtension("citext");
         modelBuilder.HasPostgresExtension("vector");
+
+        modelBuilder.ApplyConfiguration(new RegionEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CountryEntityConfiguration());
         
         modelBuilder.ApplyConfiguration(new DistilleryEntityConfiguration());
         modelBuilder.ApplyConfiguration(new WhiskyBottleEntityConfiguration());
+        
     }
 }

@@ -3,7 +3,7 @@ using MyWhiskyShelf.Core.Models;
 
 namespace MyWhiskyShelf.Core.Aggregates;
 
-public record WhiskyBottle
+public sealed record WhiskyBottle
 {
     public Guid Id { get; init; }
     public required string Name { get; init; }

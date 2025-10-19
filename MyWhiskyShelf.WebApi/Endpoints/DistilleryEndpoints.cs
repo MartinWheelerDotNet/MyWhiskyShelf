@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Application.Abstractions.Services;
-using MyWhiskyShelf.Application.Results;
+using MyWhiskyShelf.Application.Results.Distillery;
 using MyWhiskyShelf.WebApi.Contracts.Common;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 using MyWhiskyShelf.WebApi.ErrorResults;
@@ -53,7 +53,6 @@ public static class DistilleryEndpoints
             .Produces<DistilleryResponse>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
-            .ProducesValidationProblem()
             .RequiresIdempotencyKey()
             .RequireAuthorization(Policies.WriteDistilleries);
 

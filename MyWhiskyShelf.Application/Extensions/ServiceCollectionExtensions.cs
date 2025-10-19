@@ -12,5 +12,6 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IDistilleryAppService, DistilleryAppService>();
         services.AddScoped<IWhiskyBottleAppService, WhiskyBottleAppService>();
+        services.AddScoped<IGeoAppService, GeoAppService>();
     }
 }

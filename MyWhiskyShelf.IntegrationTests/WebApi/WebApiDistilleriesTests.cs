@@ -9,7 +9,7 @@ using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
 [Collection(nameof(WorkingFixture))]
-public class WebApiDistilleriesTests(WorkingFixture fixture)
+public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
 {
     [Theory]
     [InlineData(10, 4)]
@@ -38,8 +38,6 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
 
             page++;
         }
-
-        await fixture.ClearDistilleriesAsync();
         
         Assert.Multiple(
             () => Assert.Equal(expectedPagesIncludingEndOfListPage, page),
@@ -55,8 +53,6 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
 
         var response = await httpClient.GetAsync("/distilleries?page=2&amount=10");
         var pagedResponse = await response.Content.ReadFromJsonAsync<PagedResponse<DistilleryResponse>>();
-        
-        await fixture.ClearDistilleriesAsync();
         
         Assert.Empty(pagedResponse!.Items);
     }
@@ -139,16 +135,14 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     [Fact]
     public async Task When_GettingDistilleryByIdAndDistilleryExists_Expect_CorrectDistilleryReturned()
     {
-        var distilleryDetails = await fixture.SeedDistilleriesAsync(1);
-        var (id, name) = (distilleryDetails.Single().Id, distilleryDetails.Single().Name);
-        var expectedResponse = DistilleryResponseTestData.GenericResponse(id) with { Name = name };
-
+         var distilleryDetails = await fixture.SeedDistilleriesAsync(1);
+        var expectedResponse = distilleryDetails.Single();
+        var id = expectedResponse.Id;
+       
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/{id}");
         var distilleryResponse = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
         
-        await fixture.ClearDistilleriesAsync();
-
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
             () => Assert.Equal(expectedResponse, distilleryResponse!));
@@ -168,10 +162,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     [Fact]
     public async Task When_SearchingByNameAndNotFound_Expect_EmptyDistilleryResponse()
     {
-        await fixture.SeedDistilleriesAsync(DistilleryRequestTestData.GenericCreate with
-        {
-            Name = "Any Distillery"
-        });
+        await fixture.SeedDistilleriesAsync([DistilleryEntityTestData.Generic("Any Distillery")]);
         
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync("/distilleries/search?pattern=Else");
@@ -189,17 +180,12 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
         string pattern)
     {
         const string expectedName = "Case Test";
-        var seededDistilleries = await fixture.SeedDistilleriesAsync(
-            DistilleryRequestTestData.GenericCreate with { Name = expectedName });
-        seededDistilleries.TryGetValue(expectedName, out var expectedId);
-        
-        var expectedResponse = DistilleryResponseTestData.GenericResponse(expectedId) with { Name = expectedName };
+        var seededDistilleryResponses = await fixture.SeedDistilleriesAsync([DistilleryEntityTestData.Generic(expectedName)]);
+        var expectedResponse = seededDistilleryResponses.Single();
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/search?pattern={pattern}");
         var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
-
-        await fixture.ClearDistilleriesAsync();
 
         Assert.Single(distilleries!, actual => expectedResponse == actual);
     }
@@ -208,40 +194,33 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
     public async Task When_SearchingByNameAndOneFound_Expect_DistilleryResponseWithJustThatDistillery()
     {
         const string expectedName = "One";
-        var seededDistilleries = await fixture.SeedDistilleriesAsync(
-            DistilleryRequestTestData.GenericCreate with { Name = expectedName },
-            DistilleryRequestTestData.GenericCreate with { Name = "Another" });
-        
-        seededDistilleries.TryGetValue(expectedName, out var expectedId);
-        var expectedResponse = DistilleryResponseTestData.GenericResponse(expectedId) with { Name = expectedName };
+        var seededDistilleryResponses = await fixture.SeedDistilleriesAsync([
+            DistilleryEntityTestData.Generic(expectedName),
+            DistilleryEntityTestData.Generic("Another Distillery")
+        ]);
+        var expectedResponse = seededDistilleryResponses.First(sd => sd.Name == expectedName);
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/search?pattern={expectedName}");
-        var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
-        
-        await fixture.ClearDistilleriesAsync();
+        var distilleryResponses = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
 
-        Assert.Single(distilleries!, actual => expectedResponse == actual);
+        Assert.Single(distilleryResponses!, actual => expectedResponse == actual);
     }
     
     [Fact]
     public async Task When_SearchingByNameAndMultipleFound_Expect_DistilleryResponseWithThoseDistilleries()
     {
         const string searchPattern = "Two";
-        var seededDistilleries = await fixture.SeedDistilleriesAsync(
-            DistilleryRequestTestData.GenericCreate with { Name = "Two" },
-            DistilleryRequestTestData.GenericCreate with { Name = "Also Two" });
-
-        var expectedDistilleryNames = seededDistilleries
-            .Select(dr => DistilleryResponseTestData.GenericResponse(dr.Value) with { Name = dr.Key });
-
+        var expectedDistilleryResponses = await fixture.SeedDistilleriesAsync([
+            DistilleryEntityTestData.Generic(searchPattern),
+            DistilleryEntityTestData.Generic($"Also {searchPattern}")
+        ]);
+            
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/search?pattern={searchPattern}");
-        var distilleryNames = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
-        
-        await fixture.ClearDistilleriesAsync();
+        var distilleryResponses = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
 
-        Assert.Equal(expectedDistilleryNames, distilleryNames);
+        Assert.Equal(expectedDistilleryResponses.OrderBy(r => r.Name).ThenBy(r => r.Id), distilleryResponses);
     }
     
     [Fact]
@@ -254,8 +233,6 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.SendAsync(request);
-
-        await fixture.ClearDistilleriesAsync();
 
         Assert.Multiple(
             () => Assert.NotNull(response.Headers.Location),
@@ -275,8 +252,6 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.SendAsync(request);
-
-        await fixture.ClearDistilleriesAsync();
         
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
     }
@@ -293,8 +268,6 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
             $"/distilleries/{id}");
 
         var response = await httpClient.SendAsync(request);
-        
-        await fixture.ClearDistilleriesAsync();
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
     }
@@ -324,8 +297,6 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
             DistilleryRequestTestData.GenericUpdate with { Name = name });
 
         var response = await httpClient.SendAsync(request);
-
-        await fixture.ClearDistilleriesAsync();
         
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
@@ -343,5 +314,15 @@ public class WebApiDistilleriesTests(WorkingFixture fixture)
         var response = await httpClient.SendAsync(request);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    public async Task InitializeAsync()
+    {
+        await Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
+    {
+        await fixture.ClearDatabaseAsync();
     }
 }

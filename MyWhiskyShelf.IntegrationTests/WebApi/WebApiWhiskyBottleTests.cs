@@ -1,7 +1,6 @@
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 using MyWhiskyShelf.IntegrationTests.Helpers;
 using MyWhiskyShelf.IntegrationTests.TestData;
-using static MyWhiskyShelf.IntegrationTests.Fixtures.WorkingFixture;
 
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
@@ -27,10 +26,12 @@ public class WebApiWhiskyBottleTests(WorkingFixture fixture)
     [Fact]
     public async Task When_DeleteWhiskyBottleAndWhiskyBottleExists_Expect_NoContent()
     {
-        var (_, id) = fixture.GetSeededEntityDetailByTypeAndMethod(HttpMethod.Post, EntityType.WhiskyBottle);
+        var whiskyBottleResponses = await fixture.SeedWhiskyBottlesAsync([
+            WhiskyBottleEntityTestData.Generic("Delete WhiskyBottle")]);
+        
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
             HttpMethod.Delete,
-            $"/whisky-bottles/{id}");
+            $"/whisky-bottles/{whiskyBottleResponses.Single().Id}");
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.SendAsync(request);
@@ -54,8 +55,11 @@ public class WebApiWhiskyBottleTests(WorkingFixture fixture)
     [Fact]
     public async Task When_UpdateWhiskyBottleAndWhiskyBottleExists_Expect_Ok()
     {
-        await fixture.SeedWhiskyBottlesAsync();
-        var (name, id) = fixture.GetSeededEntityDetailByTypeAndMethod(HttpMethod.Delete, EntityType.WhiskyBottle);
+        var whiskyBottleResponses = await fixture.SeedWhiskyBottlesAsync([
+            WhiskyBottleEntityTestData.Generic("Update Distillery")
+        ]);
+        var (name, id) = (whiskyBottleResponses.Single().Name, whiskyBottleResponses.Single().Id);
+        
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Put,
             $"/whisky-bottles/{id}",
