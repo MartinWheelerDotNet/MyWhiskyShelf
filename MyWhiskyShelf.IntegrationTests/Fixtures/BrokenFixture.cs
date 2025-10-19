@@ -28,6 +28,16 @@ public class BrokenFixture : IAsyncLifetime
     
     public async Task DisposeAsync()
     {
-        await Application.DisposeAsync();  
+        try
+        {
+            await Application.StopAsync();
+            await Application.ResourceNotifications
+                .WaitForResourceAsync("WebApi")
+                .WaitAsync(TimeSpan.FromSeconds(20));
+        }
+        finally
+        {
+            await Application.DisposeAsync();
+        }
     } 
 }

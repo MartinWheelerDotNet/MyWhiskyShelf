@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Application.Abstractions.Services;
+using MyWhiskyShelf.Application.Extensions;
 using MyWhiskyShelf.Application.Results.Geo;
 using MyWhiskyShelf.Core.Aggregates;
 
@@ -39,13 +40,16 @@ public sealed class GeoAppService(
            
             logger.LogInformation(
                 "Country created with [Name: {Name}, Slug: {Slug}]",
-                createdCountry.Name,
-                createdCountry.Slug);
+                createdCountry.Name.SanitizeForLog(),
+                createdCountry.Slug.SanitizeForLog());
             return new CreateCountryResult(CreateCountryOutcome.Created, createdCountry);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error creating country with [Name: {Name}]", country.Name);
+            logger.LogError(
+                ex,
+                "Error creating country with [Name: {Name}]",
+                country.Name.SanitizeForLog());
             return new CreateCountryResult(CreateCountryOutcome.Error, Error: ex.Message);
         }
     }
@@ -68,7 +72,10 @@ public sealed class GeoAppService(
             if (!await write.UpdateCountryAsync(id, updatedCountry, ct)) 
                 return new UpdateCountryResult(UpdateCountryOutcome.NotFound);
 
-            logger.LogInformation("Country updated with [Id: {Id}, Name: {Name}]", id, updatedCountry.Name);
+            logger.LogInformation(
+                "Country updated with [Id: {Id}, Name: {Name}]",
+                id,
+                updatedCountry.Name.SanitizeForLog());
             return new UpdateCountryResult(UpdateCountryOutcome.Updated, updatedCountry);
         }
         catch (Exception ex)
@@ -115,12 +122,16 @@ public sealed class GeoAppService(
             logger.LogInformation(
                 "Region created with [CountryId: {CountryId}, Name: {Name}]",
                 countryId,
-                createdRegion.Name);
+                createdRegion.Name.SanitizeForLog());
             return new CreateRegionResult(CreateRegionOutcome.Created, createdRegion);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error creating region [CountryId: {CountryId}, Name: {Name}]", countryId, region.Name);
+            logger.LogError(
+                ex,
+                "Error creating region [CountryId: {CountryId}, Name: {Name}]",
+                countryId,
+                region.Name.SanitizeForLog());
             return new CreateRegionResult(CreateRegionOutcome.Error, Error: ex.Message);
         }
     }
@@ -149,13 +160,17 @@ public sealed class GeoAppService(
             logger.LogInformation(
                 "Region updated with [CountryId: {Id}, Name: {Name}]",
                 updatedRegion.CountryId,
-                updatedRegion.Name);
+                updatedRegion.Name.SanitizeForLog());
             
             return new UpdateRegionResult(UpdateRegionOutcome.Updated, updatedRegion);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error updating Region with [Id: {Id}, Name: {Name}]", id ,updatedRegion.Name);
+            logger.LogError(
+                ex,
+                "Error updating Region with [Id: {Id}, Name: {Name}]",
+                id,
+                updatedRegion.Name.SanitizeForLog());
             return new UpdateRegionResult(UpdateRegionOutcome.Error, Error: ex.Message);
         }
     }

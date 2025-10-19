@@ -138,8 +138,17 @@ public class WorkingFixture : IAsyncLifetime
 
     public virtual async Task DisposeAsync()
     {
-        await ClearDatabaseAsync();
-        await DbContext.DisposeAsync();
-        await Application.DisposeAsync();
+        try
+        {
+            await ClearDatabaseAsync();
+            await Application.StopAsync();
+            await Application.ResourceNotifications
+                .WaitForResourceAsync("WebApi")
+                .WaitAsync(TimeSpan.FromSeconds(20));
+        }
+        finally
+        {
+            await Application.DisposeAsync();
+        }
     }
 }
