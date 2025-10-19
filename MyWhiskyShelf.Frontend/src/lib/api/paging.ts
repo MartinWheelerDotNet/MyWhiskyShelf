@@ -1,5 +1,5 @@
-export interface PagedResponse<T> {
+export interface CursorPagedResponse<T> {
     items: T[];
-    page: number;
+    nextCursor: string | null;
     amount: number;
 }

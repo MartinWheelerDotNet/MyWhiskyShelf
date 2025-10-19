@@ -6,46 +6,70 @@ import { Distillery } from "@/lib/domain/types";
 
 type State = {
     items: Distillery[];
-    page: number;           
+    cursor: string | null;
+    page: number;
     amount: number;
-    loading: boolean; 
+    loading: boolean;
     isPageLoading: boolean;
     error: unknown;
     hasMore: boolean;
 };
 
-type Options = {
-    root?: React.RefObject<Element | null>;
+const getId = (d: Distillery) => d.id;
+
+export function useInfiniteDistilleries(options?: {
+    initialAmount?: number;
+    root?: React.RefObject<Element>;
     rootMargin?: string;
     threshold?: number;
-};
-
-export function useInfiniteDistilleries(initialAmount = 10, opts: Options = {}) {
-    const { root, rootMargin = "800px", threshold = 0 } = opts;
+}) {
+    const {
+        initialAmount = 24,
+        root,
+        rootMargin = "0px 0px 400px 0px",
+        threshold = 0.1,
+    } = options ?? {};
 
     const [state, setState] = React.useState<State>({
         items: [],
+        cursor: null,
         page: 0,
         amount: initialAmount,
-        loading: true,
+        loading: false,
         isPageLoading: false,
         error: null,
         hasMore: true,
     });
 
+    const amountRef = React.useRef(state.amount);
     const fetchingRef = React.useRef(false);
     const hasMoreRef = React.useRef(true);
-    const amountRef = React.useRef(initialAmount);
     React.useEffect(() => { hasMoreRef.current = state.hasMore; }, [state.hasMore]);
 
-    const [sentinelEl, setSentinelEl] = React.useState<HTMLDivElement | null>(null);
-    const setSentinel = React.useCallback((el: HTMLDivElement | null) => {
-        setSentinelEl(el);
+    const refresh = React.useCallback(async () => {
+        if (fetchingRef.current) return;
+        fetchingRef.current = true;
+
+        setState(s => ({ ...s, loading: true, isPageLoading: false, error: null, items: [], cursor: null, page: 0 }));
+        try {
+            const res = await getAllDistilleries({ cursor: null, amount: amountRef.current });
+            setState(s => ({
+                ...s,
+                items: res.items,
+                cursor: res.nextCursor ?? null,
+                page: 1,
+                loading: false,
+                isPageLoading: false,
+                hasMore: Boolean(res.nextCursor),
+            }));
+        } catch (e) {
+            setState(s => ({ ...s, loading: false, isPageLoading: false, error: e }));
+        } finally {
+            fetchingRef.current = false;
+        }
     }, []);
 
-    const getId = (x: any) => String(x.id ?? x.Id ?? x.distilleryId ?? "");
-
-    const load = React.useCallback(async (pageToLoad: number) => {
+    const loadNext = React.useCallback(async () => {
         if (fetchingRef.current || !hasMoreRef.current) return;
         fetchingRef.current = true;
 
@@ -57,16 +81,18 @@ export function useInfiniteDistilleries(initialAmount = 10, opts: Options = {}) 
         }));
 
         try {
-            const res = await getAllDistilleries(pageToLoad, amountRef.current);
+            const res = await getAllDistilleries({ cursor: state.cursor, amount: amountRef.current });
 
             setState(s => {
                 const seen = new Set(s.items.map(getId));
                 const merged = s.items.concat(res.items.filter((it: Distillery) => !seen.has(getId(it))));
-                const hasMore = res.items.length === s.amount;
+                const hasMore = Boolean(res.nextCursor);
+
                 return {
                     ...s,
                     items: merged,
-                    page: res.page,
+                    cursor: res.nextCursor ?? null,
+                    page: s.page + 1,
                     loading: false,
                     isPageLoading: false,
                     hasMore,
@@ -77,40 +103,15 @@ export function useInfiniteDistilleries(initialAmount = 10, opts: Options = {}) 
         } finally {
             fetchingRef.current = false;
         }
-    }, []);
+    }, [state.cursor]);
 
-    React.useEffect(() => {
-        load(1).catch(() => {});
-    }, [load]);
-
-    const loadNext = React.useCallback(() => {
-        setState((s) => {
-            if (!fetchingRef.current && s.hasMore) {
-                load(s.page + 1).catch(() => {});
-            }
-            return s;
-        });
-    }, [load]);
-
-    const refresh = React.useCallback(() => {
-        fetchingRef.current = false;
-        hasMoreRef.current = true;
-        amountRef.current = initialAmount;
-        setState({
-            items: [],
-            page: 0,
-            amount: initialAmount,
-            loading: true,
-            isPageLoading: false,
-            error: null,
-            hasMore: true,
-        });
-        load(1).catch(() => {});
-    }, [initialAmount, load]);
+    // sentinel management
+    const [sentinelEl, setSentinel] = React.useState<Element | null>(null);
+    const setSentinelCb = React.useCallback((el: Element | null) => setSentinel(el), []);
 
     React.useEffect(() => {
         if (!sentinelEl) return;
-        const rootEl = root?.current ?? null;
+        const rootEl = (root?.current as Element | null) ?? null;
         const io = new IntersectionObserver(
             entries => { if (entries[0]?.isIntersecting) loadNext(); },
             { root: rootEl, rootMargin, threshold }
@@ -119,8 +120,9 @@ export function useInfiniteDistilleries(initialAmount = 10, opts: Options = {}) 
         return () => io.disconnect();
     }, [sentinelEl, root, rootMargin, threshold, loadNext]);
 
+    // fallback scroll listener (if no sentinel)
     React.useEffect(() => {
-        const target = (root?.current as HTMLElement | null) ?? globalThis;
+        const target = (root?.current as HTMLElement | null) ?? (globalThis as unknown as Window);
         const onScroll = () => {
             if (fetchingRef.current || !hasMoreRef.current) return;
             const nearBottom = (() => {
@@ -128,22 +130,24 @@ export function useInfiniteDistilleries(initialAmount = 10, opts: Options = {}) 
                     const el = root.current as HTMLElement;
                     return el.scrollTop + el.clientHeight >= el.scrollHeight - 200;
                 } else {
-                    return window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 200;
+                    const win = globalThis as unknown as Window;
+                    const doc = win.document.documentElement;
+                    return win.scrollY + win.innerHeight >= doc.scrollHeight - 200;
                 }
             })();
             if (nearBottom) loadNext();
         };
-        target.addEventListener("scroll", onScroll, { passive: true });
-        return () => target.removeEventListener("scroll", onScroll);
+        (target as any).addEventListener("scroll", onScroll, { passive: true } as AddEventListenerOptions);
+        return () => (target as any).removeEventListener("scroll", onScroll);
     }, [root, loadNext]);
 
+    // kick off initial load
     React.useEffect(() => {
-        if (fetchingRef.current || !hasMoreRef.current) return;
-        const rootEl = (root?.current as HTMLElement | null);
-        const viewport = rootEl ? rootEl.clientHeight : window.innerHeight;
-        const scrollHeight = rootEl ? rootEl.scrollHeight : document.documentElement.scrollHeight;
-        if (scrollHeight <= viewport + 120) loadNext();
-    }, [state.items.length, root, loadNext]);
+        if (state.items.length === 0 && !fetchingRef.current) {
+            void refresh();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return {
         items: state.items,
@@ -155,7 +159,7 @@ export function useInfiniteDistilleries(initialAmount = 10, opts: Options = {}) 
         page: state.page,
         amount: state.amount,
         refresh,
-        setSentinel,
+        setSentinel: setSentinelCb,
         loadNext,
     };
 }
