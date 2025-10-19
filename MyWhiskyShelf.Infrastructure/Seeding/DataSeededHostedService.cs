@@ -19,6 +19,9 @@ public sealed class DataSeederHostedService(
     IConfiguration configuration,
     IServiceScopeFactory scopeFactory) : IHostedService
 {
+    private static Guid JapanId => Guid.Parse("f5712c32-1d89-444d-8cf7-9c444c55ce61");
+    private static Guid ScotlandId => Guid.Parse("e1a604b5-8aa5-4eac-89f0-64f37a3a3290");
+    
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         var enabled = configuration.GetValue("MYWHISKYSHELF_DATA_SEEDING_ENABLED", false);
@@ -39,11 +42,11 @@ public sealed class DataSeederHostedService(
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-    private async Task SeedGeoDataAsync(MyWhiskyShelfDbContext dbContext)
+    private static async Task SeedGeoDataAsync(MyWhiskyShelfDbContext dbContext)
     {
         var scotland = new CountryEntity
         {
-            Id = Guid.Parse("e1a604b5-8aa5-4eac-89f0-64f37a3a3290"),
+            Id = ScotlandId,
             Name = "Scotland",
             Slug = "scotland",
             IsActive = true,
@@ -54,7 +57,7 @@ public sealed class DataSeederHostedService(
                     Name = "Campbeltown",
                     Slug = "campbeltown",
                     IsActive = true,
-                    CountryId = Guid.Parse("e1a604b5-8aa5-4eac-89f0-64f37a3a3290")
+                    CountryId = ScotlandId
                 },
                 new RegionEntity
                 {
@@ -62,7 +65,7 @@ public sealed class DataSeederHostedService(
                     Name = "Highlands",
                     Slug = "highlands",
                     IsActive = true,
-                    CountryId = Guid.Parse("e1a604b5-8aa5-4eac-89f0-64f37a3a3290")
+                    CountryId = ScotlandId
                 },
                 new RegionEntity
                 {
@@ -70,7 +73,7 @@ public sealed class DataSeederHostedService(
                     Name = "Islay",
                     Slug = "islay",
                     IsActive = true,
-                    CountryId = Guid.Parse("e1a604b5-8aa5-4eac-89f0-64f37a3a3290")
+                    CountryId = ScotlandId
                 },
                 new RegionEntity
                 {
@@ -78,7 +81,7 @@ public sealed class DataSeederHostedService(
                     Name = "Lowland",
                     Slug = "lowland",
                     IsActive = true,
-                    CountryId = Guid.Parse("e1a604b5-8aa5-4eac-89f0-64f37a3a3290")
+                    CountryId = ScotlandId
                 },
                 new RegionEntity
                 {
@@ -86,13 +89,13 @@ public sealed class DataSeederHostedService(
                     Name = "Speyside",
                     Slug = "speyside",
                     IsActive = true,
-                    CountryId = Guid.Parse("e1a604b5-8aa5-4eac-89f0-64f37a3a3290")
+                    CountryId = ScotlandId
                 }
             ]
         };
         var japan = new CountryEntity
         {
-            Id = Guid.Parse("f5712c32-1d89-444d-8cf7-9c444c55ce61"),
+            Id = JapanId,
             Name = "Japan",
             Slug = "japan",
             IsActive = true,
@@ -103,7 +106,7 @@ public sealed class DataSeederHostedService(
                     Name = "Hokkaido",
                     Slug = "hokkaido",
                     IsActive = true,
-                    CountryId = Guid.Parse("f5712c32-1d89-444d-8cf7-9c444c55ce61")
+                    CountryId = JapanId
                 },
                 new RegionEntity
                 {
@@ -111,7 +114,7 @@ public sealed class DataSeederHostedService(
                     Name = "Tohoku",
                     Slug = "tohoku",
                     IsActive = true,
-                    CountryId = Guid.Parse("f5712c32-1d89-444d-8cf7-9c444c55ce61")
+                    CountryId = JapanId
                 },
                 new RegionEntity
                 {
@@ -119,7 +122,7 @@ public sealed class DataSeederHostedService(
                     Name = "Kanto",
                     Slug = "kanto",
                     IsActive = true,
-                    CountryId = Guid.Parse("f5712c32-1d89-444d-8cf7-9c444c55ce61")
+                    CountryId = JapanId
                 },
                 new RegionEntity
                 {
@@ -127,7 +130,7 @@ public sealed class DataSeederHostedService(
                     Name = "Chubu",
                     Slug = "chubu",
                     IsActive = true,
-                    CountryId = Guid.Parse("f5712c32-1d89-444d-8cf7-9c444c55ce61")
+                    CountryId = JapanId
                 },
                 new RegionEntity
                 {
@@ -135,7 +138,7 @@ public sealed class DataSeederHostedService(
                     Name = "Kansai",
                     Slug = "kansai",
                     IsActive = true,
-                    CountryId = Guid.Parse("f5712c32-1d89-444d-8cf7-9c444c55ce61")
+                    CountryId = JapanId
                 },
                 new RegionEntity
                 {
@@ -143,7 +146,7 @@ public sealed class DataSeederHostedService(
                     Name = "Setouchi",
                     Slug = "setouchi",
                     IsActive = true,
-                    CountryId = Guid.Parse("f5712c32-1d89-444d-8cf7-9c444c55ce61")
+                    CountryId = JapanId
                 },
                 new RegionEntity
                 {
@@ -151,18 +154,13 @@ public sealed class DataSeederHostedService(
                     Name = "Kyushu-Okinawa",
                     Slug = "kyushu-okinawa",
                     IsActive = true,
-                    CountryId = Guid.Parse("f5712c32-1d89-444d-8cf7-9c444c55ce61")
+                    CountryId = JapanId
                 }
             ]
         };
         
         dbContext.AddRange(scotland, japan);
         await dbContext.SaveChangesAsync();
-        
-        logger.LogInformation("**** Scotland Id: {Id}", scotland.Id);
-        logger.LogInformation("**** Scotland Regions: {Count}", scotland.Regions.Count);
-        logger.LogInformation("**** Japan Id: {Id}", japan.Id);
-        logger.LogInformation("**** Japan Regions: {Count}", japan.Regions.Count);
     }
 }
 
