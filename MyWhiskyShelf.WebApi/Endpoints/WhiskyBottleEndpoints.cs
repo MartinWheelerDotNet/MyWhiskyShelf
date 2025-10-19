@@ -16,7 +16,7 @@ namespace MyWhiskyShelf.WebApi.Endpoints;
 public static class WhiskyBottleEndpoints
 {
     private const string EndpointGroup = "whisky-bottle";
-    
+
     public static void MapWhiskyBottleEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/whisky-bottles")
@@ -70,7 +70,6 @@ public static class WhiskyBottleEndpoints
                             httpContext.TraceIdentifier,
                             httpContext.Request.Path)
                     };
-
                 })
             .WithName("Get Whisky Bottle")
             .Produces<WhiskyBottleResponse>()

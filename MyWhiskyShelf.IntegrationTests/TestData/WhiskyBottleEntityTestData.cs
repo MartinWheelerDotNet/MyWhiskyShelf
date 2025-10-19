@@ -25,5 +25,5 @@ public static class WhiskyBottleEntityTestData
             ChillFiltered = true,
             FlavourVector = FlavourProfileTestData.Generic.ToVector()
         };
-    } 
+    }
 }

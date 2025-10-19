@@ -27,8 +27,9 @@ public class WebApiWhiskyBottleTests(WorkingFixture fixture)
     public async Task When_DeleteWhiskyBottleAndWhiskyBottleExists_Expect_NoContent()
     {
         var whiskyBottleResponses = await fixture.SeedWhiskyBottlesAsync([
-            WhiskyBottleEntityTestData.Generic("Delete WhiskyBottle")]);
-        
+            WhiskyBottleEntityTestData.Generic("Delete WhiskyBottle")
+        ]);
+
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
             HttpMethod.Delete,
             $"/whisky-bottles/{whiskyBottleResponses.Single().Id}");
@@ -59,7 +60,7 @@ public class WebApiWhiskyBottleTests(WorkingFixture fixture)
             WhiskyBottleEntityTestData.Generic("Update Distillery")
         ]);
         var (name, id) = (whiskyBottleResponses.Single().Name, whiskyBottleResponses.Single().Id);
-        
+
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Put,
             $"/whisky-bottles/{id}",

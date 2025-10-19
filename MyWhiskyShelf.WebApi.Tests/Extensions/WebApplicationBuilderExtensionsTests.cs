@@ -27,7 +27,7 @@ public class WebApplicationBuilderExtensionsTests
         var jwt = sp
             .GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
             .Get(JwtBearerDefaults.AuthenticationScheme);
-        
+
         var authOptions = sp.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
 
         Assert.Multiple(
@@ -50,9 +50,8 @@ public class WebApplicationBuilderExtensionsTests
         using var sp = builder.Services.BuildServiceProvider();
 
         var exception = Assert
-            .Throws<InvalidOperationException>(
-                () => sp.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
-                    .Get(JwtBearerDefaults.AuthenticationScheme));
+            .Throws<InvalidOperationException>(() => sp.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
+                .Get(JwtBearerDefaults.AuthenticationScheme));
 
         Assert.Equal("Authentication:Authority must be configured in Production.", exception.Message);
     }
@@ -64,17 +63,17 @@ public class WebApplicationBuilderExtensionsTests
             new WebApplicationOptions { EnvironmentName = Environments.Production });
         builder.Configuration.AddInMemoryCollection(
         [
-            new KeyValuePair<string,string?>(
-                "Authentication:Authority", 
+            new KeyValuePair<string, string?>(
+                "Authentication:Authority",
                 "http://keycloak.example.com/realms/mywhiskyshelf")
         ]);
 
         builder.SetupAuthorization();
         using var sp = builder.Services.BuildServiceProvider();
 
-        var ex = Assert.Throws<InvalidOperationException>(
-            () => sp.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
-                .Get(JwtBearerDefaults.AuthenticationScheme));
+        var ex = Assert.Throws<InvalidOperationException>(() => sp
+            .GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
+            .Get(JwtBearerDefaults.AuthenticationScheme));
 
         Assert.Equal("Authentication:Authority must be HTTPS in Production.", ex.Message);
     }
@@ -86,7 +85,7 @@ public class WebApplicationBuilderExtensionsTests
             new WebApplicationOptions { EnvironmentName = Environments.Production });
         const string authority = "https://keycloak.example.com/realms/mywhiskyshelf";
         builder.Configuration.AddInMemoryCollection([
-            new KeyValuePair<string,string?>("Authentication:Authority", authority)
+            new KeyValuePair<string, string?>("Authentication:Authority", authority)
         ]);
 
         builder.SetupAuthorization();
@@ -94,7 +93,7 @@ public class WebApplicationBuilderExtensionsTests
         var jwt = sp
             .GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
             .Get(JwtBearerDefaults.AuthenticationScheme);
-        
+
         var authScheme = sp.GetRequiredService<IOptions<AuthenticationOptions>>().Value;
         var authOptions = sp.GetRequiredService<IOptions<AuthorizationOptions>>().Value;
 
@@ -123,7 +122,7 @@ public class WebApplicationBuilderExtensionsTests
         var jwt = sp.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
             .Get(JwtBearerDefaults.AuthenticationScheme);
 
-        var identity = new ClaimsIdentity(authenticationType: "test");
+        var identity = new ClaimsIdentity("test");
         var principal = new ClaimsPrincipal(identity);
 
         const string realmAccessJson = $"{{\"roles\":[\"{Roles.User}\",\"{Roles.Admin}\",\"\", \"   \"]}}";
@@ -151,7 +150,7 @@ public class WebApplicationBuilderExtensionsTests
         var jwt = sp.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
             .Get(JwtBearerDefaults.AuthenticationScheme);
 
-        var identity = new ClaimsIdentity(authenticationType: "test");
+        var identity = new ClaimsIdentity("test");
         var principal = new ClaimsPrincipal(identity);
 
         var ctx = BuildTokenValidatedContext(principal);
@@ -170,7 +169,7 @@ public class WebApplicationBuilderExtensionsTests
         var jwt = sp.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
             .Get(JwtBearerDefaults.AuthenticationScheme);
 
-        var identity = new ClaimsIdentity(authenticationType: "test");
+        var identity = new ClaimsIdentity("test");
         identity.AddClaim(new Claim("realm_access", "this-is-not-json"));
         var principal = new ClaimsPrincipal(identity);
 
@@ -192,7 +191,7 @@ public class WebApplicationBuilderExtensionsTests
 
         var ctx = BuildTokenValidatedContext(null);
         await jwt.Events.OnTokenValidated(ctx);
-        
+
         Assert.Null(ctx.Principal);
     }
 

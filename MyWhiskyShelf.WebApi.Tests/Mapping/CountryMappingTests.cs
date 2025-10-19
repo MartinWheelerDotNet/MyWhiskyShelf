@@ -8,6 +8,7 @@ namespace MyWhiskyShelf.WebApi.Tests.Mapping;
 public class CountryMappingTests
 {
     private static readonly SlugHelper SlugHelper = new();
+
     [Fact]
     public void When_MappingCountryToResponseWithAllFields_Expect_CountryResponseMatches()
     {

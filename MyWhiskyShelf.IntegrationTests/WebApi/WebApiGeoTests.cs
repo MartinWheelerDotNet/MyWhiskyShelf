@@ -10,6 +10,16 @@ namespace MyWhiskyShelf.IntegrationTests.WebApi;
 [Collection(nameof(WorkingFixture))]
 public class WebApiGeoTests(WorkingFixture fixture) : IAsyncLifetime
 {
+    public async Task InitializeAsync()
+    {
+        await Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
+    {
+        await fixture.ClearDatabaseAsync();
+    }
+
     [Fact]
     public async Task When_GetAllGeoDataAndDataFound_ExpectedCorrectGeoDataReturned()
     {
@@ -29,7 +39,7 @@ public class WebApiGeoTests(WorkingFixture fixture) : IAsyncLifetime
     {
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync("/geo");
-        
+
         var geoResponse = await response.Content.ReadFromJsonAsync<List<CountryResponse>>();
 
         Assert.Multiple(
@@ -46,7 +56,7 @@ public class WebApiGeoTests(WorkingFixture fixture) : IAsyncLifetime
             "/geo/countries",
             CountryRequestTestData.GenericCreate);
         var response = await httpClient.SendAsync(request);
-        
+
         var countryResponse = await response.Content.ReadFromJsonAsync<CountryResponse>();
 
         Assert.Multiple(
@@ -63,7 +73,7 @@ public class WebApiGeoTests(WorkingFixture fixture) : IAsyncLifetime
             HttpMethod.Post,
             "/geo/countries",
             CountryRequestTestData.GenericCreate with { Name = "Conflict" });
-        
+
         var response = await httpClient.SendAsync(request);
 
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
@@ -74,13 +84,13 @@ public class WebApiGeoTests(WorkingFixture fixture) : IAsyncLifetime
     {
         var countries = await fixture.SeedCountriesAsync([CountryEntityTestData.Generic("Exists", "exists")]);
         var country = countries.Single();
-        
+
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Post,
             "/geo/regions",
             RegionRequestTestData.GenericCreate with { CountryId = country.Id });
-        
+
         var response = await httpClient.SendAsync(request);
         var regionResponse = await response.Content.ReadFromJsonAsync<RegionResponse>();
 
@@ -88,7 +98,7 @@ public class WebApiGeoTests(WorkingFixture fixture) : IAsyncLifetime
             () => Assert.Equal(HttpStatusCode.Created, response.StatusCode),
             () => Assert.Equivalent(RegionResponseTestData.Generic(regionResponse!.Id, country.Id), regionResponse));
     }
-    
+
     [Fact]
     public async Task When_CreateRegionAndRegionAlreadyExistsInCountry_ExpectConflict()
     {
@@ -100,12 +110,12 @@ public class WebApiGeoTests(WorkingFixture fixture) : IAsyncLifetime
             HttpMethod.Post,
             "/geo/regions",
             RegionRequestTestData.GenericCreate with { CountryId = country.Id, Name = "Region" });
-        
+
         var response = await httpClient.SendAsync(request);
-        
+
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task When_CreateRegionAndCountryDoesNotExists_ExpectValidationProblem()
     {
@@ -121,27 +131,17 @@ public class WebApiGeoTests(WorkingFixture fixture) : IAsyncLifetime
             }
         };
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        
+
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Post,
             "/geo/regions",
             RegionRequestTestData.GenericCreate with { CountryId = countryId });
-        
+
         var response = await httpClient.SendAsync(request);
         var validationProblem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-        
+
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode),
             () => Assert.Equivalent(expectedValidationProblem, validationProblem));
-    }
-
-    public async Task InitializeAsync()
-    {
-        await Task.CompletedTask;
-    }
-
-    public async Task DisposeAsync()
-    {
-        await fixture.ClearDatabaseAsync();
     }
 }

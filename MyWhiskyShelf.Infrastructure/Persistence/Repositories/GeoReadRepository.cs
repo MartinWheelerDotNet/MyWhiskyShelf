@@ -13,7 +13,6 @@ namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
 [ExcludeFromCodeCoverage]
 public sealed class GeoReadRepository(MyWhiskyShelfDbContext dbContext) : IGeoReadRepository
 {
-        
     public async Task<IReadOnlyList<Country>> GetAllGeoInformationAsync(CancellationToken ct = default)
     {
         return await dbContext.Countries
@@ -23,7 +22,7 @@ public sealed class GeoReadRepository(MyWhiskyShelfDbContext dbContext) : IGeoRe
             .Select(CountryProjections.ToCountryDomain)
             .ToListAsync(ct);
     }
-    
+
     public async Task<Country?> GetCountryByIdAsync(Guid id, CancellationToken ct = default)
     {
         var countryEntity = await dbContext.Countries.FindAsync([id], ct);
@@ -50,16 +49,16 @@ public sealed class GeoReadRepository(MyWhiskyShelfDbContext dbContext) : IGeoRe
             .AsNoTracking()
             .AnyAsync(c => c.Id == id, ct);
     }
-    
+
     public async Task<Region?> GetRegionByIdAsync(Guid id, CancellationToken ct = default)
     {
         var regionEntity = await dbContext.Regions.FindAsync([id], ct);
         return regionEntity?.ToDomain();
     }
-    
-    
+
+
     public async Task<bool> RegionExistsByNameAndCountryIdAsync(
-        string name, 
+        string name,
         Guid countryId,
         CancellationToken ct = default)
     {
@@ -76,12 +75,5 @@ public sealed class GeoReadRepository(MyWhiskyShelfDbContext dbContext) : IGeoRe
         return await dbContext.Regions
             .AsNoTracking()
             .AnyAsync(c => c.Slug == slug && c.CountryId == countryId, ct);
-    }
-
-    public async Task<bool> RegionExistsByIdAsync(Guid id, CancellationToken ct = default)
-    {
-        return await dbContext.Regions
-            .AsNoTracking()
-            .AnyAsync(c => c.Id == id, ct);
     }
 }

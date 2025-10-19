@@ -14,7 +14,7 @@ public class AuthorizationTests(WorkingFixture fixture)
             //distilleries
             { Roles.User, true, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Get.Method },
             { Roles.Admin, true, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Get.Method },
-            { Roles.User, true, "/distilleries?page=1&amount=10", HttpMethod.Get.Method },
+            { Roles.User, true, "/distilleries?amount=10", HttpMethod.Get.Method },
             { Roles.Admin, true, "/distilleries", HttpMethod.Get.Method },
             { Roles.User, false, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Delete.Method },
             { Roles.Admin, true, $"/distilleries/{Guid.NewGuid()}", HttpMethod.Delete.Method },
@@ -54,21 +54,19 @@ public class AuthorizationTests(WorkingFixture fixture)
         bool shouldAuthenticate,
         string endpoint,
         string method
-        )
+    )
     {
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(HttpMethod.Parse(method), endpoint);
         using var httpClient = await fixture.Application.CreateHttpsClientWithRole(role);
-        
+
         var response = await httpClient.SendAsync(request);
-        
-        if (shouldAuthenticate) 
+
+        if (shouldAuthenticate)
             Assert.False(response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden);
         else
-        {
             Assert.True(response.StatusCode is HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden);
-        }
     }
-    
+
     [Theory]
     [MemberData(nameof(EndpointData), DisableDiscoveryEnumeration = true)]
     public async Task When_CreateWhiskyBottleWithoutBearerToken_Expect_Unauthorized(string endpoint, string method)
@@ -76,7 +74,7 @@ public class AuthorizationTests(WorkingFixture fixture)
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(HttpMethod.Parse(method), endpoint);
         var httpClient = fixture.Application.CreateHttpClient("WebApi");
         httpClient.BaseAddress = fixture.Application.GetEndpoint("WebApi", "https");
-        
+
         var response = await httpClient.SendAsync(request);
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);

@@ -8,4 +8,3 @@ public sealed record Country
     public required bool IsActive { get; init; }
     public IReadOnlyList<Region> Regions { get; init; } = [];
 }
-    

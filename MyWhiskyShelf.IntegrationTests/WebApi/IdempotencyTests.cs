@@ -19,9 +19,9 @@ public class IdempotencyTests(WorkingFixture fixture)
             DistilleryRequestTestData.GenericCreate),
         (EntityType.Distillery, HttpMethod.Put.Method, "/distilleries/{Id}",
             DistilleryRequestTestData.GenericUpdate with { Name = "Update" }),
-        (EntityType.Distillery, HttpMethod.Delete.Method, "/distilleries/{Id}", 
+        (EntityType.Distillery, HttpMethod.Delete.Method, "/distilleries/{Id}",
             null),
-        (EntityType.WhiskyBottle, HttpMethod.Post.Method, "/whisky-bottles", 
+        (EntityType.WhiskyBottle, HttpMethod.Post.Method, "/whisky-bottles",
             WhiskyBottleRequestTestData.GenericCreate),
         (EntityType.WhiskyBottle, HttpMethod.Put.Method, "/whisky-bottles/{Id}",
             WhiskyBottleRequestTestData.GenericUpdate with { Name = "Update" }),
@@ -41,7 +41,7 @@ public class IdempotencyTests(WorkingFixture fixture)
         "\t \t",
         "00000000-0000-0000-0000-000000000000"
     ];
-    
+
     public static TheoryData<EntityType, string, string, RequestBodyWrapper, string> InvalidKeysData()
     {
         var data = new TheoryData<EntityType, string, string, RequestBodyWrapper, string>();
@@ -106,7 +106,7 @@ public class IdempotencyTests(WorkingFixture fixture)
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equivalent(expectedValidationProblem, validationProblem);
     }
-    
+
     [Theory]
     [MemberData(nameof(IdempotentEndpointsData))]
     public async Task When_RequestTwiceWithSameIdempotencyKey_Expect_TheSameResultReturned(
@@ -118,8 +118,8 @@ public class IdempotencyTests(WorkingFixture fixture)
         var httpMethod = new HttpMethod(method);
 
         var id = await SeedIdempotencyTestData(entityType, method);
-        path = path.Replace("{Id}", id.ToString());    
-        
+        path = path.Replace("{Id}", id.ToString());
+
 
         var idempotencyKey = Guid.NewGuid().ToString();
         var initialRequest = CreateRequestWithIdempotencyKey(httpMethod, path, body.Value, idempotencyKey);
@@ -135,7 +135,7 @@ public class IdempotencyTests(WorkingFixture fixture)
         Assert.Equal(initialResponse.StatusCode, resendResponse.StatusCode);
         Assert.True(new HttpResponseMessageComparer().Equals(initialResponse, resendResponse));
     }
-    
+
     private async Task<Guid> SeedIdempotencyTestData(EntityType entityType, string method)
     {
         return entityType switch
@@ -147,7 +147,7 @@ public class IdempotencyTests(WorkingFixture fixture)
             _ => throw new InvalidEnumArgumentException()
         };
     }
-    
+
     private async Task<Guid> SeedDistillery(string method)
     {
         var entity = DistilleryEntityTestData.Generic($"Distillery {method}");
@@ -161,7 +161,7 @@ public class IdempotencyTests(WorkingFixture fixture)
         var responses = await fixture.SeedWhiskyBottlesAsync([entity]);
         return responses.Single().Id;
     }
-    
+
     private async Task<Guid> SeedCountry(string method)
     {
         var entity = CountryEntityTestData.Generic($"Country {method}", $"country-{method.ToLower()}");
@@ -176,7 +176,7 @@ public class IdempotencyTests(WorkingFixture fixture)
             $"region-country-{method.ToLower()}");
         country.Id = Guid.Parse("3b3830b8-081c-4503-8ec4-a623e4cc28bc");
         await fixture.SeedCountriesAsync([country]);
-                
+
         var region = RegionEntityTestData.Generic($"Region {method}", $"region-{method.ToLower()}", country.Id);
         var responses = await fixture.SeedRegionsAsync([region]);
         return responses.Single().Id;

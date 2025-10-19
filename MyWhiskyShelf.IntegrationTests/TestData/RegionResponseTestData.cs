@@ -14,5 +14,5 @@ public static class RegionResponseTestData
             Slug = "name",
             IsActive = true
         };
-    } 
+    }
 }

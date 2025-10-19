@@ -52,6 +52,9 @@ public class DistilleryEntityConfiguration : IEntityTypeConfiguration<Distillery
             .HasDatabaseName("IX_Distilleries_Name_trgm");
         builder.HasIndex(e => e.Name)
             .HasDatabaseName("IX_Distilleries_Name_eq");
+        builder.HasIndex(e => new { e.Name, e.Id })
+            .HasDatabaseName("IX_Distilleries_Name_Id")
+            .IsUnique(false);
         builder.HasIndex(e => e.Region)
             .IsUnique(false);
         builder.HasIndex(e => e.Owner)

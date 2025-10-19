@@ -5,7 +5,7 @@ namespace MyWhiskyShelf.Application.Tests.Extensions;
 public class StringExtensionsTests
 {
     private const string ExampleString = "This is a string";
-    
+
     [Theory]
     [InlineData("\rThis is a string")]
     [InlineData("This is a \nstring")]
@@ -14,7 +14,7 @@ public class StringExtensionsTests
     public void When_SanitizeForLog_Expect_StringWithNewlinesRemoved(string value)
     {
         var result = value.SanitizeForLog();
-        
+
         Assert.Equal(ExampleString, result);
     }
 }

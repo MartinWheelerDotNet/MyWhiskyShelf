@@ -10,8 +10,8 @@ public static class AuthorizationHelpers
     {
         return await application.CreateHttpsClientWithRole(Roles.Admin);
     }
-    
-    public static async Task<HttpClient> CreateHttpsClientWithRole(this DistributedApplication application,string role)
+
+    public static async Task<HttpClient> CreateHttpsClientWithRole(this DistributedApplication application, string role)
     {
         var keycloakUri = application.GetEndpoint("keycloak", "http");
         var userJwt = await KeycloakTokenClient.GetAccessTokenAsync(
@@ -23,7 +23,7 @@ public static class AuthorizationHelpers
         var client = application.CreateHttpClient("WebApi");
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userJwt);
         client.BaseAddress = application.GetEndpoint("WebApi", "https");
-        
+
         return client;
     }
 }

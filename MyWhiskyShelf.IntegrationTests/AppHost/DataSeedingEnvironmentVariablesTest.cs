@@ -9,21 +9,20 @@ namespace MyWhiskyShelf.IntegrationTests.AppHost;
 [Collection("DataSeeding")]
 public class DataSeedingEnvironmentVariablesTest
 {
-    private static string[] GetArgs(bool? enableDataSeeding) {
-        List<string> args = [
+    private static string[] GetArgs(bool? enableDataSeeding)
+    {
+        List<string> args =
+        [
             "--no-launch-profile",
             "MYWHISKYSHELF_UI_ENABLED=false",
             "MYWHISKYSHELF_PG_WEB_ENABLED=false",
             "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false",
             "MYWHISKYSHELF_RUN_MIGRATIONS=true"
-          
         ];
-        if (enableDataSeeding.HasValue) {
-            args.Add($"MYWHISKYSHELF_DATA_SEEDING_ENABLED={enableDataSeeding}");
-        }
+        if (enableDataSeeding.HasValue) args.Add($"MYWHISKYSHELF_DATA_SEEDING_ENABLED={enableDataSeeding}");
         return args.ToArray();
-    } 
-    
+    }
+
     [Fact]
     public async Task When_AppHostDataSeedingIsTrue_Expect_DistilleryEntriesReturned()
     {
@@ -35,7 +34,7 @@ public class DataSeedingEnvironmentVariablesTest
 
         Assert.True(distilleries!.Items.Count > 0);
     }
-    
+
     [Fact]
     public async Task When_AppHostDataSeedingNotSet_Expect_DistilleryEntriesReturned()
     {
@@ -47,7 +46,7 @@ public class DataSeedingEnvironmentVariablesTest
 
         Assert.True(distilleries!.Items.Count > 0);
     }
-    
+
     [Fact]
     public async Task When_AppHostDataSeedingIsFalse_Expect_NoDistilleryEntriesReturned()
     {

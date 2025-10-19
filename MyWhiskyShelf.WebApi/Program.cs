@@ -9,7 +9,6 @@ using MyWhiskyShelf.WebApi.Extensions;
 using MyWhiskyShelf.WebApi.Interfaces;
 using MyWhiskyShelf.WebApi.Services;
 
-
 namespace MyWhiskyShelf.WebApi;
 
 [ExcludeFromCodeCoverage]
@@ -25,7 +24,6 @@ internal static class Program
         builder.Services.AddOptionalDataSeeding();
 
         if (builder.Environment.IsDevelopment())
-        {
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("UiCors", policy =>
@@ -41,7 +39,6 @@ internal static class Program
                         .AllowAnyMethod();
                 });
             });
-        }
 
         builder.Services.AddOpenApi();
 

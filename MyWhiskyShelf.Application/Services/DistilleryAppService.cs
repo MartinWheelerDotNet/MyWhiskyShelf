@@ -1,6 +1,8 @@
 using Microsoft.Extensions.Logging;
+using MyWhiskyShelf.Application.Abstractions.Cursor;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Application.Abstractions.Services;
+using MyWhiskyShelf.Application.Cursors;
 using MyWhiskyShelf.Application.Extensions;
 using MyWhiskyShelf.Application.Results.Distillery;
 using MyWhiskyShelf.Core.Aggregates;
@@ -10,6 +12,7 @@ namespace MyWhiskyShelf.Application.Services;
 public sealed class DistilleryAppService(
     IDistilleryReadRepository read,
     IDistilleryWriteRepository write,
+    ICursorCodec cursorCodec,
     ILogger<DistilleryAppService> logger)
     : IDistilleryAppService
 {
@@ -26,7 +29,7 @@ public sealed class DistilleryAppService(
             }
 
             logger.LogDebug("Retrieved distillery with [Name: {Name}, Id: {Id}]", distillery.Name.SanitizeForLog(), id);
-            return new  GetDistilleryByIdResult(GetDistilleryByIdOutcome.Success, distillery);
+            return new GetDistilleryByIdResult(GetDistilleryByIdOutcome.Success, distillery);
         }
         catch (Exception ex)
         {
@@ -35,28 +38,43 @@ public sealed class DistilleryAppService(
         }
     }
 
-    public async Task<GetAllDistilleriesResult> GetAllAsync(int page, int amount, CancellationToken ct = default)
+    public async Task<GetAllDistilleriesResult> GetAllAsync(string? afterCursor, int amount,
+        CancellationToken ct = default)
     {
         try
         {
-            var distilleries = await read.GetAllAsync(page, amount, ct);
-            
-            logger.LogDebug("Retrieved [{Count}] distilleries (page {Page} / amount {Amount})",
-                distilleries.Count,
-                page,
-                amount);
+            if (amount <= 0)
+                return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Success, []);
 
-            return new GetAllDistilleriesResult(
-                Outcome: GetAllDistilleriesOutcome.Success,
-                Distilleries: distilleries,
-                Page: page,
-                Amount: amount
-            );
+            if (!cursorCodec.TryDecode<NameIdCursor>(afterCursor, out var cursor)
+                || (cursor is not null && (string.IsNullOrWhiteSpace(cursor.Name) || cursor.Id == Guid.Empty)))
+            {
+                logger.LogWarning(
+                    "Invalid afterCursor supplied. Cursor={Cursor}",
+                    afterCursor!.SanitizeForLog());
+                return new GetAllDistilleriesResult(
+                    GetAllDistilleriesOutcome.InvalidCursor,
+                    Error: $"Invalid cursor provided [{afterCursor}]");
+            }
+
+            var items = await read.GetAllAsync(cursor?.Name, cursor?.Id, amount, ct);
+
+            string? next = null;
+            if (items.Count == amount)
+            {
+                var last = items[^1];
+                next = cursorCodec.Encode(new NameIdCursor(last.Name, last.Id));
+            }
+
+            logger.LogDebug("Retrieved [{Count}] distilleries (amount {Amount}, hasNext: {HasNext})",
+                items.Count, amount, next is not null);
+
+            return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Success, items, next, amount);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An error occured whilst retrieving all distilleries");
-            return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Error, Error: ex.Message); 
+            return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Error, Error: ex.Message);
         }
     }
 
@@ -77,9 +95,8 @@ public sealed class DistilleryAppService(
                 pattern.SanitizeForLog());
             return new SearchDistilleriesResult(SearchDistilleriesOutcome.Error, Error: ex.Message);
         }
-        
     }
-    
+
     public async Task<CreateDistilleryResult> CreateAsync(Distillery distillery, CancellationToken ct = default)
     {
         try
@@ -90,15 +107,15 @@ public sealed class DistilleryAppService(
                 logger.LogWarning("Distillery already exists with [Name: {Name}]", distillery.Name.SanitizeForLog());
                 return new CreateDistilleryResult(CreateDistilleryOutcome.AlreadyExists);
             }
-            
+
             var addedDistillery = await write.AddAsync(distillery, ct);
 
             logger.LogDebug(
                 "Distillery created with [Name: {Name}, Id: {Id}]",
                 addedDistillery.Name.SanitizeForLog(),
                 addedDistillery.Id);
-            
-           return new CreateDistilleryResult(CreateDistilleryOutcome.Created, addedDistillery);
+
+            return new CreateDistilleryResult(CreateDistilleryOutcome.Created, addedDistillery);
         }
         catch (Exception ex)
         {
@@ -132,7 +149,7 @@ public sealed class DistilleryAppService(
                     return new UpdateDistilleryResult(UpdateDistilleryOutcome.NameConflict);
                 }
             }
-            
+
             var updated = await write.UpdateAsync(id, distillery, ct);
 
             if (updated)

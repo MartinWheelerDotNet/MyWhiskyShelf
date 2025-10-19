@@ -38,7 +38,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MyWhiskyShelf.Migrations\MyWhiskyShelf.Migrations.csproj" />
+        <ProjectReference Include="..\MyWhiskyShelf.Migrations\MyWhiskyShelf.Migrations.csproj"/>
     </ItemGroup>
 
     <PropertyGroup>

@@ -14,6 +14,5 @@ public static class CountryResponseTestData
             Slug = "name",
             Regions = []
         };
-            
     }
 }

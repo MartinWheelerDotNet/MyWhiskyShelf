@@ -7,7 +7,7 @@ namespace MyWhiskyShelf.WebApi.Mapping;
 public static class CountryMapping
 {
     private static readonly SlugHelper SlugHelper = new();
-    
+
     public static CountryResponse ToResponse(this Country domain)
     {
         return new CountryResponse
@@ -30,7 +30,7 @@ public static class CountryMapping
             IsActive = request.IsActive
         };
     }
-    
+
     public static Country ToDomain(this CountryCreateRequest request)
     {
         return new Country
@@ -40,5 +40,4 @@ public static class CountryMapping
             IsActive = request.IsActive
         };
     }
-
 }

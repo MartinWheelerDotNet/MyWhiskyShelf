@@ -18,7 +18,7 @@ public class InternalServerErrorTests(BrokenFixture fixture)
                 "distillery", "get-by-id", $"/distilleries/{Guid.NewGuid()}", HttpMethod.Get.Method, null
             },
             {
-                "distillery", "get-all", "/distilleries?page=1&amount=10", HttpMethod.Get.Method, null
+                "distillery", "get-all", "/distilleries?amount=10", HttpMethod.Get.Method, null
             },
             {
                 "distillery", "search", "/distilleries/search?pattern=anything", HttpMethod.Get.Method, null
@@ -28,11 +28,11 @@ public class InternalServerErrorTests(BrokenFixture fixture)
             },
             {
                 "distillery", "create", "/distilleries", HttpMethod.Post.Method,
-                new RequestBodyWrapper(DistilleryRequestTestData.GenericCreate with { Name = "Create Error"}) 
+                new RequestBodyWrapper(DistilleryRequestTestData.GenericCreate with { Name = "Create Error" })
             },
             {
                 "distillery", "update", $"/distilleries/{Guid.NewGuid()}", HttpMethod.Put.Method,
-                new RequestBodyWrapper(DistilleryRequestTestData.GenericUpdate with { Name = "Update Error"}) 
+                new RequestBodyWrapper(DistilleryRequestTestData.GenericUpdate with { Name = "Update Error" })
             },
             {
                 "whisky-bottle", "get-by-id", $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Get.Method, null
@@ -42,28 +42,28 @@ public class InternalServerErrorTests(BrokenFixture fixture)
             },
             {
                 "whisky-bottle", "create", "/whisky-bottles", HttpMethod.Post.Method,
-                new RequestBodyWrapper(WhiskyBottleRequestTestData.GenericCreate with { Name = "Create Error"}) 
+                new RequestBodyWrapper(WhiskyBottleRequestTestData.GenericCreate with { Name = "Create Error" })
             },
             {
                 "whisky-bottle", "update", $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Put.Method,
-                new RequestBodyWrapper(WhiskyBottleRequestTestData.GenericUpdate with { Name = "Update Error"}) 
+                new RequestBodyWrapper(WhiskyBottleRequestTestData.GenericUpdate with { Name = "Update Error" })
             },
             {
                 "geodata", "get-all", "/geo", HttpMethod.Get.Method, null
             },
             {
                 "country", "create", "/geo/countries", HttpMethod.Post.Method,
-                new RequestBodyWrapper(CountryRequestTestData.GenericCreate with { Name = "Create Error"})
+                new RequestBodyWrapper(CountryRequestTestData.GenericCreate with { Name = "Create Error" })
             },
             {
                 "region", "create", "/geo/regions", HttpMethod.Post.Method,
-                new RequestBodyWrapper(RegionRequestTestData.GenericCreate with { Name = "Create Error"})
+                new RequestBodyWrapper(RegionRequestTestData.GenericCreate with { Name = "Create Error" })
             }
         };
 
         return data;
     }
-    
+
     [Theory]
     [MemberData(nameof(InvalidRequestData), DisableDiscoveryEnumeration = true)]
     public async Task When_InternalServerErrorOccurs_Expect_Problem(
@@ -74,8 +74,8 @@ public class InternalServerErrorTests(BrokenFixture fixture)
         RequestBodyWrapper? requestBody)
     {
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        
-        var request = requestBody is null 
+
+        var request = requestBody is null
             ? IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(HttpMethod.Parse(httpMethod), instance)
             : IdempotencyHelpers.CreateRequestWithIdempotencyKey(
                 HttpMethod.Parse(httpMethod),
@@ -84,13 +84,13 @@ public class InternalServerErrorTests(BrokenFixture fixture)
 
         var response = await httpClient.SendAsync(request);
         var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-        
+
         Assert.NotNull(problemDetails);
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode),
             () => AssertProblem(name, action, instance.Split('?')[0], problemDetails));
     }
-    
+
     private static void AssertProblem(string name, string action, string instance, ProblemDetails actual)
     {
         Assert.NotNull(actual);

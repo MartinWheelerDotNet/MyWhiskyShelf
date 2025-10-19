@@ -43,11 +43,11 @@ public class WhiskyBottleEntityConfiguration : IEntityTypeConfiguration<WhiskyBo
             .HasColumnType("vector(5)")
             .IsRequired();
 
-        builder.HasIndex(e=> e.Name)
+        builder.HasIndex(e => e.Name)
             .HasDatabaseName("IX_WhiskyBottles_Name");
-        builder.HasIndex(e=> e.Name)
+        builder.HasIndex(e => e.Name)
             .HasDatabaseName("IX_WhiskyBottles_Name_trgm");
-        builder.HasIndex(e=> e.Name)
+        builder.HasIndex(e => e.Name)
             .HasDatabaseName("IX_WhiskyBottles_Name_eq");
         builder.HasIndex(e => e.DistilleryName)
             .IsUnique(false);

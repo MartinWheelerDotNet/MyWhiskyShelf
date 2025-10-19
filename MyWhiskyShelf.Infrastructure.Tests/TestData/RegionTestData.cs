@@ -14,7 +14,7 @@ public static class RegionTestData
             IsActive = true
         };
     }
-    
+
     public static Region InactiveRegion(Guid countryId)
     {
         return new Region

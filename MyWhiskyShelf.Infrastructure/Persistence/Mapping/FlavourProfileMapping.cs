@@ -5,8 +5,9 @@ namespace MyWhiskyShelf.Infrastructure.Persistence.Mapping;
 
 public static class FlavourProfileMapping
 {
-    public static Vector ToVector(this FlavourProfile flavourProfile) =>
-        new(new[]
+    public static Vector ToVector(this FlavourProfile flavourProfile)
+    {
+        return new Vector(new[]
         {
             flavourProfile.Sweet / 10f,
             flavourProfile.Fruit / 10f,
@@ -14,12 +15,13 @@ public static class FlavourProfileMapping
             flavourProfile.Spice / 10f,
             flavourProfile.Body / 10f
         });
+    }
 
     public static FlavourProfile ToFlavourProfile(this Vector flavourVector)
     {
         var roundedValues = flavourVector
             .ToArray()
-            .Select(item => (int) Math.Round(item * 10, MidpointRounding.AwayFromZero))
+            .Select(item => (int)Math.Round(item * 10, MidpointRounding.AwayFromZero))
             .ToArray();
 
         return new FlavourProfile

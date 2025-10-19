@@ -2,7 +2,12 @@ using MyWhiskyShelf.Core.Aggregates;
 
 namespace MyWhiskyShelf.Application.Results.Geo;
 
-public enum CreateCountryOutcome { Created, NameConflict, Error }
+public enum CreateCountryOutcome
+{
+    Created,
+    NameConflict,
+    Error
+}
 
 public sealed record CreateCountryResult(
     CreateCountryOutcome Outcome,
