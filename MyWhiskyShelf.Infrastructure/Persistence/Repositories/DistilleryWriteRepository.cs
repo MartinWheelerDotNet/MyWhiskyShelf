@@ -11,7 +11,7 @@ namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
 [ExcludeFromCodeCoverage]
 public sealed class DistilleryWriteRepository(MyWhiskyShelfDbContext dbContext) : IDistilleryWriteRepository
 {
-    public async Task<Distillery?> AddAsync(Distillery distillery, CancellationToken ct = default)
+    public async Task<Distillery> AddAsync(Distillery distillery, CancellationToken ct = default)
     {
         var entity = distillery.ToEntity();
 

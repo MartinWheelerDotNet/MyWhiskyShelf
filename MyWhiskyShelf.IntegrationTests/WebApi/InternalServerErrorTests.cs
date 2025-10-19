@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 using MyWhiskyShelf.IntegrationTests.Helpers;
+using MyWhiskyShelf.IntegrationTests.TestData;
 
 namespace MyWhiskyShelf.IntegrationTests.WebApi;
 
@@ -27,11 +28,11 @@ public class InternalServerErrorTests(BrokenFixture fixture)
             },
             {
                 "distillery", "create", "/distilleries", HttpMethod.Post.Method,
-                new RequestBodyWrapper(TestData.DistilleryRequestTestData.GenericCreate with { Name = "Create Error"}) 
+                new RequestBodyWrapper(DistilleryRequestTestData.GenericCreate with { Name = "Create Error"}) 
             },
             {
                 "distillery", "update", $"/distilleries/{Guid.NewGuid()}", HttpMethod.Put.Method,
-                new RequestBodyWrapper(TestData.DistilleryRequestTestData.GenericUpdate with { Name = "Update Error"}) 
+                new RequestBodyWrapper(DistilleryRequestTestData.GenericUpdate with { Name = "Update Error"}) 
             },
             {
                 "whisky-bottle", "get-by-id", $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Get.Method, null
@@ -41,11 +42,22 @@ public class InternalServerErrorTests(BrokenFixture fixture)
             },
             {
                 "whisky-bottle", "create", "/whisky-bottles", HttpMethod.Post.Method,
-                new RequestBodyWrapper(TestData.WhiskyBottleRequestTestData.GenericCreate with { Name = "Create Error"}) 
+                new RequestBodyWrapper(WhiskyBottleRequestTestData.GenericCreate with { Name = "Create Error"}) 
             },
             {
                 "whisky-bottle", "update", $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Put.Method,
-                new RequestBodyWrapper(TestData.WhiskyBottleRequestTestData.GenericUpdate with { Name = "Update Error"}) 
+                new RequestBodyWrapper(WhiskyBottleRequestTestData.GenericUpdate with { Name = "Update Error"}) 
+            },
+            {
+                "geodata", "get-all", "/geo", HttpMethod.Get.Method, null
+            },
+            {
+                "country", "create", "/geo/countries", HttpMethod.Post.Method,
+                new RequestBodyWrapper(CountryRequestTestData.GenericCreate with { Name = "Create Error"})
+            },
+            {
+                "region", "create", "/geo/regions", HttpMethod.Post.Method,
+                new RequestBodyWrapper(RegionRequestTestData.GenericCreate with { Name = "Create Error"})
             }
         };
 

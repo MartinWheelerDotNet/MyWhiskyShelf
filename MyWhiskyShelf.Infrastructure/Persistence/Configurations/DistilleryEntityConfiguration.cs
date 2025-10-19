@@ -46,7 +46,7 @@ public class DistilleryEntityConfiguration : IEntityTypeConfiguration<Distillery
             .IsRequired();
 
         builder.HasIndex(e => e.Name)
-            .HasDatabaseName("IX_WhiskyBottles_Name")
+            .HasDatabaseName("IX_Distilleries_Name")
             .IsUnique();
         builder.HasIndex(e => e.Name)
             .HasDatabaseName("IX_Distilleries_Name_trgm");

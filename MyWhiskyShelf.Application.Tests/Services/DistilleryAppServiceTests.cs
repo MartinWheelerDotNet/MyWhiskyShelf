@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Testing;
 using Moq;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
-using MyWhiskyShelf.Application.Results;
+using MyWhiskyShelf.Application.Results.Distillery;
 using MyWhiskyShelf.Application.Services;
 using MyWhiskyShelf.Application.Tests.TestData;
 using MyWhiskyShelf.Core.Aggregates;

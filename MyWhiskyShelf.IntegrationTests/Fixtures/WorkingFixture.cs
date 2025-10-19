@@ -1,11 +1,15 @@
-using System.Net.Http.Json;
 using Aspire.Hosting;
 using JetBrains.Annotations;
-using MyWhiskyShelf.IntegrationTests.Helpers;
+using Microsoft.EntityFrameworkCore;
+using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
+using MyWhiskyShelf.Infrastructure.Persistence.Entities;
+using MyWhiskyShelf.Infrastructure.Persistence.Mapping;
 using MyWhiskyShelf.IntegrationTests.TestData;
-using MyWhiskyShelf.WebApi.Contracts.Common;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
+using MyWhiskyShelf.WebApi.Contracts.GeoResponse;
 using MyWhiskyShelf.WebApi.Contracts.WhiskyBottles;
+using MyWhiskyShelf.WebApi.Mapping;
+using Npgsql;
 
 namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 
@@ -15,133 +19,127 @@ public class WorkingFixture : IAsyncLifetime
     public enum EntityType
     {
         Distillery,
-        WhiskyBottle
+        WhiskyBottle,
+        Country,
+        Region
     }
 
-    private readonly List<HttpMethod> _methods = [HttpMethod.Get, HttpMethod.Post, HttpMethod.Put, HttpMethod.Delete];
-    private readonly Dictionary<(HttpMethod Method, EntityType Entity), (string Name, Guid Id)> _seededEntityDetails
-        = new();
-
     public DistributedApplication Application { get; private set; } = null!;
-    
+    private MyWhiskyShelfDbContext DbContext { get; set; } = null!;
+
     public virtual async Task InitializeAsync()
     {
         Application = await FixtureFactory.StartAsync(FixtureFactory.DefaultTestingArguments);
+        var connectionString = await Application.GetConnectionStringAsync("myWhiskyShelfDb");
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+        dataSourceBuilder.UseVector();
+        var dataSource = dataSourceBuilder.Build();
+
+        var options = new DbContextOptionsBuilder<MyWhiskyShelfDbContext>()
+            .UseNpgsql(dataSource, o => o.UseVector())
+            .EnableSensitiveDataLogging()
+            .Options;
+
+        DbContext = new MyWhiskyShelfDbContext(options);
     }
 
-    public (string Name, Guid Id) GetSeededEntityDetailByTypeAndMethod(HttpMethod method, EntityType entity)
+    public async Task<List<DistilleryResponse>> SeedDistilleriesAsync(List<DistilleryEntity> entities)
     {
-        var entityDetails = _seededEntityDetails[(method, entity)];
-        return entityDetails;
-    }
+        DbContext.AddRange(entities);
+        await DbContext.SaveChangesAsync();
 
-public async Task SeedDatabaseWithMethodTestData()
-    {
-        await SeedDistilleriesAsync();
-        await SeedWhiskyBottlesAsync();
-    }
-
-    public async Task ClearDistilleriesAsync()
-    {
-        using var httpClient = await Application.CreateAdminHttpsClientAsync();
-        var distilleries = await httpClient.GetFromJsonAsync<PagedResponse<DistilleryResponse>>(
-            "/distilleries?page=1&amount=200");
-        await DeleteDistilleriesAsync(distilleries!.Items.Select(x => x.Id));
-    }
-
-    private async Task SeedDistilleriesAsync()
-    {
-        using var httpClient = await Application.CreateAdminHttpsClientAsync();
-
-        foreach (var method in _methods)
-        {
-            var name = $"Distillery {method.Method}";
-            var distilleryCreateRequest = DistilleryRequestTestData.GenericCreate with { Name = name };
-            var request = IdempotencyHelpers
-                .CreateRequestWithIdempotencyKey(HttpMethod.Post, "/distilleries", distilleryCreateRequest);
-            var response = await httpClient
-                .SendAsync(request);
-
-            if (!response.IsSuccessStatusCode) continue;
-
-            var distillery = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
-            _seededEntityDetails[(method, EntityType.Distillery)] = (name, distillery!.Id);
-        }
-    }
-
-    public async Task<Dictionary<string, Guid>> SeedDistilleriesAsync(
-        params DistilleryCreateRequest[] createRequests)
-    {
-        Dictionary<string, Guid> seededDistilleries = [];
-        using var httpClient = await Application.CreateAdminHttpsClientAsync();
-        
-        foreach (var createRequest in createRequests)
-        {
-            var request = IdempotencyHelpers
-                .CreateRequestWithIdempotencyKey(HttpMethod.Post, "/distilleries", createRequest);
-            var response = await httpClient
-                .SendAsync(request);
-
-            var distillery = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
-            
-            seededDistilleries.Add(distillery!.Name, distillery.Id);
-        }
-        
-        return seededDistilleries;
-    }
-
-    public async Task<List<DistilleryResponse>> SeedDistilleriesAsync(int count)
-    {
-        var createRequests = Enumerable.Range(0, count)
-            .Select(i => DistilleryRequestTestData.GenericCreate with { Name = $"Distillery Number {i}" })
-            .ToArray();
-        
-        var seededDistilleryDetails = await SeedDistilleriesAsync(createRequests);
-        
-        return seededDistilleryDetails
-            .Select(details => DistilleryResponseTestData.GenericResponse(details.Value) with { Name = details.Key })
+        return entities.Select(e => e.ToDomain().ToResponse())
             .OrderBy(response => response.Name)
             .ThenBy(response => response.Id)
             .ToList();
     }
 
-    private async Task DeleteDistilleriesAsync(IEnumerable<Guid> ids)
+    public async Task<List<DistilleryResponse>> SeedDistilleriesAsync(int count)
     {
-        using var httpClient = await Application.CreateAdminHttpsClientAsync();
-        
-        foreach (var id in ids)
-        {
-            var deleteRequest = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
-                HttpMethod.Delete,
-                $"/distilleries/{id}");
-            
-            await httpClient.SendAsync(deleteRequest);
-        }
+        var entities = Enumerable.Range(0, count)
+            .Select(i => DistilleryEntityTestData.Generic($"Distillery Number {i}"))
+            .ToList();
+
+        return await SeedDistilleriesAsync(entities);
     }
 
-    public async Task SeedWhiskyBottlesAsync()
+    public async Task<List<WhiskyBottleResponse>> SeedWhiskyBottlesAsync(List<WhiskyBottleEntity> entities)
     {
-        using var httpClient = await Application.CreateAdminHttpsClientAsync();
+        DbContext.AddRange(entities);
+        await DbContext.SaveChangesAsync();
 
-        foreach (var method in _methods)
-        {
-            var name = $"Whisky Bottle {method.Method}";
-            var distilleryCreateRequest = WhiskyBottleRequestTestData.GenericCreate with { Name = name };
-            var request = IdempotencyHelpers
-                .CreateRequestWithIdempotencyKey(HttpMethod.Post, "/whisky-bottles", distilleryCreateRequest);
-            var response = await httpClient
-                .SendAsync(request);
-
-            if (!response.IsSuccessStatusCode) continue;
-
-            var entityResponse = await response.Content.ReadFromJsonAsync<WhiskyBottleResponse>();
-            _seededEntityDetails[(method, EntityType.WhiskyBottle)] = (name, entityResponse!.Id);
-        }
+        return entities.Select(e => e.ToDomain().ToResponse())
+            .OrderBy(response => response.Name)
+            .ThenBy(response => response.Id)
+            .ToList();
     }
     
-    public virtual async Task DisposeAsync()
+    public async Task<List<CountryResponse>> SeedCountriesAsync(List<CountryEntity> entities)
     {
-        await Application.DisposeAsync();
+        DbContext.AddRange(entities);
+        await DbContext.SaveChangesAsync();
+
+        return entities.Select(e => e.ToDomain().ToResponse())
+            .OrderBy(response => response.Name)
+            .ThenBy(response => response.Id)
+            .ToList();
+    }
+    
+    public async Task<List<RegionResponse>> SeedRegionsAsync(List<RegionEntity> entities)
+    {
+        DbContext.AddRange(entities);
+        await DbContext.SaveChangesAsync();
+
+        return entities.Select(e => e.ToDomain().ToResponse())
+            .OrderBy(response => response.Name)
+            .ThenBy(response => response.Id)
+            .ToList();
     }
 
+    public async Task<List<CountryResponse>> SeedGeoDataAsync()
+    {
+        var countryId = Guid.NewGuid();
+        var countryEntity = new CountryEntity
+        {
+            Id = countryId,
+            Name = "Geo Country",
+            Slug = "geo-country",
+            IsActive = true,
+            Regions =
+            [
+                new RegionEntity
+                {
+                    Name = "Geo Region 1",
+                    Slug = "geo-region-1",
+                    IsActive = true,
+                    CountryId = countryId
+                },
+                new RegionEntity
+                {
+                    Name = "Geo Region 2",
+                    Slug = "geo-region-2",
+                    IsActive = false,
+                    CountryId = countryId
+                }
+            ]
+        };
+
+        return await SeedCountriesAsync([countryEntity]);
+    }
+    
+    public async Task ClearDatabaseAsync()
+    {
+        DbContext.Set<DistilleryEntity>().RemoveRange(DbContext.Set<DistilleryEntity>());
+        DbContext.Set<WhiskyBottleEntity>().RemoveRange(DbContext.Set<WhiskyBottleEntity>());
+        DbContext.Set<RegionEntity>().RemoveRange(DbContext.Set<RegionEntity>());
+        DbContext.Set<CountryEntity>().RemoveRange(DbContext.Set<CountryEntity>());
+        await DbContext.SaveChangesAsync();
+    }
+
+    public virtual async Task DisposeAsync()
+    {
+        await ClearDatabaseAsync();
+        await DbContext.DisposeAsync();
+        await Application.DisposeAsync();
+    }
 }

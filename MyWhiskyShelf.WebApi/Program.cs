@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.Json;
 using MyWhiskyShelf.Application.Extensions;
 using MyWhiskyShelf.Infrastructure.Extensions;
 using MyWhiskyShelf.ServiceDefaults;
@@ -7,7 +8,7 @@ using MyWhiskyShelf.WebApi.Endpoints;
 using MyWhiskyShelf.WebApi.Extensions;
 using MyWhiskyShelf.WebApi.Interfaces;
 using MyWhiskyShelf.WebApi.Services;
-using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
+
 
 namespace MyWhiskyShelf.WebApi;
 
@@ -62,6 +63,7 @@ internal static class Program
 
         app.MapDistilleryEndpoints();
         app.MapWhiskyBottleEndpoints();
+        app.MapGeoEndpoints();
 
         await app.RunAsync();
     }

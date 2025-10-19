@@ -31,9 +31,10 @@ jobs:
             backend:
               - '**'
               - '!MyWhiskyShelf.Frontend/**'
+              - '!.github/dependabot'
             frontend:
               - 'MyWhiskyShelf.Frontend/**'
-              - './github/workflows/**'
+              - '!.github/dependabot'
   
   build:
     name: Backend Build
