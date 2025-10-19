@@ -53,8 +53,8 @@ public class GeoMappingTests
                 [
                     new Region
                     {
-                        Id = thirdRegionId, 
-                        CountryId = secondCountryId, 
+                        Id = thirdRegionId,
+                        CountryId = secondCountryId,
                         Name = "Third Region",
                         Slug = "third-region",
                         IsActive = true
@@ -69,7 +69,6 @@ public class GeoMappingTests
 
         Assert.Multiple(
             () => Assert.Equal(2, response.Countries.Count),
-
             () => Assert.Equal(firstCountryId, response.Countries[0].Id),
             () => Assert.Equal("First Country", response.Countries[0].Name),
             () => Assert.Equal("first-country", response.Countries[0].Slug),
@@ -85,7 +84,6 @@ public class GeoMappingTests
             () => Assert.Equal("Second Region", response.Countries[0].Regions[1].Name),
             () => Assert.Equal("second-region", response.Countries[0].Regions[1].Slug),
             () => Assert.False(response.Countries[0].Regions[1].IsActive),
-
             () => Assert.Equal(secondCountryId, response.Countries[1].Id),
             () => Assert.Equal("Second Country", response.Countries[1].Name),
             () => Assert.Equal("second-country", response.Countries[1].Slug),

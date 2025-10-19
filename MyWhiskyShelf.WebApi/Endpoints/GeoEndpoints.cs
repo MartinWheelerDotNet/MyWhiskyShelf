@@ -14,6 +14,7 @@ public static class GeoEndpoints
 {
     private const string EndpointGroup = "geodata";
     private const string BaseUrl = "/geo";
+
     public static void MapGeoEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup(BaseUrl)
@@ -21,51 +22,51 @@ public static class GeoEndpoints
             .WithOpenApi();
 
         group.MapGet(
-            "/",
-            async (
-                [FromServices] IGeoAppService service,
-                HttpContext httpContext,
-                CancellationToken ct) =>
-            {
-                var result = await service.GetAllAsync(ct);
-
-                return result.Outcome switch
+                "/",
+                async (
+                    [FromServices] IGeoAppService service,
+                    HttpContext httpContext,
+                    CancellationToken ct) =>
                 {
-                    GetCountryGeoOutcome.Success => Results.Ok(
-                        result.Countries!.Select(c => c.ToResponse())),
-                    _ => ProblemResults.InternalServerError(
-                        EndpointGroup,
-                        "get-all",
-                        httpContext.TraceIdentifier,
-                        httpContext.Request.Path)
-                };
-            })
+                    var result = await service.GetAllAsync(ct);
+
+                    return result.Outcome switch
+                    {
+                        GetCountryGeoOutcome.Success => Results.Ok(
+                            result.Countries!.Select(c => c.ToResponse())),
+                        _ => ProblemResults.InternalServerError(
+                            EndpointGroup,
+                            "get-all",
+                            httpContext.TraceIdentifier,
+                            httpContext.Request.Path)
+                    };
+                })
             .WithName("Get All Geo Data")
             .Produces<List<CountryResponse>>()
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .RequireAuthorization(Authentication.Policies.ReadGeoData);
 
         group.MapPost(
-            "/countries",
-            async (
-                [FromBody] CountryCreateRequest request,
-                [FromServices] IGeoAppService service,
-                HttpContext httpContext,
-                CancellationToken ct) =>
-            {
-                var result = await service.CreateCountryAsync(request.ToDomain(), ct);
-
-                return result.Outcome switch
+                "/countries",
+                async (
+                    [FromBody] CountryCreateRequest request,
+                    [FromServices] IGeoAppService service,
+                    HttpContext httpContext,
+                    CancellationToken ct) =>
                 {
-                    CreateCountryOutcome.Created => Results.Created("/geo", result.Country!.ToResponse()),
-                    CreateCountryOutcome.NameConflict => Results.Conflict(),
-                    _ => ProblemResults.InternalServerError(
-                        "country",
-                        "create",
-                        httpContext.TraceIdentifier,
-                        httpContext.Request.Path)
-                };
-            })
+                    var result = await service.CreateCountryAsync(request.ToDomain(), ct);
+
+                    return result.Outcome switch
+                    {
+                        CreateCountryOutcome.Created => Results.Created("/geo", result.Country!.ToResponse()),
+                        CreateCountryOutcome.NameConflict => Results.Conflict(),
+                        _ => ProblemResults.InternalServerError(
+                            "country",
+                            "create",
+                            httpContext.TraceIdentifier,
+                            httpContext.Request.Path)
+                    };
+                })
             .WithName("Create Country")
             .Accepts<CountryCreateRequest>(MediaTypeNames.Application.Json)
             .Produces<CountryResponse>(StatusCodes.Status201Created)
@@ -73,7 +74,7 @@ public static class GeoEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .RequiresIdempotencyKey()
             .RequireAuthorization(Authentication.Policies.WriteGeoData);
-        
+
         group.MapPost(
                 "/regions",
                 async (
@@ -103,7 +104,6 @@ public static class GeoEndpoints
             .Produces(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .RequiresIdempotencyKey()
-            .RequireAuthorization(Authentication.Policies.WriteGeoData); 
-        
+            .RequireAuthorization(Authentication.Policies.WriteGeoData);
     }
 }

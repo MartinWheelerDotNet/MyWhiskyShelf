@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyWhiskyShelf.WebApi.ErrorResults;
 
 namespace MyWhiskyShelf.WebApi.Tests.ErrorResults;
 
@@ -16,9 +17,9 @@ public class InternalServerErrorProblemResultsTests
             Detail = "An unexpected error occurred. (TraceId: traceId)",
             Instance = "path"
         });
-        
-        var problem = WebApi.ErrorResults.ProblemResults.InternalServerError("name", "action", "traceId", "path");
-        
+
+        var problem = ProblemResults.InternalServerError("name", "action", "traceId", "path");
+
         Assert.Equivalent(expectedProblem, problem);
-    } 
+    }
 }

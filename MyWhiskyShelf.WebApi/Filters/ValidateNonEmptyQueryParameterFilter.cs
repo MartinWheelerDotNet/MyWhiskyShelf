@@ -6,8 +6,8 @@ public class ValidateNonEmptyQueryParameterFilter(string parameterName) : IEndpo
 {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        return context.HttpContext.Request.Query.TryGetValue(parameterName, out var value) 
-               && !string.IsNullOrWhiteSpace(value) 
+        return context.HttpContext.Request.Query.TryGetValue(parameterName, out var value)
+               && !string.IsNullOrWhiteSpace(value)
             ? await next(context)
             : ValidationProblemResults.MissingOrEmptyQueryParameter(parameterName);
     }

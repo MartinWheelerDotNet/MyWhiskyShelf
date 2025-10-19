@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Testing;
 using Moq;
+using MyWhiskyShelf.Application.Abstractions.Cursor;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
+using MyWhiskyShelf.Application.Cursors;
 using MyWhiskyShelf.Application.Results.Distillery;
 using MyWhiskyShelf.Application.Services;
 using MyWhiskyShelf.Application.Tests.TestData;
@@ -12,13 +14,18 @@ namespace MyWhiskyShelf.Application.Tests.Services;
 public class DistilleryAppServiceTests
 {
     private readonly FakeLogger<DistilleryAppService> _fakeLogger = new();
+    private readonly Mock<ICursorCodec> _mockCursorCodec = new();
     private readonly Mock<IDistilleryReadRepository> _mockRead = new();
     private readonly Mock<IDistilleryWriteRepository> _mockWrite = new();
     private readonly DistilleryAppService _service;
 
     public DistilleryAppServiceTests()
     {
-        _service = new DistilleryAppService(_mockRead.Object, _mockWrite.Object, _fakeLogger);
+        _service = new DistilleryAppService(
+            _mockRead.Object,
+            _mockWrite.Object,
+            _mockCursorCodec.Object,
+            _fakeLogger);
     }
 
     [Fact]
@@ -44,9 +51,9 @@ public class DistilleryAppServiceTests
 
         Assert.Multiple(
             () => Assert.Equal(GetDistilleryByIdOutcome.Success, result.Outcome),
-            () => Assert.Equal(DistilleryTestData.Generic with { Id = id}, result.Distillery));
+            () => Assert.Equal(DistilleryTestData.Generic with { Id = id }, result.Distillery));
     }
-    
+
     [Fact]
     public async Task When_GetByIdAndErrorOccurs_Expect_ErrorWithExceptionMessage()
     {
@@ -69,8 +76,8 @@ public class DistilleryAppServiceTests
     [Fact]
     public async Task When_GetAllAndTwoDistilleriesExist_Expect_SuccessWithListOfTwoDistilleries()
     {
-        const int page = 1;
         const int amount = 10;
+        string? afterCursor = null;
 
         List<Distillery> expectedDistilleries =
         [
@@ -78,51 +85,69 @@ public class DistilleryAppServiceTests
             DistilleryTestData.Generic with { Name = "Second Distillery" }
         ];
 
+        NameIdCursor? decoded = null;
+        _mockCursorCodec
+            .Setup(c => c.TryDecode(It.Is<string?>(s => s == null), out decoded))
+            .Returns(true);
+
         _mockRead
-            .Setup(r => r.GetAllAsync(page, amount, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllAsync(null, null, amount, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedDistilleries);
 
-        var result = await _service.GetAllAsync(page, amount);
+        var result = await _service.GetAllAsync(afterCursor, amount);
 
         Assert.Multiple(
             () => Assert.Equal(GetAllDistilleriesOutcome.Success, result.Outcome),
             () => Assert.Equal(expectedDistilleries, result.Distilleries),
-            () => Assert.Equal(page, result.Page),
+            () => Assert.Null(result.NextCursor),
             () => Assert.Equal(amount, result.Amount)
         );
+
+        _mockCursorCodec.Verify(c => c.Encode(It.IsAny<NameIdCursor>()), Times.Never);
     }
 
     [Fact]
     public async Task When_GetAllAndNoDistilleriesExist_Expect_SuccessWithEmptyList()
     {
-        const int page = 1;
         const int amount = 10;
+        string? afterCursor = null;
+
+        NameIdCursor? decoded = null;
+        _mockCursorCodec
+            .Setup(c => c.TryDecode(It.Is<string?>(s => s == null), out decoded))
+            .Returns(true);
 
         _mockRead
-            .Setup(r => r.GetAllAsync(page, amount, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllAsync(null, null, amount, It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
-        var result = await _service.GetAllAsync(page, amount);
+        var result = await _service.GetAllAsync(afterCursor, amount);
 
         Assert.Multiple(
             () => Assert.Equal(GetAllDistilleriesOutcome.Success, result.Outcome),
             () => Assert.Empty(result.Distilleries!),
-            () => Assert.Equal(page, result.Page),
+            () => Assert.Null(result.NextCursor),
             () => Assert.Equal(amount, result.Amount)
         );
     }
-    
+
     [Fact]
     public async Task When_GetAllAndErrorOccurs_Expect_ErrorWithMessage()
     {
-        const int page = 1;
         const int amount = 10;
+        string? afterCursor = null;
+
+        NameIdCursor? decoded = null;
+        _mockCursorCodec
+            .Setup(c => c.TryDecode(It.Is<string?>(s => s == null), out decoded))
+            .Returns(true);
 
         _mockRead
-            .Setup(r => r.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetAllAsync(It.IsAny<string?>(), It.IsAny<Guid?>(), It.IsAny<int>(),
+                It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Exception"));
 
-        var result = await _service.GetAllAsync(page, amount);
+        var result = await _service.GetAllAsync(afterCursor, amount);
 
         Assert.Multiple(
             () => Assert.Equal(GetAllDistilleriesOutcome.Error, result.Outcome),
@@ -134,6 +159,151 @@ public class DistilleryAppServiceTests
     }
 
     [Fact]
+    public async Task When_GetAllAndAmountIsZero_Expect_SuccessWithEmptyListAndNoRepositoryCall()
+    {
+        const int amount = 0;
+        string? afterCursor = null;
+
+        var result = await _service.GetAllAsync(afterCursor, amount);
+
+        Assert.Multiple(
+            () => Assert.Equal(GetAllDistilleriesOutcome.Success, result.Outcome),
+            () => Assert.Empty(result.Distilleries!),
+            () => Assert.Null(result.NextCursor),
+            () => Assert.Equal(0, result.Amount)
+        );
+
+        _mockRead.Verify(
+            r => r.GetAllAsync(It.IsAny<string?>(), It.IsAny<Guid?>(), It.IsAny<int>(), It.IsAny<CancellationToken>()),
+            Times.Never);
+        _mockCursorCodec.Verify(c => c.TryDecode(It.IsAny<string?>(), out It.Ref<NameIdCursor?>.IsAny), Times.Never);
+    }
+
+    [Fact]
+    public async Task When_GetAllWithInvalidCursor_Expect_InvalidCursorWithMessageAndNoRepositoryCall()
+    {
+        const int amount = 10;
+        const string afterCursor = "badCursor";
+
+        NameIdCursor? ignored = null;
+        _mockCursorCodec
+            .Setup(c => c.TryDecode(afterCursor, out ignored))
+            .Returns(false);
+
+        var result = await _service.GetAllAsync(afterCursor, amount);
+
+        Assert.Multiple(
+            () => Assert.Equal(GetAllDistilleriesOutcome.InvalidCursor, result.Outcome),
+            () => Assert.Equal($"Invalid cursor provided [{afterCursor}]", result.Error));
+
+        _mockRead
+            .Verify(r => r.GetAllAsync(
+                    It.IsAny<string?>(),
+                    It.IsAny<Guid?>(),
+                    It.IsAny<int>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Never);
+    }
+
+    [Fact]
+    public async Task When_GetAllWithMalformedCursorPayload_Expect_ErrorWithMessageAndNoRepositoryCall()
+    {
+        const int amount = 10;
+        const string afterCursor = "malformedCursor";
+
+        NameIdCursor? malformed = new("", Guid.Empty);
+        _mockCursorCodec
+            .Setup(c => c.TryDecode(afterCursor, out malformed))
+            .Returns(true);
+
+        var result = await _service.GetAllAsync(afterCursor, amount);
+
+        Assert.Multiple(
+            () => Assert.Equal(GetAllDistilleriesOutcome.InvalidCursor, result.Outcome),
+            () => Assert.Equal($"Invalid cursor provided [{afterCursor}]", result.Error));
+
+        _mockRead
+            .Verify(r => r.GetAllAsync(
+                    It.IsAny<string?>(),
+                    It.IsAny<Guid?>(),
+                    It.IsAny<int>(),
+                    It.IsAny<CancellationToken>()),
+                Times.Never);
+    }
+
+    [Fact]
+    public async Task When_GetAllWithFullPage_Expect_NextCursorReturned()
+    {
+        const int amount = 2;
+        string? afterCursor = null;
+
+        var d1 = DistilleryTestData.Generic with { Name = "First Distillery", Id = Guid.NewGuid() };
+        var d2 = DistilleryTestData.Generic with { Name = "Second Distillery", Id = Guid.NewGuid() };
+        List<Distillery> expectedDistilleries = [d1, d2];
+
+        NameIdCursor? decoded = null;
+        _mockCursorCodec
+            .Setup(c => c.TryDecode(It.Is<string?>(s => s == null), out decoded))
+            .Returns(true);
+
+        _mockRead
+            .Setup(r => r.GetAllAsync(null, null, amount, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedDistilleries);
+
+        _mockCursorCodec
+            .Setup(c => c.Encode(It.IsAny<NameIdCursor>()))
+            .Returns("NextCursor");
+
+        var result = await _service.GetAllAsync(afterCursor, amount);
+
+        Assert.Multiple(
+            () => Assert.Equal(GetAllDistilleriesOutcome.Success, result.Outcome),
+            () => Assert.Equal(expectedDistilleries, result.Distilleries),
+            () => Assert.Equal("NextCursor", result.NextCursor),
+            () => Assert.Equal(amount, result.Amount)
+        );
+
+        _mockCursorCodec.Verify(c =>
+                c.Encode(It.Is<NameIdCursor>(p => p.Name == d2.Name && p.Id == d2.Id)),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task When_GetAllWithValidCursor_Expect_PassedToRepository()
+    {
+        const int amount = 5;
+        const string afterCursor = "afterCursor";
+
+        var id = Guid.NewGuid();
+        var payload = new NameIdCursor("Distillery", id);
+
+        _mockCursorCodec
+            .Setup(c => c.TryDecode(afterCursor, out payload))
+            .Returns(true);
+
+        _mockRead
+            .Setup(r => r.GetAllAsync(payload.Name, payload.Id, amount, It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+
+        var result = await _service.GetAllAsync(afterCursor, amount);
+
+        Assert.Multiple(
+            () => Assert.Equal(GetAllDistilleriesOutcome.Success, result.Outcome),
+            () => Assert.Empty(result.Distilleries!),
+            () => Assert.Null(result.NextCursor),
+            () => Assert.Equal(amount, result.Amount)
+        );
+
+        _mockRead
+            .Verify(r => r.GetAllAsync(
+                    payload.Name,
+                    payload.Id,
+                    amount,
+                    It.IsAny<CancellationToken>()),
+                Times.Once);
+    }
+
+    [Fact]
     public async Task When_SearchAndTwoDistilleriesFound_Expect_SuccessWithListOfTwoDistilleriesNames()
     {
         List<Distillery> expectedDistilleries =
@@ -141,30 +311,30 @@ public class DistilleryAppServiceTests
             DistilleryTestData.Generic with { Name = "First Distillery" },
             DistilleryTestData.Generic with { Name = "Second Distillery" }
         ];
-        
+
         _mockRead.Setup(r => r.SearchByNameAsync("Distillery", It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedDistilleries);
-        
+
         var result = await _service.SearchByNameAsync("Distillery");
-        
+
         Assert.Multiple(
             () => Assert.Equal(SearchDistilleriesOutcome.Success, result.Outcome),
             () => Assert.Equal(expectedDistilleries, result.Distilleries));
     }
-    
+
     [Fact]
     public async Task When_SearchAndNoDistilleriesFound_ExpectSuccessWithEmptyList()
     {
         const string pattern = "Distillery";
         _mockRead.Setup(r => r.SearchByNameAsync(pattern, It.IsAny<CancellationToken>())).ReturnsAsync([]);
-        
+
         var result = await _service.SearchByNameAsync(pattern);
-        
+
         Assert.Multiple(
             () => Assert.Equal(SearchDistilleriesOutcome.Success, result.Outcome),
             () => Assert.Empty(result.Distilleries!));
     }
-    
+
     [Fact]
     public async Task When_SearchAndErrorOccurs_ExpectErrorWithMessage()
     {
@@ -172,9 +342,9 @@ public class DistilleryAppServiceTests
         _mockRead
             .Setup(r => r.SearchByNameAsync(pattern, It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Exception"));
-        
+
         var result = await _service.SearchByNameAsync(pattern);
-        
+
         Assert.Multiple(
             () => Assert.Equal(SearchDistilleriesOutcome.Error, result.Outcome),
             () => Assert.Equal("Exception", result.Error),
@@ -183,7 +353,7 @@ public class DistilleryAppServiceTests
                 $"An error occured whilst searching for distilleries with [Pattern: {pattern}",
                 _fakeLogger.Collector.LatestRecord.Message));
     }
-    
+
     [Fact]
     public async Task When_CreateAndDistilleryWithThatNameAlreadyExists_Expect_AlreadyExists()
     {
@@ -194,10 +364,9 @@ public class DistilleryAppServiceTests
         var result = await _service.CreateAsync(newDistillery);
 
         Assert.Multiple(
-            () => Assert
-                .Equal(CreateDistilleryOutcome.AlreadyExists, result.Outcome),
-            () => _mockWrite
-                .Verify(w => w.AddAsync(It.IsAny<Distillery>(), It.IsAny<CancellationToken>()), Times.Never));
+            () => Assert.Equal(CreateDistilleryOutcome.AlreadyExists, result.Outcome),
+            () => _mockWrite.Verify(w => w.AddAsync(It.IsAny<Distillery>(), It.IsAny<CancellationToken>()),
+                Times.Never));
     }
 
     [Fact]

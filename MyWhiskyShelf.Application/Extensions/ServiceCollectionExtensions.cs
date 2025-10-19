@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
+using MyWhiskyShelf.Application.Abstractions.Cursor;
 using MyWhiskyShelf.Application.Abstractions.Services;
+using MyWhiskyShelf.Application.Codecs;
 using MyWhiskyShelf.Application.Services;
 
 namespace MyWhiskyShelf.Application.Extensions;
@@ -13,5 +15,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDistilleryAppService, DistilleryAppService>();
         services.AddScoped<IWhiskyBottleAppService, WhiskyBottleAppService>();
         services.AddScoped<IGeoAppService, GeoAppService>();
+        services.AddSingleton<ICursorCodec, Base64JsonCursorCodec>();
     }
 }

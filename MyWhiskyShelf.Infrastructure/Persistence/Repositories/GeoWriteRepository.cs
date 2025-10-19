@@ -15,7 +15,7 @@ public sealed class GeoWriteRepository(MyWhiskyShelfDbContext dbContext) : IGeoW
     public async Task<Country> AddCountryAsync(Country country, CancellationToken ct = default)
     {
         var entity = country.ToEntity();
-        
+
         dbContext.Countries.Add(entity);
         await dbContext.SaveChangesAsync(ct);
 
@@ -42,9 +42,9 @@ public sealed class GeoWriteRepository(MyWhiskyShelfDbContext dbContext) : IGeoW
         if (existing is null)
             return false;
 
-        if (existing.IsActive == isActive) 
+        if (existing.IsActive == isActive)
             return true;
-        
+
         existing.IsActive = isActive;
         foreach (var regionEntity in dbContext.Regions.Where(x => x.CountryId == id))
             if (regionEntity.IsActive != isActive)
@@ -53,14 +53,14 @@ public sealed class GeoWriteRepository(MyWhiskyShelfDbContext dbContext) : IGeoW
         await dbContext.SaveChangesAsync(ct);
         return true;
     }
-    
-    
+
+
     public async Task<Region?> AddRegionAsync(Guid countryId, Region region, CancellationToken ct = default)
     {
         var parentExists = await dbContext.Countries
             .AsNoTracking()
             .AnyAsync(c => c.Id == countryId, ct);
-        
+
         if (!parentExists) return null;
 
         var entity = region.ToEntity(countryId);
@@ -91,7 +91,7 @@ public sealed class GeoWriteRepository(MyWhiskyShelfDbContext dbContext) : IGeoW
         if (existing is null) return false;
 
         if (existing.IsActive == isActive) return true;
-        
+
         existing.IsActive = isActive;
         await dbContext.SaveChangesAsync(ct);
 

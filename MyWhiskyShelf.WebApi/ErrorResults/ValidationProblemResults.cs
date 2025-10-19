@@ -12,7 +12,7 @@ public static class ValidationProblemResults
                 { parameterName, [$"Route parameter '{parameterName}' is required and cannot be empty."] }
             });
     }
-    
+
     public static IResult MissingOrEmptyQueryParameter(string parameterName)
     {
         return Results.ValidationProblem(
@@ -35,14 +35,14 @@ public static class ValidationProblemResults
             });
     }
 
-    public static IResult PagingParametersAreOutOfRange(Dictionary<string, string[]> errors)
+    public static IResult InvalidPagingParameters(Dictionary<string, string[]> errors)
     {
         return Results.ValidationProblem(
             title: "Paging parameters are out of range",
             type: "urn:mywhiskyshelf:validation-errors:paging",
             errors: errors);
     }
-    
+
     public static IResult CountryNotFound(Guid countryId)
     {
         return Results.ValidationProblem(

@@ -21,7 +21,7 @@ public sealed class DataSeederHostedService(
 {
     private static Guid JapanId => Guid.Parse("f5712c32-1d89-444d-8cf7-9c444c55ce61");
     private static Guid ScotlandId => Guid.Parse("e1a604b5-8aa5-4eac-89f0-64f37a3a3290");
-    
+
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         var enabled = configuration.GetValue("MYWHISKYSHELF_DATA_SEEDING_ENABLED", false);
@@ -40,7 +40,10 @@ public sealed class DataSeederHostedService(
         await SeedGeoDataAsync(dbContext);
     }
 
-    public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
 
     private static async Task SeedGeoDataAsync(MyWhiskyShelfDbContext dbContext)
     {
@@ -50,7 +53,8 @@ public sealed class DataSeederHostedService(
             Name = "Scotland",
             Slug = "scotland",
             IsActive = true,
-            Regions = [
+            Regions =
+            [
                 new RegionEntity
                 {
                     Id = Guid.Parse("b4d04c7b-ba24-4918-84fa-d7c84f0137d0"),
@@ -99,7 +103,8 @@ public sealed class DataSeederHostedService(
             Name = "Japan",
             Slug = "japan",
             IsActive = true,
-            Regions = [
+            Regions =
+            [
                 new RegionEntity
                 {
                     Id = Guid.Parse("cad054e9-5d20-4c42-b85f-3ec4b9f14086"),
@@ -158,10 +163,8 @@ public sealed class DataSeederHostedService(
                 }
             ]
         };
-        
+
         dbContext.AddRange(scotland, japan);
         await dbContext.SaveChangesAsync();
     }
 }
-
-    

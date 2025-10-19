@@ -15,7 +15,7 @@ public class PgWebEnvironmentVariableTests
 
         Assert.NotEmpty(appHostBuilder.Resources.OfType<PgWebContainerResource>());
     }
-    
+
     [Fact]
     public async Task When_PgWebIsEnabledInDevelopment_Expect_PgWebContainerIsPresent()
     {

@@ -1,5 +1,6 @@
 using MyWhiskyShelf.Infrastructure.Persistence.Mapping;
 using MyWhiskyShelf.Infrastructure.Persistence.Projections;
+using MyWhiskyShelf.Infrastructure.Tests.TestData;
 
 namespace MyWhiskyShelf.Infrastructure.Tests.Persistence.Projections;
 
@@ -9,7 +10,7 @@ public class DistilleryProjectionsTests
     public void When_ProjectToDistilleryDomain_Expect_AllPropertiesAreMapped()
     {
         var id = Guid.NewGuid();
-        var entity = new TestData.DistilleryEntityBuilder().WithId(id).Build();
+        var entity = new DistilleryEntityBuilder().WithId(id).Build();
 
         var projector = DistilleryProjections.ToDistilleryDomain.Compile();
         var model = projector(entity);

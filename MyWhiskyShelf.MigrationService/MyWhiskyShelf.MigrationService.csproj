@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MyWhiskyShelf.Migrations\MyWhiskyShelf.Migrations.csproj" />
-      <ProjectReference Include="..\MyWhiskyShelf.ServiceDefaults\MyWhiskyShelf.ServiceDefaults.csproj" />
+        <ProjectReference Include="..\MyWhiskyShelf.Migrations\MyWhiskyShelf.Migrations.csproj"/>
+        <ProjectReference Include="..\MyWhiskyShelf.ServiceDefaults\MyWhiskyShelf.ServiceDefaults.csproj"/>
     </ItemGroup>
 </Project>

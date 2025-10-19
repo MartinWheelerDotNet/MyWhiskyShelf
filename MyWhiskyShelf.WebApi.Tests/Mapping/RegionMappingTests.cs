@@ -8,10 +8,10 @@ namespace MyWhiskyShelf.WebApi.Tests.Mapping;
 public class RegionMappingTests
 {
     private static readonly SlugHelper SlugHelper = new();
-    
+
     [Fact]
     public void When_MappingRegionToResponseWithAllFields_Expect_RegionResponseMatches()
-    { 
+    {
         var id = Guid.NewGuid();
         var countryId = Guid.NewGuid();
 

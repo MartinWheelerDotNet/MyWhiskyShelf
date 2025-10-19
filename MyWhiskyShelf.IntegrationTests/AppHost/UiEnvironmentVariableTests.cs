@@ -12,7 +12,7 @@ public class UiEnvironmentVariableTests
 
         Assert.Contains(appHostBuilder.Resources, r => r.Name == "UI");
     }
-    
+
     [Fact]
     public async Task When_UiIsEnabled_Expect_UiContainerIsPresent()
     {

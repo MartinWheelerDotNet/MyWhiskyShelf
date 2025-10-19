@@ -18,14 +18,15 @@ public class CountryProjectionsTests
             RegionTestData.ActiveRegion(countryId) with { Id = activeRegionId },
             RegionTestData.InactiveRegion(countryId) with { Id = inactiveRegionId }
         ];
-        
+
         var countryEntity = new CountryEntity
         {
             Id = countryId,
             Name = "Country",
             Slug = "country",
             IsActive = false,
-            Regions = [
+            Regions =
+            [
                 RegionEntityTestData.ActiveRegion(activeRegionId, countryId),
                 RegionEntityTestData.InactiveRegion(inactiveRegionId, countryId)
             ]

@@ -14,7 +14,7 @@ public class RunMigrationsEnvironmentVariableTests
 
         Assert.Contains(appHostBuilder.Resources, r => r.Name == "migrations");
     }
-    
+
     [Fact]
     public async Task When_RunMigrationsIsEnabledInDevelopment_Expect_MigrationsContainerIsPresent()
     {

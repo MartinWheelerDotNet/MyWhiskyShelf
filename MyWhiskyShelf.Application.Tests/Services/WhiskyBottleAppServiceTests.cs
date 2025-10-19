@@ -48,7 +48,7 @@ public class WhiskyBottleAppServiceTests
             () => Assert.Equal(GetWhiskyBottleByIdOutcome.Success, result.Outcome),
             () => Assert.Equal(whiskyBottle, result.WhiskyBottle));
     }
-    
+
     [Fact]
     public async Task When_GetByIdAndExceptionIsThrown_Expect_ErrorAndLogError()
     {

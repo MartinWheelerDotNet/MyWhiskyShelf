@@ -15,7 +15,7 @@ public static class RegionEntityTestData
             IsActive = true
         };
     }
-    
+
     public static RegionEntity InactiveRegion(Guid id, Guid countryId)
     {
         return new RegionEntity

@@ -32,21 +32,27 @@
     "offline_access",
     "microprofile-jwt"
   ],
-
-
   "roles": {
     "realm": [
-      { "name": "admin" },
-      { "name": "user" }
+      {
+        "name": "admin"
+      },
+      {
+        "name": "user"
+      }
     ]
   },
   "groups": [
     {
       "name": "users",
-      "realmRoles": ["user"]
+      "realmRoles": [
+        "user"
+      ]
     }
   ],
-  "defaultGroups": ["/users"],
+  "defaultGroups": [
+    "/users"
+  ],
   "clients": [
     {
       "clientId": "mywhiskyshelf-api",
@@ -137,8 +143,12 @@
         "pkce.code.challenge.method": "S256",
         "post.logout.redirect.uris": "+"
       },
-      "redirectUris": ["http://localhost:5173/*"],
-      "webOrigins": ["http://localhost:5173"],
+      "redirectUris": [
+        "http://localhost:5173/*"
+      ],
+      "webOrigins": [
+        "http://localhost:5173"
+      ],
       "rootUrl": "http://localhost",
       "baseUrl": "/",
       "protocolMappers": [

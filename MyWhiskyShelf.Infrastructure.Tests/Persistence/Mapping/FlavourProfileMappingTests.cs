@@ -14,12 +14,12 @@ public class FlavourProfileMappingTests
 
         Assert.Equal(FlavourProfileTestData.GenericVector, flavourVector);
     }
-    
+
     [Fact]
     public void When_MappingVectorToFlavourProfile_ExpectCorrectFlavourProfileIsReturned()
     {
         var flavourVector = FlavourProfileTestData.GenericVector;
-        
+
         var flavourProfile = flavourVector.ToFlavourProfile();
 
         Assert.Equal(FlavourProfileTestData.Generic, flavourProfile);

@@ -12,7 +12,7 @@ public static class KeycloakTokenClient
     {
         using var http = new HttpClient();
         http.BaseAddress = keycloakBaseUri;
-        
+
         var form = new FormUrlEncodedContent(new Dictionary<string, string>
         {
             ["grant_type"] = "client_credentials",

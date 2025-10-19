@@ -16,9 +16,8 @@ namespace MyWhiskyShelf.WebApi.Endpoints;
 [ExcludeFromCodeCoverage]
 public static class DistilleryEndpoints
 {
-
     private const string EndpointGroup = "distillery";
-    
+
     public static void MapDistilleryEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/distilleries")
@@ -71,12 +70,11 @@ public static class DistilleryEndpoints
                         GetDistilleryByIdOutcome.Success => Results.Ok(result.Distillery!.ToResponse()),
                         GetDistilleryByIdOutcome.NotFound => Results.NotFound(),
                         _ => ProblemResults.InternalServerError(
-                                EndpointGroup,
-                                "get-by-id",
-                                httpContext.TraceIdentifier,
-                                httpContext.Request.Path)
+                            EndpointGroup,
+                            "get-by-id",
+                            httpContext.TraceIdentifier,
+                            httpContext.Request.Path)
                     };
-
                 })
             .WithName("Get Distillery")
             .Produces<DistilleryResponse>()
@@ -93,20 +91,25 @@ public static class DistilleryEndpoints
                     [FromServices] IDistilleryAppService service,
                     HttpContext httpContext,
                     CancellationToken ct,
-                    [FromQuery(Name = "page")] int page = 1,
+                    [FromQuery(Name = "cursor")] string? cursor = null,
                     [FromQuery(Name = "amount")] int amount = 10) =>
                 {
-                    var result = await service.GetAllAsync(page, amount, ct);
+                    var result = await service.GetAllAsync(cursor, amount, ct);
 
                     return result.Outcome switch
                     {
                         GetAllDistilleriesOutcome.Success => Results.Ok(
-                            new PagedResponse<DistilleryResponse>(
-                                Items: result.Distilleries!.Select(d => d.ToResponse()).ToList(),
-                                Page: result.Page,
-                                Amount: result.Amount
+                            new CursorPagedResponse<DistilleryResponse>(
+                                result.Distilleries!.Select(d => d.ToResponse()).ToList(),
+                                result.NextCursor,
+                                result.Amount
                             )
                         ),
+                        GetAllDistilleriesOutcome.InvalidCursor => ValidationProblemResults.InvalidPagingParameters(
+                            new Dictionary<string, string[]>
+                            {
+                                { "cursor", ["The provided 'cursor' is invalid or malformed."] }
+                            }),
                         _ => ProblemResults.InternalServerError(
                             "distillery",
                             "get-all",
@@ -115,10 +118,10 @@ public static class DistilleryEndpoints
                     };
                 })
             .WithName("Get All Distilleries")
-            .Produces<PagedResponse<DistilleryResponse>>()
+            .Produces<CursorPagedResponse<DistilleryResponse>>()
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesValidationProblem()
-            .UsesPagingResponse()
+            .UsesCursorPagingResponse()
             .RequireAuthorization(Policies.ReadDistilleries);
 
         group.MapGet(
@@ -136,11 +139,10 @@ public static class DistilleryEndpoints
                         SearchDistilleriesOutcome.Success => Results.Ok(
                             result.Distilleries!.Select(distillery => distillery.ToResponse())),
                         _ => ProblemResults.InternalServerError(
-                                EndpointGroup,
-                                "search",
-                                httpContext.TraceIdentifier,
-                                httpContext.Request.Path)
-
+                            EndpointGroup,
+                            "search",
+                            httpContext.TraceIdentifier,
+                            httpContext.Request.Path)
                     };
                 })
             .WithName("Search Distilleries")
@@ -149,7 +151,7 @@ public static class DistilleryEndpoints
             .ProducesValidationProblem()
             .RequiresNonEmptyQueryParameter("pattern")
             .RequireAuthorization(Policies.ReadDistilleries);
-        
+
         group.MapPut(
                 "/{id:guid}",
                 async (
@@ -167,10 +169,10 @@ public static class DistilleryEndpoints
                         UpdateDistilleryOutcome.NotFound => Results.NotFound(),
                         UpdateDistilleryOutcome.NameConflict => Results.Conflict(),
                         _ => ProblemResults.InternalServerError(
-                                EndpointGroup,
-                                "update",
-                                httpContext.TraceIdentifier,
-                                httpContext.Request.Path)
+                            EndpointGroup,
+                            "update",
+                            httpContext.TraceIdentifier,
+                            httpContext.Request.Path)
                     };
                 })
             .WithName("Update Distillery")
@@ -182,7 +184,7 @@ public static class DistilleryEndpoints
             .RequiresNonEmptyRouteParameter("id")
             .RequiresIdempotencyKey()
             .RequireAuthorization(Policies.WriteDistilleries);
-        
+
         group.MapDelete(
                 "/{id:guid}",
                 async (
@@ -198,10 +200,10 @@ public static class DistilleryEndpoints
                         DeleteDistilleryOutcome.Deleted => Results.NoContent(),
                         DeleteDistilleryOutcome.NotFound => Results.NotFound(),
                         _ => ProblemResults.InternalServerError(
-                                EndpointGroup,
-                                "delete",
-                                httpContext.TraceIdentifier,
-                                httpContext.Request.Path)
+                            EndpointGroup,
+                            "delete",
+                            httpContext.TraceIdentifier,
+                            httpContext.Request.Path)
                     };
                 })
             .WithName("Delete Distillery")

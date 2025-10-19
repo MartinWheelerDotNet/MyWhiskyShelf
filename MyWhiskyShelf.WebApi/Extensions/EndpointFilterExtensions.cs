@@ -14,7 +14,7 @@ public static class EndpointFilterExtensions
     {
         return routeHandlerBuilder.AddEndpointFilter(new ValidateNonEmptyRouteParameterFilter(parameterName));
     }
-    
+
     public static RouteHandlerBuilder RequiresNonEmptyQueryParameter(
         this RouteHandlerBuilder routeHandlerBuilder,
         string parameterName)
@@ -34,12 +34,12 @@ public static class EndpointFilterExtensions
         });
     }
 
-    public static RouteHandlerBuilder UsesPagingResponse(this RouteHandlerBuilder routeHandlerBuilder)
+    public static RouteHandlerBuilder UsesCursorPagingResponse(this RouteHandlerBuilder routeHandlerBuilder)
     {
         return routeHandlerBuilder.AddEndpointFilter(async (context, next) =>
         {
-            var filter = new ValidatePagingQueryInRangeFilter();
+            var filter = new ValidateCursorQueryInRangeFilter();
             return await filter.InvokeAsync(context, next);
-        }); 
+        });
     }
 }

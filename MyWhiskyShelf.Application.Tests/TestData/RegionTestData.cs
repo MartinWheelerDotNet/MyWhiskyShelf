@@ -6,7 +6,6 @@ public static class RegionTestData
 {
     public static Region ActiveRegion(Guid countryId, Guid id)
     {
-
         return new Region
         {
             Id = id,
@@ -16,7 +15,7 @@ public static class RegionTestData
             IsActive = true
         };
     }
-    
+
     public static Region InactiveRegion(Guid countryId, Guid id)
     {
         return new Region

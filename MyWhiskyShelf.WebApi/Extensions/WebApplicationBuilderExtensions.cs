@@ -8,6 +8,41 @@ namespace MyWhiskyShelf.WebApi.Extensions;
 
 public static class WebApplicationBuilderExtensions
 {
+    private static JwtBearerEvents JwtEvents =>
+        new()
+        {
+            OnTokenValidated = ctx =>
+            {
+                if (ctx.Principal?.Identity is not ClaimsIdentity identity)
+                    return Task.CompletedTask;
+
+
+                var realmAccessJson = ctx.Principal!.FindFirst("realm_access")?.Value;
+                if (string.IsNullOrWhiteSpace(realmAccessJson))
+                    return Task.CompletedTask;
+
+                try
+                {
+                    using var doc = JsonDocument.Parse(realmAccessJson);
+                    if (doc.RootElement.TryGetProperty("roles", out var rolesEl) &&
+                        rolesEl.ValueKind == JsonValueKind.Array)
+                    {
+                        var roles = rolesEl.EnumerateArray()
+                            .Where(x => x.ValueKind == JsonValueKind.String)
+                            .Select(x => x.GetString()!)
+                            .ToArray();
+                        AddRoles(identity, roles);
+                    }
+                }
+                catch
+                {
+                    // ignore malformed JSON
+                }
+
+                return Task.CompletedTask;
+            }
+        };
+
     public static void SetupAuthorization(this WebApplicationBuilder builder)
     {
         builder.Services.AddAuthorizationBuilder()
@@ -26,8 +61,8 @@ public static class WebApplicationBuilderExtensions
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddKeycloakJwtBearer(
-                serviceName: "keycloak",
-                realm: "mywhiskyshelf",
+                "keycloak",
+                "mywhiskyshelf",
                 options =>
                 {
                     options.Audience = "mywhiskyshelf-api";
@@ -64,46 +99,10 @@ public static class WebApplicationBuilderExtensions
                 });
     }
 
-    private static JwtBearerEvents JwtEvents =>
-         new()
-         {
-            OnTokenValidated = ctx =>
-            {
-                if (ctx.Principal?.Identity is not ClaimsIdentity identity) 
-                    return Task.CompletedTask;
-
-                
-
-                var realmAccessJson = ctx.Principal!.FindFirst("realm_access")?.Value;
-                if (string.IsNullOrWhiteSpace(realmAccessJson)) 
-                    return Task.CompletedTask;
-                
-                try
-                {
-                    using var doc = JsonDocument.Parse(realmAccessJson);
-                    if (doc.RootElement.TryGetProperty("roles", out var rolesEl) &&
-                        rolesEl.ValueKind == JsonValueKind.Array)
-                    {
-                        var roles = rolesEl.EnumerateArray()
-                            .Where(x => x.ValueKind == JsonValueKind.String)
-                            .Select(x => x.GetString()!)
-                            .ToArray();
-                        AddRoles(identity, roles);
-                    }
-                }
-                catch
-                {
-                    // ignore malformed JSON
-                }
-
-                return Task.CompletedTask;
-            }
-        };
-    
     private static void AddRoles(ClaimsIdentity id, IEnumerable<string>? roles)
     {
         if (roles == null) return;
-        
+
         foreach (var role in roles.Where(role => !string.IsNullOrWhiteSpace(role)))
             id.AddClaim(new Claim(ClaimTypes.Role, role));
     }

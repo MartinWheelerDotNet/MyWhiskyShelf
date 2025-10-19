@@ -21,7 +21,7 @@ public class RegionEntityMappingTests
         };
 
         var region = regionEntity.ToDomain();
-        
+
         Assert.Multiple(
             () => Assert.Equal(regionEntity.CountryId, region.CountryId),
             () => Assert.Equal("Region", region.Name),
@@ -34,9 +34,9 @@ public class RegionEntityMappingTests
     {
         var countryId = Guid.NewGuid();
         var region = RegionTestData.ActiveRegion(countryId);
-        
+
         var regionEntity = region.ToEntity(countryId);
-        
+
         Assert.Multiple(
             () => Assert.Equal(region.CountryId, regionEntity.CountryId),
             () => Assert.Equal("Active Region", regionEntity.Name),

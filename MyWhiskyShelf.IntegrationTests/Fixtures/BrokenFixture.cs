@@ -1,5 +1,6 @@
 using Aspire.Hosting;
 using JetBrains.Annotations;
+using Npgsql;
 
 namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 
@@ -14,18 +15,6 @@ public class BrokenFixture : IAsyncLifetime
         await BreakDatabaseAsync();
     }
 
-    private async Task BreakDatabaseAsync()
-    {
-        var connectionString = await Application.GetConnectionStringAsync("myWhiskyShelfDb");
-        await using var npgsqlConnection = new Npgsql.NpgsqlConnection(connectionString);
-        await npgsqlConnection.OpenAsync();
-        
-        const string sql = "ALTER SCHEMA public RENAME TO broken;";
-
-        await using var cmd = new Npgsql.NpgsqlCommand(sql, npgsqlConnection);
-        await cmd.ExecuteNonQueryAsync();
-    }
-    
     public async Task DisposeAsync()
     {
         try
@@ -36,5 +25,17 @@ public class BrokenFixture : IAsyncLifetime
         {
             await Application.DisposeAsync();
         }
-    } 
+    }
+
+    private async Task BreakDatabaseAsync()
+    {
+        var connectionString = await Application.GetConnectionStringAsync("myWhiskyShelfDb");
+        await using var npgsqlConnection = new NpgsqlConnection(connectionString);
+        await npgsqlConnection.OpenAsync();
+
+        const string sql = "ALTER SCHEMA public RENAME TO broken;";
+
+        await using var cmd = new NpgsqlCommand(sql, npgsqlConnection);
+        await cmd.ExecuteNonQueryAsync();
+    }
 }

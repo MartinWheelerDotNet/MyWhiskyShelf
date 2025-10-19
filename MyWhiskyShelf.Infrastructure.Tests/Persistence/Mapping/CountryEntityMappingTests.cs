@@ -18,19 +18,20 @@ public class CountryEntityMappingTests
             RegionTestData.ActiveRegion(countryId) with { Id = activeRegionId },
             RegionTestData.InactiveRegion(countryId) with { Id = inactiveRegionId }
         ];
-        
+
         var countryEntity = new CountryEntity
         {
             Id = countryId,
             Name = "Country",
             Slug = "country",
             IsActive = true,
-            Regions = [
+            Regions =
+            [
                 RegionEntityTestData.ActiveRegion(activeRegionId, countryId),
                 RegionEntityTestData.InactiveRegion(inactiveRegionId, countryId)
             ]
         };
-        
+
         var domain = countryEntity.ToDomain();
 
         Assert.Multiple(
@@ -40,7 +41,7 @@ public class CountryEntityMappingTests
             () => Assert.Equal(countryEntity.IsActive, domain.IsActive),
             () => Assert.Equal(expectedRegions, domain.Regions));
     }
-    
+
     [Fact]
     public void When_MappingCountryToEntityWithWhitespace_Expect_NameAndSlugTrimmed()
     {
@@ -52,7 +53,7 @@ public class CountryEntityMappingTests
             IsActive = true,
             Regions = []
         };
-    
+
         var countryEntity = country.ToEntity();
 
         Assert.Multiple(

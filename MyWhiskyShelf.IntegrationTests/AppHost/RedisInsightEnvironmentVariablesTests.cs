@@ -16,7 +16,7 @@ public class RedisInsightEnvironmentVariablesTests
         Assert.NotEmpty(appHostBuilder.Resources.OfType<RedisInsightResource>());
     }
 
-    
+
     [Fact]
     public async Task When_RedisInsightIsEnabledInDevelopment_Expect_RedisInsightContainerIsPresent()
     {

@@ -43,6 +43,19 @@ public class WorkingFixture : IAsyncLifetime
         DbContext = new MyWhiskyShelfDbContext(options);
     }
 
+    public virtual async Task DisposeAsync()
+    {
+        try
+        {
+            await ClearDatabaseAsync();
+            await Application.StopAsync();
+        }
+        finally
+        {
+            await Application.DisposeAsync();
+        }
+    }
+
     public async Task<List<DistilleryResponse>> SeedDistilleriesAsync(List<DistilleryEntity> entities)
     {
         DbContext.AddRange(entities);
@@ -73,7 +86,7 @@ public class WorkingFixture : IAsyncLifetime
             .ThenBy(response => response.Id)
             .ToList();
     }
-    
+
     public async Task<List<CountryResponse>> SeedCountriesAsync(List<CountryEntity> entities)
     {
         DbContext.AddRange(entities);
@@ -84,7 +97,7 @@ public class WorkingFixture : IAsyncLifetime
             .ThenBy(response => response.Id)
             .ToList();
     }
-    
+
     public async Task<List<RegionResponse>> SeedRegionsAsync(List<RegionEntity> entities)
     {
         DbContext.AddRange(entities);
@@ -126,7 +139,7 @@ public class WorkingFixture : IAsyncLifetime
 
         return await SeedCountriesAsync([countryEntity]);
     }
-    
+
     public async Task ClearDatabaseAsync()
     {
         DbContext.Set<DistilleryEntity>().RemoveRange(DbContext.Set<DistilleryEntity>());
@@ -134,18 +147,5 @@ public class WorkingFixture : IAsyncLifetime
         DbContext.Set<RegionEntity>().RemoveRange(DbContext.Set<RegionEntity>());
         DbContext.Set<CountryEntity>().RemoveRange(DbContext.Set<CountryEntity>());
         await DbContext.SaveChangesAsync();
-    }
-
-    public virtual async Task DisposeAsync()
-    {
-        try
-        {
-            await ClearDatabaseAsync();
-            await Application.StopAsync();
-        }
-        finally
-        {
-            await Application.DisposeAsync();
-        }
     }
 }

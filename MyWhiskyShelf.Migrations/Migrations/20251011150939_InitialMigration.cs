@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices.Marshalling;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Pgvector;
 
@@ -127,6 +128,12 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 name: "IX_Distilleries_Name_eq",
                 table: "Distilleries",
                 column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Distilleries_Name_Id",
+                table: "Distilleries",
+                columns: new[] { "Name", "Id" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

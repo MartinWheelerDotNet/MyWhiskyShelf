@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
+using MyWhiskyShelf.Infrastructure.Persistence.Entities;
 using MyWhiskyShelf.Infrastructure.Persistence.Projections;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
@@ -27,7 +28,7 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
             .AsNoTracking()
             .AnyAsync(entity => entity.Name == name, ct);
     }
-    
+
     public async Task<IReadOnlyList<Distillery>> SearchByNameAsync(string pattern, CancellationToken ct = default)
     {
         return await dbContext.Distilleries
@@ -39,19 +40,35 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
             .ToListAsync(ct);
     }
 
-    public async Task<IReadOnlyList<Distillery>> GetAllAsync(int page, int amount, CancellationToken ct = default)
+    public async Task<IReadOnlyList<Distillery>> GetAllAsync(
+        string? afterName,
+        Guid? afterId,
+        int amount,
+        CancellationToken ct = default)
     {
-        var query = dbContext.Distilleries
-            .AsNoTracking()
-            .OrderBy(entity => entity.Name)
-            .ThenBy(entity => entity.Id);
+        IQueryable<DistilleryEntity> query;
 
-        var entities = await query
-            .Skip((page - 1) * amount)
+        if (!string.IsNullOrWhiteSpace(afterName) && afterId is { } afterGuid)
+        {
+            const string sql = """
+                               SELECT * FROM "Distilleries"
+                               WHERE ("Name", "Id") > ({0}, {1})
+                               """;
+            query = dbContext.Distilleries.FromSqlRaw(sql, afterName, afterGuid);
+        }
+        else
+        {
+            query = dbContext.Distilleries;
+        }
+
+        var result = await query
+            .AsNoTracking()
+            .OrderBy(e => e.Name)
+            .ThenBy(e => e.Id)
             .Take(amount)
             .Select(DistilleryProjections.ToDistilleryDomain)
             .ToListAsync(ct);
 
-        return entities;
+        return result;
     }
 }

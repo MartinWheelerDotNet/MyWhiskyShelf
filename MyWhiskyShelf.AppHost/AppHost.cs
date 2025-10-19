@@ -45,7 +45,7 @@ var webApi = builder.AddProject<MyWhiskyShelf_WebApi>("WebApi")
 if (builder.Configuration.GetValue("MYWHISKYSHELF_UI_ENABLED", true))
 {
     // Stryker disable all: Frontend environment wiring isn’t covered by mutation tests
-    const int vitePort = 5173; 
+    const int vitePort = 5173;
     builder
         .AddNpmApp("UI", "../MyWhiskyShelf.Frontend")
         .WithEnvironment("BROWSER", "none")
@@ -54,7 +54,7 @@ if (builder.Configuration.GetValue("MYWHISKYSHELF_UI_ENABLED", true))
         .WithEnvironment("VITE_KEYCLOAK_REALM", "mywhiskyshelf")
         .WithEnvironment("VITE_KEYCLOAK_CLIENT_ID", "mywhiskyshelf-frontend")
         .WithEnvironment("VITE_PORT", vitePort.ToString())
-        .WithHttpEndpoint(port: vitePort, env: "VITE_PORT")
+        .WithHttpEndpoint(vitePort, env: "VITE_PORT")
         .WithReference(webApi)
         .WaitFor(webApi)
         .WithReference(keycloak)
@@ -68,7 +68,7 @@ if (runMigrations)
     var migrations = builder.AddProject<MyWhiskyShelf_MigrationService>("migrations")
         .WithReference(database)
         .WaitFor(database);
-    
+
     webApi
         .WithReference(migrations)
         .WaitForCompletion(migrations);

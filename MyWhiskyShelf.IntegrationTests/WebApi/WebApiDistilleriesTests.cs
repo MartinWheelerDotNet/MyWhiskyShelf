@@ -11,77 +11,73 @@ namespace MyWhiskyShelf.IntegrationTests.WebApi;
 [Collection(nameof(WorkingFixture))]
 public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
 {
+    public async Task InitializeAsync()
+    {
+        await Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
+    {
+        await fixture.ClearDatabaseAsync();
+    }
+
     [Theory]
-    [InlineData(10, 4)]
-    [InlineData(5, 6)]
-    [InlineData(30, 2)]
+    [InlineData(10, 3)]
+    [InlineData(5, 5)]
+    [InlineData(30, 1)]
     [InlineData(2, 13)]
-    public async Task When_GettingAllDistilleriesWithPageAndAmount_Expect_DistilleriesResponsesMatchInExpectedPages(
-       int amountPerPage,
-       int expectedPagesIncludingEndOfListPage)
+    public async Task When_GettingAllDistilleriesWithAmount_Expect_DistilleriesResponsesMatchInExpectedPages(
+        int amountPerPage,
+        int expectedPages)
     {
         const int amountOfDistilleries = 24;
         var expectedDistilleryResponses = await fixture.SeedDistilleriesAsync(amountOfDistilleries);
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var page = 1;
+        string? cursor = null;
         List<DistilleryResponse> distilleries = [];
+
         while (true)
         {
-            var response = await httpClient.GetAsync($"/distilleries?page={page}&amount={amountPerPage}");
+            var endpoint = cursor is null
+                ? $"/distilleries?amount={amountPerPage}"
+                : $"/distilleries?amount={amountPerPage}&cursor={cursor}";
+
+            var response = await httpClient.GetAsync(endpoint);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-            var pagedResponse = await response.Content.ReadFromJsonAsync<PagedResponse<DistilleryResponse>>();
+            var pagedResponse = await response.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
             distilleries.AddRange(pagedResponse!.Items);
 
-            if (pagedResponse.Items.Count is 0) break;
+            if (string.IsNullOrWhiteSpace(pagedResponse.NextCursor)) break;
 
+            cursor = pagedResponse.NextCursor;
             page++;
         }
-        
+
         Assert.Multiple(
-            () => Assert.Equal(expectedPagesIncludingEndOfListPage, page),
+            () => Assert.Equal(expectedPages, page),
             () => Assert.Equal(expectedDistilleryResponses, distilleries));
     }
 
     [Fact]
-    public async Task When_GettingAllDistilleriesAndRequestBeyondAvailable_Expect_EmptyDistilleriesList()
+    public async Task When_GettingAllDistilleriesAndOnLastPage_Expect_NextCursorIsNull()
     {
         const int amountOfDistilleries = 10;
         await fixture.SeedDistilleriesAsync(amountOfDistilleries);
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
-        var response = await httpClient.GetAsync("/distilleries?page=2&amount=10");
-        var pagedResponse = await response.Content.ReadFromJsonAsync<PagedResponse<DistilleryResponse>>();
-        
-        Assert.Empty(pagedResponse!.Items);
+        var response = await httpClient.GetAsync("/distilleries?amount=20");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        var pagedResponse = await response.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
+
+        Assert.Multiple(
+            () => Assert.Equal(10, pagedResponse!.Items.Count),
+            () => Assert.Null(pagedResponse!.NextCursor));
     }
 
-    [Theory]
-    [InlineData(0)]
-    [InlineData(-1)]
-    [InlineData(-10)]
-    public async Task When_GettingAllDistilleriesAndPageIsLessThanOne_Expect_ValidationProblem(int page)
-    {
-       var expectedValidationProblemDetails = new ValidationProblemDetails
-        {
-            Status = 400,
-            Title = "Paging parameters are out of range",
-            Type = "urn:mywhiskyshelf:validation-errors:paging",
-            Errors = new Dictionary<string, string[]>
-            {
-                { "page", ["page must be greater than or equal to 1"] }
-            }
-        };
-
-        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-
-        var response = await httpClient.GetAsync($"/distilleries?page={page}&amount=10");
-        var validationProblem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-        
-        Assert.Equivalent(expectedValidationProblemDetails, validationProblem);
-    }
-    
     [Theory]
     [InlineData(-10)]
     [InlineData(-1)]
@@ -103,14 +99,14 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
-        var response = await httpClient.GetAsync($"/distilleries?page=0&amount={amount}");
+        var response = await httpClient.GetAsync($"/distilleries?amount={amount}");
         var validationProblem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-        
+
         Assert.Equivalent(expectedValidationProblemDetails, validationProblem);
     }
-    
+
     [Fact]
-    public async Task When_GettingAllDistilleriesAndAmountAndPageAreOutOfRange_Expect_ValidationProblemWithBothErrors()
+    public async Task When_GettingAllDistilleriesAndInvalidCursor_Expect_ValidationProblem()
     {
         var expectedValidationProblemDetails = new ValidationProblemDetails
         {
@@ -119,30 +115,29 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
             Type = "urn:mywhiskyshelf:validation-errors:paging",
             Errors = new Dictionary<string, string[]>
             {
-                { "page", ["page must be greater than or equal to 1"] },
-                { "amount", ["amount must be between 1 and 200"] }
+                { "cursor", ["The provided 'cursor' is invalid or malformed."] }
             }
         };
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
-        var response = await httpClient.GetAsync("/distilleries?page=0&amount=0");
+        var response = await httpClient.GetAsync("/distilleries?amount=10&cursor=not-base64!!");
         var validationProblem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-        
+
         Assert.Equivalent(expectedValidationProblemDetails, validationProblem);
     }
-    
+
     [Fact]
     public async Task When_GettingDistilleryByIdAndDistilleryExists_Expect_CorrectDistilleryReturned()
     {
-         var distilleryDetails = await fixture.SeedDistilleriesAsync(1);
+        var distilleryDetails = await fixture.SeedDistilleriesAsync(1);
         var expectedResponse = distilleryDetails.Single();
         var id = expectedResponse.Id;
-       
+
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/{id}");
         var distilleryResponse = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
-        
+
         Assert.Multiple(
             () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
             () => Assert.Equal(expectedResponse, distilleryResponse!));
@@ -158,19 +153,19 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task When_SearchingByNameAndNotFound_Expect_EmptyDistilleryResponse()
     {
         await fixture.SeedDistilleriesAsync([DistilleryEntityTestData.Generic("Any Distillery")]);
-        
+
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync("/distilleries/search?pattern=Else");
         var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
 
         Assert.Empty(distilleries!);
     }
-    
+
     [Theory]
     [InlineData("CASE TEST")]
     [InlineData("CASE test")]
@@ -180,7 +175,8 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         string pattern)
     {
         const string expectedName = "Case Test";
-        var seededDistilleryResponses = await fixture.SeedDistilleriesAsync([DistilleryEntityTestData.Generic(expectedName)]);
+        var seededDistilleryResponses =
+            await fixture.SeedDistilleriesAsync([DistilleryEntityTestData.Generic(expectedName)]);
         var expectedResponse = seededDistilleryResponses.Single();
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
@@ -189,7 +185,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
 
         Assert.Single(distilleries!, actual => expectedResponse == actual);
     }
-    
+
     [Fact]
     public async Task When_SearchingByNameAndOneFound_Expect_DistilleryResponseWithJustThatDistillery()
     {
@@ -206,7 +202,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
 
         Assert.Single(distilleryResponses!, actual => expectedResponse == actual);
     }
-    
+
     [Fact]
     public async Task When_SearchingByNameAndMultipleFound_Expect_DistilleryResponseWithThoseDistilleries()
     {
@@ -215,14 +211,14 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
             DistilleryEntityTestData.Generic(searchPattern),
             DistilleryEntityTestData.Generic($"Also {searchPattern}")
         ]);
-            
+
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var response = await httpClient.GetAsync($"/distilleries/search?pattern={searchPattern}");
         var distilleryResponses = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
 
         Assert.Equal(expectedDistilleryResponses.OrderBy(r => r.Name).ThenBy(r => r.Id), distilleryResponses);
     }
-    
+
     [Fact]
     public async Task When_AddingDistilleryAndDistilleryDoesNotExist_Expect_CreatedWithLocationHeaderSet()
     {
@@ -252,7 +248,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var response = await httpClient.SendAsync(request);
-        
+
         Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
     }
 
@@ -261,7 +257,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
     {
         var distilleries = await fixture.SeedDistilleriesAsync(1);
         var id = distilleries.Single().Id;
-        
+
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
             HttpMethod.Delete,
@@ -297,7 +293,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
             DistilleryRequestTestData.GenericUpdate with { Name = name });
 
         var response = await httpClient.SendAsync(request);
-        
+
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
@@ -314,15 +310,5 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         var response = await httpClient.SendAsync(request);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-    }
-
-    public async Task InitializeAsync()
-    {
-        await Task.CompletedTask;
-    }
-
-    public async Task DisposeAsync()
-    {
-        await fixture.ClearDatabaseAsync();
     }
 }
