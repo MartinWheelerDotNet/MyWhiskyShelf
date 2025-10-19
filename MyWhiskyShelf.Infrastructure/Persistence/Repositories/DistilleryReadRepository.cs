@@ -33,6 +33,8 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
         return await dbContext.Distilleries
             .AsNoTracking()
             .Where(entity => EF.Functions.ILike(entity.Name, $"%{pattern}%"))
+            .OrderBy(entity => entity.Name)
+            .ThenBy(entity => entity.Id)
             .Select(DistilleryProjections.ToDistilleryDomain)
             .ToListAsync(ct);
     }
