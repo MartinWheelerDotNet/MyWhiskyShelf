@@ -1,5 +1,21 @@
-bin/
-obj/
+# Node (anywhere in the repo)
+**/node_modules/
+**/dist/
+**/build/
+**/.next/
+**/out/
+
+# JetBrains / Rider
+.idea/
+*.iml
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+
+# .NET build output
+**/bin/
+**/obj/
+
+# OS files
+.DS_Store
+Thumbs.db
