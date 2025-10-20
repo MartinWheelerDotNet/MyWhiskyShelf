@@ -12,10 +12,10 @@ describe("distilleriesApi.getAllDistilleries", () => {
         getMock.mockReset();
     });
 
-    it("calls axiosClient.get with default page/amount and returns the paged response", async () => {
+    it("calls axiosClient.get with default amount and returns the cursor paged response", async () => {
         const payload = {
             items: [{ id: "1", name: "A" }],
-            page: 1,
+            nextCursor: null,
             amount: 10,
         };
         getMock.mockResolvedValue({ data: payload });
@@ -28,26 +28,28 @@ describe("distilleriesApi.getAllDistilleries", () => {
         expect(url).toBe("/distilleries");
         expect(opts).toEqual(
             expect.objectContaining({
-                params: { page: 1, amount: 10 },
+                // default request now uses { amount } only (no page)
+                params: { amount: 10 },
             })
         );
 
         expect(res).toEqual(payload);
     });
 
-    it("passes through explicit page and amount (and signal) to axios", async () => {
+    it("passes through explicit cursor and amount (and signal) to axios", async () => {
         const ac = new AbortController();
-        const payload = { items: [], page: 2, amount: 20 };
+        const payload = { items: [], nextCursor: "NEXT123", amount: 20 };
         getMock.mockResolvedValue({ data: payload });
 
         const { getAllDistilleries } = await import("./distilleriesApi");
-        const res = await getAllDistilleries(2, 20, ac.signal);
+        // new signature: pass an options object with cursor/amount/signal
+        const res = await getAllDistilleries({ cursor: "CURSOR123", amount: 20, signal: ac.signal });
 
         const [url, opts] = getMock.mock.calls[0];
         expect(url).toBe("/distilleries");
         expect(opts).toEqual(
             expect.objectContaining({
-                params: { page: 2, amount: 20 },
+                params: { cursor: "CURSOR123", amount: 20 },
                 signal: ac.signal,
             })
         );
@@ -66,7 +68,8 @@ describe("distilleriesApi.getAllDistilleries", () => {
         expect(url).toBe("/distilleries");
         expect(opts).toEqual(
             expect.objectContaining({
-                params: { page: 1, amount: 10 },
+                // default request: { amount } only
+                params: { amount: 10 },
             })
         );
     });

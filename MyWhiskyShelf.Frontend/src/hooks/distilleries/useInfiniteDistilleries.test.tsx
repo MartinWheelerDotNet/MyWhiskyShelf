@@ -4,7 +4,7 @@ import { act } from "react";
 
 const hoisted = vi.hoisted(() => {
     const getAll = vi.fn<
-        (page: number, amount: number, signal?: AbortSignal) => Promise<any>
+        (args: { cursor?: string | null; amount?: number; signal?: AbortSignal }) => Promise<any>
     >();
     const getId = (x: any) => String(x?.id ?? "");
 
@@ -36,13 +36,11 @@ beforeEach(() => {
             this.cb = cb;
             lastObserver = {
                 cb,
-                observe: () => {
-                },
-                disconnect: () => {
-                },
+                observe: () => {},
+                disconnect: () => {},
             };
         }
-        observe() { }
+        observe() {}
         disconnect() {}
     } as any;
 });
@@ -60,10 +58,10 @@ const flush = async () => {
     });
 };
 
-function pagePayload(page: number, amount: number, ids: (string | number)[]) {
+function cursorPayload(nextCursor: string | null, amount: number, ids: (string | number)[]) {
     return {
         items: ids.map((id) => ({ id: String(id), name: `D${id}` })),
-        page,
+        nextCursor,
         amount,
     };
 }
@@ -81,7 +79,7 @@ function Host({ amount = 10 }: { amount?: number }) {
         loadNext,
         refresh,
         setSentinel,
-    } = useInfiniteDistilleries(amount);
+    } = useInfiniteDistilleries({ initialAmount: amount });
 
     return (
         <div>
@@ -108,8 +106,9 @@ describe("useInfiniteDistilleries", () => {
         vi.useRealTimers();
     });
 
-    it("loads page 1 on mount (default amount=10) and populates state", async () => {
-        hoisted.getAll.mockResolvedValueOnce(pagePayload(1, 10, [1,2,3]));
+    it("loads first page on mount (default amount=10) and populates state", async () => {
+        // First page returns nextCursor=null => no more pages
+        hoisted.getAll.mockResolvedValueOnce(cursorPayload(null, 10, [1,2,3]));
 
         render(<Host amount={10} />);
         expect(read("loading")).toBe("true");
@@ -117,10 +116,9 @@ describe("useInfiniteDistilleries", () => {
         await flush();
 
         expect(hoisted.getAll).toHaveBeenCalledTimes(1);
-        const [p1, a1] = hoisted.getAll.mock.calls[0];
-        expect(p1).toBe(1);
-        expect(a1).toBe(10);
-        
+        const [args1] = hoisted.getAll.mock.calls[0];
+        expect(args1).toEqual(expect.objectContaining({ cursor: null, amount: 10 }));
+
         expect(read("loading")).toBe("false");
         expect(read("isPageLoading")).toBe("false");
         expect(read("page")).toBe("1");
@@ -130,9 +128,11 @@ describe("useInfiniteDistilleries", () => {
     });
 
     it("loadNext appends next page and updates page; merges by id without duplicates", async () => {
+        // First page has nextCursor -> allows loadNext
         hoisted.getAll
-            .mockResolvedValueOnce(pagePayload(1, 10, [1,2,3,4,5,6,7,8,9,10]))
-            .mockResolvedValueOnce(pagePayload(2, 10, [10,11,12]));
+            .mockResolvedValueOnce(cursorPayload("CUR1", 10, [1,2,3,4,5,6,7,8,9,10]))
+            // Second page returns duplicate 10 and two new ids, and no nextCursor
+            .mockResolvedValueOnce(cursorPayload(null, 10, [10,11,12]));
 
         render(<Host amount={10} />);
         await flush();
@@ -140,10 +140,10 @@ describe("useInfiniteDistilleries", () => {
         fireEvent.click(screen.getByTestId("next"));
         await flush();
 
-        const c1 = hoisted.getAll.mock.calls[0];
-        const c2 = hoisted.getAll.mock.calls[1];
-        expect(c1[0]).toBe(1); expect(c1[1]).toBe(10);
-        expect(c2[0]).toBe(2); expect(c2[1]).toBe(10);
+        const a1 = hoisted.getAll.mock.calls[0][0];
+        const a2 = hoisted.getAll.mock.calls[1][0];
+        expect(a1).toEqual(expect.objectContaining({ cursor: null, amount: 10 }));
+        expect(a2).toEqual(expect.objectContaining({ cursor: "CUR1", amount: 10 }));
 
         expect(read("page")).toBe("2");
         expect(readJSON("ids")).toEqual([
@@ -151,10 +151,10 @@ describe("useInfiniteDistilleries", () => {
         ]);
     });
 
-    it("sets hasMore=false and endReached=true when a smaller page is returned", async () => {
+    it("sets hasMore=false and endReached=true when nextCursor is null", async () => {
         hoisted.getAll
-            .mockResolvedValueOnce(pagePayload(1, 10, [1,2,3,4,5,6,7,8,9,10]))
-            .mockResolvedValueOnce(pagePayload(2, 10, [11,12,13,14]));
+            .mockResolvedValueOnce(cursorPayload("CUR1", 10, [1,2,3,4,5,6,7,8,9,10]))
+            .mockResolvedValueOnce(cursorPayload(null, 10, [11,12,13,14]));
 
         render(<Host amount={10} />);
         await flush();
@@ -164,20 +164,23 @@ describe("useInfiniteDistilleries", () => {
 
         expect(read("hasMore")).toBe("false");
         expect(read("endReached")).toBe("true");
-        
+
         fireEvent.click(screen.getByTestId("next"));
         await flush();
+        // no additional calls after hasMore=false
         expect(hoisted.getAll).toHaveBeenCalledTimes(2);
     });
 
-    it("guards against duplicate in-flight loads (only 1 network call for a given next page)", async () => {
-
-        hoisted.getAll.mockResolvedValueOnce(pagePayload(1, 10, [1,2,3,4,5,6,7,8,9,10]));
+    it("guards against duplicate in-flight loads (only 1 network call for a given next cursor)", async () => {
+        // Initial page with next cursor
+        hoisted.getAll.mockResolvedValueOnce(cursorPayload("CUR2", 10, [1,2,3,4,5,6,7,8,9,10]));
 
         let resolveP2!: (v: any) => void;
         const p2 = new Promise((res) => { resolveP2 = res; });
-        hoisted.getAll.mockImplementationOnce((page) => {
-            if (page === 2) return p2 as Promise<any>;
+
+        // Next page call is made with cursor="CUR2"
+        hoisted.getAll.mockImplementationOnce((args) => {
+            if (args?.cursor === "CUR2") return p2 as Promise<any>;
             return Promise.reject(new Error("unexpected"));
         });
 
@@ -186,22 +189,22 @@ describe("useInfiniteDistilleries", () => {
 
         fireEvent.click(screen.getByTestId("next"));
         fireEvent.click(screen.getByTestId("next"));
-        
 
+        // initial + one in-flight (second click ignored)
         expect(hoisted.getAll).toHaveBeenCalledTimes(2);
 
-        resolveP2(pagePayload(2, 10, [11,12]));
+        resolveP2(cursorPayload(null, 10, [11,12]));
         await flush();
 
         expect(read("page")).toBe("2");
         expect(readJSON("ids")).toEqual(["1","2","3","4","5","6","7","8","9","10","11","12"]);
     });
 
-    it("refresh resets state and loads page 1 again", async () => {
+    it("refresh resets state and loads first page again", async () => {
         hoisted.getAll
-            .mockResolvedValueOnce(pagePayload(1, 10, [1,2,3,4,5,6,7,8,9,10]))
-            .mockResolvedValueOnce(pagePayload(2, 10, [11,12]))
-            .mockResolvedValueOnce(pagePayload(1, 10, [1]));
+            .mockResolvedValueOnce(cursorPayload("CUR1", 10, [1,2,3,4,5,6,7,8,9,10]))
+            .mockResolvedValueOnce(cursorPayload(null, 10, [11,12]))
+            .mockResolvedValueOnce(cursorPayload(null, 10, [1]));
 
         render(<Host amount={10} />);
         await flush();
@@ -213,9 +216,8 @@ describe("useInfiniteDistilleries", () => {
         await flush();
 
         expect(hoisted.getAll).toHaveBeenCalledTimes(3);
-        const last = hoisted.getAll.mock.calls.at(-1)!;
-        expect(last[0]).toBe(1);
-        expect(last[1]).toBe(10);
+        const lastArgs = hoisted.getAll.mock.calls.at(-1)![0];
+        expect(lastArgs).toEqual(expect.objectContaining({ cursor: null, amount: 10 }));
 
         expect(read("page")).toBe("1");
         expect(readJSON("ids")).toEqual(["1"]);
@@ -224,8 +226,8 @@ describe("useInfiniteDistilleries", () => {
 
     it("IntersectionObserver callback triggers loadNext when sentinel intersects", async () => {
         hoisted.getAll
-            .mockResolvedValueOnce(pagePayload(1, 10, [1,2,3,4,5,6,7,8,9,10]))
-            .mockResolvedValueOnce(pagePayload(2, 10, [11]));
+            .mockResolvedValueOnce(cursorPayload("CUR1", 10, [1,2,3,4,5,6,7,8,9,10]))
+            .mockResolvedValueOnce(cursorPayload(null, 10, [11]));
 
         render(<Host amount={10} />);
         await flush();
@@ -236,9 +238,8 @@ describe("useInfiniteDistilleries", () => {
         await flush();
 
         expect(hoisted.getAll).toHaveBeenCalledTimes(2);
-        const last = hoisted.getAll.mock.calls.at(-1)!;
-        expect(last[0]).toBe(2);
-        expect(last[1]).toBe(10);
+        const lastArgs = hoisted.getAll.mock.calls.at(-1)![0];
+        expect(lastArgs).toEqual(expect.objectContaining({ cursor: "CUR1", amount: 10 }));
         expect(readJSON("ids")).toEqual(["1","2","3","4","5","6","7","8","9","10","11"]);
         expect(read("page")).toBe("2");
     });
