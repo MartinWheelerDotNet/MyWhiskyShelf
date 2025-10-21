@@ -142,7 +142,10 @@ public sealed class DistilleryAppService(
             if (distillery.RegionId is {} regionGuid 
                 && !await RegionExistsAndIsInCountry(distillery.CountryId, regionGuid, ct))
             {
-                logger.LogWarning(RegionDoesNotExistInCountry, distillery.RegionId, distillery.CountryId);
+                logger.LogWarning(
+                    RegionDoesNotExistInCountry,
+                    distillery.RegionId?.SanitizeForLog() ?? string.Empty,
+                    distillery.CountryId.SanitizeForLog());
                 return new CreateDistilleryResult(CreateDistilleryOutcome.RegionDoesNotExistInCountry);
             }
             
@@ -191,7 +194,10 @@ public sealed class DistilleryAppService(
             if (distillery.RegionId is {} regionGuid 
                 && !await RegionExistsAndIsInCountry(distillery.CountryId, regionGuid, ct))
             {
-                logger.LogWarning(RegionDoesNotExistInCountry, distillery.RegionId, distillery.CountryId);
+                logger.LogWarning(
+                    RegionDoesNotExistInCountry,
+                    distillery.RegionId?.SanitizeForLog() ?? string.Empty,
+                    distillery.CountryId.SanitizeForLog());
                 return new UpdateDistilleryResult(UpdateDistilleryOutcome.RegionDoesNotExistInCountry);
             }
 
