@@ -4,6 +4,8 @@ public enum CreateDistilleryOutcome
 {
     Created,
     AlreadyExists,
+    CountryDoesNotExist,
+    RegionDoesNotExistInCountry,
     Error
 }
 

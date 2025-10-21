@@ -8,6 +8,7 @@ using MyWhiskyShelf.Application.Results.Distillery;
 using MyWhiskyShelf.Application.Services;
 using MyWhiskyShelf.Application.Tests.TestData;
 using MyWhiskyShelf.Core.Aggregates;
+using MyWhiskyShelf.Core.Models;
 
 namespace MyWhiskyShelf.Application.Tests.Services;
 
@@ -17,6 +18,7 @@ public class DistilleryAppServiceTests
     private readonly Mock<ICursorCodec> _mockCursorCodec = new();
     private readonly Mock<IDistilleryReadRepository> _mockRead = new();
     private readonly Mock<IDistilleryWriteRepository> _mockWrite = new();
+    private readonly Mock<IGeoReadRepository> _mockGeoRead = new();
     private readonly DistilleryAppService _service;
 
     public DistilleryAppServiceTests()
@@ -24,6 +26,7 @@ public class DistilleryAppServiceTests
         _service = new DistilleryAppService(
             _mockRead.Object,
             _mockWrite.Object,
+            _mockGeoRead.Object,
             _mockCursorCodec.Object,
             _fakeLogger);
     }
@@ -58,8 +61,7 @@ public class DistilleryAppServiceTests
     public async Task When_GetByIdAndErrorOccurs_Expect_ErrorWithExceptionMessage()
     {
         var id = Guid.NewGuid();
-        _mockRead
-            .Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+        _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Exception"));
 
         var result = await _service.GetByIdAsync(id);
@@ -68,33 +70,24 @@ public class DistilleryAppServiceTests
             () => Assert.Equal(GetDistilleryByIdOutcome.Error, result.Outcome),
             () => Assert.Equal("Exception", result.Error),
             () => Assert.Equal(LogLevel.Error, _fakeLogger.Collector.LatestRecord.Level),
-            () => Assert.Equal(
-                $"Error retrieving distillery with [Id: {id}]",
-                _fakeLogger.Collector.LatestRecord.Message));
+            () => Assert.Equal($"Error retrieving distillery with [Id: {id}]", _fakeLogger.Collector.LatestRecord.Message));
     }
 
     [Fact]
     public async Task When_GetAllAndTwoDistilleriesExist_Expect_SuccessWithListOfTwoDistilleries()
     {
         const int amount = 10;
-        string? afterCursor = null;
-
+        var afterCursor = string.Empty;
         List<Distillery> expectedDistilleries =
         [
             DistilleryTestData.Generic with { Name = "First Distillery" },
             DistilleryTestData.Generic with { Name = "Second Distillery" }
         ];
-
-        NameIdCursor? decoded = null;
-        _mockCursorCodec
-            .Setup(c => c.TryDecode(It.Is<string?>(s => s == null), out decoded))
-            .Returns(true);
-
-        _mockRead
-            .Setup(r => r.GetAllAsync(null, null, amount, It.IsAny<CancellationToken>()))
+        var emptyDistilleryFilterOptions = new DistilleryFilterOptions();
+        _mockRead.Setup(r => r.SearchByFilter(emptyDistilleryFilterOptions, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedDistilleries);
 
-        var result = await _service.GetAllAsync(afterCursor, amount);
+        var result = await _service.GetAllAsync(amount, afterCursor);
 
         Assert.Multiple(
             () => Assert.Equal(GetAllDistilleriesOutcome.Success, result.Outcome),
@@ -103,25 +96,20 @@ public class DistilleryAppServiceTests
             () => Assert.Equal(amount, result.Amount)
         );
 
-        _mockCursorCodec.Verify(c => c.Encode(It.IsAny<NameIdCursor>()), Times.Never);
+        _mockCursorCodec
+            .Verify(c => c.TryDecode(It.IsAny<string>(), out It.Ref<DistilleryQueryCursor?>.IsAny), Times.Never);
+        _mockCursorCodec
+            .Verify(c => c.Encode(It.IsAny<DistilleryQueryCursor>()), Times.Never);
     }
 
     [Fact]
     public async Task When_GetAllAndNoDistilleriesExist_Expect_SuccessWithEmptyList()
     {
         const int amount = 10;
-        string? afterCursor = null;
-
-        NameIdCursor? decoded = null;
-        _mockCursorCodec
-            .Setup(c => c.TryDecode(It.Is<string?>(s => s == null), out decoded))
-            .Returns(true);
-
-        _mockRead
-            .Setup(r => r.GetAllAsync(null, null, amount, It.IsAny<CancellationToken>()))
+        _mockRead.Setup(r => r.SearchByFilter(It.IsAny<DistilleryFilterOptions>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
-        var result = await _service.GetAllAsync(afterCursor, amount);
+        var result = await _service.GetAllAsync(amount, string.Empty);
 
         Assert.Multiple(
             () => Assert.Equal(GetAllDistilleriesOutcome.Success, result.Outcome),
@@ -135,36 +123,24 @@ public class DistilleryAppServiceTests
     public async Task When_GetAllAndErrorOccurs_Expect_ErrorWithMessage()
     {
         const int amount = 10;
-        string? afterCursor = null;
-
-        NameIdCursor? decoded = null;
-        _mockCursorCodec
-            .Setup(c => c.TryDecode(It.Is<string?>(s => s == null), out decoded))
-            .Returns(true);
-
-        _mockRead
-            .Setup(r => r.GetAllAsync(It.IsAny<string?>(), It.IsAny<Guid?>(), It.IsAny<int>(),
-                It.IsAny<CancellationToken>()))
+        _mockRead.Setup(r => r.SearchByFilter(It.IsAny<DistilleryFilterOptions>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Exception"));
 
-        var result = await _service.GetAllAsync(afterCursor, amount);
+        var result = await _service.GetAllAsync(amount, afterCursor: null!);
 
         Assert.Multiple(
             () => Assert.Equal(GetAllDistilleriesOutcome.Error, result.Outcome),
             () => Assert.Equal("Exception", result.Error),
             () => Assert.Equal(LogLevel.Error, _fakeLogger.Collector.LatestRecord.Level),
-            () => Assert.Equal(
-                "An error occured whilst retrieving all distilleries",
-                _fakeLogger.Collector.LatestRecord.Message));
+            () => Assert.Equal("An error occurred whilst retrieving all distilleries", _fakeLogger.Collector.LatestRecord.Message));
     }
 
     [Fact]
     public async Task When_GetAllAndAmountIsZero_Expect_SuccessWithEmptyListAndNoRepositoryCall()
     {
         const int amount = 0;
-        string? afterCursor = null;
 
-        var result = await _service.GetAllAsync(afterCursor, amount);
+        var result = await _service.GetAllAsync(amount, afterCursor: null!);
 
         Assert.Multiple(
             () => Assert.Equal(GetAllDistilleriesOutcome.Success, result.Outcome),
@@ -174,9 +150,10 @@ public class DistilleryAppServiceTests
         );
 
         _mockRead.Verify(
-            r => r.GetAllAsync(It.IsAny<string?>(), It.IsAny<Guid?>(), It.IsAny<int>(), It.IsAny<CancellationToken>()),
+            r => r.SearchByFilter(It.IsAny<DistilleryFilterOptions>(), It.IsAny<CancellationToken>()),
             Times.Never);
-        _mockCursorCodec.Verify(c => c.TryDecode(It.IsAny<string?>(), out It.Ref<NameIdCursor?>.IsAny), Times.Never);
+        _mockCursorCodec
+            .Verify(c => c.TryDecode(It.IsAny<string>(), out It.Ref<DistilleryQueryCursor?>.IsAny), Times.Never);
     }
 
     [Fact]
@@ -184,77 +161,36 @@ public class DistilleryAppServiceTests
     {
         const int amount = 10;
         const string afterCursor = "badCursor";
-
-        NameIdCursor? ignored = null;
-        _mockCursorCodec
-            .Setup(c => c.TryDecode(afterCursor, out ignored))
+        DistilleryQueryCursor? distilleryQueryCursor;
+        _mockCursorCodec.Setup(c => c.TryDecode(afterCursor, out distilleryQueryCursor))
             .Returns(false);
 
-        var result = await _service.GetAllAsync(afterCursor, amount);
+        var result = await _service.GetAllAsync(amount, afterCursor);
 
         Assert.Multiple(
             () => Assert.Equal(GetAllDistilleriesOutcome.InvalidCursor, result.Outcome),
-            () => Assert.Equal($"Invalid cursor provided [{afterCursor}]", result.Error));
+            () => Assert.Equal("Invalid cursor provided", result.Error));
 
-        _mockRead
-            .Verify(r => r.GetAllAsync(
-                    It.IsAny<string?>(),
-                    It.IsAny<Guid?>(),
-                    It.IsAny<int>(),
-                    It.IsAny<CancellationToken>()),
-                Times.Never);
-    }
-
-    [Fact]
-    public async Task When_GetAllWithMalformedCursorPayload_Expect_ErrorWithMessageAndNoRepositoryCall()
-    {
-        const int amount = 10;
-        const string afterCursor = "malformedCursor";
-
-        NameIdCursor? malformed = new("", Guid.Empty);
-        _mockCursorCodec
-            .Setup(c => c.TryDecode(afterCursor, out malformed))
-            .Returns(true);
-
-        var result = await _service.GetAllAsync(afterCursor, amount);
-
-        Assert.Multiple(
-            () => Assert.Equal(GetAllDistilleriesOutcome.InvalidCursor, result.Outcome),
-            () => Assert.Equal($"Invalid cursor provided [{afterCursor}]", result.Error));
-
-        _mockRead
-            .Verify(r => r.GetAllAsync(
-                    It.IsAny<string?>(),
-                    It.IsAny<Guid?>(),
-                    It.IsAny<int>(),
-                    It.IsAny<CancellationToken>()),
-                Times.Never);
+        _mockRead.Verify(
+            r => r.SearchByFilter(It.IsAny<DistilleryFilterOptions>(), It.IsAny<CancellationToken>()),
+            Times.Never);
     }
 
     [Fact]
     public async Task When_GetAllWithFullPage_Expect_NextCursorReturned()
     {
         const int amount = 2;
-        string? afterCursor = null;
-
-        var d1 = DistilleryTestData.Generic with { Name = "First Distillery", Id = Guid.NewGuid() };
-        var d2 = DistilleryTestData.Generic with { Name = "Second Distillery", Id = Guid.NewGuid() };
-        List<Distillery> expectedDistilleries = [d1, d2];
-
-        NameIdCursor? decoded = null;
-        _mockCursorCodec
-            .Setup(c => c.TryDecode(It.Is<string?>(s => s == null), out decoded))
-            .Returns(true);
-
-        _mockRead
-            .Setup(r => r.GetAllAsync(null, null, amount, It.IsAny<CancellationToken>()))
+        var firstDistillery = DistilleryTestData.Generic with { Name = "First Distillery", Id = Guid.NewGuid() };
+        var secondDistillery = DistilleryTestData.Generic with { Name = "Second Distillery", Id = Guid.NewGuid() };
+        var distilleryFilterOptionsWithAmountOnly = new DistilleryFilterOptions { Amount = amount };
+        var expectedDistilleryQueryCursor = new DistilleryQueryCursor(secondDistillery.Name, null, null, null);
+        List<Distillery> expectedDistilleries = [firstDistillery, secondDistillery];
+        _mockRead.Setup(r => r.SearchByFilter(distilleryFilterOptionsWithAmountOnly, It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedDistilleries);
-
-        _mockCursorCodec
-            .Setup(c => c.Encode(It.IsAny<NameIdCursor>()))
+        _mockCursorCodec.Setup(c => c.Encode(It.IsAny<DistilleryQueryCursor>()))
             .Returns("NextCursor");
 
-        var result = await _service.GetAllAsync(afterCursor, amount);
+        var result = await _service.GetAllAsync(amount, afterCursor: null!);
 
         Assert.Multiple(
             () => Assert.Equal(GetAllDistilleriesOutcome.Success, result.Outcome),
@@ -263,9 +199,7 @@ public class DistilleryAppServiceTests
             () => Assert.Equal(amount, result.Amount)
         );
 
-        _mockCursorCodec.Verify(c =>
-                c.Encode(It.Is<NameIdCursor>(p => p.Name == d2.Name && p.Id == d2.Id)),
-            Times.Once);
+        _mockCursorCodec.Verify(c => c.Encode(expectedDistilleryQueryCursor), Times.Once);
     }
 
     [Fact]
@@ -273,19 +207,16 @@ public class DistilleryAppServiceTests
     {
         const int amount = 5;
         const string afterCursor = "afterCursor";
-
-        var id = Guid.NewGuid();
-        var payload = new NameIdCursor("Distillery", id);
-
+        var expectedDistilleryFilterOptions = new DistilleryFilterOptions { AfterName = "Distillery", Amount = amount };
+        var distilleryQueryCursor = new DistilleryQueryCursor("Distillery", null, null, null);
         _mockCursorCodec
-            .Setup(c => c.TryDecode(afterCursor, out payload))
+            .Setup(c => c.TryDecode(afterCursor, out distilleryQueryCursor))
             .Returns(true);
-
         _mockRead
-            .Setup(r => r.GetAllAsync(payload.Name, payload.Id, amount, It.IsAny<CancellationToken>()))
+            .Setup(r => r.SearchByFilter(expectedDistilleryFilterOptions, It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
-        var result = await _service.GetAllAsync(afterCursor, amount);
+        var result = await _service.GetAllAsync(amount, afterCursor);
 
         Assert.Multiple(
             () => Assert.Equal(GetAllDistilleriesOutcome.Success, result.Outcome),
@@ -294,93 +225,100 @@ public class DistilleryAppServiceTests
             () => Assert.Equal(amount, result.Amount)
         );
 
-        _mockRead
-            .Verify(r => r.GetAllAsync(
-                    payload.Name,
-                    payload.Id,
-                    amount,
-                    It.IsAny<CancellationToken>()),
-                Times.Once);
-    }
-
-    [Fact]
-    public async Task When_SearchAndTwoDistilleriesFound_Expect_SuccessWithListOfTwoDistilleriesNames()
-    {
-        List<Distillery> expectedDistilleries =
-        [
-            DistilleryTestData.Generic with { Name = "First Distillery" },
-            DistilleryTestData.Generic with { Name = "Second Distillery" }
-        ];
-
-        _mockRead.Setup(r => r.SearchByNameAsync("Distillery", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(expectedDistilleries);
-
-        var result = await _service.SearchByNameAsync("Distillery");
-
-        Assert.Multiple(
-            () => Assert.Equal(SearchDistilleriesOutcome.Success, result.Outcome),
-            () => Assert.Equal(expectedDistilleries, result.Distilleries));
-    }
-
-    [Fact]
-    public async Task When_SearchAndNoDistilleriesFound_ExpectSuccessWithEmptyList()
-    {
-        const string pattern = "Distillery";
-        _mockRead.Setup(r => r.SearchByNameAsync(pattern, It.IsAny<CancellationToken>())).ReturnsAsync([]);
-
-        var result = await _service.SearchByNameAsync(pattern);
-
-        Assert.Multiple(
-            () => Assert.Equal(SearchDistilleriesOutcome.Success, result.Outcome),
-            () => Assert.Empty(result.Distilleries!));
-    }
-
-    [Fact]
-    public async Task When_SearchAndErrorOccurs_ExpectErrorWithMessage()
-    {
-        const string pattern = "Distillery";
-        _mockRead
-            .Setup(r => r.SearchByNameAsync(pattern, It.IsAny<CancellationToken>()))
-            .ThrowsAsync(new Exception("Exception"));
-
-        var result = await _service.SearchByNameAsync(pattern);
-
-        Assert.Multiple(
-            () => Assert.Equal(SearchDistilleriesOutcome.Error, result.Outcome),
-            () => Assert.Equal("Exception", result.Error),
-            () => Assert.Equal(LogLevel.Error, _fakeLogger.Collector.LatestRecord.Level),
-            () => Assert.Equal(
-                $"An error occured whilst searching for distilleries with [Pattern: {pattern}",
-                _fakeLogger.Collector.LatestRecord.Message));
+        _mockRead.Verify(
+            r => r.SearchByFilter(expectedDistilleryFilterOptions, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
     public async Task When_CreateAndDistilleryWithThatNameAlreadyExists_Expect_AlreadyExists()
     {
-        var newDistillery = DistilleryTestData.Generic with { Name = "New Distillery" };
+        var distillery = DistilleryTestData.Generic with { Name = "New Distillery" };
+
         _mockRead.Setup(r => r.ExistsByNameAsync("New Distillery", It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
-        var result = await _service.CreateAsync(newDistillery);
+        var result = await _service.CreateAsync(distillery);
 
-        Assert.Multiple(
-            () => Assert.Equal(CreateDistilleryOutcome.AlreadyExists, result.Outcome),
-            () => _mockWrite.Verify(w => w.AddAsync(It.IsAny<Distillery>(), It.IsAny<CancellationToken>()),
-                Times.Never));
+        Assert.Equal(CreateDistilleryOutcome.AlreadyExists, result.Outcome);
+        
+        _mockWrite
+            .Verify(w => w.AddAsync(It.IsAny<Distillery>(), It.IsAny<CancellationToken>()), Times.Never);
+        _mockGeoRead
+            .Verify(g => g.CountryExistsByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task When_CreateAndCountryDoesNotExist_Expect_CountryDoesNotExist()
+    {
+        var distillery = DistilleryTestData.Generic with
+        {
+            Name = "New Distillery",
+            CountryId = Guid.NewGuid(),
+            RegionId = null
+        };
+        _mockRead.Setup(r => r.ExistsByNameAsync(distillery.Name, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        _mockGeoRead.Setup(g => g.CountryExistsByIdAsync(distillery.CountryId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        var result = await _service.CreateAsync(distillery);
+
+        Assert.Equal(CreateDistilleryOutcome.CountryDoesNotExist, result.Outcome);
+
+        _mockWrite.Verify(w => w.AddAsync(It.IsAny<Distillery>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task When_CreateAndRegionNotInCountry_Expect_RegionDoesNotExistInCountry()
+    {
+        var countryId = Guid.NewGuid();
+        var regionId = Guid.NewGuid();
+        var distillery = DistilleryTestData.Generic with
+        {
+            Name = "New Distillery",
+            CountryId = countryId,
+            RegionId = regionId
+        };
+        _mockRead.Setup(r => r.ExistsByNameAsync(distillery.Name, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        _mockGeoRead.Setup(g => g.CountryExistsByIdAsync(countryId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        _mockGeoRead.Setup(g => g.GetRegionByIdAsync(regionId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Region
+            {
+                Id = regionId,
+                CountryId = Guid.NewGuid(),
+                Name = "Other Country Region",
+                Slug = "other-country-region",
+                IsActive = false
+            });
+
+        var result = await _service.CreateAsync(distillery);
+        
+        Assert.Equal(CreateDistilleryOutcome.RegionDoesNotExistInCountry, result.Outcome);
+        _mockWrite.Verify(w => w.AddAsync(It.IsAny<Distillery>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
     public async Task When_CreateAndDistilleryCreated_Expect_Created()
     {
-        var newDistillery = DistilleryTestData.Generic with { Name = "New Distillery" };
-        var savedDistillery = DistilleryTestData.Generic with { Id = Guid.NewGuid(), Name = "New Distillery" };
-
-        _mockRead.Setup(r => r.ExistsByNameAsync(newDistillery.Name, It.IsAny<CancellationToken>()))
+        var countryId = Guid.NewGuid();
+        var distillery = DistilleryTestData.Generic with
+        {
+            Name = "New Distillery",
+            CountryId = countryId,
+            RegionId = null
+        };
+        var savedDistillery = distillery with { Id = Guid.NewGuid() };
+        _mockRead.Setup(r => r.ExistsByNameAsync(distillery.Name, It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
-        _mockWrite.Setup(w => w.AddAsync(newDistillery, It.IsAny<CancellationToken>()))
+        _mockGeoRead.Setup(g => g.CountryExistsByIdAsync(countryId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        _mockWrite.Setup(w => w.AddAsync(distillery, It.IsAny<CancellationToken>()))
             .ReturnsAsync(savedDistillery);
 
-        var result = await _service.CreateAsync(newDistillery);
+        var result = await _service.CreateAsync(distillery);
 
         Assert.Multiple(
             () => Assert.Equal(CreateDistilleryOutcome.Created, result.Outcome),
@@ -390,9 +328,17 @@ public class DistilleryAppServiceTests
     [Fact]
     public async Task When_CreateAndExceptionIsThrown_Expect_ErrorAndLogError()
     {
-        var newDistillery = DistilleryTestData.Generic with { Name = "New Distillery" };
+        var countryId = Guid.NewGuid();
+        var newDistillery = DistilleryTestData.Generic with
+        {
+            Name = "New Distillery",
+            CountryId = countryId,
+            RegionId = null
+        };
         _mockRead.Setup(r => r.ExistsByNameAsync(newDistillery.Name, It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
+        _mockGeoRead.Setup(g => g.CountryExistsByIdAsync(countryId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
         _mockWrite.Setup(w => w.AddAsync(newDistillery, It.IsAny<CancellationToken>()))
             .ThrowsAsync(new InvalidOperationException("Exception"));
 
@@ -426,7 +372,6 @@ public class DistilleryAppServiceTests
         var id = Guid.NewGuid();
         var currentDistillery = DistilleryTestData.Generic with { Id = id, Name = "Current Distillery" };
         var updatedDistillery = DistilleryTestData.Generic with { Id = id, Name = "Updated Distillery" };
-
         _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(currentDistillery);
         _mockRead.Setup(r => r.ExistsByNameAsync(updatedDistillery.Name, It.IsAny<CancellationToken>()))
@@ -438,16 +383,82 @@ public class DistilleryAppServiceTests
     }
 
     [Fact]
+    public async Task When_UpdateAndCountryDoesNotExist_Expect_CountryDoesNotExist()
+    {
+        var id = Guid.NewGuid();
+        var current = DistilleryTestData.Generic with { Id = id, Name = "Current" };
+        var updated = DistilleryTestData.Generic with
+        {
+            Id = id,
+            Name = "Updated",
+            CountryId = Guid.NewGuid(),
+            RegionId = null
+        };
+        _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(current);
+        _mockRead.Setup(r => r.ExistsByNameAsync(updated.Name, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        _mockGeoRead.Setup(g => g.CountryExistsByIdAsync(updated.CountryId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+
+        var result = await _service.UpdateAsync(id, updated);
+
+        Assert.Equal(UpdateDistilleryOutcome.CountryDoesNotExist, result.Outcome);
+    }
+
+    [Fact]
+    public async Task When_UpdateAndRegionNotInCountry_Expect_RegionDoesNotExistInCountry()
+    {
+        var id = Guid.NewGuid();
+        var current = DistilleryTestData.Generic with { Id = id, Name = "Current" };
+        var countryId = Guid.NewGuid();
+        var regionId = Guid.NewGuid();
+        var updated = DistilleryTestData.Generic with
+        {
+            Id = id,
+            Name = "Updated",
+            CountryId = countryId,
+            RegionId = regionId
+        };
+        _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(current);
+        _mockRead.Setup(r => r.ExistsByNameAsync(updated.Name, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        _mockGeoRead.Setup(g => g.CountryExistsByIdAsync(countryId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        _mockGeoRead.Setup(g => g.GetRegionByIdAsync(regionId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Region
+            {
+                Id = regionId,
+                CountryId = Guid.NewGuid(),
+                Name = "Region",
+                Slug = "region",
+                IsActive = true
+            });
+
+        var result = await _service.UpdateAsync(id, updated);
+
+        Assert.Equal(UpdateDistilleryOutcome.RegionDoesNotExistInCountry, result.Outcome);
+    }
+
+    [Fact]
     public async Task When_UpdateAndDistilleryUpdated_Expect_Updated()
     {
         var id = Guid.NewGuid();
         var currentDistillery = DistilleryTestData.Generic with { Id = id, Name = "Current Distillery" };
-        var updatedDistillery = DistilleryTestData.Generic with { Id = id, Name = "Updated Distillery" };
-
+        var updatedDistillery = DistilleryTestData.Generic with
+        {
+            Id = id,
+            Name = "Updated Distillery",
+            CountryId = Guid.NewGuid(),
+            RegionId = null
+        };
         _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(currentDistillery);
         _mockRead.Setup(r => r.ExistsByNameAsync(updatedDistillery.Name, It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
+        _mockGeoRead.Setup(g => g.CountryExistsByIdAsync(updatedDistillery.CountryId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
         _mockWrite.Setup(w => w.UpdateAsync(id, updatedDistillery, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
@@ -461,9 +472,20 @@ public class DistilleryAppServiceTests
     {
         var id = Guid.NewGuid();
         var currentDistillery = DistilleryTestData.Generic with { Id = id, Name = "Current Distillery" };
-        var updatedDistillery = DistilleryTestData.Generic with { Id = id, Name = "Updated Distillery" };
+        var updatedDistillery = DistilleryTestData.Generic with
+        {
+            Id = id,
+            Name = "Updated Distillery",
+            CountryId = Guid.NewGuid(),
+            RegionId = null
+        };
+
         _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(currentDistillery);
+        _mockRead.Setup(r => r.ExistsByNameAsync(updatedDistillery.Name, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
+        _mockGeoRead.Setup(g => g.CountryExistsByIdAsync(updatedDistillery.CountryId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
         _mockWrite.Setup(w => w.UpdateAsync(id, updatedDistillery, It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
@@ -477,12 +499,19 @@ public class DistilleryAppServiceTests
     {
         var id = Guid.NewGuid();
         var currentDistillery = DistilleryTestData.Generic with { Id = id, Name = "Current Distillery" };
-        var updatedDistillery = DistilleryTestData.Generic with { Id = id, Name = "Updated Distillery" };
-
+        var updatedDistillery = DistilleryTestData.Generic with
+        {
+            Id = id,
+            Name = "Updated Distillery",
+            CountryId = Guid.NewGuid(),
+            RegionId = null
+        };
         _mockRead.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()))
             .ReturnsAsync(currentDistillery);
         _mockRead.Setup(r => r.ExistsByNameAsync(updatedDistillery.Name, It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
+        _mockGeoRead.Setup(g => g.CountryExistsByIdAsync(updatedDistillery.CountryId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
         _mockWrite.Setup(w => w.UpdateAsync(id, updatedDistillery, It.IsAny<CancellationToken>()))
             .ThrowsAsync(new InvalidOperationException("Exception"));
 

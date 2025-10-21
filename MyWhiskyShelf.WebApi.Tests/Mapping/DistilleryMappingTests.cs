@@ -17,8 +17,8 @@ public class DistilleryMappingTests
         Assert.Multiple(
             () => Assert.Equal(distillery.Id, response.Id),
             () => Assert.Equal(distillery.Name, response.Name),
-            () => Assert.Equal(distillery.Country, response.Country),
-            () => Assert.Equal(distillery.Region, response.Region),
+            () => Assert.Equal(distillery.CountryId, response.CountryId),
+            () => Assert.Equal(distillery.RegionId, response.RegionId),
             () => Assert.Equal(distillery.Founded, response.Founded),
             () => Assert.Equal(distillery.Owner, response.Owner),
             () => Assert.Equal(distillery.Type, response.Type),
@@ -36,8 +36,8 @@ public class DistilleryMappingTests
         Assert.Multiple(
             () => Assert.Equal(Guid.Empty, distillery.Id),
             () => Assert.Equal(distilleryRequest.Name, distillery.Name),
-            () => Assert.Equal(distilleryRequest.Country, distillery.Country),
-            () => Assert.Equal(distilleryRequest.Region, distillery.Region),
+            () => Assert.Equal(distilleryRequest.CountryId, distillery.CountryId),
+            () => Assert.Equal(distilleryRequest.RegionId, distillery.RegionId),
             () => Assert.Equal(distilleryRequest.Founded, distillery.Founded),
             () => Assert.Equal(distilleryRequest.Owner, distillery.Owner),
             () => Assert.Equal(distilleryRequest.Type, distillery.Type),
@@ -68,8 +68,8 @@ public class DistilleryMappingTests
         Assert.Multiple(
             () => Assert.Equal(id, distillery.Id),
             () => Assert.Equal(distilleryUpdateRequest.Name, distillery.Name),
-            () => Assert.Equal(distilleryUpdateRequest.Country, distillery.Country),
-            () => Assert.Equal(distilleryUpdateRequest.Region, distillery.Region),
+            () => Assert.Equal(distilleryUpdateRequest.CountryId, distillery.CountryId),
+            () => Assert.Equal(distilleryUpdateRequest.RegionId, distillery.RegionId),
             () => Assert.Equal(distilleryUpdateRequest.Founded, distillery.Founded),
             () => Assert.Equal(distilleryUpdateRequest.Owner, distillery.Owner),
             () => Assert.Equal(distilleryUpdateRequest.Type, distillery.Type),

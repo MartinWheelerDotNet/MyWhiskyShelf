@@ -12,8 +12,8 @@ public static class DistilleryProjections
         {
             Id = distilleryEntity.Id,
             Name = distilleryEntity.Name,
-            Country = distilleryEntity.Country,
-            Region = distilleryEntity.Region,
+            CountryId = distilleryEntity.CountryId,
+            RegionId = distilleryEntity.RegionId,
             Founded = distilleryEntity.Founded,
             Owner = distilleryEntity.Owner,
             Type = distilleryEntity.Type,

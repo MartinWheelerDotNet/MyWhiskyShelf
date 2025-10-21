@@ -21,18 +21,15 @@ public class InternalServerErrorTests(BrokenFixture fixture)
                 "distillery", "get-all", "/distilleries?amount=10", HttpMethod.Get.Method, null
             },
             {
-                "distillery", "search", "/distilleries/search?pattern=anything", HttpMethod.Get.Method, null
-            },
-            {
                 "distillery", "delete", $"/distilleries/{Guid.NewGuid()}", HttpMethod.Delete.Method, null
             },
             {
                 "distillery", "create", "/distilleries", HttpMethod.Post.Method,
-                new RequestBodyWrapper(DistilleryRequestTestData.GenericCreate with { Name = "Create Error" })
+                new RequestBodyWrapper(DistilleryRequestTestData.Create(Guid.NewGuid(), name: "Create Error"))
             },
             {
                 "distillery", "update", $"/distilleries/{Guid.NewGuid()}", HttpMethod.Put.Method,
-                new RequestBodyWrapper(DistilleryRequestTestData.GenericUpdate with { Name = "Update Error" })
+                new RequestBodyWrapper(DistilleryRequestTestData.Update(Guid.NewGuid(), name: "Update Error"))
             },
             {
                 "whisky-bottle", "get-by-id", $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Get.Method, null

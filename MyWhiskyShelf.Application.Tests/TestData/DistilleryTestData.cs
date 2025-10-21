@@ -8,8 +8,8 @@ public static class DistilleryTestData
     public static readonly Distillery Generic = new()
     {
         Name = "Name",
-        Country = "Country",
-        Region = "Region",
+        CountryId = Guid.Parse("dcf107a7-8905-470e-8b00-bd552c78bcfc"),
+        RegionId = Guid.Parse("8d860816-5e78-4d51-86f4-ae0cf57d2cf3"),
         Founded = 2000,
         Owner = "Owner",
         Type = "Type",

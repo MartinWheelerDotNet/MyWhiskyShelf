@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pgvector;
@@ -16,7 +15,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
     [Migration("20251011150939_InitialMigration")]
     partial class InitialMigration
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -68,10 +66,8 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<Guid>("CountryId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -80,8 +76,7 @@ namespace MyWhiskyShelf.Migrations.Migrations
 
                     b.Property<Vector>("FlavourVector")
                         .IsRequired()
-                        .HasColumnType("vector(5)")
-                        .HasColumnName("FlavourVector");
+                        .HasColumnType("vector(5)");
 
                     b.Property<int>("Founded")
                         .HasColumnType("integer");
@@ -96,10 +91,8 @@ namespace MyWhiskyShelf.Migrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<string>("Region")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<Guid?>("RegionId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("TastingNotes")
                         .IsRequired()
@@ -113,21 +106,18 @@ namespace MyWhiskyShelf.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FlavourVector")
-                        .HasAnnotation("Npgsql:StorageParameter:lists", 100);
+                    b.HasIndex("CountryId")
+                        .HasDatabaseName("IX_Distilleries_CountryId");
 
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("FlavourVector"), "ivfflat");
-                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("FlavourVector"), new[] { "vector_cosine_ops" });
+                    b.HasIndex("FlavourVector")
+                        .HasDatabaseName("IX_Distilleries_FlavourVector");
 
                     b.HasIndex("Name")
                         .IsUnique()
-                        .HasDatabaseName("IX_Distilleries_Name_eq");
+                        .HasDatabaseName("UX_Distilleries_Name_eq");
 
-                    b.HasIndex("Owner");
-
-                    b.HasIndex("Region");
-
-                    b.HasIndex("Type");
+                    b.HasIndex("RegionId")
+                        .HasDatabaseName("IX_Distilleries_RegionId");
 
                     b.ToTable("Distilleries");
                 });
@@ -201,8 +191,7 @@ namespace MyWhiskyShelf.Migrations.Migrations
 
                     b.Property<Vector>("FlavourVector")
                         .IsRequired()
-                        .HasColumnType("vector(5)")
-                        .HasColumnName("FlavourVector");
+                        .HasColumnType("vector(5)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -224,13 +213,8 @@ namespace MyWhiskyShelf.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DistilleryName");
-
                     b.HasIndex("FlavourVector")
-                        .HasAnnotation("Npgsql:StorageParameter:lists", 100);
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("FlavourVector"), "ivfflat");
-                    NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("FlavourVector"), new[] { "vector_cosine_ops" });
+                        .HasDatabaseName("IX_WhiskyBottles_FlavourVector");
 
                     b.HasIndex("Name")
                         .HasDatabaseName("IX_WhiskyBottles_Name_eq");
@@ -238,6 +222,24 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("WhiskyBottles");
+                });
+
+            // Relationships
+            modelBuilder.Entity("MyWhiskyShelf.Infrastructure.Persistence.Entities.DistilleryEntity", b =>
+                {
+                    b.HasOne("MyWhiskyShelf.Infrastructure.Persistence.Entities.CountryEntity", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MyWhiskyShelf.Infrastructure.Persistence.Entities.RegionEntity", "Region")
+                        .WithMany()
+                        .HasForeignKey("RegionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Country");
+                    b.Navigation("Region");
                 });
 
             modelBuilder.Entity("MyWhiskyShelf.Infrastructure.Persistence.Entities.RegionEntity", b =>

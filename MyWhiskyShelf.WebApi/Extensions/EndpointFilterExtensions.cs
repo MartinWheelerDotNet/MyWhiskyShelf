@@ -15,13 +15,6 @@ public static class EndpointFilterExtensions
         return routeHandlerBuilder.AddEndpointFilter(new ValidateNonEmptyRouteParameterFilter(parameterName));
     }
 
-    public static RouteHandlerBuilder RequiresNonEmptyQueryParameter(
-        this RouteHandlerBuilder routeHandlerBuilder,
-        string parameterName)
-    {
-        return routeHandlerBuilder.AddEndpointFilter(new ValidateNonEmptyQueryParameterFilter(parameterName));
-    }
-
     public static RouteHandlerBuilder RequiresIdempotencyKey(this RouteHandlerBuilder routeHandlerBuilder)
     {
         return routeHandlerBuilder.AddEndpointFilter(async (context, next) =>

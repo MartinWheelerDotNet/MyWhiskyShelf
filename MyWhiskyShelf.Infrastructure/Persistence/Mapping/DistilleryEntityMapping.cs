@@ -11,8 +11,8 @@ public static class DistilleryEntityMapping
         {
             Id = distilleryEntity.Id,
             Name = distilleryEntity.Name,
-            Country = distilleryEntity.Country,
-            Region = distilleryEntity.Region,
+            CountryId = distilleryEntity.CountryId,
+            RegionId = distilleryEntity.RegionId,
             Founded = distilleryEntity.Founded,
             Owner = distilleryEntity.Owner,
             Type = distilleryEntity.Type,
@@ -28,8 +28,8 @@ public static class DistilleryEntityMapping
         return new DistilleryEntity
         {
             Name = distillery.Name.Trim(),
-            Country = distillery.Country,
-            Region = distillery.Region,
+            CountryId = distillery.CountryId,
+            RegionId = distillery.RegionId,
             Founded = distillery.Founded,
             Owner = distillery.Owner,
             Type = distillery.Type,

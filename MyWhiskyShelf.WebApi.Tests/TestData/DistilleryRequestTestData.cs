@@ -7,8 +7,8 @@ public static class DistilleryRequestTestData
     public static readonly DistilleryCreateRequest GenericCreateRequest = new()
     {
         Name = "Name",
-        Country = "Country",
-        Region = "Region",
+        CountryId = Guid.NewGuid(),
+        RegionId = Guid.NewGuid(),
         Founded = 2000,
         Owner = "Owner",
         Type = "Type",
@@ -21,8 +21,8 @@ public static class DistilleryRequestTestData
     public static readonly DistilleryUpdateRequest GenericUpdateRequest = new()
     {
         Name = "Name",
-        Country = "Country",
-        Region = "Region",
+        CountryId = Guid.NewGuid(),
+        RegionId = Guid.NewGuid(),
         Founded = 2000,
         Owner = "Owner",
         Type = "Type",

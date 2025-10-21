@@ -10,22 +10,24 @@ public class Base64JsonCursorCodecTests
     [Fact]
     public void When_EncodeAndDecodeRoundTrip_Expect_SuccessAndSamePayload()
     {
-        var payload = new NameIdCursor("Name", Guid.NewGuid());
+        var payload = new DistilleryQueryCursor("Name", "Pattern", Guid.NewGuid(), Guid.NewGuid());
 
         var cursor = _codec.Encode(payload);
-        var result = _codec.TryDecode<NameIdCursor>(cursor, out var decoded);
+        var result = _codec.TryDecode<DistilleryQueryCursor>(cursor, out var decoded);
 
+        Assert.NotNull(decoded);
         Assert.Multiple(
             () => Assert.True(result),
-            () => Assert.NotNull(decoded),
-            () => Assert.Equal(payload.Name, decoded!.Name),
-            () => Assert.Equal(payload.Id, decoded!.Id));
+            () => Assert.Equal(payload.AfterName, decoded.AfterName),
+            () => Assert.Equal(payload.NameSearchPattern, decoded.NameSearchPattern),
+            () => Assert.Equal(payload.CountryId, decoded.CountryId),
+            () => Assert.Equal(payload.RegionId, decoded.RegionId));
     }
 
     [Fact]
     public void When_TryDecodeWithNullCursor_Expect_TrueAndNullPayload()
     {
-        var result = _codec.TryDecode<NameIdCursor>(null, out var decoded);
+        var result = _codec.TryDecode<DistilleryQueryCursor>(null, out var decoded);
 
         Assert.Multiple(
             () => Assert.True(result),
@@ -35,7 +37,7 @@ public class Base64JsonCursorCodecTests
     [Fact]
     public void When_TryDecodeWithEmptyCursor_Expect_TrueAndNullPayload()
     {
-        var result = _codec.TryDecode<NameIdCursor>(string.Empty, out var decoded);
+        var result = _codec.TryDecode<DistilleryQueryCursor>(string.Empty, out var decoded);
 
         Assert.Multiple(
             () => Assert.True(result),
@@ -45,7 +47,7 @@ public class Base64JsonCursorCodecTests
     [Fact]
     public void When_TryDecodeWithInvalidBase64_Expect_FalseAndNullPayload()
     {
-        var result = _codec.TryDecode<NameIdCursor>("not-base64!!", out var decoded);
+        var result = _codec.TryDecode<DistilleryQueryCursor>("not-base64!!", out var decoded);
 
         Assert.Multiple(
             () => Assert.False(result),
@@ -56,7 +58,7 @@ public class Base64JsonCursorCodecTests
     public void When_TryDecodeWithMalformedJson_Expect_FalseAndNullPayload()
     {
         var blob = Convert.ToBase64String("{thisIs: notJson"u8.ToArray());
-        var result = _codec.TryDecode<NameIdCursor>(blob, out var decoded);
+        var result = _codec.TryDecode<DistilleryQueryCursor>(blob, out var decoded);
 
         Assert.Multiple(
             () => Assert.False(result),
@@ -68,12 +70,14 @@ public class Base64JsonCursorCodecTests
     {
         var cursor = _codec.Encode(new { Number = 42 });
 
-        var result = _codec.TryDecode<NameIdCursor>(cursor, out var decoded);
+        var result = _codec.TryDecode<DistilleryQueryCursor>(cursor, out var decoded);
 
+        Assert.NotNull(decoded);
         Assert.Multiple(
             () => Assert.True(result),
-            () => Assert.NotNull(decoded),
-            () => Assert.Null(decoded!.Name),
-            () => Assert.Equal(Guid.Empty, decoded!.Id));
+            () => Assert.Null(decoded.AfterName),
+            () => Assert.Null(decoded.NameSearchPattern),
+            () => Assert.Null(decoded.CountryId),
+            () => Assert.Null(decoded.RegionId));
     }
 }

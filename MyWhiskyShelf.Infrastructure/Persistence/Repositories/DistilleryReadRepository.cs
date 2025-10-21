@@ -2,8 +2,8 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Core.Aggregates;
+using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
-using MyWhiskyShelf.Infrastructure.Persistence.Entities;
 using MyWhiskyShelf.Infrastructure.Persistence.Projections;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
@@ -29,46 +29,33 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
             .AnyAsync(entity => entity.Name == name, ct);
     }
 
-    public async Task<IReadOnlyList<Distillery>> SearchByNameAsync(string pattern, CancellationToken ct = default)
-    {
-        return await dbContext.Distilleries
-            .AsNoTracking()
-            .Where(entity => EF.Functions.ILike(entity.Name, $"%{pattern}%"))
-            .OrderBy(entity => entity.Name)
-            .ThenBy(entity => entity.Id)
-            .Select(DistilleryProjections.ToDistilleryDomain)
-            .ToListAsync(ct);
-    }
-
-    public async Task<IReadOnlyList<Distillery>> GetAllAsync(
-        string? afterName,
-        Guid? afterId,
-        int amount,
+    public async Task<IReadOnlyList<Distillery>> SearchByFilter(
+        DistilleryFilterOptions options,
         CancellationToken ct = default)
     {
-        IQueryable<DistilleryEntity> query;
 
-        if (!string.IsNullOrWhiteSpace(afterName) && afterId is { } afterGuid)
+        var query = dbContext.Distilleries.AsNoTracking();
+
+        if (options.CountryId is { } countryId)
+            query = query.Where(d => d.CountryId == countryId);
+
+        if (options.RegionId is { } regionId)
+            query = query.Where(d => d.RegionId == regionId);
+
+        if (!string.IsNullOrWhiteSpace(options.NameSearchPattern))
         {
-            const string sql = """
-                               SELECT * FROM "Distilleries"
-                               WHERE ("Name", "Id") > ({0}, {1})
-                               """;
-            query = dbContext.Distilleries.FromSqlRaw(sql, afterName, afterGuid);
-        }
-        else
-        {
-            query = dbContext.Distilleries;
+            var pattern = $"%{options.NameSearchPattern.Trim()}%";
+            query = query.Where(d => EF.Functions.ILike(d.Name, pattern));
         }
 
-        var result = await query
-            .AsNoTracking()
-            .OrderBy(e => e.Name)
-            .ThenBy(e => e.Id)
-            .Take(amount)
+        query = query.OrderBy(d => d.Name);
+
+        if (!string.IsNullOrWhiteSpace(options.AfterName))
+            query = query.Where(d => string.Compare(d.Name, options.AfterName) > 0);
+        
+        return await query
+            .Take(options.Amount)
             .Select(DistilleryProjections.ToDistilleryDomain)
             .ToListAsync(ct);
-
-        return result;
     }
 }

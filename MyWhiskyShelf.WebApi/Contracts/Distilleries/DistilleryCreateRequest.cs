@@ -6,8 +6,8 @@ namespace MyWhiskyShelf.WebApi.Contracts.Distilleries;
 public record DistilleryCreateRequest
 {
     public required string Name { get; init; }
-    public required string Country { get; init; }
-    public required string Region { get; init; }
+    public required Guid CountryId { get; init; }
+    public Guid? RegionId { get; init; }
     public required int Founded { get; init; }
     public required string Owner { get; init; }
     public required string Type { get; init; }
