@@ -13,12 +13,14 @@ namespace MyWhiskyShelf.IntegrationTests.WebApi;
 [Collection(nameof(WorkingFixture))]
 public class IdempotencyTests(WorkingFixture fixture)
 {
+    private static readonly Guid FirstSeededCountryId = Guid.Parse("caafacf4-c8f8-4b72-bfb7-226deafbfdd6");
+    
     private static readonly List<(EntityType EntityType, string Method, string Path, object? Body)> EndpointData =
     [
         (EntityType.Distillery, HttpMethod.Post.Method, "/distilleries",
-            DistilleryRequestTestData.GenericCreate),
+            DistilleryRequestTestData.Create(FirstSeededCountryId)),
         (EntityType.Distillery, HttpMethod.Put.Method, "/distilleries/{Id}",
-            DistilleryRequestTestData.GenericUpdate with { Name = "Update" }),
+            DistilleryRequestTestData.Update(FirstSeededCountryId, name: "Update")),
         (EntityType.Distillery, HttpMethod.Delete.Method, "/distilleries/{Id}",
             null),
         (EntityType.WhiskyBottle, HttpMethod.Post.Method, "/whisky-bottles",
@@ -150,7 +152,7 @@ public class IdempotencyTests(WorkingFixture fixture)
 
     private async Task<Guid> SeedDistillery(string method)
     {
-        var entity = DistilleryEntityTestData.Generic($"Distillery {method}");
+        var entity = DistilleryEntityTestData.Generic($"Distillery {method}", FirstSeededCountryId);
         var responses = await fixture.SeedDistilleriesAsync([entity]);
         return responses.Single().Id;
     }

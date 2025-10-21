@@ -12,8 +12,8 @@ public static class DistilleryMapping
         {
             Id = distillery.Id,
             Name = distillery.Name,
-            Country = distillery.Country,
-            Region = distillery.Region,
+            CountryId = distillery.CountryId,
+            RegionId = distillery.RegionId,
             Founded = distillery.Founded,
             Owner = distillery.Owner,
             Type = distillery.Type,
@@ -24,38 +24,38 @@ public static class DistilleryMapping
         };
     }
 
-    public static Distillery ToDomain(this DistilleryCreateRequest distilleryCreateRequest)
+    public static Distillery ToDomain(this DistilleryCreateRequest request)
     {
         return new Distillery
         {
-            Name = distilleryCreateRequest.Name,
-            Country = distilleryCreateRequest.Country,
-            Region = distilleryCreateRequest.Region,
-            Founded = distilleryCreateRequest.Founded,
-            Owner = distilleryCreateRequest.Owner,
-            Type = distilleryCreateRequest.Type,
-            Description = distilleryCreateRequest.Description,
-            TastingNotes = distilleryCreateRequest.TastingNotes,
-            FlavourProfile = distilleryCreateRequest.FlavourProfile ?? new FlavourProfile(),
-            Active = distilleryCreateRequest.Active
+            Name = request.Name,
+            CountryId = request.CountryId,
+            RegionId = request.RegionId,
+            Founded = request.Founded,
+            Owner = request.Owner,
+            Type = request.Type,
+            Description = request.Description,
+            TastingNotes = request.TastingNotes,
+            FlavourProfile = request.FlavourProfile ?? new FlavourProfile(),
+            Active = request.Active
         };
     }
 
-    public static Distillery ToDomain(this DistilleryUpdateRequest distilleryCreateRequest, Guid id)
+    public static Distillery ToDomain(this DistilleryUpdateRequest request, Guid id)
     {
         return new Distillery
         {
             Id = id,
-            Name = distilleryCreateRequest.Name,
-            Country = distilleryCreateRequest.Country,
-            Region = distilleryCreateRequest.Region,
-            Founded = distilleryCreateRequest.Founded,
-            Owner = distilleryCreateRequest.Owner,
-            Type = distilleryCreateRequest.Type,
-            Description = distilleryCreateRequest.Description,
-            TastingNotes = distilleryCreateRequest.TastingNotes,
-            FlavourProfile = distilleryCreateRequest.FlavourProfile ?? new FlavourProfile(),
-            Active = distilleryCreateRequest.Active
+            Name = request.Name,
+            CountryId = request.CountryId,
+            RegionId = request.RegionId,
+            Founded = request.Founded,
+            Owner = request.Owner,
+            Type = request.Type,
+            Description = request.Description,
+            TastingNotes = request.TastingNotes,
+            FlavourProfile = request.FlavourProfile ?? new FlavourProfile(),
+            Active = request.Active
         };
     }
 }

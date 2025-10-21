@@ -6,8 +6,8 @@ public sealed record Distillery
 {
     public Guid Id { get; init; }
     public required string Name { get; init; }
-    public required string Country { get; init; }
-    public required string Region { get; init; }
+    public required Guid CountryId { get; init; }
+    public required Guid? RegionId { get; init; }
     public required int Founded { get; init; }
     public required string Owner { get; init; }
     public required string Type { get; init; }

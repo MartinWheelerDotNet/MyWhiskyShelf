@@ -15,8 +15,8 @@ public class DistilleryEntityMappingTests
         Assert.Multiple(
             () => Assert.Equal(distilleryEntity.Id, domain.Id),
             () => Assert.Equal(distilleryEntity.Name, domain.Name),
-            () => Assert.Equal(distilleryEntity.Country, domain.Country),
-            () => Assert.Equal(distilleryEntity.Region, domain.Region),
+            () => Assert.Equal(distilleryEntity.CountryId, domain.CountryId),
+            () => Assert.Equal(distilleryEntity.RegionId, domain.RegionId),
             () => Assert.Equal(distilleryEntity.Founded, domain.Founded),
             () => Assert.Equal(distilleryEntity.Owner, domain.Owner),
             () => Assert.Equal(distilleryEntity.Type, domain.Type),

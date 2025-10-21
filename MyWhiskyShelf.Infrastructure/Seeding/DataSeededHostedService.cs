@@ -31,13 +31,16 @@ public sealed class DataSeederHostedService(
         using var scope = scopeFactory.CreateScope();
         var distilleries = await loader.GetDistilleriesFromJsonAsync("Resources/distilleries.json", cancellationToken);
         var dbContext = scope.ServiceProvider.GetRequiredService<MyWhiskyShelfDbContext>();
+        
+        await SeedGeoDataAsync(dbContext);
+        
         var entities = distilleries.Select(d => d.ToEntity()).ToList();
         dbContext.Distilleries.AddRange(entities);
         await dbContext.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation("Seeded {Count} distilleries.", entities.Count);
 
-        await SeedGeoDataAsync(dbContext);
+        
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
@@ -92,6 +95,14 @@ public sealed class DataSeederHostedService(
                     Id = Guid.Parse("c6b3dd09-35af-4e00-9fbe-8c68cad061fd"),
                     Name = "Speyside",
                     Slug = "speyside",
+                    IsActive = true,
+                    CountryId = ScotlandId
+                },
+                new RegionEntity
+                {
+                    Id = Guid.Parse("53fd7179-aed8-453e-99f9-3bf14b633770"),
+                    Name = "Islands",
+                    Slug = "island",
                     IsActive = true,
                     CountryId = ScotlandId
                 }

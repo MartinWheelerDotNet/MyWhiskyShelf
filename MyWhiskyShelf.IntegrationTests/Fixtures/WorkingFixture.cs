@@ -16,6 +16,12 @@ namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 [UsedImplicitly]
 public class WorkingFixture : IAsyncLifetime
 {
+    public readonly Guid FirstSeededCountryId = Guid.Parse("caafacf4-c8f8-4b72-bfb7-226deafbfdd6");
+    public readonly Guid SecondSeededCountryId = Guid.Parse("2cc817db-03e4-4221-ae63-ef7505ab400e");
+    public readonly Guid FirstRegionFirstCountryId = Guid.NewGuid();
+    public readonly Guid SecondRegionFirstCountryId = Guid.NewGuid();
+    public readonly Guid FirstRegionSecondCountryId = Guid.NewGuid();
+    
     public enum EntityType
     {
         Distillery,
@@ -58,6 +64,8 @@ public class WorkingFixture : IAsyncLifetime
 
     public async Task<List<DistilleryResponse>> SeedDistilleriesAsync(List<DistilleryEntity> entities)
     {
+        await SetupCountriesForTests();
+        
         DbContext.AddRange(entities);
         await DbContext.SaveChangesAsync();
 
@@ -70,7 +78,10 @@ public class WorkingFixture : IAsyncLifetime
     public async Task<List<DistilleryResponse>> SeedDistilleriesAsync(int count)
     {
         var entities = Enumerable.Range(0, count)
-            .Select(i => DistilleryEntityTestData.Generic($"Distillery Number {i}"))
+            .Select(i => DistilleryEntityTestData.Generic(
+                $"Distillery {i}",
+                FirstSeededCountryId,
+                FirstRegionFirstCountryId))
             .ToList();
 
         return await SeedDistilleriesAsync(entities);
@@ -100,6 +111,8 @@ public class WorkingFixture : IAsyncLifetime
 
     public async Task<List<RegionResponse>> SeedRegionsAsync(List<RegionEntity> entities)
     {
+        await SetupCountriesForTests();
+        
         DbContext.AddRange(entities);
         await DbContext.SaveChangesAsync();
 
@@ -115,24 +128,18 @@ public class WorkingFixture : IAsyncLifetime
         var countryEntity = new CountryEntity
         {
             Id = countryId,
-            Name = "Geo Country",
-            Slug = "geo-country",
+            Name = "Geo Country 1",
+            Slug = "geo-country-1",
             IsActive = true,
             Regions =
             [
                 new RegionEntity
                 {
-                    Name = "Geo Region 1",
-                    Slug = "geo-region-1",
-                    IsActive = true,
-                    CountryId = countryId
+                    Name = "Geo Region 1", Slug = "geo-region-1", IsActive = true,  CountryId = countryId
                 },
                 new RegionEntity
                 {
-                    Name = "Geo Region 2",
-                    Slug = "geo-region-2",
-                    IsActive = false,
-                    CountryId = countryId
+                    Name = "Geo Region 2", Slug = "geo-region-2", IsActive = false, CountryId = countryId
                 }
             ]
         };
@@ -140,12 +147,68 @@ public class WorkingFixture : IAsyncLifetime
         return await SeedCountriesAsync([countryEntity]);
     }
 
-    public async Task ClearDatabaseAsync()
+    public async Task ClearDatabaseAsync(CancellationToken ct = default)
     {
-        DbContext.Set<DistilleryEntity>().RemoveRange(DbContext.Set<DistilleryEntity>());
-        DbContext.Set<WhiskyBottleEntity>().RemoveRange(DbContext.Set<WhiskyBottleEntity>());
-        DbContext.Set<RegionEntity>().RemoveRange(DbContext.Set<RegionEntity>());
-        DbContext.Set<CountryEntity>().RemoveRange(DbContext.Set<CountryEntity>());
-        await DbContext.SaveChangesAsync();
+        DbContext.ChangeTracker.Clear();
+
+        await DbContext.Set<DistilleryEntity>().ExecuteDeleteAsync(ct);
+        await DbContext.Set<WhiskyBottleEntity>().ExecuteDeleteAsync(ct);
+        await DbContext.Set<RegionEntity>().ExecuteDeleteAsync(ct);
+        await DbContext.Set<CountryEntity>().ExecuteDeleteAsync(ct);
+        
+        await DbContext.SaveChangesAsync(ct);
+    }
+
+    public async Task SetupCountriesForTests()
+    {
+        await SeedCountriesAsync(
+        [
+            new CountryEntity
+            {
+                Id = FirstSeededCountryId,
+                Name = "Geo Country 1",
+                Slug = "geo-country-1",
+                IsActive = true,
+                Regions =
+                [
+                    new RegionEntity
+                    {
+                        Id = FirstRegionFirstCountryId,
+                        CountryId = FirstSeededCountryId,
+                        Name = "Geo Region 1",
+                        Slug = "geo-region-1",
+                        IsActive = true
+                        
+                    },
+                    new RegionEntity
+                    {
+                        Id = SecondRegionFirstCountryId,
+                        CountryId = FirstSeededCountryId,
+                        Name = "Geo Region 2",
+                        Slug = "geo-region-2",
+                        IsActive = false
+                    }
+                ]
+            }
+            ,new CountryEntity
+            {
+                Id = SecondSeededCountryId,
+                Name = "Geo Country 2",
+                Slug = "geo-country-2",
+                IsActive = true,
+                Regions =
+                [
+                    new RegionEntity
+                    {
+                        Id = FirstRegionSecondCountryId,
+                        CountryId = SecondSeededCountryId,
+                        Name = "Geo Region 1",
+                        Slug = "geo-region-1",
+                        IsActive = true
+                        
+                    }
+                ]
+            }
+        ]);
     }
 }

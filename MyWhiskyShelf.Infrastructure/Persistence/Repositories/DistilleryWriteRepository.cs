@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
@@ -14,7 +15,7 @@ public sealed class DistilleryWriteRepository(MyWhiskyShelfDbContext dbContext) 
     public async Task<Distillery> AddAsync(Distillery distillery, CancellationToken ct = default)
     {
         var entity = distillery.ToEntity();
-
+       
         dbContext.Distilleries.Add(entity);
         await dbContext.SaveChangesAsync(ct);
 
@@ -23,14 +24,14 @@ public sealed class DistilleryWriteRepository(MyWhiskyShelfDbContext dbContext) 
 
     public async Task<bool> UpdateAsync(Guid id, Distillery distillery, CancellationToken ct = default)
     {
-        var existingEntity = await dbContext.Distilleries.FindAsync([id], ct);
-        if (existingEntity is null) return false;
+        var existing = await dbContext.Distilleries.FirstOrDefaultAsync(d => d.Id == id, ct);
+        if (existing is null) return false;
 
         var updated = distillery.ToEntity();
         updated.Id = id;
-        dbContext.Entry(existingEntity).CurrentValues.SetValues(updated);
-        await dbContext.SaveChangesAsync(ct);
 
+        dbContext.Entry(existing).CurrentValues.SetValues(updated);
+        await dbContext.SaveChangesAsync(ct);
         return true;
     }
 
@@ -41,7 +42,6 @@ public sealed class DistilleryWriteRepository(MyWhiskyShelfDbContext dbContext) 
 
         dbContext.Distilleries.Remove(entity);
         await dbContext.SaveChangesAsync(ct);
-
         return true;
     }
 }

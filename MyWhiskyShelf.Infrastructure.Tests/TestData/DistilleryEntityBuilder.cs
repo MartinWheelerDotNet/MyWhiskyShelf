@@ -18,8 +18,8 @@ public sealed class DistilleryEntityBuilder
         {
             Id = _id,
             Name = "Name",
-            Country = "Country",
-            Region = "Region",
+            CountryId = Guid.NewGuid(),
+            RegionId = Guid.NewGuid(),
             Founded = 2000,
             Owner = "Owner",
             Type = "Type",

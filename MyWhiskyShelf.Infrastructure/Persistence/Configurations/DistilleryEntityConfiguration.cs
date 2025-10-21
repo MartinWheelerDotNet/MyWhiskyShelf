@@ -10,60 +10,56 @@ public class DistilleryEntityConfiguration : IEntityTypeConfiguration<Distillery
 {
     public void Configure(EntityTypeBuilder<DistilleryEntity> builder)
     {
+        builder.ToTable("Distilleries");
         builder.HasKey(e => e.Id);
+        
+        builder.Property(e => e.Id).ValueGeneratedOnAdd();
+        builder.Property(e => e.Name).HasColumnType("citext").HasMaxLength(100).IsRequired();
+        builder.Property(e => e.Founded).IsRequired();
+        builder.Property(e => e.Owner).HasMaxLength(50).IsRequired();
+        builder.Property(e => e.Type).HasMaxLength(25).IsRequired();
+        builder.Property(e => e.Description).HasMaxLength(250).IsRequired();
+        builder.Property(e => e.TastingNotes).HasMaxLength(250).IsRequired();
+        builder.Property(e => e.CountryId).IsRequired();
+        builder.Property(e => e.RegionId).IsRequired(false);
+        builder.Property(e => e.FlavourVector).HasColumnType("vector(5)").IsRequired();
+        builder.Property(e => e.Active).IsRequired();
+        
+        AddRelationships(builder);
+        AddStandardIndexes(builder);
+        AddFilterIndexes(builder);
+    }
 
-        builder.Property(e => e.Id)
-            .ValueGeneratedOnAdd();
-        builder.Property(e => e.Name)
-            .HasColumnType("citext")
-            .HasMaxLength(100)
-            .IsRequired();
-        builder.Property(e => e.Country)
-            .HasMaxLength(50)
-            .IsRequired();
-        builder.Property(e => e.Region)
-            .HasMaxLength(50)
-            .IsRequired();
-        builder.Property(e => e.Founded)
-            .IsRequired();
-        builder.Property(e => e.Owner)
-            .HasMaxLength(50)
-            .IsRequired();
-        builder.Property(e => e.Type)
-            .HasMaxLength(25)
-            .IsRequired();
-        builder.Property(e => e.Description)
-            .HasMaxLength(250)
-            .IsRequired();
-        builder.Property(e => e.TastingNotes)
-            .HasMaxLength(250)
-            .IsRequired();
-        builder.Property(e => e.FlavourVector)
-            .HasColumnName("FlavourVector")
-            .HasColumnType("vector(5)")
-            .IsRequired();
-        builder.Property(e => e.Active)
-            .IsRequired();
+    private static void AddRelationships(EntityTypeBuilder<DistilleryEntity> builder)
+    {
+        builder.HasOne(e => e.Country)
+            .WithMany()
+            .HasForeignKey(e => e.CountryId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(e => e.Region)
+            .WithMany()
+            .HasForeignKey(e => e.RegionId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 
+    private static void AddStandardIndexes(EntityTypeBuilder<DistilleryEntity> builder)
+    {
         builder.HasIndex(e => e.Name)
-            .HasDatabaseName("IX_Distilleries_Name")
+            .HasDatabaseName("UX_Distilleries_Name_eq")
             .IsUnique();
-        builder.HasIndex(e => e.Name)
-            .HasDatabaseName("IX_Distilleries_Name_trgm");
-        builder.HasIndex(e => e.Name)
-            .HasDatabaseName("IX_Distilleries_Name_eq");
-        builder.HasIndex(e => new { e.Name, e.Id })
-            .HasDatabaseName("IX_Distilleries_Name_Id")
-            .IsUnique(false);
-        builder.HasIndex(e => e.Region)
-            .IsUnique(false);
-        builder.HasIndex(e => e.Owner)
-            .IsUnique(false);
-        builder.HasIndex(e => e.Type)
-            .IsUnique(false);
         builder.HasIndex(e => e.FlavourVector)
             .HasMethod("ivfflat")
             .HasOperators("vector_cosine_ops")
             .HasStorageParameter("lists", 100);
+    }
+
+    private static void AddFilterIndexes(EntityTypeBuilder<DistilleryEntity> builder)
+    {
+        builder.HasIndex(e => e.Name)
+            .HasDatabaseName("IX_Distilleries_Name_trgm");
+        builder.HasIndex(e => e.CountryId)
+            .HasDatabaseName("IX_Distilleries_CountryId");
+        builder.HasIndex(e => e.RegionId)
+            .HasDatabaseName("IX_Distilleries_RegionId");
     }
 }

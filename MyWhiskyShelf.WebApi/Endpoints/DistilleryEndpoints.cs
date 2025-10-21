@@ -3,6 +3,7 @@ using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Application.Abstractions.Services;
 using MyWhiskyShelf.Application.Results.Distillery;
+using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.WebApi.Contracts.Common;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 using MyWhiskyShelf.WebApi.ErrorResults;
@@ -12,7 +13,6 @@ using static MyWhiskyShelf.WebApi.Constants.Authentication;
 
 namespace MyWhiskyShelf.WebApi.Endpoints;
 
-// Endpoints are covered by integration tests which are managed by Aspire, and do not need to be tested independently
 [ExcludeFromCodeCoverage]
 public static class DistilleryEndpoints
 {
@@ -40,6 +40,18 @@ public static class DistilleryEndpoints
                             $"/distilleries/{result.Distillery!.Id}",
                             result.Distillery.ToResponse()),
                         CreateDistilleryOutcome.AlreadyExists => Results.Conflict(),
+                        CreateDistilleryOutcome.CountryDoesNotExist =>
+                            ValidationProblemResults.InvalidPagingParameters(
+                                new Dictionary<string, string[]>
+                                {
+                                    { "countryId", ["Country does not exist."] }
+                                }),
+                        CreateDistilleryOutcome.RegionDoesNotExistInCountry =>
+                            ValidationProblemResults.InvalidPagingParameters(
+                                new Dictionary<string, string[]>
+                                {
+                                    { "regionId", ["Region does not exist in the specified country."] }
+                                }),
                         _ => ProblemResults.InternalServerError(
                             EndpointGroup,
                             "create",
@@ -84,18 +96,24 @@ public static class DistilleryEndpoints
             .RequiresNonEmptyRouteParameter("id")
             .RequireAuthorization(Policies.ReadDistilleries);
 
-        group
-            .MapGet(
+        group.MapGet(
                 "/",
                 async (
                     [FromServices] IDistilleryAppService service,
                     HttpContext httpContext,
                     CancellationToken ct,
                     [FromQuery(Name = "cursor")] string? cursor = null,
-                    [FromQuery(Name = "amount")] int amount = 10) =>
+                    [FromQuery(Name = "amount")] int amount = 10,
+                    [FromQuery(Name = "countryId")] Guid? countryId = null,
+                    [FromQuery(Name = "regionId")] Guid? regionId = null,
+                    [FromQuery(Name = "nameSearchPattern")] string? nameSearchPattern = null) =>
                 {
-                    var result = await service.GetAllAsync(cursor, amount, ct);
-
+                    var result = !string.IsNullOrWhiteSpace(cursor)
+                        ? await service.GetAllAsync(amount, cursor, ct)
+                        : await service.GetAllAsync(
+                            new DistilleryFilterOptions(countryId, regionId, nameSearchPattern?.Trim(), amount),
+                            ct);
+                    
                     return result.Outcome switch
                     {
                         GetAllDistilleriesOutcome.Success => Results.Ok(
@@ -124,34 +142,6 @@ public static class DistilleryEndpoints
             .UsesCursorPagingResponse()
             .RequireAuthorization(Policies.ReadDistilleries);
 
-        group.MapGet(
-                "/search",
-                async (
-                    [FromQuery] string pattern,
-                    [FromServices] IDistilleryAppService service,
-                    HttpContext httpContext,
-                    CancellationToken ct) =>
-                {
-                    var result = await service.SearchByNameAsync(pattern, ct);
-
-                    return result.Outcome switch
-                    {
-                        SearchDistilleriesOutcome.Success => Results.Ok(
-                            result.Distilleries!.Select(distillery => distillery.ToResponse())),
-                        _ => ProblemResults.InternalServerError(
-                            EndpointGroup,
-                            "search",
-                            httpContext.TraceIdentifier,
-                            httpContext.Request.Path)
-                    };
-                })
-            .WithName("Search Distilleries")
-            .Produces<List<DistilleryResponse>>()
-            .ProducesProblem(StatusCodes.Status500InternalServerError)
-            .ProducesValidationProblem()
-            .RequiresNonEmptyQueryParameter("pattern")
-            .RequireAuthorization(Policies.ReadDistilleries);
-
         group.MapPut(
                 "/{id:guid}",
                 async (
@@ -168,6 +158,18 @@ public static class DistilleryEndpoints
                         UpdateDistilleryOutcome.Updated => Results.Ok(result.Distillery!.ToResponse()),
                         UpdateDistilleryOutcome.NotFound => Results.NotFound(),
                         UpdateDistilleryOutcome.NameConflict => Results.Conflict(),
+                        UpdateDistilleryOutcome.CountryDoesNotExist =>
+                            ValidationProblemResults.InvalidPagingParameters(
+                                new Dictionary<string, string[]>
+                                {
+                                    { "countryId", ["Country does not exist."] }
+                                }),
+                        UpdateDistilleryOutcome.RegionDoesNotExistInCountry =>
+                            ValidationProblemResults.InvalidPagingParameters(
+                                new Dictionary<string, string[]>
+                                {
+                                    { "regionId", ["Region does not exist in the specified country."] }
+                                }),
                         _ => ProblemResults.InternalServerError(
                             EndpointGroup,
                             "update",

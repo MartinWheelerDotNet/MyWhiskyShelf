@@ -5,6 +5,8 @@ public enum UpdateDistilleryOutcome
     Updated,
     NotFound,
     NameConflict,
+    CountryDoesNotExist,
+    RegionDoesNotExistInCountry,
     Error
 }
 

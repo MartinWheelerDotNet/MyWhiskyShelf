@@ -1,6 +1,6 @@
 namespace MyWhiskyShelf.Application.Extensions;
 
-public static class StringExtensions
+public static class SanitizeExtensions
 {
     public static string SanitizeForLog(this string value)
     {
@@ -11,4 +11,6 @@ public static class StringExtensions
             .Replace("\t", " ")
             .Trim();
     }
+
+    public static string SanitizeForLog(this Guid value) => value.ToString().SanitizeForLog();
 }

@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.IntegrationTests.Fixtures;
 using MyWhiskyShelf.IntegrationTests.Helpers;
 using MyWhiskyShelf.IntegrationTests.TestData;
@@ -11,71 +10,60 @@ namespace MyWhiskyShelf.IntegrationTests.WebApi;
 [Collection(nameof(WorkingFixture))]
 public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
 {
-    public async Task InitializeAsync()
-    {
-        await Task.CompletedTask;
-    }
-
-    public async Task DisposeAsync()
-    {
-        await fixture.ClearDatabaseAsync();
-    }
+    public async Task InitializeAsync() => await Task.CompletedTask;
+    public async Task DisposeAsync()    => await fixture.ClearDatabaseAsync();
 
     [Theory]
     [InlineData(10, 3)]
     [InlineData(5, 5)]
     [InlineData(30, 1)]
     [InlineData(2, 13)]
-    public async Task When_GettingAllDistilleriesWithAmount_Expect_DistilleriesResponsesMatchInExpectedPages(
-        int amountPerPage,
-        int expectedPages)
+    public async Task When_GetAllWithAmount_Expect_ResponsesMatchExpectedPages(int amountPerPage, int expectedPages)
     {
         const int amountOfDistilleries = 24;
-        var expectedDistilleryResponses = await fixture.SeedDistilleriesAsync(amountOfDistilleries);
+        var expectedDistilleries = await fixture.SeedDistilleriesAsync(amountOfDistilleries);
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
         var page = 1;
         string? cursor = null;
-        List<DistilleryResponse> distilleries = [];
+        List<DistilleryResponse> distilleryResponses = [];
 
         while (true)
         {
-            var endpoint = cursor is null
+            var url = cursor is null
                 ? $"/distilleries?amount={amountPerPage}"
                 : $"/distilleries?amount={amountPerPage}&cursor={cursor}";
 
-            var response = await httpClient.GetAsync(endpoint);
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var result = await httpClient.GetAsync(url);
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
-            var pagedResponse = await response.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
-            distilleries.AddRange(pagedResponse!.Items);
+            var pagedResponse = await result.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
+            distilleryResponses.AddRange(pagedResponse!.Items);
 
             if (string.IsNullOrWhiteSpace(pagedResponse.NextCursor)) break;
-
             cursor = pagedResponse.NextCursor;
             page++;
         }
 
         Assert.Multiple(
             () => Assert.Equal(expectedPages, page),
-            () => Assert.Equal(expectedDistilleryResponses, distilleries));
+            () => Assert.Equal(expectedDistilleries, distilleryResponses));
     }
 
     [Fact]
-    public async Task When_GettingAllDistilleriesAndOnLastPage_Expect_NextCursorIsNull()
+    public async Task When_GetAllOnLastPage_Expect_NextCursorIsNull()
     {
-        const int amountOfDistilleries = 10;
-        await fixture.SeedDistilleriesAsync(amountOfDistilleries);
+        await fixture.SeedDistilleriesAsync(10);
+        
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-
-        var response = await httpClient.GetAsync("/distilleries?amount=20");
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-        var pagedResponse = await response.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
-
+        var result = await httpClient.GetAsync("/distilleries?amount=20");
+        var pagedResponse = await result.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
+        
+        Assert.NotNull(pagedResponse);
         Assert.Multiple(
-            () => Assert.Equal(10, pagedResponse!.Items.Count),
-            () => Assert.Null(pagedResponse!.NextCursor));
+            () => Assert.Equal(HttpStatusCode.OK, result.StatusCode),
+            () => Assert.Equal(10, pagedResponse.Items.Count),
+            () => Assert.Null(pagedResponse.NextCursor));
     }
 
     [Theory]
@@ -84,231 +72,345 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
     [InlineData(0)]
     [InlineData(201)]
     [InlineData(500)]
-    public async Task When_GettingAllDistilleriesAndAmountIsOutOfRange_Expect_ValidationProblem(int amount)
+    public async Task When_GetAllAmountOutOfRange_Expect_ValidationProblem(int amount)
     {
-        var expectedValidationProblemDetails = new ValidationProblemDetails
-        {
-            Status = 400,
-            Title = "Paging parameters are out of range",
-            Type = "urn:mywhiskyshelf:validation-errors:paging",
-            Errors = new Dictionary<string, string[]>
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.GetAsync($"/distilleries?amount={amount}");
+
+        await ValidationProblemAssertions.AssertValidationProblemAsync(
+            result,
+            expectedStatus: 400,
+            expectedTitle:  "Paging parameters are out of range",
+            expectedType:   "urn:mywhiskyshelf:validation-errors:paging",
+            expectedErrors: new Dictionary<string, string[]>
             {
                 { "amount", ["amount must be between 1 and 200"] }
-            }
-        };
-
-        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-
-        var response = await httpClient.GetAsync($"/distilleries?amount={amount}");
-        var validationProblem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
-
-        Assert.Equivalent(expectedValidationProblemDetails, validationProblem);
+            });
     }
 
     [Fact]
-    public async Task When_GettingAllDistilleriesAndInvalidCursor_Expect_ValidationProblem()
+    public async Task When_GetAllInvalidCursor_Expect_ValidationProblem()
     {
-        var expectedValidationProblemDetails = new ValidationProblemDetails
-        {
-            Status = 400,
-            Title = "Paging parameters are out of range",
-            Type = "urn:mywhiskyshelf:validation-errors:paging",
-            Errors = new Dictionary<string, string[]>
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.GetAsync("/distilleries?amount=10&cursor=not-base64!!");
+
+        await ValidationProblemAssertions.AssertValidationProblemAsync(
+            result,
+            expectedStatus: 400,
+            expectedTitle:  "Paging parameters are out of range",
+            expectedType:   "urn:mywhiskyshelf:validation-errors:paging",
+            expectedErrors: new Dictionary<string, string[]>
             {
                 { "cursor", ["The provided 'cursor' is invalid or malformed."] }
-            }
-        };
-
+            });
+    }
+    
+    [Fact]
+    public async Task When_GetAllWithNameSearchNotFound_Expect_EmptyList()
+    {
+        await fixture.SeedDistilleriesAsync(3);
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
-        var response = await httpClient.GetAsync("/distilleries?amount=10&cursor=not-base64!!");
-        var validationProblem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        var result = await httpClient.GetAsync("/distilleries?amount=10&nameSearchPattern=zzz");
+        var pagedResponse = await result.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
 
-        Assert.Equivalent(expectedValidationProblemDetails, validationProblem);
+        Assert.Empty(pagedResponse!.Items);
     }
 
     [Fact]
-    public async Task When_GettingDistilleryByIdAndDistilleryExists_Expect_CorrectDistilleryReturned()
+    public async Task When_GetAllWithNameSearchCaseInsensitive_Expect_SingleMatch()
     {
-        var distilleryDetails = await fixture.SeedDistilleriesAsync(1);
-        var expectedResponse = distilleryDetails.Single();
-        var id = expectedResponse.Id;
-
-        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        var response = await httpClient.GetAsync($"/distilleries/{id}");
-        var distilleryResponse = await response.Content.ReadFromJsonAsync<DistilleryResponse>();
-
-        Assert.Multiple(
-            () => Assert.Equal(HttpStatusCode.OK, response.StatusCode),
-            () => Assert.Equal(expectedResponse, distilleryResponse!));
-    }
-
-    [Fact]
-    public async Task When_GettingDistilleryByIdAndDistilleryDoesNotExist_Expect_NotFoundResponse()
-    {
-        var endpoint = $"/distilleries/{Guid.NewGuid()}";
-        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-
-        var response = await httpClient.GetAsync(endpoint);
-
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task When_SearchingByNameAndNotFound_Expect_EmptyDistilleryResponse()
-    {
-        await fixture.SeedDistilleriesAsync([DistilleryEntityTestData.Generic("Any Distillery")]);
-
-        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        var response = await httpClient.GetAsync("/distilleries/search?pattern=Else");
-        var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
-
-        Assert.Empty(distilleries!);
-    }
-
-    [Theory]
-    [InlineData("CASE TEST")]
-    [InlineData("CASE test")]
-    [InlineData("CaSe TeSt")]
-    [InlineData("case test")]
-    public async Task When_SearchingByNameInsensitiveCase_Expect_DistilleryResponseWithJustThatDistillery(
-        string pattern)
-    {
-        const string expectedName = "Case Test";
-        var seededDistilleryResponses =
-            await fixture.SeedDistilleriesAsync([DistilleryEntityTestData.Generic(expectedName)]);
-        var expectedResponse = seededDistilleryResponses.Single();
-
-        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        var response = await httpClient.GetAsync($"/distilleries/search?pattern={pattern}");
-        var distilleries = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
-
-        Assert.Single(distilleries!, actual => expectedResponse == actual);
-    }
-
-    [Fact]
-    public async Task When_SearchingByNameAndOneFound_Expect_DistilleryResponseWithJustThatDistillery()
-    {
-        const string expectedName = "One";
-        var seededDistilleryResponses = await fixture.SeedDistilleriesAsync([
-            DistilleryEntityTestData.Generic(expectedName),
-            DistilleryEntityTestData.Generic("Another Distillery")
-        ]);
-        var expectedResponse = seededDistilleryResponses.First(sd => sd.Name == expectedName);
-
-        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        var response = await httpClient.GetAsync($"/distilleries/search?pattern={expectedName}");
-        var distilleryResponses = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
-
-        Assert.Single(distilleryResponses!, actual => expectedResponse == actual);
-    }
-
-    [Fact]
-    public async Task When_SearchingByNameAndMultipleFound_Expect_DistilleryResponseWithThoseDistilleries()
-    {
-        const string searchPattern = "Two";
-        var expectedDistilleryResponses = await fixture.SeedDistilleriesAsync([
-            DistilleryEntityTestData.Generic(searchPattern),
-            DistilleryEntityTestData.Generic($"Also {searchPattern}")
+        
+        await fixture.SeedDistilleriesAsync(
+        [
+            DistilleryEntityTestData.Generic("Alpha", fixture.FirstSeededCountryId),
+            DistilleryEntityTestData.Generic("Beta", fixture.FirstSeededCountryId)
         ]);
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        var response = await httpClient.GetAsync($"/distilleries/search?pattern={searchPattern}");
-        var distilleryResponses = await response.Content.ReadFromJsonAsync<List<DistilleryResponse>>();
+        var result = await httpClient.GetAsync("/distilleries?amount=10&nameSearchPattern=alpha");
+        var pagedResponse = await result.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
 
-        Assert.Equal(expectedDistilleryResponses.OrderBy(r => r.Name).ThenBy(r => r.Id), distilleryResponses);
+        Assert.Single(pagedResponse!.Items, d => d.Name == "Alpha");
     }
 
     [Fact]
-    public async Task When_AddingDistilleryAndDistilleryDoesNotExist_Expect_CreatedWithLocationHeaderSet()
+    public async Task When_GetAllWithNameSearchMultipleFound_Expect_SortedMatches()
     {
-        var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
-            HttpMethod.Post,
-            "/distilleries",
-            DistilleryRequestTestData.GenericCreate with { Name = "Distillery D" });
-        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        
+        await fixture.SeedDistilleriesAsync([
+            DistilleryEntityTestData.Generic("Two A", fixture.FirstSeededCountryId),
+            DistilleryEntityTestData.Generic("Two B", fixture.FirstSeededCountryId)
+        ]);
 
-        var response = await httpClient.SendAsync(request);
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.GetAsync("/distilleries?amount=10&nameSearchPattern=Two");
+        var pagedResponse = await result.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
+
+        var expected = new[] { "Two A", "Two B" };
+        
+        Assert.Equal(expected, pagedResponse!.Items.Select(i => i.Name).ToArray());
+    }
+
+    [Fact]
+    public async Task When_GetAllWithCountryFilter_Expect_OnlyThatCountriesDistilleries()
+    {
+        await fixture.SeedDistilleriesAsync(
+        [
+            DistilleryEntityTestData.Generic("C1 One", fixture.FirstSeededCountryId),
+            DistilleryEntityTestData.Generic("C1 Two", fixture.FirstSeededCountryId),
+            DistilleryEntityTestData.Generic("C2 One", fixture.SecondSeededCountryId)
+        ]);
+
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.GetAsync($"/distilleries?amount=50&countryId={fixture.FirstSeededCountryId}");
+        var pagedResponse = await result.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
+
+        Assert.All(pagedResponse!.Items, d => Assert.StartsWith("C1", d.Name));
+    }
+
+    [Fact]
+    public async Task When_GetAllWithCountryAndRegionFilter_Expect_OnlyMatchingDistilleries()
+    {
+        await fixture.SeedDistilleriesAsync(
+        [
+            DistilleryEntityTestData.Generic("C1R1 One", fixture.FirstSeededCountryId, fixture.FirstRegionFirstCountryId),
+            DistilleryEntityTestData.Generic("C1R1 Two", fixture.FirstSeededCountryId, fixture.FirstRegionFirstCountryId),
+            DistilleryEntityTestData.Generic("C1R2", fixture.FirstSeededCountryId, fixture.SecondRegionFirstCountryId),
+            DistilleryEntityTestData.Generic("C2", fixture.SecondSeededCountryId)
+        ]);
+
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.GetAsync($"/distilleries?amount=50&countryId={fixture.FirstSeededCountryId}&regionId={fixture.FirstRegionFirstCountryId}");
+        var pagedResponse = await result.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
+
+        Assert.All(pagedResponse!.Items, d => Assert.StartsWith("C1R1", d.Name));
+    }
+
+    [Fact]
+    public async Task When_GetAllFreshSearchWithFilters_Expect_FirstPageSortedAndCursorReturned()
+    {
+        
+        await fixture.SeedDistilleriesAsync(
+        [
+            DistilleryEntityTestData.Generic("A", fixture.FirstSeededCountryId),
+            DistilleryEntityTestData.Generic("B", fixture.FirstSeededCountryId),
+            DistilleryEntityTestData.Generic("C", fixture.FirstSeededCountryId)
+        ]);
+        var expected = new[] { "A", "B" };
+
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.GetAsync($"/distilleries?amount=2&countryId={fixture.FirstSeededCountryId}");
+        var firstPage = await result.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
+
+        Assert.NotNull(firstPage!.NextCursor);
+        Assert.Equal(expected, firstPage.Items.Select(x => x.Name).ToArray());
+    }
+    
+    [Fact]
+    public async Task When_GetByIdEntityExists_Expect_OkWithEntity()
+    {
+        var seeded = await fixture.SeedDistilleriesAsync(1);
+        var expected = seeded.Single();
+
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.GetAsync($"/distilleries/{expected.Id}");
+        var distilleryResponse = await result.Content.ReadFromJsonAsync<DistilleryResponse>();
+        
+        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        Assert.Equal(expected, distilleryResponse);
+    }
+
+    [Fact]
+    public async Task When_GetByIdEntityMissing_Expect_NotFound()
+    {
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        
+        var result = await httpClient.GetAsync($"/distilleries/{Guid.NewGuid()}");
+        
+        Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+    }
+
+    [Fact]
+    public async Task When_CreateWithValidGeoData_Expect_CreatedAndLocationHeader()
+    {
+        await fixture.SetupCountriesForTests();
+        
+        var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
+            HttpMethod.Post, "/distilleries",
+            DistilleryRequestTestData.Create(fixture.FirstSeededCountryId, null, "Distillery D"));
+        
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.SendAsync(request);
 
         Assert.Multiple(
-            () => Assert.NotNull(response.Headers.Location),
-            () => Assert.Equal(HttpStatusCode.Created, response.StatusCode));
+            () => Assert.NotNull(result.Headers.Location),
+            () => Assert.Equal(HttpStatusCode.Created, result.StatusCode));
     }
 
     [Fact]
-    public async Task When_AddingDistilleryAndDistilleryAlreadyExists_Expect_Conflict()
+    public async Task When_CreateWithDuplicateName_Expect_Conflict()
+    {
+        var seeded = await fixture.SeedDistilleriesAsync(1);
+        var duplicatedName = seeded.Single().Name;
+        
+        var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
+            HttpMethod.Post, "/distilleries",
+            DistilleryRequestTestData.Create(fixture.FirstSeededCountryId, null, duplicatedName));
+        
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.SendAsync(request);
+        
+        Assert.Equal(HttpStatusCode.Conflict, result.StatusCode);
+    }
+
+    [Fact]
+    public async Task When_CreateWithUnknownCountry_Expect_ValidationProblemOnCountryId()
+    {
+        var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
+            HttpMethod.Post, "/distilleries",
+            DistilleryRequestTestData.Create(Guid.NewGuid(), null, "X"));
+        
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.SendAsync(request);
+
+        await ValidationProblemAssertions.AssertValidationProblemAsync(
+            result,
+            expectedStatus: 400,
+            expectedTitle:  "Paging parameters are out of range",
+            expectedType:   "urn:mywhiskyshelf:validation-errors:paging",
+            expectedErrors: new Dictionary<string, string[]>
+            {
+                { "countryId", ["Country does not exist."] }
+            });
+    }
+
+    [Fact]
+    public async Task When_CreateWithRegionNotInCountry_Expect_ValidationProblemOnRegionId()
+    {
+        await fixture.SeedRegionsAsync(
+            [RegionEntityTestData.Generic("C2 Region", "c2-region", fixture.SecondSeededCountryId)]);
+        
+        var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
+            HttpMethod.Post, "/distilleries",
+            DistilleryRequestTestData.Create(fixture.FirstSeededCountryId, fixture.SecondSeededCountryId));
+        
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.SendAsync(request);
+
+        await ValidationProblemAssertions.AssertValidationProblemAsync(
+            result,
+            expectedStatus: 400,
+            expectedTitle:  "Paging parameters are out of range",
+            expectedType:   "urn:mywhiskyshelf:validation-errors:paging",
+            expectedErrors: new Dictionary<string, string[]>
+            {
+                { "regionId", ["Region does not exist in the specified country."] }
+            });
+    }
+
+    [Fact]
+    public async Task When_UpdateEntityExists_Expect_Ok()
     {
         var distilleries = await fixture.SeedDistilleriesAsync(1);
-        var name = distilleries.Single().Name;
+        
+        var distillery = distilleries.Single();
+        var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
+            HttpMethod.Put, $"/distilleries/{distillery.Id}",
+            DistilleryRequestTestData.Update(fixture.FirstSeededCountryId, null, distillery.Name));
+       
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.SendAsync(request);
+        
+        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+    }
+
+    [Fact]
+    public async Task When_UpdateEntityMissing_Expect_NotFound()
+    {
+        
+        var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
+            HttpMethod.Put, $"/distilleries/{Guid.NewGuid()}",
+            DistilleryRequestTestData.Update(fixture.FirstSeededCountryId, null, "X"));
+        
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.SendAsync(request);
+        
+        Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+    }
+
+    [Fact]
+    public async Task When_UpdateWithUnknownCountry_Expect_ValidationProblemOnCountryId()
+    {
+        var distilleries = await fixture.SeedDistilleriesAsync(1);
+        var distillery = distilleries.Single();
 
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
-            HttpMethod.Post,
-            "/distilleries",
-            DistilleryRequestTestData.GenericCreate with { Name = name });
+            HttpMethod.Put, $"/distilleries/{distillery.Id}",
+            DistilleryRequestTestData.Update(Guid.NewGuid(), null, distillery.Name));
+
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.SendAsync(request);
 
-        var response = await httpClient.SendAsync(request);
-
-        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        await ValidationProblemAssertions.AssertValidationProblemAsync(
+            result,
+            expectedStatus: 400,
+            expectedTitle:  "Paging parameters are out of range",
+            expectedType:   "urn:mywhiskyshelf:validation-errors:paging",
+            expectedErrors: new Dictionary<string, string[]>
+            {
+                { "countryId", ["Country does not exist."] }
+            });
     }
 
     [Fact]
-    public async Task When_DeletingDistilleryAndDistilleryExists_Expect_NoContent()
+    public async Task When_UpdateWithRegionNotInCountry_Expect_ValidationProblemOnRegionId()
     {
         var distilleries = await fixture.SeedDistilleriesAsync(1);
-        var id = distilleries.Single().Id;
+        var distillery = distilleries.Single();
+        var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
+            HttpMethod.Put, $"/distilleries/{distillery.Id}",
+            DistilleryRequestTestData.Update(fixture.FirstSeededCountryId, fixture.FirstRegionSecondCountryId, distillery.Name));
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
+        var result = await httpClient.SendAsync(request);
+
+        await ValidationProblemAssertions.AssertValidationProblemAsync(
+            result,
+            expectedStatus: 400,
+            expectedTitle:  "Paging parameters are out of range",
+            expectedType:   "urn:mywhiskyshelf:validation-errors:paging",
+            expectedErrors: new Dictionary<string, string[]>
+            {
+                { "regionId", ["Region does not exist in the specified country."] }
+            });
+    }
+
+    [Fact]
+    public async Task When_DeleteEntityExists_Expect_NoContent()
+    {
+        var distilleries = await fixture.SeedDistilleriesAsync(1);
+        var distilleryId = distilleries.Single().Id;
+        var req = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
             HttpMethod.Delete,
-            $"/distilleries/{id}");
+            $"/distilleries/{distilleryId}");
+        
+        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
+        var result = await httpClient.SendAsync(req);
 
-        var response = await httpClient.SendAsync(request);
-
-        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
     }
 
     [Fact]
-    public async Task When_DeletingDistilleryAndDistilleryDoesNotExist_Expect_NotFound()
+    public async Task When_DeleteEntityMissing_Expect_NotFound()
     {
-        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(
             HttpMethod.Delete,
             $"/distilleries/{Guid.NewGuid()}");
-
-        var response = await httpClient.SendAsync(request);
-
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task When_UpdatingDistilleryAndDistilleryExists_Expect_OkResponse()
-    {
-        var distilleries = await fixture.SeedDistilleriesAsync(1);
-        var (id, name) = (distilleries.Single().Id, distilleries.Single().Name);
+    
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
-            HttpMethod.Put,
-            $"/distilleries/{id}",
-            DistilleryRequestTestData.GenericUpdate with { Name = name });
+        var result = await httpClient.SendAsync(request);
 
-        var response = await httpClient.SendAsync(request);
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task When_UpdatingDistilleryAndDistilleryDoesNotExist_Expect_NotFoundResponse()
-    {
-        var distilleryId = Guid.NewGuid();
-        using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
-            HttpMethod.Put,
-            $"/distilleries/{distilleryId}",
-            DistilleryRequestTestData.GenericUpdate with { Name = "Update Distillery" });
-
-        var response = await httpClient.SendAsync(request);
-
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
     }
 }

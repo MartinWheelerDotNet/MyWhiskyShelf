@@ -7,8 +7,8 @@ public static class DistilleryTestData
     public static readonly Distillery Generic = new()
     {
         Name = "Name",
-        Country = "Country",
-        Region = "Region",
+        CountryId = Guid.NewGuid(),
+        RegionId = Guid.NewGuid(),
         Founded = 2000,
         Owner = "Owner",
         Type = "Type",

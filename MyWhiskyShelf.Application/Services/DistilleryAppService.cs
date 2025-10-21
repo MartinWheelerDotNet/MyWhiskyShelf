@@ -6,16 +6,49 @@ using MyWhiskyShelf.Application.Cursors;
 using MyWhiskyShelf.Application.Extensions;
 using MyWhiskyShelf.Application.Results.Distillery;
 using MyWhiskyShelf.Core.Aggregates;
+using MyWhiskyShelf.Core.Models;
 
 namespace MyWhiskyShelf.Application.Services;
 
 public sealed class DistilleryAppService(
     IDistilleryReadRepository read,
     IDistilleryWriteRepository write,
+    IGeoReadRepository geoRead,
     ICursorCodec cursorCodec,
     ILogger<DistilleryAppService> logger)
     : IDistilleryAppService
 {
+    private const string RetrievedDistillery = 
+        "Retrieved distillery with [Name: {Name}, Id: {Id}]";
+    private const string RetrievedDistilleries = 
+        "Retrieved [{Count}] distilleries (amount {Amount}, hasNext: {HasNext})";
+    private const string DistilleryNotFound = 
+        "Distillery not found with [Id: {Id}]";
+    private const string ErrorRetrievingDistillery =
+        "Error retrieving distillery with [Id: {Id}]";
+    private const string InvalidAfterCursor =
+        "Invalid 'afterCursor' supplied. Cursor={Cursor}";
+    private const string ErrorRetrievingAllDistilleries =
+        "An error occurred whilst retrieving all distilleries";
+    private const string DistilleryAlreadyExistsWithName =
+        "Distillery already exists with [Name: {Name}]";
+    private const string CountryDoesNotExist =
+        "Country not found with [Id: {Id}]";
+    private const string DistilleryCreated =
+        "Distillery created with [Name: {Name}, Id: {Id}]";
+    private const string ErrorCreatingDistillery =
+        "Error creating distillery with [Name: {Name}]";
+    private const string DistilleryUpdated =
+        "Distillery updated with [Name: {Name}, Id: {Id}]";
+    private const string ErrorUpdatingDistillery =
+        "Error updating distillery [Name: {Name}, Id: {Id}]";
+    private const string DistilleryDeleted =
+        "Distillery deleted with [Id: {Id}]";
+    private const string ErrorDeletingDistillery = 
+        "Error deleting distillery [Id: {Id}]";
+    private const string RegionDoesNotExistInCountry = 
+        "Region does not exist in the specified country [RegionId: {RegionId}, CountryId: {CountryId}]";
+
     public async Task<GetDistilleryByIdResult> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         try
@@ -24,102 +57,106 @@ public sealed class DistilleryAppService(
 
             if (distillery is null)
             {
-                logger.LogWarning("Distillery not found with [Id: {Id}]", id);
+                logger.LogWarning(DistilleryNotFound, id);
                 return new GetDistilleryByIdResult(GetDistilleryByIdOutcome.NotFound);
             }
 
-            logger.LogDebug("Retrieved distillery with [Name: {Name}, Id: {Id}]", distillery.Name.SanitizeForLog(), id);
+            logger.LogDebug(RetrievedDistillery, distillery.Name.SanitizeForLog(), id);
             return new GetDistilleryByIdResult(GetDistilleryByIdOutcome.Success, distillery);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error retrieving distillery with [Id: {Id}]", id);
+            logger.LogError(ex, ErrorRetrievingDistillery, id);
             return new GetDistilleryByIdResult(GetDistilleryByIdOutcome.Error, Error: ex.Message);
         }
     }
 
-    public async Task<GetAllDistilleriesResult> GetAllAsync(string? afterCursor, int amount,
+    public async Task<GetAllDistilleriesResult> GetAllAsync(
+        int amount,
+        string afterCursor,
         CancellationToken ct = default)
     {
+        DistilleryQueryCursor? cursor = null;
+        if (!string.IsNullOrWhiteSpace(afterCursor) && !cursorCodec.TryDecode(afterCursor, out cursor))
+        {
+            logger.LogWarning(InvalidAfterCursor, afterCursor.SanitizeForLog());
+            return new GetAllDistilleriesResult(
+                GetAllDistilleriesOutcome.InvalidCursor,
+                Error: "Invalid cursor provided");
+        }
+
+        var queryOptions = new DistilleryFilterOptions(
+            cursor?.CountryId,
+            cursor?.RegionId,
+            cursor?.NameSearchPattern,
+            amount,
+            cursor?.AfterName);
+
+        return await GetAllAsync(queryOptions, ct);
+    }
+
+    public async Task<GetAllDistilleriesResult> GetAllAsync(
+        DistilleryFilterOptions filterOptions,
+        CancellationToken ct = default)
+    {
+        var amount = filterOptions.Amount;
+        if (amount <= 0)
+            return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Success, []);
+
         try
         {
-            if (amount <= 0)
-                return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Success, []);
+            var items = await read.SearchByFilter(filterOptions, ct);
+            var nextCursor = GenerateNextCursor(filterOptions, items, amount);
 
-            if (!cursorCodec.TryDecode<NameIdCursor>(afterCursor, out var cursor)
-                || (cursor is not null && (string.IsNullOrWhiteSpace(cursor.Name) || cursor.Id == Guid.Empty)))
-            {
-                logger.LogWarning(
-                    "Invalid afterCursor supplied. Cursor={Cursor}",
-                    afterCursor!.SanitizeForLog());
-                return new GetAllDistilleriesResult(
-                    GetAllDistilleriesOutcome.InvalidCursor,
-                    Error: $"Invalid cursor provided [{afterCursor}]");
-            }
+            logger.LogDebug(
+                RetrievedDistilleries,
+                items.Count,
+                amount,
+                nextCursor is not null);
 
-            var items = await read.GetAllAsync(cursor?.Name, cursor?.Id, amount, ct);
-
-            string? next = null;
-            if (items.Count == amount)
-            {
-                var last = items[^1];
-                next = cursorCodec.Encode(new NameIdCursor(last.Name, last.Id));
-            }
-
-            logger.LogDebug("Retrieved [{Count}] distilleries (amount {Amount}, hasNext: {HasNext})",
-                items.Count, amount, next is not null);
-
-            return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Success, items, next, amount);
+            return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Success, items, nextCursor, amount);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An error occured whilst retrieving all distilleries");
+            logger.LogError(ex, ErrorRetrievingAllDistilleries);
             return new GetAllDistilleriesResult(GetAllDistilleriesOutcome.Error, Error: ex.Message);
         }
     }
-
-    public async Task<SearchDistilleriesResult> SearchByNameAsync(string pattern, CancellationToken ct = default)
-    {
-        try
-        {
-            var distilleries = await read.SearchByNameAsync(pattern, ct);
-
-            logger.LogDebug("Retrieved [{Count}] distilleries", distilleries.Count);
-            return new SearchDistilleriesResult(SearchDistilleriesOutcome.Success, distilleries);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(
-                ex,
-                "An error occured whilst searching for distilleries with [Pattern: {Pattern}",
-                pattern.SanitizeForLog());
-            return new SearchDistilleriesResult(SearchDistilleriesOutcome.Error, Error: ex.Message);
-        }
-    }
-
+    
     public async Task<CreateDistilleryResult> CreateAsync(Distillery distillery, CancellationToken ct = default)
     {
         try
         {
-            var exists = await read.ExistsByNameAsync(distillery.Name, ct);
-            if (exists)
+            if (await read.ExistsByNameAsync(distillery.Name, ct))
             {
-                logger.LogWarning("Distillery already exists with [Name: {Name}]", distillery.Name.SanitizeForLog());
+                logger.LogWarning(DistilleryAlreadyExistsWithName, distillery.Name.SanitizeForLog());
                 return new CreateDistilleryResult(CreateDistilleryOutcome.AlreadyExists);
             }
 
+            if (!await geoRead.CountryExistsByIdAsync(distillery.CountryId, ct))
+            {
+                logger.LogWarning(CountryDoesNotExist, distillery.CountryId);
+                return new CreateDistilleryResult(CreateDistilleryOutcome.CountryDoesNotExist);
+            }
+
+            if (distillery.RegionId is {} regionGuid 
+                && !await RegionExistsAndIsInCountry(distillery.CountryId, regionGuid, ct))
+            {
+                logger.LogWarning(
+                    RegionDoesNotExistInCountry,
+                    distillery.RegionId?.SanitizeForLog() ?? string.Empty,
+                    distillery.CountryId.SanitizeForLog());
+                return new CreateDistilleryResult(CreateDistilleryOutcome.RegionDoesNotExistInCountry);
+            }
+            
             var addedDistillery = await write.AddAsync(distillery, ct);
 
-            logger.LogDebug(
-                "Distillery created with [Name: {Name}, Id: {Id}]",
-                addedDistillery.Name.SanitizeForLog(),
-                addedDistillery.Id);
-
+            logger.LogDebug(DistilleryCreated, addedDistillery.Name.SanitizeForLog(), addedDistillery.Id);
             return new CreateDistilleryResult(CreateDistilleryOutcome.Created, addedDistillery);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error creating distillery with [Name: {Name}]", distillery.Name.SanitizeForLog());
+            logger.LogError(ex, ErrorCreatingDistillery, distillery.Name.SanitizeForLog());
             return new CreateDistilleryResult(CreateDistilleryOutcome.Error, Error: ex.Message);
         }
     }
@@ -134,41 +171,50 @@ public sealed class DistilleryAppService(
             var current = await read.GetByIdAsync(id, ct);
             if (current is null)
             {
-                logger.LogWarning("Distillery not found with [id: {Id}]", id);
+                logger.LogWarning(DistilleryNotFound, id);
                 return new UpdateDistilleryResult(UpdateDistilleryOutcome.NotFound);
             }
-
+            
             if (!string.Equals(current.Name, distillery.Name, StringComparison.Ordinal))
             {
                 var exists = await read.ExistsByNameAsync(distillery.Name, ct);
                 if (exists)
                 {
-                    logger.LogWarning(
-                        "Distillery already exists with [Name: {Name}]",
-                        distillery.Name.SanitizeForLog());
+                    logger.LogWarning(DistilleryAlreadyExistsWithName, distillery.Name.SanitizeForLog());
                     return new UpdateDistilleryResult(UpdateDistilleryOutcome.NameConflict);
                 }
+            }
+
+            if (!await geoRead.CountryExistsByIdAsync(distillery.CountryId, ct))
+            {
+                logger.LogWarning(CountryDoesNotExist, distillery.CountryId);
+                return new UpdateDistilleryResult(UpdateDistilleryOutcome.CountryDoesNotExist);
+            }
+
+            if (distillery.RegionId is {} regionGuid 
+                && !await RegionExistsAndIsInCountry(distillery.CountryId, regionGuid, ct))
+            {
+                logger.LogWarning(
+                    RegionDoesNotExistInCountry,
+                    distillery.RegionId?.SanitizeForLog() ?? string.Empty,
+                    distillery.CountryId.SanitizeForLog());
+                return new UpdateDistilleryResult(UpdateDistilleryOutcome.RegionDoesNotExistInCountry);
             }
 
             var updated = await write.UpdateAsync(id, distillery, ct);
 
             if (updated)
             {
-                logger.LogDebug(
-                    "Distillery updated with [Name: {Name}, Id: {Id}]",
-                    distillery.Name.SanitizeForLog(),
-                    id);
+                logger.LogDebug(DistilleryUpdated, distillery.Name.SanitizeForLog(), id);
                 return new UpdateDistilleryResult(UpdateDistilleryOutcome.Updated, distillery);
             }
 
-            logger.LogWarning("Distillery not found with [id: {Id}]", id);
+            logger.LogWarning(DistilleryNotFound, id);
             return new UpdateDistilleryResult(UpdateDistilleryOutcome.NotFound);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error updating distillery [Name: {Name}, Id: {Id}]",
-                distillery.Name.SanitizeForLog(),
-                id);
+            logger.LogError(ex, ErrorUpdatingDistillery, distillery.Name.SanitizeForLog(), id);
             return new UpdateDistilleryResult(UpdateDistilleryOutcome.Error, Error: ex.Message);
         }
     }
@@ -180,17 +226,35 @@ public sealed class DistilleryAppService(
             var deleted = await write.DeleteAsync(id, ct);
             if (deleted)
             {
-                logger.LogDebug("Distillery deleted with [Id: {Id}]", id);
+                logger.LogDebug(DistilleryDeleted, id);
                 return new DeleteDistilleryResult(DeleteDistilleryOutcome.Deleted);
             }
 
-            logger.LogWarning("Distillery not found with [Id: {Id}]", id);
+            logger.LogWarning(DistilleryNotFound, id);
             return new DeleteDistilleryResult(DeleteDistilleryOutcome.NotFound);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error deleting distillery [Id: {Id}]", id);
+            logger.LogError(ex, ErrorDeletingDistillery, id);
             return new DeleteDistilleryResult(DeleteDistilleryOutcome.Error, ex.Message);
         }
     }
+
+    private async Task<bool> RegionExistsAndIsInCountry(Guid countryId, Guid regionId, CancellationToken ct)
+    {
+        var region = await geoRead.GetRegionByIdAsync(regionId, ct);
+        if (region is null) return false;
+
+        return region.CountryId == countryId;
+    }
+    
+    private string? GenerateNextCursor(DistilleryFilterOptions filterOptions, IReadOnlyList<Distillery> items, int amount)
+        => items.Count < amount
+            ? null
+            : cursorCodec.Encode(new DistilleryQueryCursor(
+                items[^1].Name,
+                filterOptions.NameSearchPattern,
+                filterOptions.CountryId,
+                filterOptions.RegionId));
+
 }
