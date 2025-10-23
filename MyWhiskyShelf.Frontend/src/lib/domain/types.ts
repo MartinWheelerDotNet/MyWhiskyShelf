@@ -1,11 +1,13 @@
 export interface Distillery {
     id: string;
     name: string;
-    country?: string;
-    region?: string;
+    countryName: string;
+    countryId: string;
+    regionName?: string;
+    regionId?: string;
     founded?: number;
     owner?: string;
-    type?: string;
+    type: string;
     description?: string;
     tastingNotes?: string;
     flavourProfile?: {

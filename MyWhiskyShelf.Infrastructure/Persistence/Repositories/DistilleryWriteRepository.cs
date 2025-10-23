@@ -4,6 +4,7 @@ using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 using MyWhiskyShelf.Infrastructure.Persistence.Mapping;
+using MyWhiskyShelf.Infrastructure.Persistence.Projections;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
 
@@ -19,7 +20,13 @@ public sealed class DistilleryWriteRepository(MyWhiskyShelfDbContext dbContext) 
         dbContext.Distilleries.Add(entity);
         await dbContext.SaveChangesAsync(ct);
 
-        return entity.ToDomain();
+        var mappedEntity = await dbContext.Distilleries
+            .AsNoTracking()
+            .Where(e => e.Id == entity.Id)
+            .Select(DistilleryProjections.ToDistilleryDomain)
+            .SingleAsync(ct);
+            
+        return mappedEntity;
     }
 
     public async Task<bool> UpdateAsync(Guid id, Distillery distillery, CancellationToken ct = default)

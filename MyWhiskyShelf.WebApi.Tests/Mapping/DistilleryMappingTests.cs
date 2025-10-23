@@ -37,7 +37,9 @@ public class DistilleryMappingTests
             () => Assert.Equal(Guid.Empty, distillery.Id),
             () => Assert.Equal(distilleryRequest.Name, distillery.Name),
             () => Assert.Equal(distilleryRequest.CountryId, distillery.CountryId),
+            () => Assert.Equal(distilleryRequest.CountryName, distillery.CountryName),
             () => Assert.Equal(distilleryRequest.RegionId, distillery.RegionId),
+            () => Assert.Equal(distilleryRequest.RegionName, distillery.RegionName),
             () => Assert.Equal(distilleryRequest.Founded, distillery.Founded),
             () => Assert.Equal(distilleryRequest.Owner, distillery.Owner),
             () => Assert.Equal(distilleryRequest.Type, distillery.Type),
@@ -61,20 +63,22 @@ public class DistilleryMappingTests
     public void When_DistilleryUpdateRequestToDomainWithAllFieldsAndRouteId_Expect_DistilleryMatchesAndIdSetFromRoute()
     {
         var id = Guid.NewGuid();
-        var distilleryUpdateRequest = DistilleryRequestTestData.GenericUpdateRequest;
+        var distilleryRequest = DistilleryRequestTestData.GenericUpdateRequest;
 
-        var distillery = distilleryUpdateRequest.ToDomain(id);
+        var distillery = distilleryRequest.ToDomain(id);
 
         Assert.Multiple(
             () => Assert.Equal(id, distillery.Id),
-            () => Assert.Equal(distilleryUpdateRequest.Name, distillery.Name),
-            () => Assert.Equal(distilleryUpdateRequest.CountryId, distillery.CountryId),
-            () => Assert.Equal(distilleryUpdateRequest.RegionId, distillery.RegionId),
-            () => Assert.Equal(distilleryUpdateRequest.Founded, distillery.Founded),
-            () => Assert.Equal(distilleryUpdateRequest.Owner, distillery.Owner),
-            () => Assert.Equal(distilleryUpdateRequest.Type, distillery.Type),
-            () => Assert.Equal(distilleryUpdateRequest.FlavourProfile, distillery.FlavourProfile),
-            () => Assert.Equal(distilleryUpdateRequest.Active, distillery.Active));
+            () => Assert.Equal(distilleryRequest.Name, distillery.Name),
+            () => Assert.Equal(distilleryRequest.CountryId, distillery.CountryId),
+            () => Assert.Equal(distilleryRequest.CountryName, distillery.CountryName),
+            () => Assert.Equal(distilleryRequest.RegionId, distillery.RegionId),
+            () => Assert.Equal(distilleryRequest.RegionName, distillery.RegionName),
+            () => Assert.Equal(distilleryRequest.Founded, distillery.Founded),
+            () => Assert.Equal(distilleryRequest.Owner, distillery.Owner),
+            () => Assert.Equal(distilleryRequest.Type, distillery.Type),
+            () => Assert.Equal(distilleryRequest.FlavourProfile, distillery.FlavourProfile),
+            () => Assert.Equal(distilleryRequest.Active, distillery.Active));
     }
 
     [Fact]

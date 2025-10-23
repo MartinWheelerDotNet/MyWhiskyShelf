@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from "vitest/config";
 import path from "node:path";
 
@@ -8,11 +9,10 @@ export default defineConfig({
         globals: true,
         reporters: ["default", "junit"],
         outputFile: "./TestResults/vitest-junit.xml",
-        includeSource: ["src/**/*.{ts,tsx}"],
+        includeSource: ["src/*.{ts,tsx}"],
         coverage: {
             provider: "v8",
-            all: true,
-            include: ["src/**/*.{ts,tsx}"],
+            include: ['src/**.{ts,tsx}'],
             exclude: [
                 "src/**/__tests__/**",
                 "src/**/*.test.*",

@@ -8,7 +8,9 @@ public static class DistilleryRequestTestData
     {
         Name = "Name",
         CountryId = Guid.NewGuid(),
+        CountryName = "Country Name",
         RegionId = Guid.NewGuid(),
+        RegionName = "Region Name",
         Founded = 2000,
         Owner = "Owner",
         Type = "Type",
@@ -22,7 +24,9 @@ public static class DistilleryRequestTestData
     {
         Name = "Name",
         CountryId = Guid.NewGuid(),
+        CountryName = "Country Name",
         RegionId = Guid.NewGuid(),
+        RegionName = "Region Name",
         Founded = 2000,
         Owner = "Owner",
         Type = "Type",

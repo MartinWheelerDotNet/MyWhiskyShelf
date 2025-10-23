@@ -18,13 +18,13 @@ beforeEach(() => {
 const baseProps: DistilleryCardProps = {
     id: "ardbeg",
     name: "Ardbeg",
-    region: "Islay",
-    country: "Scotland",
+    countryName: "Scotland",
+    regionName: "Islay",
     founded: 1815,
+    type: "Malt",
     isFavorite: false,
     description: "Renowned for intensely peated single malts.",
-    tastingNotes: "Smoke, iodine, sea spray, citrus.",
-    whiskiesCount: 17,
+    tastingNotes: "Smoke, iodine, sea spray, citrus."
 };
 
 describe("DistilleryCard", () => {
@@ -32,38 +32,21 @@ describe("DistilleryCard", () => {
         renderWithTheme(<DistilleryCard {...baseProps} logoUrl={undefined} />);
 
         expect(screen.getByText("Ardbeg")).toBeInTheDocument();
-
         expect(screen.getByText("A")).toBeInTheDocument();
-
         expect(screen.getByText("Scotland")).toBeInTheDocument();
         expect(screen.getByText("Islay")).toBeInTheDocument();
-
-        expect(screen.getByText(/17 whiskies/i)).toBeInTheDocument();
+        
     });
 
-    it("pluralizes 'whisky' correctly when count is 1", () => {
-        renderWithTheme(<DistilleryCard {...baseProps} whiskiesCount={1} />);
-        expect(screen.getByText(/1 whisky/i)).toBeInTheDocument();
-    });
-
-    it("pluralizes 'whiskies' correctly when count is 0", () => {
-        renderWithTheme(<DistilleryCard {...baseProps} whiskiesCount={0} />);
-        expect(screen.getByText(/0 whiskies/i)).toBeInTheDocument();
-    });
-
-    it("does not render country/region/whiskies chips when omitted", () => {
+    it("does not render region chip when omitted", () => {
         renderWithTheme(
             <DistilleryCard
                 {...baseProps}
-                country={undefined}
-                region={undefined}
-                whiskiesCount={undefined}
+                regionName={undefined}
             />
         );
 
-        expect(screen.queryByText("Scotland")).not.toBeInTheDocument();
         expect(screen.queryByText("Islay")).not.toBeInTheDocument();
-        expect(screen.queryByText(/whisky|whiskies/i)).not.toBeInTheDocument();
     });
 
     it("favorite button calls onToggleFavorite with id", async () => {

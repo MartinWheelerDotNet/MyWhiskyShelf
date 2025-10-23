@@ -17,24 +17,24 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import FavoriteIcon from "@mui/icons-material/FavoriteBorder";
-import LocalDrinkOutlinedIcon from "@mui/icons-material/LocalDrinkOutlined";
 import PublicOutlinedIcon from "@mui/icons-material/PublicOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
+import GrainOutlinedIcon from "@mui/icons-material/GrainOutlined";
 import { styled } from "@mui/material/styles";
 
 export type DistilleryCardProps = Readonly<{
     id: string;
     name: string;
-    country?: string;
-    region?: string;
+    countryName: string;
+    regionName?: string;
     founded?: number | string;
     owner?: string;
+    type: string,
     isFavorite?: boolean;
     logoUrl?: string;
     onToggleFavorite?: (id: string) => void;
     description?: string;
     tastingNotes?: string;
-    whiskiesCount?: number;
 }>;
 
 type ExpandMoreProps = {
@@ -55,21 +55,22 @@ export default function DistilleryCard(
     {
         id, 
         name,
-        region,
-        country,
+        countryName,
+        regionName,
         founded,
         owner,
+        type,
         isFavorite = false,
         logoUrl,
         onToggleFavorite,
         description,
-        tastingNotes,
-        whiskiesCount 
+        tastingNotes 
     }: DistilleryCardProps) {
     
     const [expanded, setExpanded] = React.useState(false);
 
     return (
+        
         <Card
             elevation={8}
             sx={(theme) => ({
@@ -106,30 +107,30 @@ export default function DistilleryCard(
                 title={name}
                 subheader={
                     <Stack paddingTop={1} direction="row" gap={1} flexWrap="wrap" alignItems="center">
-                        {country && (
+                        {countryName && (
                             <Chip
                                 size="small"
                                 variant="outlined"
                                 icon={<PublicOutlinedIcon fontSize="small" />}
-                                label={country}
+                                label={countryName}
                                 sx={{ borderRadius: 999 }}
                             />
                         )}
-                        {region && (
+                        {regionName && (
                             <Chip
                                 size="small"
                                 variant="outlined"
                                 icon={<PlaceOutlinedIcon fontSize="small" />}
-                                label={region}
+                                label={regionName}
                                 sx={{ borderRadius: 999 }}
                             />
                         )}
-                        {typeof whiskiesCount === "number" && (
+                        {type && (
                             <Chip
                                 size="small"
-                                color="primary"
-                                icon={<LocalDrinkOutlinedIcon fontSize="small" />}
-                                label={`${whiskiesCount} whisk${whiskiesCount === 1 ? "y" : "ies"}`}
+                                variant="outlined"
+                                icon={<GrainOutlinedIcon fontSize="small" />}
+                                label={type}
                                 sx={{ borderRadius: 999 }}
                             />
                         )}

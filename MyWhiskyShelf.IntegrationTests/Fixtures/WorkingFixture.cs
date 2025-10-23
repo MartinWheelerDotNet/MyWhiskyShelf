@@ -17,7 +17,9 @@ namespace MyWhiskyShelf.IntegrationTests.Fixtures;
 public class WorkingFixture : IAsyncLifetime
 {
     public readonly Guid FirstSeededCountryId = Guid.Parse("caafacf4-c8f8-4b72-bfb7-226deafbfdd6");
+    public const string FirstSeededCountryName = "Geo Country 1";
     public readonly Guid SecondSeededCountryId = Guid.Parse("2cc817db-03e4-4221-ae63-ef7505ab400e");
+    private const string FirstSeededRegionName = "Geo Region 1";
     public readonly Guid FirstRegionFirstCountryId = Guid.NewGuid();
     public readonly Guid SecondRegionFirstCountryId = Guid.NewGuid();
     public readonly Guid FirstRegionSecondCountryId = Guid.NewGuid();
@@ -128,14 +130,14 @@ public class WorkingFixture : IAsyncLifetime
         var countryEntity = new CountryEntity
         {
             Id = countryId,
-            Name = "Geo Country 1",
+            Name = FirstSeededCountryName,
             Slug = "geo-country-1",
             IsActive = true,
             Regions =
             [
                 new RegionEntity
                 {
-                    Name = "Geo Region 1", Slug = "geo-region-1", IsActive = true,  CountryId = countryId
+                    Name = FirstSeededRegionName, Slug = "geo-region-1", IsActive = true,  CountryId = countryId
                 },
                 new RegionEntity
                 {
@@ -166,7 +168,7 @@ public class WorkingFixture : IAsyncLifetime
             new CountryEntity
             {
                 Id = FirstSeededCountryId,
-                Name = "Geo Country 1",
+                Name = FirstSeededCountryName,
                 Slug = "geo-country-1",
                 IsActive = true,
                 Regions =
@@ -175,7 +177,7 @@ public class WorkingFixture : IAsyncLifetime
                     {
                         Id = FirstRegionFirstCountryId,
                         CountryId = FirstSeededCountryId,
-                        Name = "Geo Region 1",
+                        Name = FirstSeededRegionName,
                         Slug = "geo-region-1",
                         IsActive = true
                         

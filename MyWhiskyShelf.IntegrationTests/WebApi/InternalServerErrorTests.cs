@@ -25,11 +25,11 @@ public class InternalServerErrorTests(BrokenFixture fixture)
             },
             {
                 "distillery", "create", "/distilleries", HttpMethod.Post.Method,
-                new RequestBodyWrapper(DistilleryRequestTestData.Create(Guid.NewGuid(), name: "Create Error"))
+                new RequestBodyWrapper(DistilleryRequestTestData.Create(Guid.NewGuid(), "Error", name: "Create Error"))
             },
             {
                 "distillery", "update", $"/distilleries/{Guid.NewGuid()}", HttpMethod.Put.Method,
-                new RequestBodyWrapper(DistilleryRequestTestData.Update(Guid.NewGuid(), name: "Update Error"))
+                new RequestBodyWrapper(DistilleryRequestTestData.Update(Guid.NewGuid(), "Error", name: "Update Error"))
             },
             {
                 "whisky-bottle", "get-by-id", $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Get.Method, null

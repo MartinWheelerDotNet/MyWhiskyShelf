@@ -11,7 +11,7 @@ public static class FixtureFactory
         "MYWHISKYSHELF_RUN_MIGRATIONS=true",
         "MYWHISKYSHELF_DATA_SEEDING_ENABLED=false",
         "MYWHISKYSHELF_UI_ENABLED=false",
-        "MYWHISKYSHELF_PG_WEB_ENABLED=false",
+        "MYWHISKYSHELF_PG_WEB_ENABLED=true",
         "MYWHISKYSHELF_REDIS_INSIGHT_ENABLED=false"
     ];
 

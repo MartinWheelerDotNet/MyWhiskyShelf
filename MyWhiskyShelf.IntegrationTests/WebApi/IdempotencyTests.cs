@@ -14,13 +14,14 @@ namespace MyWhiskyShelf.IntegrationTests.WebApi;
 public class IdempotencyTests(WorkingFixture fixture)
 {
     private static readonly Guid FirstSeededCountryId = Guid.Parse("caafacf4-c8f8-4b72-bfb7-226deafbfdd6");
+    private const string FirstSeededCountryName = "Geo Country 1";
     
     private static readonly List<(EntityType EntityType, string Method, string Path, object? Body)> EndpointData =
     [
         (EntityType.Distillery, HttpMethod.Post.Method, "/distilleries",
-            DistilleryRequestTestData.Create(FirstSeededCountryId)),
+            DistilleryRequestTestData.Create(FirstSeededCountryId, FirstSeededCountryName, name: "Create")),
         (EntityType.Distillery, HttpMethod.Put.Method, "/distilleries/{Id}",
-            DistilleryRequestTestData.Update(FirstSeededCountryId, name: "Update")),
+            DistilleryRequestTestData.Update(FirstSeededCountryId, FirstSeededCountryName, name: "Update")),
         (EntityType.Distillery, HttpMethod.Delete.Method, "/distilleries/{Id}",
             null),
         (EntityType.WhiskyBottle, HttpMethod.Post.Method, "/whisky-bottles",
