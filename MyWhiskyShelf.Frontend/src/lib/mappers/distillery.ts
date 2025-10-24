@@ -9,8 +9,10 @@ export function mapToDistillery(response: DistilleryResponse) : Distillery {
     return {
         id: response.id,
         name: response.name,
-        country: response.country ?? undefined,
-        region: response.region ?? undefined,
+        countryId: response.countryId,
+        countryName: response.countryName,
+        regionId: response.regionId ?? undefined,
+        regionName: response.regionName ?? undefined,
         founded: response.founded ?? undefined,
         owner: response.owner ?? undefined,
         type: response.type ?? undefined,
@@ -25,10 +27,11 @@ export function mapToDistilleryCardProps(domain: Distillery) : DistilleryCardPro
     return {
         id: domain.id,
         name: domain.name,
-        country: domain.country ?? undefined,
-        region: domain.region ?? undefined,
+        countryName: domain.countryName,
+        regionName: domain.regionName ?? undefined,
         founded: domain.founded ?? undefined,
         owner: domain.owner ?? undefined,
+        type: domain.type,
         description: domain.description ?? undefined,
         tastingNotes: domain.tastingNotes ?? undefined,
     }

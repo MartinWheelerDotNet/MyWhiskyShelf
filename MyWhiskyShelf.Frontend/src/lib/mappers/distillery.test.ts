@@ -4,10 +4,12 @@ import { mapToDistillery, mapToDistilleryCardProps } from "./distillery";
 describe("mapToDistillery (API → Domain)", () => {
     it("maps all fields and converts nulls to undefined", () => {
         const api = {
-            id: "abc",
+            id: "123",
             name: "Ardbeg",
-            country: "Scotland",
-            region: "Islay",
+            countryId: "456",
+            countryName: "Scotland",
+            regionId: "789",
+            regionName: "Islay",
             founded: 1815,
             owner: "LVMH",
             type: "Single Malt",
@@ -20,10 +22,12 @@ describe("mapToDistillery (API → Domain)", () => {
         const domain = mapToDistillery(api);
         expect(domain).not.toBe(api); // new object
         expect(domain).toEqual({
-            id: "abc",
+            id: "123",
             name: "Ardbeg",
-            country: "Scotland",
-            region: "Islay",
+            countryId: "456",
+            countryName: "Scotland",
+            regionId: "789",
+            regionName: "Islay",
             founded: 1815,
             owner: "LVMH",
             type: "Single Malt",
@@ -36,10 +40,12 @@ describe("mapToDistillery (API → Domain)", () => {
 
     it("normalizes nullable fields to undefined", () => {
         const apiWithNulls = {
-            id: "id1",
-            name: "Nullsburg",
-            country: null,
-            region: null,
+            id: "123",
+            name: "Ardbeg",
+            countryId: "456",
+            countryName: "Scotland",
+            regionId: null,
+            regionName: null,
             founded: null,
             owner: null,
             type: null,
@@ -51,10 +57,12 @@ describe("mapToDistillery (API → Domain)", () => {
 
         const domain = mapToDistillery(apiWithNulls);
         expect(domain).toEqual({
-            id: "id1",
-            name: "Nullsburg",
-            country: undefined,
-            region: undefined,
+            id: "123",
+            name: "Ardbeg",
+            countryId: "456",
+            countryName: "Scotland",
+            regionId: undefined,
+            regionName: undefined,
             founded: undefined,
             owner: undefined,
             type: undefined,
@@ -69,13 +77,15 @@ describe("mapToDistillery (API → Domain)", () => {
 describe("mapToDistilleryCardProps (Domain → CardProps)", () => {
     it("picks and normalizes only the fields needed by the card", () => {
         const domain = {
-            id: "xyz",
+            id: "123",
             name: "Lagavulin",
-            country: "Scotland",
-            region: "Islay",
+            countryId: "456",
+            countryName: "Scotland",
+            regionId: "789",
+            regionName: "Islay",
             founded: 1816,
             owner: "Diageo",
-            type: "Single Malt",
+            type: "Malt",
             description: "Rich smoke",
             tastingNotes: "Smoke, iodine",
             flavourProfile: { sweet: 2, smoky: 5, fruity: 1, spicy: 2, malty: 2 },
@@ -84,28 +94,31 @@ describe("mapToDistilleryCardProps (Domain → CardProps)", () => {
 
         const props = mapToDistilleryCardProps(domain);
         expect(props).toEqual({
-            id: "xyz",
+            id: "123",
             name: "Lagavulin",
-            country: "Scotland",
-            region: "Islay",
+            countryName: "Scotland",
+            regionName: "Islay",
             founded: 1816,
             owner: "Diageo",
             description: "Rich smoke",
             tastingNotes: "Smoke, iodine",
+            type: "Malt"
         });
 
-        // Ensure excluded fields are not present
-        expect("type" in props).toBe(false);
+        expect("regionId" in props).toBe(false);
+        expect("countryId" in props).toBe(false);
         expect("active" in props).toBe(false);
         expect("flavourProfile" in props).toBe(false);
     });
 
     it("converts null/undefined in domain to undefined in props", () => {
         const domain = {
-            id: "n1",
-            name: "Nowhere",
-            country: undefined,
-            region: null as unknown as undefined,
+            id: "123",
+            name: "Ardbeg",
+            countryId: "456",
+            countryName: "Scotland",
+            regionId: null,
+            regionName: null as unknown as undefined,
             founded: undefined,
             owner: null as unknown as undefined,
             type: undefined,
@@ -117,12 +130,13 @@ describe("mapToDistilleryCardProps (Domain → CardProps)", () => {
 
         const props = mapToDistilleryCardProps(domain as any);
         expect(props).toEqual({
-            id: "n1",
-            name: "Nowhere",
-            country: undefined,
-            region: undefined,
+            id: "123",
+            name: "Ardbeg",
+            countryName: "Scotland",
+            regionName: undefined,
             founded: undefined,
             owner: undefined,
+            type: undefined,
             description: undefined,
             tastingNotes: undefined,
         });

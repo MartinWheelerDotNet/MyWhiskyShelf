@@ -18,13 +18,13 @@ import { Distillery } from "@/lib/domain/types";
 export default function DistilleriesDashboard() {
     const {
         items,
-        loading,          // <-- use this for initial skeletons
+        loading,
         isPageLoading,
         error,
         hasMore,
         refresh,
         setSentinel,
-    } = useInfiniteDistilleries({ initialAmount: 10 }); // <-- updated signature
+    } = useInfiniteDistilleries({ initialAmount: 10 });
 
     const {
         query, setQuery,
@@ -59,9 +59,8 @@ export default function DistilleriesDashboard() {
             />
 
             <DistilleriesList
-                items={filteredItems as Distillery[]} // pass raw items; list maps to card props internally
-                getId={(x: any) => String(x?.id ?? x?.Id ?? x?.distilleryId ?? "")}
-                initialLoading={loading && items.length === 0}  // <-- initial load uses `loading`
+                items={filteredItems as Distillery[]}
+                initialLoading={loading && items.length === 0}
                 showMoreSkeletons={hasMore}
                 initialSkeletonCount={6}
                 moreSkeletonCount={3}

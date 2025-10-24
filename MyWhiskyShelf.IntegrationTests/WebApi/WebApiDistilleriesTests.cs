@@ -238,7 +238,9 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Post, "/distilleries",
-            DistilleryRequestTestData.Create(fixture.FirstSeededCountryId, null, "Distillery D"));
+            DistilleryRequestTestData.Create(fixture.FirstSeededCountryId,
+                WorkingFixture.FirstSeededCountryName,
+                name: "Distillery D"));
         
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var result = await httpClient.SendAsync(request);
@@ -256,7 +258,10 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Post, "/distilleries",
-            DistilleryRequestTestData.Create(fixture.FirstSeededCountryId, null, duplicatedName));
+            DistilleryRequestTestData.Create(
+                fixture.FirstSeededCountryId,
+                WorkingFixture.FirstSeededCountryName,
+                name: duplicatedName));
         
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var result = await httpClient.SendAsync(request);
@@ -269,7 +274,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
     {
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Post, "/distilleries",
-            DistilleryRequestTestData.Create(Guid.NewGuid(), null, "X"));
+            DistilleryRequestTestData.Create(Guid.NewGuid(), "Unknown"));
         
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var result = await httpClient.SendAsync(request);
@@ -293,7 +298,10 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Post, "/distilleries",
-            DistilleryRequestTestData.Create(fixture.FirstSeededCountryId, fixture.SecondSeededCountryId));
+            DistilleryRequestTestData.Create(
+                fixture.FirstSeededCountryId,
+                WorkingFixture.FirstSeededCountryName,
+                fixture.SecondSeededCountryId));
         
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var result = await httpClient.SendAsync(request);
@@ -317,7 +325,11 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         var distillery = distilleries.Single();
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Put, $"/distilleries/{distillery.Id}",
-            DistilleryRequestTestData.Update(fixture.FirstSeededCountryId, null, distillery.Name));
+            DistilleryRequestTestData.Update(
+                fixture.FirstSeededCountryId,
+                WorkingFixture.FirstSeededCountryName,
+                null,
+                distillery.Name));
        
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var result = await httpClient.SendAsync(request);
@@ -331,7 +343,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Put, $"/distilleries/{Guid.NewGuid()}",
-            DistilleryRequestTestData.Update(fixture.FirstSeededCountryId, null, "X"));
+            DistilleryRequestTestData.Update(fixture.FirstSeededCountryId, WorkingFixture.FirstSeededCountryName));
         
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var result = await httpClient.SendAsync(request);
@@ -347,7 +359,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
 
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Put, $"/distilleries/{distillery.Id}",
-            DistilleryRequestTestData.Update(Guid.NewGuid(), null, distillery.Name));
+            DistilleryRequestTestData.Update(Guid.NewGuid(), "Unknown", name: distillery.Name));
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var result = await httpClient.SendAsync(request);
@@ -370,7 +382,11 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         var distillery = distilleries.Single();
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Put, $"/distilleries/{distillery.Id}",
-            DistilleryRequestTestData.Update(fixture.FirstSeededCountryId, fixture.FirstRegionSecondCountryId, distillery.Name));
+            DistilleryRequestTestData.Update(
+                fixture.FirstSeededCountryId,
+                WorkingFixture.FirstSeededCountryName,
+                fixture.FirstRegionSecondCountryId,
+                distillery.Name));
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var result = await httpClient.SendAsync(request);

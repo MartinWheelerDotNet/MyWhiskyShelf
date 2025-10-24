@@ -34,7 +34,16 @@ public sealed class DataSeederHostedService(
         
         await SeedGeoDataAsync(dbContext);
         
-        var entities = distilleries.Select(d => d.ToEntity()).ToList();
+        var entities = distilleries.Select(d =>
+        {
+            var distilleryWithGeoData = d with
+            {
+                RegionName = dbContext.Regions.First(r => r.Id == d.RegionId).Name,
+                CountryName = dbContext.Countries.First(c => c.Id == d.CountryId).Name
+            };
+            return distilleryWithGeoData.ToEntity();
+        }).ToList();
+        
         dbContext.Distilleries.AddRange(entities);
         await dbContext.SaveChangesAsync(cancellationToken);
 

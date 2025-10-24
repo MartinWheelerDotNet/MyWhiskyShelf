@@ -1,8 +1,10 @@
 export interface DistilleryResponse {
     id: string;
     name: string;
-    country: string;
-    region: string;
+    countryId: string;
+    countryName: string;
+    regionId: string;
+    regionName: string;
     founded: number;
     owner: string;
     type: string;

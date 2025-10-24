@@ -82,7 +82,6 @@ export function useInfiniteDistilleries(options?: {
 
         try {
             const res = await getAllDistilleries({ cursor: state.cursor, amount: amountRef.current });
-
             setState(s => {
                 const seen = new Set(s.items.map(getId));
                 const merged = s.items.concat(res.items.filter((it: Distillery) => !seen.has(getId(it))));
