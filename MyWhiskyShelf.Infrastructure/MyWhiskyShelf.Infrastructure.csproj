@@ -6,19 +6,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\MyWhiskyShelf.Application\MyWhiskyShelf.Application.csproj"/>
+        <ProjectReference Include="..\MyWhiskyShelf.Application\MyWhiskyShelf.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.1"/>
-        <PackageReference Include="JetBrains.Annotations" Version="2025.2.2"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.10"/>
-        <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.39"/>
-        <PackageReference Include="Pgvector.EntityFrameworkCore" Version="0.2.2"/>
-        <PackageReference Include="StackExchange.Redis" Version="2.9.32"/>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.2" />
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.2" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.10" />
+        <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.39" />
+        <PackageReference Include="Pgvector.EntityFrameworkCore" Version="0.2.2" />
+        <PackageReference Include="StackExchange.Redis" Version="2.9.32" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Persistence\Converters\"/>
+        <Folder Include="Persistence\Converters\" />
     </ItemGroup>
 </Project>
