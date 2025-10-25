@@ -9,10 +9,8 @@ import { keycloakAuthProvider, type AuthProvider } from "@/auth/keycloakAdapter"
 
 type RetriableConfig = InternalAxiosRequestConfig & { _retry?: boolean };
 
-const apiBaseUrl = import.meta.env?.VITE_WEBAPI_URL as string | undefined;
-
 export const axiosClient: AxiosInstance = axios.create({
-    baseURL: apiBaseUrl,
+    baseURL: "/api",
     headers: { "Content-Type": "application/json" },
 });
 
