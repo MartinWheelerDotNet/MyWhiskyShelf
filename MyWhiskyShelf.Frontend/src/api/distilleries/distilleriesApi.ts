@@ -9,17 +9,20 @@ import { mapToDistillery } from "@/lib/mappers/distillery";
 // @ts-ignore
 import type { Distillery } from "@/lib/domain/types";
 
-type GetAllParams = {
+type DistilleryFilterParams = {
     cursor?: string | null;
     amount?: number;
+    pattern?: string | undefined;
+    countryId?: string | undefined;
+    regionId?: string | undefined;
     signal?: AbortSignal;
 };
 
 export async function getAllDistilleries(
-    { cursor = null, amount = 10, signal }: GetAllParams = {}
+    { pattern, cursor = null, amount = 10, countryId, regionId, signal }: DistilleryFilterParams = {}
 ): Promise<CursorPagedResponse<Distillery>> {
     const res = await axiosClient.get<CursorPagedResponse<DistilleryResponse>>("/distilleries", {
-        params: { amount, ...(cursor ? { cursor } : {}) },
+        params: { pattern, amount, countryId, regionId, ...(cursor ? { cursor } : {}) },
         signal,
     });
 

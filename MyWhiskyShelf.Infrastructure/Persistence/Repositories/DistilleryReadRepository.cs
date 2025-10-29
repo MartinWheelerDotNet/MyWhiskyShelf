@@ -6,10 +6,9 @@ using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 using MyWhiskyShelf.Infrastructure.Persistence.Projections;
 
+
 namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
 
-// Repository level tests are covered by integration tests, and specific functionality, such as postgres functions
-// cannot be tested against sqlite / in-memory db.
 [ExcludeFromCodeCoverage]
 public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) : IDistilleryReadRepository
 {
@@ -33,7 +32,6 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
         DistilleryFilterOptions options,
         CancellationToken ct = default)
     {
-
         var query = dbContext.Distilleries.AsNoTracking();
 
         if (options.CountryId is { } countryId)
@@ -44,15 +42,18 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
 
         if (!string.IsNullOrWhiteSpace(options.NameSearchPattern))
         {
-            var pattern = $"%{options.NameSearchPattern.Trim()}%";
-            query = query.Where(d => EF.Functions.ILike(d.Name, pattern));
+            var term = options.NameSearchPattern.Trim();
+            var like = $"%{term}%";
+            query = query.Where(d =>
+                EF.Functions.ILike(d.Name, like) ||
+                EF.Functions.TrigramsSimilarity(d.Name, term) >= 0.3);
         }
 
         query = query.OrderBy(d => d.Name);
 
         if (!string.IsNullOrWhiteSpace(options.AfterName))
             query = query.Where(d => string.Compare(d.Name, options.AfterName) > 0);
-        
+
         return await query
             .Take(options.Amount)
             .Select(DistilleryProjections.ToDistilleryDomain)

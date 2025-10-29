@@ -50,7 +50,7 @@ public static class WebApplicationBuilderExtensions
             .AddPolicy(Policies.WriteDistilleries, policy => policy.RequireRole(Roles.Admin))
             .AddPolicy(Policies.ReadWhiskyBottles, policy => policy.RequireRole(Roles.User, Roles.Admin))
             .AddPolicy(Policies.WriteWhiskyBottles, policy => policy.RequireRole(Roles.User, Roles.Admin))
-            .AddPolicy(Policies.ReadGeoData, policy => policy.RequireRole(Roles.Admin))
+            .AddPolicy(Policies.ReadGeoData, policy => policy.RequireRole(Roles.User, Roles.Admin))
             .AddPolicy(Policies.WriteGeoData, policy => policy.RequireRole(Roles.Admin))
             .AddFallbackPolicy("default", policy => policy.RequireAuthenticatedUser());
 

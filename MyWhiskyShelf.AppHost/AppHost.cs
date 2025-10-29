@@ -49,7 +49,6 @@ if (builder.Configuration.GetValue("MYWHISKYSHELF_UI_ENABLED", true))
     builder
         .AddNpmApp("UI", "../MyWhiskyShelf.Frontend")
         .WithEnvironment("BROWSER", "none")
-        .WithEnvironment("VITE_WEBAPI_URL", webApi.GetEndpoint("https"))
         .WithEnvironment("VITE_KEYCLOAK_URL", keycloak.GetEndpoint("http"))
         .WithEnvironment("VITE_KEYCLOAK_REALM", "mywhiskyshelf")
         .WithEnvironment("VITE_KEYCLOAK_CLIENT_ID", "mywhiskyshelf-frontend")

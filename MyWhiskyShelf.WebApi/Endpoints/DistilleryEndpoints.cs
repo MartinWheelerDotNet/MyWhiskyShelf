@@ -106,12 +106,12 @@ public static class DistilleryEndpoints
                     [FromQuery(Name = "amount")] int amount = 10,
                     [FromQuery(Name = "countryId")] Guid? countryId = null,
                     [FromQuery(Name = "regionId")] Guid? regionId = null,
-                    [FromQuery(Name = "nameSearchPattern")] string? nameSearchPattern = null) =>
+                    [FromQuery(Name = "pattern")] string? pattern = null) =>
                 {
                     var result = !string.IsNullOrWhiteSpace(cursor)
                         ? await service.GetAllAsync(amount, cursor, ct)
                         : await service.GetAllAsync(
-                            new DistilleryFilterOptions(countryId, regionId, nameSearchPattern?.Trim(), amount),
+                            new DistilleryFilterOptions(countryId, regionId, pattern?.Trim(), amount),
                             ct);
                     
                     return result.Outcome switch
