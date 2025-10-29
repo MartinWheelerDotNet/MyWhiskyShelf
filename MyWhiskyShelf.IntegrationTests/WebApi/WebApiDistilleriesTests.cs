@@ -111,7 +111,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         await fixture.SeedDistilleriesAsync(3);
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
 
-        var result = await httpClient.GetAsync("/distilleries?amount=10&nameSearchPattern=zzz");
+        var result = await httpClient.GetAsync("/distilleries?amount=10&pattern=zzz");
         var pagedResponse = await result.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
 
         Assert.Empty(pagedResponse!.Items);
@@ -128,7 +128,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         ]);
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        var result = await httpClient.GetAsync("/distilleries?amount=10&nameSearchPattern=alpha");
+        var result = await httpClient.GetAsync("/distilleries?amount=10&pattern=alpha");
         var pagedResponse = await result.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
 
         Assert.Single(pagedResponse!.Items, d => d.Name == "Alpha");
@@ -144,7 +144,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
         ]);
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
-        var result = await httpClient.GetAsync("/distilleries?amount=10&nameSearchPattern=Two");
+        var result = await httpClient.GetAsync("/distilleries?amount=10&pattern=Two");
         var pagedResponse = await result.Content.ReadFromJsonAsync<CursorPagedResponse<DistilleryResponse>>();
 
         var expected = new[] { "Two A", "Two B" };

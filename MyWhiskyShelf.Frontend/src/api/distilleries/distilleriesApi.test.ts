@@ -27,8 +27,7 @@ describe("distilleriesApi.getAllDistilleries", () => {
         const [url, opts] = getMock.mock.calls[0];
         expect(url).toBe("/distilleries");
         expect(opts).toEqual(
-            expect.objectContaining({
-                // default request now uses { amount } only (no page)
+            expect.objectContaining({               
                 params: { amount: 10 },
             })
         );
@@ -42,8 +41,10 @@ describe("distilleriesApi.getAllDistilleries", () => {
         getMock.mockResolvedValue({ data: payload });
 
         const { getAllDistilleries } = await import("./distilleriesApi");
-        // new signature: pass an options object with cursor/amount/signal
-        const res = await getAllDistilleries({ cursor: "CURSOR123", amount: 20, signal: ac.signal });
+        const res = await getAllDistilleries({
+            cursor: "CURSOR123",
+            amount: 20,
+            signal: ac.signal });
 
         const [url, opts] = getMock.mock.calls[0];
         expect(url).toBe("/distilleries");
