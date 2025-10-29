@@ -20,7 +20,7 @@
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.2",
     "@react-keycloak/web": "^3.4.0",
-    "axios": "^1.12.2",
+    "axios": "^1.13.1",
     "keycloak-js": "^26.2.1",
     "react": "^19.1.1",
     "react-dom": "^19.2.0"
