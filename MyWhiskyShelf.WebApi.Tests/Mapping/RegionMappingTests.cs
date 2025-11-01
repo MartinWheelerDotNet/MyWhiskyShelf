@@ -1,14 +1,11 @@
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.WebApi.Contracts.GeoResponse;
 using MyWhiskyShelf.WebApi.Mapping;
-using Slugify;
 
 namespace MyWhiskyShelf.WebApi.Tests.Mapping;
 
 public class RegionMappingTests
 {
-    private static readonly SlugHelper SlugHelper = new();
-
     [Fact]
     public void When_MappingRegionToResponseWithAllFields_Expect_RegionResponseMatches()
     {
@@ -20,7 +17,6 @@ public class RegionMappingTests
             Id = id,
             CountryId = countryId,
             Name = "Region",
-            Slug = "region",
             IsActive = true
         };
         var response = domain.ToResponse();
@@ -29,7 +25,6 @@ public class RegionMappingTests
             () => Assert.Equal(domain.Id, response.Id),
             () => Assert.Equal(domain.CountryId, response.CountryId),
             () => Assert.Equal(domain.Name, response.Name),
-            () => Assert.Equal(domain.Slug, response.Slug),
             () => Assert.Equal(domain.IsActive, response.IsActive)
         );
     }
@@ -53,7 +48,6 @@ public class RegionMappingTests
             () => Assert.Equal(request.Id, domain.Id),
             () => Assert.Equal(request.CountryId, domain.CountryId),
             () => Assert.Equal(request.Name, domain.Name),
-            () => Assert.Equal(SlugHelper.GenerateSlug(request.Name), domain.Slug),
             () => Assert.Equal(request.IsActive, domain.IsActive)
         );
     }
@@ -69,7 +63,6 @@ public class RegionMappingTests
             Id = id,
             CountryId = countryId,
             Name = "Region",
-            Slug = "region",
             IsActive = true
         };
 
@@ -80,7 +73,6 @@ public class RegionMappingTests
             () => Assert.Equal(request.Id, domain.Id),
             () => Assert.Equal(request.CountryId, domain.CountryId),
             () => Assert.Equal(request.Name, domain.Name),
-            () => Assert.Equal(request.Slug, domain.Slug),
             () => Assert.Equal(request.IsActive, domain.IsActive)
         );
     }

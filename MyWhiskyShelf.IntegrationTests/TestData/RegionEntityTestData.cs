@@ -4,12 +4,11 @@ namespace MyWhiskyShelf.IntegrationTests.TestData;
 
 public static class RegionEntityTestData
 {
-    public static RegionEntity Generic(string name, string slug, Guid countryId)
+    public static RegionEntity Generic(string name, Guid countryId)
     {
         return new RegionEntity
         {
             Name = name,
-            Slug = slug,
             IsActive = true,
             CountryId = countryId
         };

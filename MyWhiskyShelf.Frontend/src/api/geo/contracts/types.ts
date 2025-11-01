@@ -1,7 +1,6 @@
 export type CountryResponse = {
     id: string;
     name: string;
-    slug: string;
     isActive: boolean;
     regions: RegionResponse[];
 };
@@ -10,14 +9,12 @@ export type RegionResponse = {
     id: string;
     countryId: string;
     name: string;
-    slug: string;
     isActive: boolean;
 };
 
 export type Country = {
     id: string;
     name: string;
-    slug: string;
     isActive: boolean;
 };
 
@@ -25,7 +22,6 @@ export type Region = {
     id: string;
     countryId: string;
     name: string;
-    slug: string;
     isActive: boolean;
 };
 

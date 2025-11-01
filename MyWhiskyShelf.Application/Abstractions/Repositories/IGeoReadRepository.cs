@@ -8,10 +8,8 @@ public interface IGeoReadRepository
 
     Task<Country?> GetCountryByIdAsync(Guid id, CancellationToken ct = default);
     Task<bool> CountryExistsByNameAsync(string name, CancellationToken ct = default);
-    Task<bool> CountryExistsBySlugAsync(string slug, CancellationToken ct = default);
     Task<bool> CountryExistsByIdAsync(Guid id, CancellationToken ct = default);
 
     Task<Region?> GetRegionByIdAsync(Guid id, CancellationToken ct = default);
     Task<bool> RegionExistsByNameAndCountryIdAsync(string name, Guid countryId, CancellationToken ct = default);
-    Task<bool> RegionExistsBySlugAndCountryIdAsync(string slug, Guid countryId, CancellationToken ct = default);
 }

@@ -18,15 +18,9 @@ public sealed class CountryEntityConfiguration : IEntityTypeConfiguration<Countr
             .HasMaxLength(50)
             .IsRequired();
 
-        b.Property(e => e.Slug)
-            .HasColumnType("citext")
-            .HasMaxLength(50)
-            .IsRequired();
-
         b.Property(e => e.IsActive).IsRequired();
 
         b.HasIndex(e => e.Name).IsUnique();
-        b.HasIndex(e => e.Slug).IsUnique();
 
         b.HasMany(e => e.Regions)
             .WithOne(r => r.Country)

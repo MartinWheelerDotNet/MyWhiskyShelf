@@ -23,7 +23,6 @@ public class CountryProjectionsTests
         {
             Id = countryId,
             Name = "Country",
-            Slug = "country",
             IsActive = false,
             Regions =
             [
@@ -38,7 +37,6 @@ public class CountryProjectionsTests
         Assert.Multiple(
             () => Assert.Equal(countryEntity.Id, country.Id),
             () => Assert.Equal(countryEntity.Name, country.Name),
-            () => Assert.Equal(countryEntity.Slug, country.Slug),
             () => Assert.Equal(countryEntity.IsActive, country.IsActive),
             () => Assert.Equal(expectedRegions.OrderBy(er => er.Name).ThenBy(er => er.Id), country.Regions));
     }

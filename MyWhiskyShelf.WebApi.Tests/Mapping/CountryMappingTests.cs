@@ -1,14 +1,11 @@
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.WebApi.Contracts.GeoResponse;
 using MyWhiskyShelf.WebApi.Mapping;
-using Slugify;
 
 namespace MyWhiskyShelf.WebApi.Tests.Mapping;
 
 public class CountryMappingTests
 {
-    private static readonly SlugHelper SlugHelper = new();
-
     [Fact]
     public void When_MappingCountryToResponseWithAllFields_Expect_CountryResponseMatches()
     {
@@ -20,7 +17,6 @@ public class CountryMappingTests
         {
             Id = countryId,
             Name = "Country",
-            Slug = "country",
             IsActive = true,
             Regions =
             [
@@ -29,7 +25,6 @@ public class CountryMappingTests
                     Id = firstRegionId,
                     CountryId = countryId,
                     Name = "First Region",
-                    Slug = "first-region",
                     IsActive = true
                 },
                 new Region
@@ -37,7 +32,6 @@ public class CountryMappingTests
                     Id = secondRegionId,
                     CountryId = countryId,
                     Name = "Second Region",
-                    Slug = "second-region",
                     IsActive = false
                 }
             ]
@@ -48,7 +42,6 @@ public class CountryMappingTests
         Assert.Multiple(
             () => Assert.Equal(domain.Id, response.Id),
             () => Assert.Equal(domain.Name, response.Name),
-            () => Assert.Equal(domain.Slug, response.Slug),
             () => Assert.Equal(domain.IsActive, response.IsActive),
             () => Assert.Equal(domain.Regions.Count, response.Regions.Count),
             () =>
@@ -59,7 +52,6 @@ public class CountryMappingTests
                     () => Assert.Equal(firstRegionDomain.Id, firstRegionResponse.Id),
                     () => Assert.Equal(firstRegionDomain.CountryId, firstRegionResponse.CountryId),
                     () => Assert.Equal(firstRegionDomain.Name, firstRegionResponse.Name),
-                    () => Assert.Equal(firstRegionDomain.Slug, firstRegionResponse.Slug),
                     () => Assert.Equal(firstRegionDomain.IsActive, firstRegionResponse.IsActive)
                 );
             },
@@ -71,7 +63,6 @@ public class CountryMappingTests
                     () => Assert.Equal(secondRegionDomain.Id, secondRegionResponse.Id),
                     () => Assert.Equal(secondRegionDomain.CountryId, secondRegionResponse.CountryId),
                     () => Assert.Equal(secondRegionDomain.Name, secondRegionResponse.Name),
-                    () => Assert.Equal(secondRegionDomain.Slug, secondRegionResponse.Slug),
                     () => Assert.Equal(secondRegionDomain.IsActive, secondRegionResponse.IsActive)
                 );
             }
@@ -92,7 +83,6 @@ public class CountryMappingTests
         Assert.Multiple(
             () => Assert.Equal(Guid.Empty, domain.Id),
             () => Assert.Equal(request.Name, domain.Name),
-            () => Assert.Equal(SlugHelper.GenerateSlug(request.Name), domain.Slug),
             () => Assert.Equal(request.IsActive, domain.IsActive)
         );
     }
@@ -105,7 +95,6 @@ public class CountryMappingTests
         {
             Id = id,
             Name = "Country",
-            Slug = "country",
             IsActive = false
         };
 
@@ -114,7 +103,6 @@ public class CountryMappingTests
         Assert.Multiple(
             () => Assert.Equal(request.Id, domain.Id),
             () => Assert.Equal(request.Name, domain.Name),
-            () => Assert.Equal(request.Slug, domain.Slug),
             () => Assert.Equal(request.IsActive, domain.IsActive)
         );
     }

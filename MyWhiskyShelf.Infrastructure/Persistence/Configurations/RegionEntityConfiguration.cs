@@ -18,14 +18,8 @@ public sealed class RegionEntityConfiguration : IEntityTypeConfiguration<RegionE
             .HasMaxLength(50)
             .IsRequired();
 
-        b.Property(e => e.Slug)
-            .HasColumnType("citext")
-            .HasMaxLength(50)
-            .IsRequired();
-
         b.Property(e => e.IsActive).IsRequired();
 
         b.HasIndex(e => new { e.CountryId, e.Name }).IsUnique();
-        b.HasIndex(e => new { e.CountryId, e.Slug }).IsUnique();
     }
 }

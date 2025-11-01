@@ -167,20 +167,18 @@ public class IdempotencyTests(WorkingFixture fixture)
 
     private async Task<Guid> SeedCountry(string method)
     {
-        var entity = CountryEntityTestData.Generic($"Country {method}", $"country-{method.ToLower()}");
+        var entity = CountryEntityTestData.Generic($"Country {method}");
         var responses = await fixture.SeedCountriesAsync([entity]);
         return responses.Single().Id;
     }
 
     private async Task<Guid> SeedRegion(string method)
     {
-        var country = CountryEntityTestData.Generic(
-            $"Region Country {method}",
-            $"region-country-{method.ToLower()}");
+        var country = CountryEntityTestData.Generic($"Region Country {method}");
         country.Id = Guid.Parse("3b3830b8-081c-4503-8ec4-a623e4cc28bc");
         await fixture.SeedCountriesAsync([country]);
 
-        var region = RegionEntityTestData.Generic($"Region {method}", $"region-{method.ToLower()}", country.Id);
+        var region = RegionEntityTestData.Generic($"Region {method}", country.Id);
         var responses = await fixture.SeedRegionsAsync([region]);
         return responses.Single().Id;
     }

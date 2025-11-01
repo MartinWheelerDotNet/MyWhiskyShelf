@@ -41,17 +41,9 @@ namespace MyWhiskyShelf.Migrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("citext");
 
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("citext");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("Slug")
                         .IsUnique();
 
                     b.ToTable("Countries");
@@ -139,17 +131,9 @@ namespace MyWhiskyShelf.Migrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("citext");
 
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("citext");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId", "Name")
-                        .IsUnique();
-
-                    b.HasIndex("CountryId", "Slug")
                         .IsUnique();
 
                     b.ToTable("Regions");

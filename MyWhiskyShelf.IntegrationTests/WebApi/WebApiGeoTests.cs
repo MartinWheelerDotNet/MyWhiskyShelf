@@ -67,7 +67,7 @@ public class WebApiGeoTests(WorkingFixture fixture) : IAsyncLifetime
     [Fact]
     public async Task When_CreateCountryAndCountryExists_ExpectConflict()
     {
-        await fixture.SeedCountriesAsync([CountryEntityTestData.Generic("Conflict", "conflict")]);
+        await fixture.SeedCountriesAsync([CountryEntityTestData.Generic("Conflict")]);
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Post,
@@ -82,7 +82,7 @@ public class WebApiGeoTests(WorkingFixture fixture) : IAsyncLifetime
     [Fact]
     public async Task When_CreateRegionAndCountryExistsAndRegionCreated_ExpectOkWithRegion()
     {
-        var countries = await fixture.SeedCountriesAsync([CountryEntityTestData.Generic("Exists", "exists")]);
+        var countries = await fixture.SeedCountriesAsync([CountryEntityTestData.Generic("Exists")]);
         var country = countries.Single();
 
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
@@ -102,9 +102,9 @@ public class WebApiGeoTests(WorkingFixture fixture) : IAsyncLifetime
     [Fact]
     public async Task When_CreateRegionAndRegionAlreadyExistsInCountry_ExpectConflict()
     {
-        var countries = await fixture.SeedCountriesAsync([CountryEntityTestData.Generic("Country", "country")]);
+        var countries = await fixture.SeedCountriesAsync([CountryEntityTestData.Generic("Country")]);
         var country = countries.Single();
-        await fixture.SeedRegionsAsync([RegionEntityTestData.Generic("Region", "region", country.Id)]);
+        await fixture.SeedRegionsAsync([RegionEntityTestData.Generic("Region", country.Id)]);
         using var httpClient = await fixture.Application.CreateAdminHttpsClientAsync();
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Post,

@@ -11,7 +11,6 @@ public static class CountryProjections
         {
             Id = entity.Id,
             Name = entity.Name,
-            Slug = entity.Slug,
             IsActive = entity.IsActive,
             Regions = entity.Regions
                 .OrderBy(r => r.Name)
@@ -21,7 +20,6 @@ public static class CountryProjections
                     Id = r.Id,
                     CountryId = r.CountryId,
                     Name = r.Name,
-                    Slug = r.Slug,
                     IsActive = r.IsActive
                 })
                 .ToList()

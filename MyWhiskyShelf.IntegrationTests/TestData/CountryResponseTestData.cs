@@ -11,7 +11,6 @@ public static class CountryResponseTestData
             Id = id,
             Name = "Name",
             IsActive = true,
-            Slug = "name",
             Regions = []
         };
     }
