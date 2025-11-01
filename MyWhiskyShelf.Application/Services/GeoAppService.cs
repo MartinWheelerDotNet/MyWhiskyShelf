@@ -68,6 +68,8 @@ public sealed class GeoAppService(
             if (await DoesSlugExist(region, ct))
                 region = region with { Slug = EnrichSlug(region.Slug) };
 
+
+            logger.LogError("{Id}, {CountryId}", region.Id, region.CountryId);
             var createdRegion = await write.AddRegionAsync(countryId, region, ct);
             if (createdRegion is null)
                 return new CreateRegionResult(CreateRegionOutcome.CountryNotFound);

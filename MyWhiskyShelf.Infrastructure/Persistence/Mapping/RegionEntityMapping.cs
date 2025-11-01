@@ -17,11 +17,12 @@ public static class RegionEntityMapping
         };
     }
 
-    public static RegionEntity ToEntity(this Region region, Guid countryId)
+    public static RegionEntity ToEntity(this Region region, CountryEntity countryEntity)
     {
         return new RegionEntity
         {
-            CountryId = countryId,
+            Id = region.Id,
+            CountryId = countryEntity.Id,
             Name = region.Name.Trim(),
             Slug = region.Slug.Trim(),
             IsActive = region.IsActive
