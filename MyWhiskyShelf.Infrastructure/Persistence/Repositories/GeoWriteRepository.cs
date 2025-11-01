@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
+using MyWhiskyShelf.Infrastructure.Persistence.Entities;
 using MyWhiskyShelf.Infrastructure.Persistence.Mapping;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
@@ -57,14 +58,14 @@ public sealed class GeoWriteRepository(MyWhiskyShelfDbContext dbContext) : IGeoW
 
     public async Task<Region?> AddRegionAsync(Guid countryId, Region region, CancellationToken ct = default)
     {
-        var parentExists = await dbContext.Countries
+        var parentCountry = await dbContext.Countries
             .AsNoTracking()
-            .AnyAsync(c => c.Id == countryId, ct);
+            .FirstOrDefaultAsync(c => c.Id == countryId, ct);
 
-        if (!parentExists) return null;
+        if (parentCountry is null) return null;
 
-        var entity = region.ToEntity(countryId);
-
+        var entity = region.ToEntity(parentCountry);
+        
         dbContext.Regions.Add(entity);
         await dbContext.SaveChangesAsync(ct);
 
@@ -73,10 +74,13 @@ public sealed class GeoWriteRepository(MyWhiskyShelfDbContext dbContext) : IGeoW
 
     public async Task<bool> UpdateRegionAsync(Guid id, Region region, CancellationToken ct = default)
     {
-        var existing = await dbContext.Regions.FindAsync([id], ct);
+        var existing = await dbContext.Regions
+            .Include(r => r.Country)
+            .FirstOrDefaultAsync(r => r.Id == id, ct);
+            
         if (existing is null) return false;
 
-        var updated = region.ToEntity(existing.CountryId);
+        var updated = region.ToEntity(existing.Country);
         updated.Id = id;
 
         dbContext.Entry(existing).CurrentValues.SetValues(updated);

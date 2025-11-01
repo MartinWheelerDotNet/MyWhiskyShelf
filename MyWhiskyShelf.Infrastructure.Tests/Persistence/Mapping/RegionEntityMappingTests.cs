@@ -1,6 +1,6 @@
+using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Infrastructure.Persistence.Entities;
 using MyWhiskyShelf.Infrastructure.Persistence.Mapping;
-using MyWhiskyShelf.Infrastructure.Tests.TestData;
 
 namespace MyWhiskyShelf.Infrastructure.Tests.Persistence.Mapping;
 
@@ -11,13 +11,15 @@ public class RegionEntityMappingTests
     {
         var id = Guid.NewGuid();
         var countryId = Guid.NewGuid();
+        var countryEntity = new CountryEntity { Id = countryId };
+        
         var regionEntity = new RegionEntity
         {
             Id = id,
             Name = "Region",
             Slug = "region",
             IsActive = true,
-            CountryId = countryId
+            Country = countryEntity
         };
 
         var region = regionEntity.ToDomain();
@@ -33,14 +35,22 @@ public class RegionEntityMappingTests
     public void When_MappingRegionToEntity_Expect_RegionEntityMatches()
     {
         var countryId = Guid.NewGuid();
-        var region = RegionTestData.ActiveRegion(countryId);
+        var countryEntity = new CountryEntity { Id = countryId };
+        
+        var region = new Region
+        {
+            CountryId = countryId,
+            Name = "Region",
+            Slug = "region",
+            IsActive = true
+        };
 
-        var regionEntity = region.ToEntity(countryId);
-
+        var regionEntity = region.ToEntity(countryEntity);
+    
         Assert.Multiple(
-            () => Assert.Equal(region.CountryId, regionEntity.CountryId),
-            () => Assert.Equal("Active Region", regionEntity.Name),
-            () => Assert.Equal("active-region", regionEntity.Slug),
+            () => Assert.Equal(regionEntity.CountryId, countryId),
+            () => Assert.Equal("Region", regionEntity.Name),
+            () => Assert.Equal("region", regionEntity.Slug),
             () => Assert.True(regionEntity.IsActive));
     }
 }

@@ -23,11 +23,18 @@ public static class CountryEntityMapping
 
     public static CountryEntity ToEntity(this Country country)
     {
-        return new CountryEntity
+        var countryEntity = new CountryEntity
         {
+            Id = country.Id,
             Name = country.Name.Trim(),
             Slug = country.Slug.Trim(),
             IsActive = country.IsActive
         };
+
+        countryEntity.Regions = country.Regions
+            .Select(region => region.ToEntity(countryEntity))
+            .ToList();
+        
+        return countryEntity;
     }
 }
