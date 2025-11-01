@@ -17,7 +17,7 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
         return await dbContext.Distilleries
             .AsNoTracking()
             .Where(d => d.Id == id)
-            .Select(DistilleryProjections.ToDistilleryDomain)
+            .Select(DistilleryProjections.ToDomain)
             .SingleOrDefaultAsync(ct);
     }
 
@@ -56,7 +56,7 @@ public sealed class DistilleryReadRepository(MyWhiskyShelfDbContext dbContext) :
 
         return await query
             .Take(options.Amount)
-            .Select(DistilleryProjections.ToDistilleryDomain)
+            .Select(DistilleryProjections.ToDomain)
             .ToListAsync(ct);
     }
 }

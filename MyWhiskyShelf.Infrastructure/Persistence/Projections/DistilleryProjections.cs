@@ -7,7 +7,7 @@ namespace MyWhiskyShelf.Infrastructure.Persistence.Projections;
 
 public static class DistilleryProjections
 {
-    public static readonly Expression<Func<DistilleryEntity, Distillery>> ToDistilleryDomain =
+    public static readonly Expression<Func<DistilleryEntity, Distillery>> ToDomain =
         distilleryEntity => new Distillery
         {
             Id = distilleryEntity.Id,
