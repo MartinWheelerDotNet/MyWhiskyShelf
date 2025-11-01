@@ -12,7 +12,6 @@ public static class RegionEntityMapping
             Id = entity.Id,
             CountryId = entity.CountryId,
             Name = entity.Name,
-            Slug = entity.Slug,
             IsActive = entity.IsActive
         };
     }
@@ -24,7 +23,6 @@ public static class RegionEntityMapping
             Id = region.Id,
             CountryId = countryEntity.Id,
             Name = region.Name.Trim(),
-            Slug = region.Slug.Trim(),
             IsActive = region.IsActive
         };
     }

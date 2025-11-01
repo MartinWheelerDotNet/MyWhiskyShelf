@@ -10,7 +10,6 @@ public static class RegionTestData
         {
             CountryId = countryId,
             Name = "Active Region",
-            Slug = "active-region",
             IsActive = true
         };
     }
@@ -21,7 +20,6 @@ public static class RegionTestData
         {
             CountryId = countryId,
             Name = "inactive Region",
-            Slug = "inactive-region",
             IsActive = false
         };
     }

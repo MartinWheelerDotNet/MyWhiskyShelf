@@ -9,7 +9,6 @@ public sealed class DistilleryEntityBuilder
     {
         Id = Guid.NewGuid(),
         Name = "Added Country",
-        Slug = "added-country",
         IsActive = true
     };
 
@@ -26,7 +25,6 @@ public sealed class DistilleryEntityBuilder
         {
             Id = countryId,
             Name = "Added Country",
-            Slug = "added-country",
             IsActive = true,
             Regions = 
             [
@@ -35,7 +33,6 @@ public sealed class DistilleryEntityBuilder
                     Id = Guid.NewGuid(), 
                     CountryId = countryId,
                     Name = "Added Region",
-                    Slug = "added-region",
                     IsActive = true 
                 }
             ]

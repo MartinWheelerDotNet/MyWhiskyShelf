@@ -11,7 +11,6 @@ public static class RegionTestData
             Id = id,
             CountryId = countryId,
             Name = "Active Region",
-            Slug = "active-region",
             IsActive = true
         };
     }
@@ -23,7 +22,6 @@ public static class RegionTestData
             Id = id,
             CountryId = countryId,
             Name = "Inactive Region",
-            Slug = "inactive-region",
             IsActive = false
         };
     }

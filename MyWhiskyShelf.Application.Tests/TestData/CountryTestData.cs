@@ -11,7 +11,6 @@ public static class CountryTestData
         {
             Id = countryId.Value,
             Name = "Generic Country",
-            Slug = "generic-country",
             IsActive = true,
             Regions =
             [

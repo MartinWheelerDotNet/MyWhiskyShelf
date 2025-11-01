@@ -60,26 +60,6 @@ public class GeoAppServiceTests
     }
 
     [Fact]
-    public async Task When_CreateCountryAndSlugAlreadyExists_Expect_EnrichedSlugCreated()
-    {
-        var country = CountryTestData.Generic() with
-        {
-            Name = "name",
-            Slug = "slug"
-        };
-        _readMock.Setup(read => read.CountryExistsBySlugAsync("slug", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
-
-        await _service.CreateCountryAsync(country);
-
-        _writeMock.Verify(
-            write => write.AddCountryAsync(
-                It.Is<Country>(c => c.Slug != country.Slug),
-                It.IsAny<CancellationToken>()),
-            Times.Once);
-    }
-
-    [Fact]
     public async Task When_CreateCountryAndCountryIsCreated_Expect_CreatedOutcomeWithCountry()
     {
         var country = CountryTestData.Generic();
@@ -140,27 +120,6 @@ public class GeoAppServiceTests
         var result = await _service.UpdateCountryAsync(id, updatedCountry);
 
         Assert.Equal(UpdateCountryOutcome.NameConflict, result.Outcome);
-    }
-
-    [Fact]
-    public async Task When_UpdateCountryAndSlugHasChangedAndAlreadyExists_Expect_SlugEnriched()
-    {
-        var id = Guid.NewGuid();
-        var existingCountry = CountryTestData.Generic() with { Id = id, Slug = "original-slug" };
-        var updatedCountry = CountryTestData.Generic() with { Id = id, Slug = "updated-slug" };
-        _readMock.Setup(read => read.GetCountryByIdAsync(id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(existingCountry);
-        _readMock.Setup(read => read.CountryExistsBySlugAsync("slug", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
-
-        await _service.UpdateCountryAsync(id, updatedCountry);
-
-        _writeMock.Verify(
-            write => write.UpdateCountryAsync(
-                id,
-                It.Is<Country>(c => c.Slug != existingCountry.Slug),
-                It.IsAny<CancellationToken>()),
-            Times.Once);
     }
 
     [Fact]
@@ -290,29 +249,6 @@ public class GeoAppServiceTests
     }
 
     [Fact]
-    public async Task When_CreateRegionAndSlugAlreadyExists_Expect_SlugEnriched()
-    {
-        const string slug = "new-region-slug";
-        var countryId = Guid.NewGuid();
-        var id = Guid.NewGuid();
-        var region = RegionTestData.ActiveRegion(countryId, id) with { Slug = slug };
-        _readMock.Setup(read => read.CountryExistsByIdAsync(countryId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
-        _readMock.Setup(read =>
-                read.RegionExistsBySlugAndCountryIdAsync(slug, countryId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
-
-        await _service.CreateRegionAsync(countryId, region);
-
-        _writeMock.Verify(
-            write => write.AddRegionAsync(
-                countryId,
-                It.Is<Region>(r => r.Slug != slug),
-                It.IsAny<CancellationToken>()),
-            Times.Once);
-    }
-
-    [Fact]
     public async Task When_CreateRegionAndCountryDoesNotExistsOnCreate_Expect_CountryNotFoundOutcome()
     {
         var countryId = Guid.NewGuid();
@@ -413,30 +349,6 @@ public class GeoAppServiceTests
         var result = await _service.UpdateRegionAsync(id, updatedRegion);
 
         Assert.Equal(UpdateRegionOutcome.NameConflict, result.Outcome);
-    }
-
-    [Fact]
-    public async Task When_UpdateRegionAndSlugAlreadyExists_Expect_SlugEnriched()
-    {
-        const string slug = "updated-region-slug";
-        var countryId = Guid.NewGuid();
-        var id = Guid.NewGuid();
-        var region = RegionTestData.ActiveRegion(countryId, id);
-        var updatedRegion = RegionTestData.ActiveRegion(countryId, id) with { Slug = slug };
-        _readMock.Setup(read => read.GetRegionByIdAsync(id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(region);
-        _readMock.Setup(read =>
-                read.RegionExistsBySlugAndCountryIdAsync(slug, countryId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
-
-        await _service.UpdateRegionAsync(id, updatedRegion);
-
-        _writeMock.Verify(
-            write => write.UpdateRegionAsync(
-                id,
-                It.Is<Region>(r => r.Slug != slug),
-                It.IsAny<CancellationToken>()),
-            Times.Once);
     }
 
     [Fact]

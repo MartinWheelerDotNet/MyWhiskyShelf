@@ -131,17 +131,16 @@ public class WorkingFixture : IAsyncLifetime
         {
             Id = countryId,
             Name = FirstSeededCountryName,
-            Slug = "geo-country-1",
             IsActive = true,
             Regions =
             [
                 new RegionEntity
                 {
-                    Name = FirstSeededRegionName, Slug = "geo-region-1", IsActive = true,  CountryId = countryId
+                    Name = FirstSeededRegionName, IsActive = true,  CountryId = countryId
                 },
                 new RegionEntity
                 {
-                    Name = "Geo Region 2", Slug = "geo-region-2", IsActive = false, CountryId = countryId
+                    Name = "Geo Region 2", IsActive = false, CountryId = countryId
                 }
             ]
         };
@@ -169,7 +168,6 @@ public class WorkingFixture : IAsyncLifetime
             {
                 Id = FirstSeededCountryId,
                 Name = FirstSeededCountryName,
-                Slug = "geo-country-1",
                 IsActive = true,
                 Regions =
                 [
@@ -178,7 +176,6 @@ public class WorkingFixture : IAsyncLifetime
                         Id = FirstRegionFirstCountryId,
                         CountryId = FirstSeededCountryId,
                         Name = FirstSeededRegionName,
-                        Slug = "geo-region-1",
                         IsActive = true
                         
                     },
@@ -187,7 +184,6 @@ public class WorkingFixture : IAsyncLifetime
                         Id = SecondRegionFirstCountryId,
                         CountryId = FirstSeededCountryId,
                         Name = "Geo Region 2",
-                        Slug = "geo-region-2",
                         IsActive = false
                     }
                 ]
@@ -196,7 +192,6 @@ public class WorkingFixture : IAsyncLifetime
             {
                 Id = SecondSeededCountryId,
                 Name = "Geo Country 2",
-                Slug = "geo-country-2",
                 IsActive = true,
                 Regions =
                 [
@@ -205,9 +200,7 @@ public class WorkingFixture : IAsyncLifetime
                         Id = FirstRegionSecondCountryId,
                         CountryId = SecondSeededCountryId,
                         Name = "Geo Region 1",
-                        Slug = "geo-region-1",
                         IsActive = true
-                        
                     }
                 ]
             }
