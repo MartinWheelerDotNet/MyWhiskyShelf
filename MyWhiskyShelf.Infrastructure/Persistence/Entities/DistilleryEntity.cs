@@ -1,9 +1,9 @@
-// EF Models should be classes and should have publicly settable properties
-// ReSharper disable PropertyCanBeMadeInitOnly.Global
 using Pgvector;
 
 namespace MyWhiskyShelf.Infrastructure.Persistence.Entities;
 
+// EF Models should be classes and should have publicly settable properties
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
 public class DistilleryEntity
 {
     public Guid Id { get; set; }

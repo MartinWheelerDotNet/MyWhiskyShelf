@@ -1,8 +1,7 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace MyWhiskyShelf.Infrastructure.Persistence.Entities;
 
-[ExcludeFromCodeCoverage]
+// EF Models should be classes and should have publicly settable properties
+// ReSharper disable PropertyCanBeMadeInitOnly.Global
 public sealed class CountryEntity
 {
     public Guid Id { get; set; }

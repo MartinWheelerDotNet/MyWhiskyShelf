@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
-using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Infrastructure.Interfaces;
 
 namespace MyWhiskyShelf.Infrastructure.Seeding;
