@@ -53,7 +53,7 @@ public class WebApplicationBuilderExtensionsTests
             .Throws<InvalidOperationException>(() => sp.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
                 .Get(JwtBearerDefaults.AuthenticationScheme));
 
-        Assert.Equal("Authentication:Authority must be configured in Production.", exception.Message);
+        Assert.Equal("Authentication:Authority must be configured.", exception.Message);
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class WebApplicationBuilderExtensionsTests
             .GetRequiredService<IOptionsMonitor<JwtBearerOptions>>()
             .Get(JwtBearerDefaults.AuthenticationScheme));
 
-        Assert.Equal("Authentication:Authority must be HTTPS in Production.", ex.Message);
+        Assert.Equal("Authentication:Authority must be HTTPS.", ex.Message);
     }
 
     [Fact]

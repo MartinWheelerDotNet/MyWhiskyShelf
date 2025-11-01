@@ -23,7 +23,7 @@ public sealed class DistilleryWriteRepository(MyWhiskyShelfDbContext dbContext) 
         var mappedEntity = await dbContext.Distilleries
             .AsNoTracking()
             .Where(e => e.Id == entity.Id)
-            .Select(DistilleryProjections.ToDistilleryDomain)
+            .Select(DistilleryProjections.ToDomain)
             .SingleAsync(ct);
             
         return mappedEntity;

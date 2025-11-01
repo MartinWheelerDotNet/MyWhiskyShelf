@@ -15,7 +15,7 @@ public class DistilleryProjectionsTests
             .AddRegion()
             .Build();
 
-        var projector = DistilleryProjections.ToDistilleryDomain.Compile();
+        var projector = DistilleryProjections.ToDomain.Compile();
         var model = projector(entity);
 
         Assert.Multiple(
@@ -42,7 +42,7 @@ public class DistilleryProjectionsTests
             .WithId(id)
             .Build();
 
-        var projector = DistilleryProjections.ToDistilleryDomain.Compile();
+        var projector = DistilleryProjections.ToDomain.Compile();
         var model = projector(entity);
 
         Assert.Multiple(

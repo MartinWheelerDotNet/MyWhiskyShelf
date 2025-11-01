@@ -24,6 +24,7 @@ internal static class Program
         builder.Services.AddOptionalDataSeeding();
 
         if (builder.Environment.IsDevelopment())
+        {
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("UiCors", policy =>
@@ -39,8 +40,9 @@ internal static class Program
                         .AllowAnyMethod();
                 });
             });
+            builder.Services.AddOpenApi();
+        }
 
-        builder.Services.AddOpenApi();
 
         builder.SetupAuthorization();
 

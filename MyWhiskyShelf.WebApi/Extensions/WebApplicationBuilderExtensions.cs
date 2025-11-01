@@ -11,32 +11,30 @@ public static class WebApplicationBuilderExtensions
     private static JwtBearerEvents JwtEvents =>
         new()
         {
-            OnTokenValidated = ctx =>
+            OnTokenValidated = context =>
             {
-                if (ctx.Principal?.Identity is not ClaimsIdentity identity)
+                if (context.Principal?.Identity is not ClaimsIdentity identity)
                     return Task.CompletedTask;
 
-
-                var realmAccessJson = ctx.Principal!.FindFirst("realm_access")?.Value;
+                var realmAccessJson = context.Principal.FindFirst("realm_access")?.Value;
                 if (string.IsNullOrWhiteSpace(realmAccessJson))
                     return Task.CompletedTask;
 
                 try
                 {
                     using var doc = JsonDocument.Parse(realmAccessJson);
-                    if (doc.RootElement.TryGetProperty("roles", out var rolesEl) &&
-                        rolesEl.ValueKind == JsonValueKind.Array)
+                    if (doc.RootElement.TryGetProperty("roles", out var rolesElement) &&
+                        rolesElement.ValueKind == JsonValueKind.Array)
                     {
-                        var roles = rolesEl.EnumerateArray()
-                            .Where(x => x.ValueKind == JsonValueKind.String)
-                            .Select(x => x.GetString()!)
+                        var roles = rolesElement.EnumerateArray()
+                            .Where(element => element.ValueKind == JsonValueKind.String)
+                            .Select(stringElement => stringElement.GetString()!)
                             .ToArray();
                         AddRoles(identity, roles);
                     }
                 }
-                catch
-                {
-                    // ignore malformed JSON
+                catch {
+                    // ignored
                 }
 
                 return Task.CompletedTask;
@@ -81,11 +79,9 @@ public static class WebApplicationBuilderExtensions
                     {
                         var authority = builder.Configuration["Authentication:Authority"];
                         if (string.IsNullOrWhiteSpace(authority))
-                            throw new InvalidOperationException(
-                                "Authentication:Authority must be configured in Production.");
+                            throw new InvalidOperationException("Authentication:Authority must be configured.");
                         if (!authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-                            throw new InvalidOperationException(
-                                "Authentication:Authority must be HTTPS in Production.");
+                            throw new InvalidOperationException("Authentication:Authority must be HTTPS.");
                         options.Authority = authority;
                     }
 
