@@ -1,4 +1,4 @@
-namespace MyWhiskyShelf.Application.Results.WhiskyBottle;
+namespace MyWhiskyShelf.Application.Results.WhiskyBottles;
 
 public enum GetWhiskyBottleByIdOutcome
 {

@@ -18,6 +18,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IWhiskyBottleWriteRepository, WhiskyBottleWriteRepository>();
         services.AddScoped<IGeoReadRepository, GeoReadRepository>();
         services.AddScoped<IGeoWriteRepository, GeoWriteRepository>();
+        services.AddScoped<IBrandReadRepository, BrandReadRepository>();
     }
 
     public static void AddOptionalDataSeeding(this IServiceCollection services)

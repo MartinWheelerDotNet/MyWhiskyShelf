@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Application.Abstractions.Services;
-using MyWhiskyShelf.Application.Results.Distillery;
+using MyWhiskyShelf.Application.Results.Distilleries;
 using MyWhiskyShelf.Core.Models;
 using MyWhiskyShelf.WebApi.Contracts.Common;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;

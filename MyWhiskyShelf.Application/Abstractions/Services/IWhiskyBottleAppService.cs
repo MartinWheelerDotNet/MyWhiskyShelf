@@ -1,4 +1,4 @@
-using MyWhiskyShelf.Application.Results.WhiskyBottle;
+using MyWhiskyShelf.Application.Results.WhiskyBottles;
 using MyWhiskyShelf.Core.Aggregates;
 
 namespace MyWhiskyShelf.Application.Abstractions.Services;

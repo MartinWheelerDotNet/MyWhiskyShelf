@@ -139,6 +139,26 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     b.ToTable("Regions");
                 });
 
+            modelBuilder.Entity("MyWhiskyShelf.Infrastructure.Persistence.Entities.BrandEntity", b =>
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uuid");
+                
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(75)
+                    .HasColumnType("citext");
+
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(250);
+                
+                b.HasIndex("Name")
+                    .HasDatabaseName("UX_Brands_Name_eq")
+                    .IsUnique();
+            });
+
             modelBuilder.Entity("MyWhiskyShelf.Infrastructure.Persistence.Entities.WhiskyBottleEntity", b =>
                 {
                     b.Property<Guid>("Id")

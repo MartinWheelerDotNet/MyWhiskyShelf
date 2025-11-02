@@ -1,4 +1,4 @@
-namespace MyWhiskyShelf.Application.Results.Distillery;
+namespace MyWhiskyShelf.Application.Results.Distilleries;
 
 public enum CreateDistilleryOutcome
 {

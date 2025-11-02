@@ -1,4 +1,4 @@
-using MyWhiskyShelf.Application.Results.Geo;
+using MyWhiskyShelf.Application.Results.GeoData;
 using MyWhiskyShelf.Core.Aggregates;
 
 namespace MyWhiskyShelf.Application.Abstractions.Services;

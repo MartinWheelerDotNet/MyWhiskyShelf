@@ -15,6 +15,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDistilleryAppService, DistilleryAppService>();
         services.AddScoped<IWhiskyBottleAppService, WhiskyBottleAppService>();
         services.AddScoped<IGeoAppService, GeoAppService>();
+        services.AddScoped<IBrandAppService, BrandAppService>();
         services.AddSingleton<ICursorCodec, Base64JsonCursorCodec>();
     }
 }

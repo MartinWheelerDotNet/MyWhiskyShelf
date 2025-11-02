@@ -1,4 +1,4 @@
-using MyWhiskyShelf.Application.Results.Distillery;
+using MyWhiskyShelf.Application.Results.Distilleries;
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Core.Models;
 

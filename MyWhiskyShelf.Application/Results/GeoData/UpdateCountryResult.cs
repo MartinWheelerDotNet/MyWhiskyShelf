@@ -1,6 +1,6 @@
 using MyWhiskyShelf.Core.Aggregates;
 
-namespace MyWhiskyShelf.Application.Results.Geo;
+namespace MyWhiskyShelf.Application.Results.GeoData;
 
 public enum UpdateCountryOutcome
 {
