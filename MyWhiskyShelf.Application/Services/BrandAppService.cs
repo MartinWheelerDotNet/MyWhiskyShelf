@@ -7,11 +7,11 @@ namespace MyWhiskyShelf.Application.Services;
 
 public class BrandAppService(IBrandReadRepository read, ILogger<BrandAppService> logger) : IBrandAppService
 {
-    public async Task<GetBrandsResult> GetBrands()
+    public async Task<GetBrandsResult> GetBrandsAsync(CancellationToken ct = default)
     {
         try
         {
-            var results = await read.GetBrands();
+            var results = await read.GetBrands(ct);
             return new GetBrandsResult(GetBrandsOutcome.Success, results);
         }
         catch(Exception ex)

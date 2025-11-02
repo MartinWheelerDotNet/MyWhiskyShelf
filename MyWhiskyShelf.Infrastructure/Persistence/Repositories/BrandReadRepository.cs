@@ -8,11 +8,12 @@ namespace MyWhiskyShelf.Infrastructure.Persistence.Repositories;
 
 public class BrandReadRepository(MyWhiskyShelfDbContext dbContext) : IBrandReadRepository
 {
-    public async Task<List<Brand>> GetBrands()
+    public async Task<List<Brand>> GetBrands(CancellationToken ct = default)
     {
         return await dbContext.Brands
             .AsNoTracking()
             .Select(BrandProjections.ToDomain)
-            .ToListAsync();
+            .OrderBy(b => b.Name)
+            .ToListAsync(ct);
     }
 }

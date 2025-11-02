@@ -4,5 +4,5 @@ namespace MyWhiskyShelf.Application.Abstractions.Repositories;
 
 public interface IBrandReadRepository
 {
-    Task<List<Brand>> GetBrands();
+    Task<List<Brand>> GetBrands(CancellationToken ct = default);
 }

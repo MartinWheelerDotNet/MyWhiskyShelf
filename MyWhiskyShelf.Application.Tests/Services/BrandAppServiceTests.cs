@@ -26,10 +26,10 @@ public class BrandAppServiceTests
             new() { Id = Guid.NewGuid(), Name = "First Name", Description = "First Description" },
             new() { Id = Guid.NewGuid(), Name = "Second Name", Description = "Second Description" }
         ];
-        _readMock.Setup(read => read.GetBrands())
+        _readMock.Setup(read => read.GetBrands(It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedBrands);
 
-        var result = await _service.GetBrands();
+        var result = await _service.GetBrandsAsync();
 
         Assert.Multiple(
             () => Assert.Equal(GetBrandsOutcome.Success, result.Outcome),
@@ -40,9 +40,10 @@ public class BrandAppServiceTests
     [Fact]
     public async Task When_GetBrandsAndNoBrandsFound_Expect_SuccessOutcomeWithEmptyList()
     {
-        _readMock.Setup(read => read.GetBrands()).ReturnsAsync([]);
+        _readMock.Setup(read => read.GetBrands(It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
         
-        var result = await _service.GetBrands();
+        var result = await _service.GetBrandsAsync();
 
         Assert.Multiple(
             () => Assert.Equal(GetBrandsOutcome.Success, result.Outcome),
@@ -53,9 +54,10 @@ public class BrandAppServiceTests
     [Fact]
     public async Task When_GetBrandsAndAnErrorOccurs_Expect_ErrorOutcomeWithErrorLogged()
     {
-        _readMock.Setup(read => read.GetBrands()).ThrowsAsync(new InvalidOperationException("Exception"));
+        _readMock.Setup(read => read.GetBrands(It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new InvalidOperationException("Exception"));
 
-        var result = await _service.GetBrands();
+        var result = await _service.GetBrandsAsync();
 
         Assert.Multiple(
             () => Assert.Equal(GetBrandsOutcome.Error, result.Outcome),

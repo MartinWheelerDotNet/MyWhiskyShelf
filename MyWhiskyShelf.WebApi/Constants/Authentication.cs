@@ -16,5 +16,6 @@ public static class Authentication
         public const string WriteWhiskyBottles = "WhiskyBottles.Write";
         public const string ReadGeoData = "GeoData.Read";
         public const string WriteGeoData = "GeoData.Write";
+        public const string ReadBrands = "Brands.Read";
     }
 }

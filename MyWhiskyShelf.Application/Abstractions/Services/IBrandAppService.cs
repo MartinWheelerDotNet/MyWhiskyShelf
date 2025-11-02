@@ -4,5 +4,5 @@ namespace MyWhiskyShelf.Application.Abstractions.Services;
 
 public interface IBrandAppService
 {
-    Task<GetBrandsResult> GetBrands();
+    Task<GetBrandsResult> GetBrandsAsync(CancellationToken ct = default);
 }
