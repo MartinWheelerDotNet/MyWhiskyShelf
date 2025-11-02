@@ -11,7 +11,6 @@ public static class CountryEntityMapping
         {
             Id = entity.Id,
             Name = entity.Name,
-            Slug = entity.Slug,
             IsActive = entity.IsActive,
             Regions = entity.Regions
                 .OrderBy(r => r.Name)
@@ -27,7 +26,6 @@ public static class CountryEntityMapping
         {
             Id = country.Id,
             Name = country.Name.Trim(),
-            Slug = country.Slug.Trim(),
             IsActive = country.IsActive
         };
 

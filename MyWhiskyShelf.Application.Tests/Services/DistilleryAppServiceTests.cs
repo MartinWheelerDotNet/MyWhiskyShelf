@@ -290,7 +290,6 @@ public class DistilleryAppServiceTests
                 Id = regionId,
                 CountryId = Guid.NewGuid(),
                 Name = "Other Country Region",
-                Slug = "other-country-region",
                 IsActive = false
             });
 
@@ -432,7 +431,6 @@ public class DistilleryAppServiceTests
                 Id = regionId,
                 CountryId = Guid.NewGuid(),
                 Name = "Region",
-                Slug = "region",
                 IsActive = true
             });
 

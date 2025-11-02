@@ -17,7 +17,6 @@ public class RegionEntityMappingTests
         {
             Id = id,
             Name = "Region",
-            Slug = "region",
             IsActive = true,
             Country = countryEntity
         };
@@ -27,7 +26,6 @@ public class RegionEntityMappingTests
         Assert.Multiple(
             () => Assert.Equal(regionEntity.CountryId, region.CountryId),
             () => Assert.Equal("Region", region.Name),
-            () => Assert.Equal("region", region.Slug),
             () => Assert.True(region.IsActive));
     }
 
@@ -41,7 +39,6 @@ public class RegionEntityMappingTests
         {
             CountryId = countryId,
             Name = "Region",
-            Slug = "region",
             IsActive = true
         };
 
@@ -50,7 +47,6 @@ public class RegionEntityMappingTests
         Assert.Multiple(
             () => Assert.Equal(regionEntity.CountryId, countryId),
             () => Assert.Equal("Region", regionEntity.Name),
-            () => Assert.Equal("region", regionEntity.Slug),
             () => Assert.True(regionEntity.IsActive));
     }
 }

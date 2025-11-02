@@ -21,7 +21,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "citext", maxLength: 50, nullable: false),
-                    Slug = table.Column<string>(type: "citext", maxLength: 50, nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -34,12 +33,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 table: "Countries",
                 column: "Name",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Countries_Slug",
-                table: "Countries",
-                column: "Slug",
-                unique: true);
             
             migrationBuilder.CreateTable(
                 name: "Regions",
@@ -47,7 +40,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "citext", maxLength: 50, nullable: false),
-                    Slug = table.Column<string>(type: "citext", maxLength: 50, nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     CountryId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
@@ -66,12 +58,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 name: "IX_Regions_CountryId_Name",
                 table: "Regions",
                 columns: new[] { "CountryId", "Name" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Regions_CountryId_Slug",
-                table: "Regions",
-                columns: new[] { "CountryId", "Slug" },
                 unique: true);
             
             migrationBuilder.CreateTable(
@@ -107,8 +93,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
             
-            
-
             migrationBuilder.CreateIndex(
                 name: "UX_Distilleries_Name_eq",
                 table: "Distilleries",

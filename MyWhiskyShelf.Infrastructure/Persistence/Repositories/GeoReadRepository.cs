@@ -36,13 +36,6 @@ public sealed class GeoReadRepository(MyWhiskyShelfDbContext dbContext) : IGeoRe
             .AnyAsync(c => c.Name == name, ct);
     }
 
-    public async Task<bool> CountryExistsBySlugAsync(string slug, CancellationToken ct = default)
-    {
-        return await dbContext.Countries
-            .AsNoTracking()
-            .AnyAsync(c => c.Slug == slug, ct);
-    }
-
     public async Task<bool> CountryExistsByIdAsync(Guid id, CancellationToken ct = default)
     {
         return await dbContext.Countries
@@ -65,15 +58,5 @@ public sealed class GeoReadRepository(MyWhiskyShelfDbContext dbContext) : IGeoRe
         return await dbContext.Regions
             .AsNoTracking()
             .AnyAsync(c => c.Name == name && c.CountryId == countryId, ct);
-    }
-
-    public async Task<bool> RegionExistsBySlugAndCountryIdAsync(
-        string slug,
-        Guid countryId,
-        CancellationToken ct = default)
-    {
-        return await dbContext.Regions
-            .AsNoTracking()
-            .AnyAsync(c => c.Slug == slug && c.CountryId == countryId, ct);
     }
 }

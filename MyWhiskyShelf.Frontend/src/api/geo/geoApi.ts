@@ -13,7 +13,6 @@ export async function getGeoBootstrap(signal?: AbortSignal): Promise<GeoBootstra
         const country: Country = {
             id: c.id,
             name: c.name,
-            slug: c.slug,
             isActive: !!c.isActive,
         };
         countries.push(country);
@@ -23,7 +22,6 @@ export async function getGeoBootstrap(signal?: AbortSignal): Promise<GeoBootstra
                 id: r.id,
                 countryId: r.countryId,
                 name: r.name,
-                slug: r.slug,
                 isActive: !!r.isActive,
             }
             regions.push(region);

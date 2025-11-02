@@ -4,12 +4,11 @@ namespace MyWhiskyShelf.IntegrationTests.TestData;
 
 public static class CountryEntityTestData
 {
-    public static CountryEntity Generic(string name, string slug)
+    public static CountryEntity Generic(string name)
     {
         return new CountryEntity
         {
             Name = name,
-            Slug = slug,
             IsActive = true
         };
     }

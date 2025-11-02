@@ -294,7 +294,7 @@ public class WebApiDistilleriesTests(WorkingFixture fixture) : IAsyncLifetime
     public async Task When_CreateWithRegionNotInCountry_Expect_ValidationProblemOnRegionId()
     {
         await fixture.SeedRegionsAsync(
-            [RegionEntityTestData.Generic("C2 Region", "c2-region", fixture.SecondSeededCountryId)]);
+            [RegionEntityTestData.Generic("C2 Region", fixture.SecondSeededCountryId)]);
         
         var request = IdempotencyHelpers.CreateRequestWithIdempotencyKey(
             HttpMethod.Post, "/distilleries",

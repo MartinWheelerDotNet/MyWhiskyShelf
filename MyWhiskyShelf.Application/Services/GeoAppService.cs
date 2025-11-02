@@ -33,15 +33,9 @@ public sealed class GeoAppService(
             if (await DoesNameExist(country, ct))
                 return new CreateCountryResult(CreateCountryOutcome.NameConflict);
 
-            if (await DoesSlugExist(country, ct))
-                country = country with { Slug = EnrichSlug(country.Slug) };
-
             var createdCountry = await write.AddCountryAsync(country, ct);
 
-            logger.LogInformation(
-                "Country created with [Name: {Name}, Slug: {Slug}]",
-                createdCountry.Name.SanitizeForLog(),
-                createdCountry.Slug.SanitizeForLog());
+            logger.LogInformation("Country created with [Name: {Name}]", createdCountry.Name.SanitizeForLog());
             return new CreateCountryResult(CreateCountryOutcome.Created, createdCountry);
         }
         catch (Exception ex)
@@ -64,11 +58,7 @@ public sealed class GeoAppService(
 
             if (await DoesNameExist(region, ct))
                 return new CreateRegionResult(CreateRegionOutcome.NameConflict);
-
-            if (await DoesSlugExist(region, ct))
-                region = region with { Slug = EnrichSlug(region.Slug) };
-
-
+            
             logger.LogError("{Id}, {CountryId}", region.Id, region.CountryId);
             var createdRegion = await write.AddRegionAsync(countryId, region, ct);
             if (createdRegion is null)
@@ -103,9 +93,6 @@ public sealed class GeoAppService(
 
             if (HasNameChanged(currentCountry, updatedCountry) && await DoesNameExist(updatedCountry, ct))
                 return new UpdateCountryResult(UpdateCountryOutcome.NameConflict);
-
-            if (HasSlugChanged(currentCountry, updatedCountry) && await DoesSlugExist(updatedCountry, ct))
-                updatedCountry = updatedCountry with { Slug = EnrichSlug(updatedCountry.Slug) };
 
             if (!await write.UpdateCountryAsync(id, updatedCountry, ct))
                 return new UpdateCountryResult(UpdateCountryOutcome.NotFound);
@@ -156,10 +143,7 @@ public sealed class GeoAppService(
 
             if (HasNameChanged(currentRegion, updatedRegion) && await DoesNameExist(updatedRegion, ct))
                 return new UpdateRegionResult(UpdateRegionOutcome.NameConflict);
-
-            if (HasSlugChanged(currentRegion, updatedRegion) && await DoesSlugExist(updatedRegion, ct))
-                updatedRegion = updatedRegion with { Slug = EnrichSlug(updatedRegion.Slug) };
-
+            
             if (!await write.UpdateRegionAsync(id, updatedRegion, ct))
                 return new UpdateRegionResult(UpdateRegionOutcome.NotFound);
 
@@ -199,11 +183,6 @@ public sealed class GeoAppService(
         }
     }
 
-    private static string EnrichSlug(string slug)
-    {
-        return $"{slug}-{DateTime.Now:yyyyMMddHHmmss}";
-    }
-
     private static bool HasNameChanged(Country currentCountry, Country updatedCountry)
     {
         return currentCountry.Name != updatedCountry.Name;
@@ -213,17 +192,7 @@ public sealed class GeoAppService(
     {
         return currentRegion.Name != updatedRegion.Name;
     }
-
-    private static bool HasSlugChanged(Country currentCountry, Country updatedCountry)
-    {
-        return currentCountry.Slug != updatedCountry.Slug;
-    }
-
-    private static bool HasSlugChanged(Region currentRegion, Region updatedRegion)
-    {
-        return currentRegion.Slug != updatedRegion.Slug;
-    }
-
+    
     private static bool HasCountryChanged(Region currentRegion, Region updatedRegion)
     {
         return currentRegion.CountryId != updatedRegion.CountryId;
@@ -237,15 +206,5 @@ public sealed class GeoAppService(
     private async Task<bool> DoesNameExist(Region region, CancellationToken ct = default)
     {
         return await read.RegionExistsByNameAndCountryIdAsync(region.Name, region.CountryId, ct);
-    }
-
-    private async Task<bool> DoesSlugExist(Country country, CancellationToken ct = default)
-    {
-        return await read.CountryExistsBySlugAsync(country.Slug, ct);
-    }
-
-    private async Task<bool> DoesSlugExist(Region region, CancellationToken ct = default)
-    {
-        return await read.RegionExistsBySlugAndCountryIdAsync(region.Slug, region.CountryId, ct);
     }
 }
