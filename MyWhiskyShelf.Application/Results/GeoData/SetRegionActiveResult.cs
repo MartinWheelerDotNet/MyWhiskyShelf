@@ -1,4 +1,4 @@
-namespace MyWhiskyShelf.Application.Results.Geo;
+namespace MyWhiskyShelf.Application.Results.GeoData;
 
 public enum SetRegionActiveOutcome
 {

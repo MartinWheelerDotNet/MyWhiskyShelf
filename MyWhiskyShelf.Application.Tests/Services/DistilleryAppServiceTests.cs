@@ -4,7 +4,7 @@ using Moq;
 using MyWhiskyShelf.Application.Abstractions.Cursor;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Application.Cursors;
-using MyWhiskyShelf.Application.Results.Distillery;
+using MyWhiskyShelf.Application.Results.Distilleries;
 using MyWhiskyShelf.Application.Services;
 using MyWhiskyShelf.Application.Tests.TestData;
 using MyWhiskyShelf.Core.Aggregates;

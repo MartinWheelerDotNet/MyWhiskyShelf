@@ -55,6 +55,9 @@ public class InternalServerErrorTests(BrokenFixture fixture)
             {
                 "region", "create", "/geo/regions", HttpMethod.Post.Method,
                 new RequestBodyWrapper(RegionRequestTestData.GenericCreate with { Name = "Create Error" })
+            },
+            {
+                "brand", "get-all", "/brands", HttpMethod.Get.Method, null
             }
         };
 

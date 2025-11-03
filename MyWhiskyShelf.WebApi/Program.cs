@@ -63,6 +63,7 @@ internal static class Program
         app.MapDistilleryEndpoints();
         app.MapWhiskyBottleEndpoints();
         app.MapGeoEndpoints();
+        app.MapBrandEndpoints();
 
         await app.RunAsync();
     }

@@ -29,7 +29,17 @@ public class AuthorizationTests(WorkingFixture fixture)
             { Roles.User, true, "/whisky-bottles", HttpMethod.Post.Method },
             { Roles.Admin, true, "/whisky-bottles", HttpMethod.Post.Method },
             { Roles.User, true, $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Put.Method },
-            { Roles.Admin, true, $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Put.Method }
+            { Roles.Admin, true, $"/whisky-bottles/{Guid.NewGuid()}", HttpMethod.Put.Method },
+            
+            { Roles.User, true, "/geo", HttpMethod.Get.Method },
+            { Roles.Admin, true, "/geo", HttpMethod.Get.Method },
+            { Roles.User, false, "/geo/countries", HttpMethod.Post.Method },
+            { Roles.Admin, true, "/geo/countries", HttpMethod.Post.Method },
+            { Roles.User, false, "/geo/regions", HttpMethod.Post.Method },
+            { Roles.Admin, true, "/geo/regions", HttpMethod.Post.Method },
+            
+            { Roles.User, true, "/brands", HttpMethod.Get.Method },
+            { Roles.Admin, true, "/brands", HttpMethod.Get.Method }
         };
     }
 
@@ -68,7 +78,7 @@ public class AuthorizationTests(WorkingFixture fixture)
 
     [Theory]
     [MemberData(nameof(EndpointData), DisableDiscoveryEnumeration = true)]
-    public async Task When_CreateWhiskyBottleWithoutBearerToken_Expect_Unauthorized(string endpoint, string method)
+    public async Task When_AuthenticateWithoutBearerToken_Expect_Unauthorized(string endpoint, string method)
     {
         var request = IdempotencyHelpers.CreateNoBodyRequestWithIdempotencyKey(HttpMethod.Parse(method), endpoint);
         var httpClient = fixture.Application.CreateHttpClient("WebApi");

@@ -1,7 +1,7 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using MyWhiskyShelf.Application.Abstractions.Services;
-using MyWhiskyShelf.Application.Results.Geo;
+using MyWhiskyShelf.Application.Results.GeoData;
 using MyWhiskyShelf.WebApi.Constants;
 using MyWhiskyShelf.WebApi.Contracts.GeoResponse;
 using MyWhiskyShelf.WebApi.ErrorResults;

@@ -1,4 +1,6 @@
-namespace MyWhiskyShelf.Application.Results.Distillery;
+using MyWhiskyShelf.Core.Aggregates;
+
+namespace MyWhiskyShelf.Application.Results.Distilleries;
 
 public enum GetAllDistilleriesOutcome
 {
@@ -9,7 +11,7 @@ public enum GetAllDistilleriesOutcome
 
 public sealed record GetAllDistilleriesResult(
     GetAllDistilleriesOutcome Outcome,
-    IReadOnlyList<Core.Aggregates.Distillery>? Distilleries = null,
+    IReadOnlyList<Distillery>? Distilleries = null,
     string? NextCursor = null,
     int Amount = 0,
     string? Error = null);

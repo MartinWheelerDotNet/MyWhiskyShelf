@@ -5,6 +5,7 @@ using MyWhiskyShelf.Infrastructure.Persistence.Contexts;
 using MyWhiskyShelf.Infrastructure.Persistence.Entities;
 using MyWhiskyShelf.Infrastructure.Persistence.Mapping;
 using MyWhiskyShelf.IntegrationTests.TestData;
+using MyWhiskyShelf.WebApi.Contracts.Brands;
 using MyWhiskyShelf.WebApi.Contracts.Distilleries;
 using MyWhiskyShelf.WebApi.Contracts.GeoResponse;
 using MyWhiskyShelf.WebApi.Contracts.WhiskyBottles;
@@ -77,7 +78,7 @@ public class WorkingFixture : IAsyncLifetime
             .ToList();
     }
 
-    public async Task<List<DistilleryResponse>> SeedDistilleriesAsync(int count)
+   public async Task<List<DistilleryResponse>> SeedDistilleriesAsync(int count)
     {
         var entities = Enumerable.Range(0, count)
             .Select(i => DistilleryEntityTestData.Generic(
@@ -87,6 +88,25 @@ public class WorkingFixture : IAsyncLifetime
             .ToList();
 
         return await SeedDistilleriesAsync(entities);
+    }
+   
+    public async Task<List<BrandResponse>> SeedBrandsAsync(int count)
+    {
+        var entities = Enumerable.Range(0, count)
+            .Select(i => new BrandEntity
+            {
+                Name = $"Brand {i}",
+                Description = "Description"
+            })
+            .ToList();
+
+        DbContext.AddRange(entities);
+        await DbContext.SaveChangesAsync();
+
+        return entities.Select(e => e.ToDomain().ToResponse())
+            .OrderBy(response => response.Name)
+            .ThenBy(response => response.Id)
+            .ToList();
     }
 
     public async Task<List<WhiskyBottleResponse>> SeedWhiskyBottlesAsync(List<WhiskyBottleEntity> entities)
@@ -156,6 +176,7 @@ public class WorkingFixture : IAsyncLifetime
         await DbContext.Set<WhiskyBottleEntity>().ExecuteDeleteAsync(ct);
         await DbContext.Set<RegionEntity>().ExecuteDeleteAsync(ct);
         await DbContext.Set<CountryEntity>().ExecuteDeleteAsync(ct);
+        await DbContext.Set<BrandEntity>().ExecuteDeleteAsync(ct);
         
         await DbContext.SaveChangesAsync(ct);
     }

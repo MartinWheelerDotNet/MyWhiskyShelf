@@ -16,6 +16,7 @@ public class MyWhiskyShelfDbContext(
     internal DbSet<WhiskyBottleEntity> WhiskyBottles { get; set; }
     internal DbSet<CountryEntity> Countries { get; set; }
     internal DbSet<RegionEntity> Regions { get; set; }
+    internal DbSet<BrandEntity> Brands { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,6 +31,7 @@ public class MyWhiskyShelfDbContext(
         modelBuilder.ApplyConfiguration(new CountryEntityConfiguration());
 
         modelBuilder.ApplyConfiguration(new DistilleryEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new BrandEntityConfiguration());
         modelBuilder.ApplyConfiguration(new WhiskyBottleEntityConfiguration());
     }
 }

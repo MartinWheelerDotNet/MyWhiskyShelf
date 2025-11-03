@@ -50,6 +50,7 @@ public static class WebApplicationBuilderExtensions
             .AddPolicy(Policies.WriteWhiskyBottles, policy => policy.RequireRole(Roles.User, Roles.Admin))
             .AddPolicy(Policies.ReadGeoData, policy => policy.RequireRole(Roles.User, Roles.Admin))
             .AddPolicy(Policies.WriteGeoData, policy => policy.RequireRole(Roles.Admin))
+            .AddPolicy(Policies.ReadBrands, policy => policy.RequireRole(Roles.User, Roles.Admin))
             .AddFallbackPolicy("default", policy => policy.RequireAuthenticatedUser());
 
         builder.Services.AddAuthentication(options =>

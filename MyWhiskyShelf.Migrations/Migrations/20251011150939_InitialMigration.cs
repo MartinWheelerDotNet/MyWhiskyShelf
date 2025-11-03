@@ -59,6 +59,31 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 table: "Regions",
                 columns: new[] { "CountryId", "Name" },
                 unique: true);
+
+            migrationBuilder.CreateTable(
+                name: "Brands",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "citext", maxLength: 75, nullable: false),
+                    Description = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Brands", x => x.Id);
+                });
+            
+            migrationBuilder.CreateIndex(
+                name: "UX_Brands_Name_eq",
+                table: "Brands",
+                column: "Name",
+                unique: true);
+            
+            migrationBuilder.Sql(
+                """
+                CREATE INDEX IF NOT EXISTS "IX_Brands_Name_trgm"
+                ON "Brands" USING gin ("Name" gin_trgm_ops);
+                """);
             
             migrationBuilder.CreateTable(
                 name: "Distilleries",
@@ -117,10 +142,11 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 .Annotation("Npgsql:IndexOperators", new[] { "vector_cosine_ops" })
                 .Annotation("Npgsql:StorageParameter:lists", 100);
             
-            migrationBuilder.Sql("""
+            migrationBuilder.Sql(
+                """
                 CREATE INDEX IF NOT EXISTS "IX_Distilleries_Name_trgm"
                 ON "Distilleries" USING gin ("Name" gin_trgm_ops);
-            """);
+                """);
             
             migrationBuilder.CreateTable(
                 name: "WhiskyBottles",
@@ -173,9 +199,10 @@ namespace MyWhiskyShelf.Migrations.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(name: "Distilleries");
-            migrationBuilder.DropTable(name: "Regions");
             migrationBuilder.DropTable(name: "WhiskyBottles");
+            migrationBuilder.DropTable(name: "Distilleries");
+            migrationBuilder.DropTable(name: "Brands");
+            migrationBuilder.DropTable(name: "Regions");
             migrationBuilder.DropTable(name: "Countries");
         }
     }

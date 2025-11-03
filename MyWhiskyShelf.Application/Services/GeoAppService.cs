@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Application.Abstractions.Services;
 using MyWhiskyShelf.Application.Extensions;
-using MyWhiskyShelf.Application.Results.Geo;
+using MyWhiskyShelf.Application.Results.GeoData;
 using MyWhiskyShelf.Core.Aggregates;
 
 namespace MyWhiskyShelf.Application.Services;

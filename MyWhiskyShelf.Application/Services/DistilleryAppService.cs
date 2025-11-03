@@ -4,7 +4,7 @@ using MyWhiskyShelf.Application.Abstractions.Repositories;
 using MyWhiskyShelf.Application.Abstractions.Services;
 using MyWhiskyShelf.Application.Cursors;
 using MyWhiskyShelf.Application.Extensions;
-using MyWhiskyShelf.Application.Results.Distillery;
+using MyWhiskyShelf.Application.Results.Distilleries;
 using MyWhiskyShelf.Core.Aggregates;
 using MyWhiskyShelf.Core.Models;
 
