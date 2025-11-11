@@ -18,8 +18,7 @@ public static class GeoEndpoints
     public static void MapGeoEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup(BaseUrl)
-            .WithTags("GeoData")
-            .WithOpenApi();
+            .WithTags("GeoData");
 
         group.MapGet(
                 "/",

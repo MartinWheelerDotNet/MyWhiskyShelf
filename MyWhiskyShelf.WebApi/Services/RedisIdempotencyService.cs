@@ -14,7 +14,7 @@ public class RedisIdempotencyService(IConnectionMultiplexer connectionMultiplexe
         var cachedResultString = await _database.StringGetAsync(idempotencyKey.ToString());
         return cachedResultString.IsNullOrEmpty
             ? null
-            : JsonSerializer.Deserialize<CachedResponse>(cachedResultString!);
+            : JsonSerializer.Deserialize<CachedResponse>(cachedResultString!.ToString());
     }
 
     public async Task AddToCacheAsync(

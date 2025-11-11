@@ -20,8 +20,7 @@ public static class WhiskyBottleEndpoints
     public static void MapWhiskyBottleEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/whisky-bottles")
-            .WithTags("Whisky Bottles")
-            .WithOpenApi();
+            .WithTags("Whisky Bottles");
 
         group.MapPost(
                 "/",

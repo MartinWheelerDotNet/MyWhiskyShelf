@@ -21,8 +21,7 @@ public static class DistilleryEndpoints
     public static void MapDistilleryEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/distilleries")
-            .WithTags("Distilleries")
-            .WithOpenApi();
+            .WithTags("Distilleries");
 
         group.MapPost(
                 "/",
