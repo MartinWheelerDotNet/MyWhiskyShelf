@@ -133,9 +133,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CountryId", "Name")
-                        .IsUnique();
-
                     b.ToTable("Regions");
                 });
 
@@ -153,6 +150,9 @@ namespace MyWhiskyShelf.Migrations.Migrations
                 b.Property<string>("Name")
                     .IsRequired()
                     .HasMaxLength(250);
+                
+                b.Property<Guid>("CountryId")
+                    .HasColumnType("uuid");
                 
                 b.HasIndex("Name")
                     .HasDatabaseName("UX_Brands_Name_eq")

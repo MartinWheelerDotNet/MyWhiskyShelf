@@ -1,0 +1,2048 @@
+[
+  {
+    "Id": "8a7a743b-1085-4c89-898a-c831380ce6f9",
+    "Name": "Ainslie's",
+    "Description": "Historic blended Scotch from James Ainslie & Co. of Leith (est. 1868); the firm famously acquired and rebuilt Clynelish during the late-19th-century whisky boom.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "60781f16-4791-4f75-a496-54aa938251f7",
+    "Name": "Alex Ferguson",
+    "Description": "A vintage blended Scotch from A. Ferguson & Co. (unrelated to the football manager), with bottlings dating to around the 1930s.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "726b5b4c-3bb5-426a-922a-359f185f712c",
+    "Name": "Anchor",
+    "Description": "“Scottish Anchor” is a premium blended Scotch bottled by Douglas Laing, known from ceramic decanter releases such as Admiral’s Select.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "7457a417-ca3d-4dbb-9d00-977788d50ff4",
+    "Name": "Angels' Nectar",
+    "Description": "A blended malt from Highfern inspired by the angels’ share, crafted from Highland and Speyside malts and bottled at natural colour.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "d2e661e3-916c-4b88-86e1-d1cbd2d87207",
+    "Name": "Antiquary",
+    "Description": "Victorian-era blend named after Sir Walter Scott’s novel; Edinburgh-born and recently revived with new age-stated expressions.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "1f8d7c71-51b7-4536-b383-fddd5c7549dc",
+    "Name": "Ardray",
+    "Description": "Contemporary blended Scotch launched in 2023, created by Beam Suntory with Japanese blending artistry and malts/grains from renowned Scotch distilleries.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "e7e98235-b59e-45d9-92d5-784c6eb1317d",
+    "Name": "Auchnagie",
+    "Description": "A blended malt from The Lost Distillery Company that recreates the style of the long-closed Auchnagie distillery in Perthshire.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "01fc9806-2666-4344-b6d1-08b476777cb2",
+    "Name": "Auld Alliance",
+    "Description": "A commemorative William Grant & Sons blend marrying Scotch whisky with French Armagnac, celebrating the historic Franco-Scottish ‘Auld Alliance’.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "9f32313e-5120-4fc8-bba8-d1135b89e1fe",
+    "Name": "Ballantine's",
+    "Description": "Global blended Scotch brand tracing back to 1827 and George Ballantine; today produced by Chivas Brothers (Pernod Ricard).",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "11a398eb-d40d-4cb8-9f59-f0c4af0b5a8b",
+    "Name": "Barker's",
+    "Description": "Historic blended Scotch label noted by specialist retailers, with vintage-era bottlings occasionally seen on the secondary market.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "c9ab66e6-4b11-4f0f-b737-eefede3c59c7",
+    "Name": "Baxter's",
+    "Description": "Old blended Scotch brand associated with James Watson & Co., known from bottlings such as Baxter’s Barley Bree in the mid-20th century.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "0094a3fb-4153-4c8c-824b-66a8d7644b11",
+    "Name": "Bell's",
+    "Description": "One of the UK’s best-known blended Scotches, originally from Arthur Bell & Sons and now part of Diageo.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "bf26ad63-de3f-4fe5-bbc2-0a645d826936",
+    "Name": "Ben Nevis",
+    "Description": "Highland single malt distillery at Fort William, owned by Japan’s Nikka since 1989 and famed for robust, waxy spirit.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "5053afd7-571f-4609-8f61-7d79baedc078",
+    "Name": "Berry Bros & Rudd",
+    "Description": "Historic London wine & spirits merchant and independent bottler; creator of the Cutty Sark brand and producer of modern ‘Classic Range’ whiskies.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "fd73dc83-a147-479a-ba0e-bd63840a8ea8",
+    "Name": "Big Ben",
+    "Description": "Novelty decanter/blended Scotch line sold in an Elizabeth Tower–shaped 50cl bottle, typically featuring easy-drinking Highland/Speyside style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "c02dbd78-bc9f-4833-95bb-284928fb5775",
+    "Name": "Big Peat",
+    "Description": "Islay blended malt from Douglas Laing, a small-batch marriage of malts that has included Ardbeg, Caol Ila, Bowmore and Port Ellen.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "f7aee8a0-cb2e-47a6-8b3e-3e86fdba2baa",
+    "Name": "Big T",
+    "Description": "Long-running blended Scotch produced by Tomatin, first released in the late 19th century and still associated with the distillery today.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "aef0bf2b-2c11-4af2-9646-6a5dd0d06afb",
+    "Name": "Black & White",
+    "Description": "Classic Buchanan’s blend now owned by Diageo, famous for its Scottie and Westie terriers and strong international following.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "0969bc6e-1d99-4fc9-915f-b6db08f42743",
+    "Name": "Black Bottle",
+    "Description": "Blend dating to 1879 from the Graham brothers (tea blenders), today under Distell/Heineken Beverages and known for a gently smoky profile.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "92d4537b-18b5-4ded-b077-ba044088d665",
+    "Name": "Black Bull",
+    "Description": "Historic blended Scotch revived by Duncan Taylor; known for high-strength, malt-forward blends (e.g., 50/50 malt-to-grain) and age-stated releases up to 55 years.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "23d1c0b7-9fc6-4d9a-9e4e-54724be4b4a7",
+    "Name": "Blue Spot",
+    "Description": "Mitchell & Son single pot still Irish whiskey, aged a minimum 7 years in bourbon, sherry and Madeira casks and bottled at cask strength.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "f5236d1b-3df2-452f-8d6b-efa349fb56fb",
+    "Name": "Buchanan's",
+    "Description": "Blended Scotch brand founded in 1884 by James Buchanan; now a Diageo label with strong popularity in Latin America and the US.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "5158b013-269f-4842-975d-881415b45567",
+    "Name": "Bulloch Lade",
+    "Description": "Once a major blender/owner (incl. Caol Ila), famed for BL Gold Label; the company collapsed after WWI but the brand endured for decades.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "74f007e0-9ad2-4e36-8a69-f674a2ac98fa",
+    "Name": "Burberrys",
+    "Description": "Scarce fashion-house bottlings (blended and single malt) commissioned by Burberrys of London—e.g., 12-year and vintage-dated releases.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "1d140c69-7f07-4dd7-87df-be0e443b6705",
+    "Name": "Busker",
+    "Description": "Irish whiskey brand from Royal Oak Distillery (owned by Illva Saronno) with a blended core and a ‘Single Collection’ (malt, pot still, grain), often triple-cask matured.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "410ed1ce-0370-4efb-8909-8b52d3614196",
+    "Name": "Caisteal Chamuis",
+    "Description": "Heavily peated ‘Island style’ blended malt from Mossburn (Torabhaig’s sister brand), named after a Skye castle and finished in bourbon barrels for balance.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "ce8c6042-cbd1-4f58-95b7-a36a30162fa5",
+    "Name": "Campbeltown Loch",
+    "Description": "Blended malt created by J&A Mitchell (Springbank), marrying Campbeltown single malts for a maritime style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "693e6706-a9d1-47b4-a149-e54b745bdbea",
+    "Name": "Chequers",
+    "Description": "Historic Leith-born blend (1863), later part of DCL; long exported and often associated with Linkwood-forward recipes.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "33b07733-8b8a-47c9-819d-de6bfd3e2318",
+    "Name": "Chivas",
+    "Description": "Flagship blended Scotch brand from Chivas Brothers, known for premium blends and global reach.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "f86b771c-d608-44a6-bf60-9bdcd975002b",
+    "Name": "Chivas Regal",
+    "Description": "Luxury blended Scotch range introduced in 1909 with an original 25-year-old expression; a mainstay of the Chivas portfolio.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "b577334e-2f1c-4878-b945-f903f7dbac40",
+    "Name": "Cladach",
+    "Description": "Coastal-themed blended malt from Diageo’s Special Releases 2018, drawing on seaside distilleries for a salty-sweet profile.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "69eee786-b494-40c5-8b0b-aa8d37e8e753",
+    "Name": "Clonakilty",
+    "Description": "West Cork Irish whiskey brand and distillery (opened 2019), releasing cask-finished single batch and single grain whiskies.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "13f07a8c-287b-48be-aff7-e610380387c1",
+    "Name": "Coilltean",
+    "Description": "A Samaroli independent-bottling series (the name is Gaelic for ‘woodlands’), featuring rare single malts such as 1992 Macallan and 1975 Glen Garioch.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "834b9e42-9b4e-4a57-b376-123fba95f8c6",
+    "Name": "Collection Moon",
+    "Description": "Blended malt label from Italy’s Moon Import, with vintage-era releases (e.g., 12-year-old bottlings believed from the late 1980s/early 1990s).",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "a3c1cdc8-0619-4dd3-9bba-68e57962dadb",
+    "Name": "Collectivum XXVIII",
+    "Description": "A Diageo Special Releases 2017 blended malt marrying whiskies from 28 active malt distilleries across Scotland.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "026fd968-cccd-4a93-841d-5c671f75f201",
+    "Name": "Compass Box",
+    "Description": "Modern Scotch blending house founded in 2000 by John Glaser, known for innovative, transparent blends like Spice Tree and The Peat Monster.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "fbfdfd05-01fd-4a3e-8b62-d79b36e3a1ac",
+    "Name": "Connacht",
+    "Description": "Irish distillery brand from Ballina, County Mayo, producing single malt and pot still whiskey; recently announced a name change to Ballina Distillery.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "748403eb-8e91-491b-b18e-003adf4e93c8",
+    "Name": "Connemara",
+    "Description": "Peated Irish single malt created at Cooley (Kilbeggan Distilling/Beam Suntory), long noted as the only widely available peated Irish whiskey.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "7bd89bed-e979-40ed-9e4c-d65215d2d92b",
+    "Name": "Copper Dog",
+    "Description": "Speyside blended malt first created at the Craigellachie Hotel; a fruit-forward marriage of eight single malts, now part of the Diageo portfolio.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "4c604540-2073-4764-8770-f6153e1fd6df",
+    "Name": "Crabbie",
+    "Description": "Historic John Crabbie & Co. brand revived in Edinburgh; releases include an 8-year-old Highland single malt alongside limited single casks.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "9c6aeeba-146e-485d-ab4e-f6b92586b133",
+    "Name": "Craig Athol",
+    "Description": "Now-vanished blended Scotch linked to Arthur Bell & Sons/Blair Athol; bottles from the 1970s–80s occasionally surface at auction.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "9c851959-f8c7-4973-af10-008cabf6544d",
+    "Name": "Crawford's",
+    "Description": "Leith-born blended Scotch from A&A Crawford (est. 1860), best known for its 3 Star and later 5 Star expressions.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "de950865-8d2c-4765-95c7-e371ee78406a",
+    "Name": "Cutty Sark",
+    "Description": "Blended Scotch created in 1923 by Berry Bros. & Rudd; produced today by La Martiniquaise and noted for a lighter, naturally coloured style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "01c307dc-fe81-4b44-8f51-f0197d6e46a5",
+    "Name": "Dawson's",
+    "Description": "Historic blended Scotch associated with Peter Dawson, an early 20th-century blender later absorbed into DCL.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "c74f6351-8612-4217-ac9c-0981b4bb4944",
+    "Name": "Dewar's",
+    "Description": "Global blended Scotch from John Dewar & Sons, a pioneer of blending since the late 19th century.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "b43555fe-54f0-42ce-8166-2c0d307530a1",
+    "Name": "Dimple",
+    "Description": "Haig’s Dimple (aka Dimple Pinch), a classic blended Scotch introduced in 1893 by John Haig & Co.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "5cd6e032-0469-46ea-bca3-d39b67e004de",
+    "Name": "Drumshanbo",
+    "Description": "Irish single pot still whiskey from The Shed Distillery in Drumshanbo; triple distilled with barley and oats and matured in bourbon and Oloroso sherry casks.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "62af8218-693c-4de2-ac38-3365a49d1634",
+    "Name": "Dubliner",
+    "Description": "Irish whiskey brand from the Dublin Liberties Distillery; known for Bourbon Cask and liqueur variants.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "b4f9fe39-722f-4bef-aabf-a7ae5bab656e",
+    "Name": "Duncan Taylor",
+    "Description": "Independent Scotch bottler founded in 1938 (Huntly), known for releasing whiskies from a large private cask collection and brands like Black Bull.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "680e1955-775f-4391-a4a0-d692596af285",
+    "Name": "Dunhill",
+    "Description": "Dunhill Old Master was a 1970s blended Scotch created by IDV exclusively for the London retailer Dunhill.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "13039a4d-f0a3-4796-ae57-796ba530e624",
+    "Name": "Dunville's",
+    "Description": "Historic Irish brand revived in 2013 by Echlinville Distillery; releases include Dunville’s VR and Three Crowns.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "2383d8a8-4b43-43d0-82e3-de06a272dba6",
+    "Name": "Egan's",
+    "Description": "Irish whiskey brand tracing to P. & H. Egan (est. 1852 in Tullamore), revived for modern single malts and blends.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "9ef0fcf5-4222-433f-aa88-99ee941752ad",
+    "Name": "Elements of Islay",
+    "Description": "Elixir Distillers’ range celebrating Islay styles, featuring small-batch blended malts and limited single malts (launched mid-2000s).",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "6d3499f1-7c66-43e5-a203-0774cfc71d34",
+    "Name": "Epicurean",
+    "Description": "Douglas Laing Lowland blended malt noted for fresh, grassy character and cocktail-friendly profile.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "c04e478c-04f2-4d0e-ba82-2998b13708ed",
+    "Name": "Fable",
+    "Description": "Independent Scotch bottler (Pendulum Spirits, 2020) focusing on single casks and storytelling-led blended malts.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "3bc814b8-97f2-4ad4-98f9-e1b31711a351",
+    "Name": "Famous Grouse",
+    "Description": "Iconic blended Scotch introduced in 1896 and long among Scotland’s best-selling whiskies.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "aad3360a-7b3b-4777-bc0b-122eb161e58e",
+    "Name": "Fercullen",
+    "Description": "Irish whiskey brand from Powerscourt Distillery in County Wicklow, spanning malt, grain, and blends.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "7e25281c-5063-4f41-8511-d6d8a63e964e",
+    "Name": "Findlater's",
+    "Description": "Historic blended Scotch label from Findlater, Mackie, Todd & Co., a 19th–20th-century merchant bottler, known for age-stated blends and special decanters.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "2a87cc5d-4f73-406f-a4be-c78a25b1bb87",
+    "Name": "Flaming Pig",
+    "Description": "Irish blended whiskey finished in intensely charred bourbon casks for added spice and gentle smokiness.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "e0468755-9c3d-439d-88cb-1c31f6e5e861",
+    "Name": "Friar John Cor",
+    "Description": "Modern Scotch range from Lindores Abbey referencing the 1494 Exchequer Rolls; includes limited cask-strength single malt releases.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "a8db31bc-4df0-4ed8-9f02-4eb6f20db32e",
+    "Name": "Gilbey's",
+    "Description": "W.&A. Gilbey’s historic Scotch blends (e.g., Spey Royal), stemming from the London wine & spirits merchant’s early 20th-century move into whisky.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "eb2a7d64-b16e-4539-86ff-ed7fc7e10b5a",
+    "Name": "Gilmour Thomson's",
+    "Description": "Leith-based blender best known for early 20th-century bottlings like Royal Blend; the J.G. Thomson name has been revived for small-batch whiskies.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "a2d123fc-6593-459e-b8b2-f30ef7cdef96",
+    "Name": "Gladstone Axe",
+    "Description": "Contemporary blended malt composed of Highland and Islay single malts; 100% malted barley, aged in oak, released in characterful decanters.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "193c21d8-8e10-4e47-96ea-49acd3c85408",
+    "Name": "Glen Garry",
+    "Description": "Long-running blended Scotch label historically bottled by firms like John Hopkins & Co.; sometimes confused with Loch Lomond’s ‘Glengarry’.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "10b99870-ccfb-4702-b401-7e0aa5908d67",
+    "Name": "Glendrostan",
+    "Description": "Vintage blended Scotch brand associated with Longman Distillers; 1980s bottlings claim an ‘original recipe’ predating 1780.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "1353eb41-bacc-423c-927c-449b63f17cd9",
+    "Name": "Glenleven",
+    "Description": "Blended malt Scotch from the House of Haig, sold mainly in the 1960s–80s.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "40e29166-1b79-4cbd-a1ae-f64b05c87d15",
+    "Name": "Glenrosa",
+    "Description": "Historic blended Scotch label with mid-20th-century bottlings; the name has appeared on later blended releases as well.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "cbd9db3c-d8b6-4a58-81a4-6f0e5644bfd7",
+    "Name": "Gold Spot",
+    "Description": "Mitchell & Son single pot still Irish whiskey; limited editions have included 9-year and 13-year expressions with wine-cask components.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "c6f418ce-ec08-4bcf-956f-6b32d60cadce",
+    "Name": "Golden Age",
+    "Description": "John Haig & Co. blended Scotch popular in the 1970s and discontinued in the early 1980s.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "f54fab64-3300-4df0-b163-9404988be571",
+    "Name": "Golden Heather",
+    "Description": "Vintage blended Scotch label (e.g., late-1940s/1950s bottlings) associated with Paten & Co.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "b3957ddc-7d32-496f-90b1-9381240362df",
+    "Name": "Grand Coronation",
+    "Description": "Blended Scotch seen in mid-20th-century US market bottlings; examples cite Pristine Liquor Co. as bottler.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "3f102d63-6b0d-4bc4-b1b5-be33819edaac",
+    "Name": "Grant's",
+    "Description": "Major blended Scotch brand from William Grant & Sons, introduced in the late 19th century and among the world’s top sellers.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "5aed80ef-9065-41ef-b14f-3e6e8c1ef1fe",
+    "Name": "Green Spot",
+    "Description": "Single pot still Irish whiskey from the historic ‘Spot’ range of Mitchell & Son, matured in bourbon and sherry casks.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "8c0fbec0-1e47-4343-92c6-f97eb7eb1595",
+    "Name": "Haig",
+    "Description": "Historic Scotch brand of John Haig & Co.; long-running blends such as Haig Gold/De Luxe preceded modern offshoots.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "c703832a-a503-4457-a043-5708b0f9db98",
+    "Name": "Haig Club",
+    "Description": "Contemporary single grain Scotch from Cameronbridge, launched with Diageo and David Beckham; designed for a modern, lighter style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "a327dda8-c7f4-49dd-bfe6-d54eadf834b5",
+    "Name": "Hankey Bannister",
+    "Description": "Historic blended Scotch founded in 1757 and now produced by Inver House Distillers (ThaiBev), long associated with society patrons.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "a844ca8e-814e-4cba-94b7-a64fec71de08",
+    "Name": "Hart Brothers",
+    "Description": "Independent Scotch bottler (origins in the 19th–20th c.) known for cask-strength single casks and selected blends across all regions.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "1acb2a5c-70d5-40c1-addc-d13c4012f215",
+    "Name": "Harvey's",
+    "Description": "Blended Scotch label from the historic Bristol wine & spirits merchant, seen in vintage-era bottlings alongside the famous sherries.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "6e44fecd-e953-49c5-9662-2a66baacee49",
+    "Name": "Hazelwood",
+    "Description": "House of Hazelwood—rare, aged Scotch blends from the Gordon family’s long-matured cask collection based in Dufftown.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "c348f133-f01b-4e0b-b994-864e93bec04a",
+    "Name": "Heather Dew",
+    "Description": "Collectible blended Scotch from Mitchell Brothers of Glasgow, famed for ‘Greybeard’ ceramic jugs and mid-20th-century bottlings.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "80a3d0fe-24f4-4393-8c8c-8f75ba8eec2b",
+    "Name": "Highland Harvest",
+    "Description": "Organic Scotch label releasing blends and single malts, including independent-bottled organic expressions.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "0864389a-cf77-440e-918c-d6680fb76e34",
+    "Name": "Hogshead",
+    "Description": "Blended malt Scotch bottled by Signatory Vintage, typically a marriage of malts with a noted Islay component.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "a28401f8-152f-4d8f-b727-d2bca9bcb96e",
+    "Name": "House of Commons",
+    "Description": "Official parliamentary blended Scotch—historic bottlings by Buchanan’s or Gordon & MacPhail; current ‘Parliamentarian’ produced for the Commons.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "71b85f75-5808-40c1-af48-42a767d3a51f",
+    "Name": "The Irishman",
+    "Description": "Modern Irish whiskey brand from Walsh Whiskey, noted for single malt, single pot still, and premium cask-finished expressions.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "9555ea4b-fc0e-46f9-9328-1f4944dfefa4",
+    "Name": "Islay Mist",
+    "Description": "Classic blended Scotch marrying peaty Islay malt with gentler Highland/Speyside components, originally created for a local celebration on Islay.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "25410678-5d27-4edf-b023-2ffc69b971ea",
+    "Name": "Isle of Skye",
+    "Description": "Blended Scotch from Ian Macleod Distillers, traditionally built around Island and Highland malts for a lightly smoky, heather-honey style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "bfbb9043-94f4-4ed1-a22d-03084f0aac41",
+    "Name": "J & G Stewart",
+    "Description": "Historic Edinburgh blending house whose name appears on vintage blended Scotches; associated with elegant, well-aged house blends.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "f71eeed6-e41b-4d44-9648-68d6228e10a0",
+    "Name": "J&B",
+    "Description": "Global blended Scotch brand Justerini & Brooks, renowned for its bright, approachable style and long export history.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "ec8672d5-b163-4b45-869f-77bb2326ac9e",
+    "Name": "James Eadie",
+    "Description": "Revived Victorian whisky name producing single cask bottlings and the ‘Trade Mark X’ blended Scotch based on an 1870s recipe.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "12e4f87f-2f17-4f35-afa0-01e615fab0d2",
+    "Name": "James Haddow",
+    "Description": "Vintage-era blended Scotch label linked to Glasgow merchants; bottles from the mid-20th century occasionally surface at auction.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "877a7f3a-f504-4ef2-8bd9-cc4ab01429c6",
+    "Name": "Jameson",
+    "Description": "Blended Irish whiskey from Irish Distillers (Pernod Ricard); triple-distilled and aged a minimum of four years, the world’s best-selling Irish whiskey.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "6e63e382-1a6b-4985-b22e-e0aed3c477fb",
+    "Name": "J.J. Corry",
+    "Description": "Revived Irish whiskey bonder founded by Louise McGuane in County Clare, curating and blending sourced Irish whiskeys under named releases like The Hanson.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "18c30055-f00f-40a2-ba0c-d004c2447cc2",
+    "Name": "John Player Special",
+    "Description": "Vintage blended Scotch brand tied to the John Player tobacco marque; 1980s bottlings were blended/bottled by Langside Distillers for export markets.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "0d6ab3ee-a2e0-4136-af8b-e0d2a82a6602",
+    "Name": "Johnnie Walker",
+    "Description": "Global Scotch whisky brand founded in Kilmarnock in 1820 and now produced by Diageo; renowned for its coloured-label blends.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "fff6bcd2-0352-4234-a7e3-9a4d18bc57a1",
+    "Name": "Kilbeggan",
+    "Description": "Traditional Irish whiskey brand from the historic Kilbeggan Distillery; typically double-distilled for a classic smooth style.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "b2e67068-6ef8-4146-9cb3-23024d65e19f",
+    "Name": "King William IV",
+    "Description": "Rare blended Scotch produced by John Gillon & Co. for export markets; examples include 1950s–80s bottlings.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "6bdb9f11-00c3-415f-9c79-ed64e671a983",
+    "Name": "King’s Choice",
+    "Description": "Mid-20th-century blended Scotch label bottled by Stewart, Pott & Co., seen in 1960s–70s releases for continental markets.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "1952bab1-6b59-45f7-8308-0d39a1916d15",
+    "Name": "Kirker & Greer",
+    "Description": "Belfast-based Irish whiskey blender/brand releasing triple-distilled blends (e.g., Shamrock) and age-stated expressions from sourced stocks.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "f61aac65-7f6a-4407-becd-ce02427032a5",
+    "Name": "Knappogue Castle",
+    "Description": "Irish single malt brand named after a 15th-century castle; known for age-stated, bourbon-cask-led releases like the 12 Year.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "2c0849f3-74a3-4f30-9493-02137b230551",
+    "Name": "Knightrider",
+    "Description": "Vintage blended Scotch label with documented 1960s bottlings, typically released for export markets.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "5e561af8-65c5-4f44-b8e0-8dd9367ce751",
+    "Name": "Laird O' Logan",
+    "Description": "De Luxe blended Scotch from White Horse Distillers, seen in 12-year expressions during the 1970s–80s.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "7413b6d9-8152-4783-80dd-34338717c073",
+    "Name": "Lauder's",
+    "Description": "Long-running blended Scotch first created in 1834; today part of the MacDuff International portfolio.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "1335ce7d-0c57-40e3-a2b9-cfb70d079e9a",
+    "Name": "Logan",
+    "Description": "Early-20th-century White Horse blend with a loyal following, especially in Iberian markets.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "2d55975b-50de-403f-bcb8-9b624530d5a8",
+    "Name": "Logan's",
+    "Description": "Market variant of the Logan blended Scotch (often ‘De Luxe’), appearing on mid-to-late-20th-century bottlings.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "87748aab-beb6-4b75-9bf9-88740206a509",
+    "Name": "Long John",
+    "Description": "Historic blended Scotch now under Pernod Ricard; traditionally a Highland-style blend with strong sales in France.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "c3e813d3-e1ee-4ca4-8717-d27cd5862729",
+    "Name": "Lord Elcho",
+    "Description": "Blended Scotch from Wemyss Malts, crafted with a high malt content and a fruit-forward house style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "53c77924-94fa-4714-ae43-0fda4d0df696",
+    "Name": "Mackintosh",
+    "Description": "Modern blended malt Scotch marrying Highland and Speyside components for a soft, fruity profile.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "d2589ea2-8fa8-4d29-8e02-84b34cbb6913",
+    "Name": "MacNair's",
+    "Description": "Blended malt and small-batch Scotch (e.g., Lum Reek) from The GlenAllachie Distillers Company, revived under Billy Walker’s stewardship.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "90086cc5-9939-4c8b-b3b1-2a4d56d74fc4",
+    "Name": "MacNaMara",
+    "Description": "Hebridean blended Scotch from Pràban na Linne (The Gaelic Whiskies) on Skye, typically light, coastal and gently peated.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "2160f46d-e2ca-48f4-8eb4-bd13ec3d92a6",
+    "Name": "McConnell's",
+    "Description": "Historic Belfast Irish whiskey brand (founded 1776) revived with blends and single malts.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "e1111feb-0063-4063-8b6e-aa1e2dfdc03a",
+    "Name": "Method and Madness",
+    "Description": "Experimental Irish Distillers brand from Midleton’s micro distillery, exploring unusual woods and mashbills.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "85c62c26-0f98-457e-8868-ebd61705e566",
+    "Name": "Midleton",
+    "Description": "Prestige Irish whiskey label best known for Midleton Very Rare—annual vintage releases blended at the Midleton distillery.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "48bf57f2-f9f8-4d8c-9af7-e0ab2a4703a4",
+    "Name": "Mitchells & Butlers",
+    "Description": "Birmingham brewer’s blended Scotch label, seen on mid-20th-century age-stated bottlings and decanters.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "76409d8d-75d1-416c-aa4b-a4751f6eb121",
+    "Name": "Monarch Of The Highlands",
+    "Description": "Traditional blended Scotch brand drawing on Highland malts; vintage bottlings were widely exported.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "b7c3e1ad-1f55-49a6-b216-c9cc3c2e1a4e",
+    "Name": "Monkey Shoulder",
+    "Description": "Blended malt Scotch from William Grant & Sons, crafted for mixing and sipping with a soft, malty profile.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "9ab37b94-469b-46d1-971e-4feee0618174",
+    "Name": "Mossburn",
+    "Description": "Independent Scotch bottler/brand (sister to Torabhaig) releasing regional blended malts and single cask selections.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "019bc99e-196a-45f2-a108-2a6eb1de7e86",
+    "Name": "Neal's",
+    "Description": "Vintage blended Scotch brand from UK wine & spirit merchants; mid-20th-century bottlings appear at auction.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "af73737e-8634-44f5-b205-a1478f329b05",
+    "Name": "Nectar of the Daily Drams",
+    "Description": "Independent bottling series from Belgian importer The Nectar, releasing small-batch single malts and blends from Scottish distilleries.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "95e29ae1-12ca-4685-b0c9-1cdcffe672fb",
+    "Name": "Noble Rebel",
+    "Description": "Contemporary blended malt from Loch Lomond Group, crafted by Master Blender Michael Henry with editions like Smoke Symphony and Orchard Outburst.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "c1d2149f-b4a6-419f-a013-1063217cbd44",
+    "Name": "Nomad",
+    "Description": "‘Outland’ whisky created by González Byass with Whyte & Mackay—blended and aged in Scotland before a sherry-cask finish in Jerez.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "86de1401-9da4-40ec-8970-256b26518244",
+    "Name": "Old Bannockburn",
+    "Description": "Historic Deanston single malt label first used for the distillery’s earliest releases in the 1970s.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "3fafa52e-f19c-46fb-9ad3-92f44a2ca6e2",
+    "Name": "Old Comber",
+    "Description": "Revived Irish single pot still brand from Echlinville, rooted in the old Comber Distilleries; modern releases feature heritage mashbills and cask finishes.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "780dfad9-bbeb-40fc-8e97-3e0688601227",
+    "Name": "Old Court",
+    "Description": "Vintage blended Scotch bottled by A. Gillies & Co. (Glen Scotia owners), with age-stated expressions for export markets.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "4c6763ad-09d8-453d-a792-ea54c98d6092",
+    "Name": "Old Parr",
+    "Description": "Deluxe blended Scotch (Grand Old Parr) launched in 1909; a Diageo brand with major popularity in Latin America and Japan.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "fd321e3c-82b0-4fe9-a42a-70aa1c4a6fdf",
+    "Name": "Old Perth",
+    "Description": "Sherry-matured blended malt from Morrison, blended in Perth and focused on rich, Speyside-driven profiles.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "01f0f7b9-cf48-4499-9ede-053309c84843",
+    "Name": "Old Rarity",
+    "Description": "De Luxe blended Scotch from Bulloch Lade & Co., with classic decanter and 12-year releases dating from the mid-20th century.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "0da5a504-cf18-4538-b110-a3a5d9e9368f",
+    "Name": "Orbital",
+    "Description": "An eight-year ‘world blend’ created by Whisky Magazine—tastings samples married with aged grain and finished in PX sherry cask to raise funds for charity.",
+    "CountryId": null
+  },
+  {
+    "Id": "47afc3ac-ec53-4915-af58-5a867d4f66dd",
+    "Name": "Paddy",
+    "Description": "Long-running blended Irish whiskey brand with Cork roots; renamed ‘Paddy’ in 1912 and today produced under Sazerac ownership.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "abc187a7-6d4e-422b-8d20-0a80bb500718",
+    "Name": "Peat Chimney",
+    "Description": "Wemyss Malts blended malt highlighting Islay smoke in a balanced, maritime style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "7446161a-e248-404b-a5d7-ef2b2cc950d2",
+    "Name": "Pig's Nose",
+    "Description": "Approachable blended Scotch from Ian Macleod Distillers, known for its soft, easy-drinking character.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "9d771de3-6cfd-4c72-9940-d2d318bcc401",
+    "Name": "Pinwinnie",
+    "Description": "Vintage blended Scotch label (e.g., ‘Pinwinnie Royale’) with widely traded 1980s–90s bottlings.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "f5a5ab19-746e-4c7d-a54a-5751ed8d584b",
+    "Name": "Pogues",
+    "Description": "Band-branded Irish whiskey produced in West Cork, released as a blended expression.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "bb02bce5-d7e0-4963-817d-32df7e8d9d5b",
+    "Name": "Poit Dhubh",
+    "Description": "Gaelic Whiskies’ non chill filtered blended malt from Skye—peat-accented and released at various ages.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "b15456ee-9d7a-4344-b462-68916e925a22",
+    "Name": "Portgordon",
+    "Description": "Blended malt Scotch associated with Portgordon Maltings commemorative releases (e.g., 1980s ‘Celebration Blend’).",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "55e0e649-363b-41ba-85b0-8e22ed36f6dc",
+    "Name": "Powers",
+    "Description": "Historic Irish whiskey brand from Irish Distillers, famed for pot still–led character and bottlings like Powers Gold Label and John’s Lane 12.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "5cb5e351-272e-4baf-a9c1-6c7b0dde7f44",
+    "Name": "Proper No. Twelve",
+    "Description": "Modern blended Irish whiskey launched by Eire Born Spirits, triple-distilled and designed for a smooth, approachable style.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "00f9a19b-5229-4b90-9985-e3a2fc0a1b1f",
+    "Name": "Pure Scot",
+    "Description": "Contemporary blended Scotch created by the team behind Bladnoch, combining malt and grain for a versatile, cocktail-friendly profile.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "e632c788-5a90-432b-8c70-8c7c52d85805",
+    "Name": "Putachieside",
+    "Description": "De Luxe blended Scotch historically produced by William Sanderson & Son (of VAT 69), widely exported in the mid-20th century.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "66e8631a-0538-48ef-bc6f-2f45cef3207c",
+    "Name": "Red Spot",
+    "Description": "Mitchell & Son single pot still Irish whiskey—15 years old—matured in a mix of bourbon, sherry and Marsala casks.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "71399833-e6c1-4e14-b802-b548050fdc13",
+    "Name": "Redbreast",
+    "Description": "Iconic single pot still Irish whiskey from Midleton, with age-stated core bottlings and sherry-forward special editions.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "dbae14f3-63cc-4655-85f7-add24eeef055",
+    "Name": "Robert Burns (Arran)",
+    "Description": "Officially endorsed Arran brand featuring a mellow blended Scotch and a fruity single malt, named for Scotland’s national poet.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "d0d2b6a1-3903-4f03-91b7-4fc6b4a6c7e6",
+    "Name": "Rock Island",
+    "Description": "Douglas Laing blended malt celebrating Scotland’s islands; a maritime, lightly smoky whisky formerly known as Rock Oyster.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "c858ada3-7c8d-493d-842d-83ca648fabb4",
+    "Name": "Roe & Co",
+    "Description": "Dublin-based Irish whiskey brand from Diageo, named after historic distiller George Roe and crafted for a fruit-vanilla house style.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "bcaca0bb-c76a-4be2-bee3-4221c675597f",
+    "Name": "Royal Household",
+    "Description": "Prestige blended Scotch historically bottled for the British Royal Household; today best known as a limited export release, notably in Japan.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "17945b90-8af1-4f87-a0e6-41f4696ef3cf",
+    "Name": "Royal Salute",
+    "Description": "Prestige blended Scotch launched in 1953 to mark Queen Elizabeth II’s coronation; all core expressions are 21 years or older.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "8f100e1e-856a-4579-9f5b-409c61f642a5",
+    "Name": "Sailor's Home",
+    "Description": "Modern Irish whiskey brand inspired by Limerick’s maritime heritage, releasing blends and single malts with cask finishes (e.g., rum, Madeira).",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "883a2db0-2954-4a33-bf6e-2262ad15d77d",
+    "Name": "Samuel Webster & Sons.",
+    "Description": "Historic UK brewer–merchant label seen on mid-20th-century blended Scotch bottlings and decanters for the retail trade.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "cfc1f7d6-f940-42e5-94e4-20e19787654d",
+    "Name": "Sandy Macdonald",
+    "Description": "Long-running de luxe blended Scotch with strong export presence, historically linked to Macdonald Greenlees of Edinburgh.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "7f6d0dbf-5425-4503-be60-fff47ff3a0db",
+    "Name": "Sandy Macnab's",
+    "Description": "Traditional blended Scotch label from Glasgow merchants, remembered for gift decanters and easy-drinking house style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "7c511025-7286-458f-ae5d-7760f0587227",
+    "Name": "Savoy",
+    "Description": "Historic blended Scotch associated with the famed London hotel name; produced by various bottlers for domestic and export markets.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "39d7a004-2a4a-44c2-8883-9d2f5851e65d",
+    "Name": "Scallywag",
+    "Description": "Douglas Laing Speyside blended malt celebrated for sherry-rich, fruity character; part of the ‘Remarkable Regional Malts’ range.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "8719149a-7326-4993-a7a4-20e28141d50d",
+    "Name": "Scotland's Ripe Old Age",
+    "Description": "Vintage blended Scotch brand widely exported in the mid-20th century, often in age-stated decanters and presentation bottles.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "ce736e1a-2d85-4cd8-a148-a9a7a9cda55f",
+    "Name": "Serendipity",
+    "Description": "Limited-edition blended malt from William Grant & Sons, created after an accidental vatting and released as a one-off in the 2000s.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "045b138c-33cd-46da-88d5-4e0df4a140fa",
+    "Name": "Sexton",
+    "Description": "Single malt Irish whiskey matured in oloroso sherry casks; a Proximo brand distilled at Bushmills to the creator’s spec.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "42b27b2d-b5cd-4276-972b-02d7ca7c9292",
+    "Name": "Shackleton",
+    "Description": "Whyte & Mackay blended malt inspired by Sir Ernest Shackleton, built on a recreation of the antique Mackinlay’s whisky.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "5f56e731-e276-4e78-b218-f2cdd570f1cd",
+    "Name": "Sheep Dip",
+    "Description": "Blended malt Scotch with farming roots in its branding; created by Spencerfield Spirit Co., now under Ian Macleod Distillers.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "30851c88-608a-4912-9dfb-5e8442043a17",
+    "Name": "Shortcross",
+    "Description": "Irish whiskey from Rademon Estate Distillery (County Down), including notable peated single malt releases.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "4e62f98d-1e59-4f45-8538-8084dfe86b67",
+    "Name": "Sideburn",
+    "Description": "Limited blended malt release by Decadent Drinks/WhiskySponge—marrying 1992 & 1993 William Grant casks and bottled at natural strength.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "85bd4ed9-bd39-44b2-8b53-aeaceb5378d0",
+    "Name": "Silkie",
+    "Description": "‘The Legendary Silkie’—a Donegal-born Irish blend of malt and grain with a touch of peated malt from Sliabh Liag Distillers.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "98048d1b-eb1f-47ab-ad32-4dbf22fde958",
+    "Name": "Six Isles",
+    "Description": "Ian Macleod blended malt marrying casks from Scotland’s island distilleries for a smoky, maritime profile.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "9f5c65dd-1db9-40f2-ab62-233e30a07927",
+    "Name": "Slane",
+    "Description": "Triple-casked Irish blended whiskey from Brown-Forman, produced at Slane Distillery in the Boyne Valley.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "84c38d11-5a42-4738-b6dc-5782a83d8756",
+    "Name": "Something Special",
+    "Description": "Chivas Brothers blended Scotch introduced in 1912, known for a Speyside-led character and distinctive decanter.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "5b2aeb25-483b-4c59-95e6-3e5d508939da",
+    "Name": "Spey Cast",
+    "Description": "Vintage blended Scotch label noted for 12-year decanter bottlings and rare 1937 vintage releases.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "07905642-633c-42e2-852b-04c8ccc59ddd",
+    "Name": "Spice King",
+    "Description": "Wemyss Malts blended malt built on Island character—spice, subtle smoke, and a maritime note.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "9c89fdb9-76f7-4b72-b16e-c6c191bbe415",
+    "Name": "Stewart's",
+    "Description": "Historic blended Scotch with Dundee roots; today a Whyte & Mackay blend known for a spicy, fruity style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "bb0c6c51-bd15-4c84-9527-1ee48cfc07b3",
+    "Name": "Storyman",
+    "Description": "Small-batch blended Scotch created with Annandale Distillery and personally selected by actor James Cosmo.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "4de82728-bbba-4d92-b184-031df4c1bc7b",
+    "Name": "Strathcolm",
+    "Description": "Single grain Scotch brand bottled by Angus Dundee—light, floral, and approachable in style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "42482c41-3c89-497a-9e82-6b5c32a2e1e1",
+    "Name": "Té Bheag",
+    "Description": "Gaelic Whiskies blended Scotch with a high malt content, matured in sherry casks and unchilfiltered.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "fb22a9dd-52dd-4c77-9da2-8dd484cae757",
+    "Name": "Teacher's",
+    "Description": "Long-running blended Scotch (Highland Cream), founded by William Teacher and now part of Suntory Global Spirits.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "4b3d4e18-7fdf-4010-ac2c-0fc7fd374822",
+    "Name": "Teeling",
+    "Description": "Dublin-built Irish whiskey brand and distillery known for innovation across small batch, single grain, and single malt releases.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "79fa764f-18f0-45a7-978d-66ef73e88b0f",
+    "Name": "The Dead Rabbit",
+    "Description": "Irish whiskey brand created with the famed New York bar; a smooth, approachable blend associated with The Dublin Liberties Distillery.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "90b6a420-4b77-4997-9d5a-380a6dcc2d3b",
+    "Name": "The Gauldrons",
+    "Description": "Campbeltown blended malt from Douglas Laing, marrying coastal, cereal-sweet notes with gentle smoke.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "0e94a2ad-b293-4c95-8424-6b77dac82d78",
+    "Name": "The Guard Bridge",
+    "Description": "Blended malt from Eden Mill St Andrews, named after the historic crossing near the distillery; crafted for a bright, malty Lowland style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "2549a912-3c55-439d-ae44-4484f45dea66",
+    "Name": "The Hive",
+    "Description": "Wemyss Malts blended malt highlighting honeyed Speyside character with soft citrus and gentle spice.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "37468fba-8bf1-434a-b759-875422c07c6f",
+    "Name": "The Last Drop",
+    "Description": "Ultra-rare Scotch bottlings from The Last Drop Distillers—curated, very old blends and single malts released in tiny allocations.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "4e65e32d-1154-4372-99d0-1ee3b67cdf90",
+    "Name": "The Royal Household",
+    "Description": "Prestige blended Scotch historically bottled for the British Royal Household; now an occasional export release with a refined, balanced profile.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "59c0919a-960e-46ee-a841-aa329ab727d9",
+    "Name": "The Scotsman",
+    "Description": "Vintage blended Scotch label tied to the famed Edinburgh newspaper name; mid-20th-century bottlings were popular in export markets.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "62c8cce3-7139-4ec7-be89-3d36c1200ce3",
+    "Name": "The Whistler",
+    "Description": "Irish whiskey range from Boann Distillery (Drogheda), spanning blends and single malts with sherry and other cask finishes.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "ce8dcf58-1379-4084-a24d-9314f988e7a4",
+    "Name": "The Woodsman",
+    "Description": "Whyte & Mackay blended Scotch crafted for mixing, matured and finished with a focus on fresh oak and vanilla-forward sweetness.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "e761684a-f689-497f-b3aa-a514acf689d9",
+    "Name": "Thompson Bros",
+    "Description": "Independent bottler based in Dornoch releasing small-batch Scotch single malts, grains, and occasional blends with distinctive label art.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "b1576a52-4f13-4647-b756-58ca18892eba",
+    "Name": "Timorous",
+    "Description": "Limited-edition spin-off in the Timorous Beastie family from Douglas Laing—lighter, approachable Highland-style blended malt.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "5912f7a5-8d11-41eb-9229-41060106a849",
+    "Name": "Timorous Beastie",
+    "Description": "Douglas Laing Highland blended malt named after Burns’s ‘wee, sleekit beastie’; honeyed cereal, citrus and gentle spice profile.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "f16403df-07fb-4960-baf5-89afa54c1708",
+    "Name": "Tullamore Dew",
+    "Description": "Flagship Irish blended whiskey (often triple distilled), known for a smooth, biscuity style and wide cask-finished variants.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "a2ef2f21-333d-4cf1-94e4-42555a619dfe",
+    "Name": "Two Stacks",
+    "Description": "Independent Irish whiskey brand blending and bottling small-batch releases (including the ‘Dram in a Can’) across malt, grain, and pot still styles.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "2e2fe76e-c318-4daa-9c51-3e69f5a2968f",
+    "Name": "Tyrconnell",
+    "Description": "Historic Irish single malt revived by Cooley/Kilbeggan (now Beam Suntory), noted for wine-cask finishes and a delicate orchard-fruit profile.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "5ba61f26-f426-4039-b5dc-bbf29885e130",
+    "Name": "Uam Var",
+    "Description": "Vintage blended Scotch named after the Perthshire hill; mid-20th-century bottlings surface from various merchants for export markets.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "bdbee746-e0a1-4e68-af73-93b514863fdd",
+    "Name": "VAT 69",
+    "Description": "Classic blended Scotch from William Sanderson & Son—rounded, sweet-spice style and long-standing global distribution.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "da9cd310-eddd-489c-a4c0-8503682b0ce9",
+    "Name": "Waterford",
+    "Description": "Irish single malt brand focused on single-farm ‘terroir’ bottlings, produced with traceable barley and detailed provenance.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "e277ff6a-259d-46aa-82b7-f7c4652407d0",
+    "Name": "Watt Whisky",
+    "Description": "Campbeltown-based independent bottler (Mark & Kate Watt) offering single casks and small-batch Scotch blends.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "f492f070-cdde-4923-b9f1-ebfe4aefe1ee",
+    "Name": "The Whisky Exchange",
+    "Description": "Retailer label for own bottlings—single casks and small-batch Scotch blends selected and released under The Whisky Exchange name.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "cd9b2761-a579-455d-8765-acee2c34b8ed",
+    "Name": "West Cork",
+    "Description": "Independent Irish whiskey brand and distillery from Skibbereen producing single malt, pot still, and blends with a focus on approachable, cask-finished styles.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "6a08d4c3-243f-4f44-bc4c-960452755c7e",
+    "Name": "Westport",
+    "Description": "Blended malt label used for teaspooned Glenmorangie—independent-bottled Scotch noted for a light, citrusy Highland profile.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "ac6b8cd0-f955-48f2-aeaf-6953efeaf37b",
+    "Name": "Whisky Works",
+    "Description": "Whyte & Mackay’s experimental line releasing small-batch blends and single malts with innovative maturations and finishes.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "e75ec0da-150d-46c6-ba13-860bd8138245",
+    "Name": "Whistler",
+    "Description": "Irish whiskey range from Boann Distillery (Drogheda), spanning blends and single malts with sherry and other cask finishes.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "07dc7376-5825-4bbd-9a78-9636b9cafb46",
+    "Name": "White Heather",
+    "Description": "Revived blended Scotch from The GlenAllachie Distillers Company, featuring richly sherried, age-stated releases (e.g., 15 & 21 Year).",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "951a6ef0-aeb8-4176-ba1d-e1acdc3fde8d",
+    "Name": "White Horse",
+    "Description": "Classic blended Scotch dating to the late 19th century, historically linked to Lagavulin and famed for a gently smoky, malty style.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "628ed4c4-5080-4963-8c48-71389bc41c51",
+    "Name": "Whyte & Mackay",
+    "Description": "Founding house blend of Whyte & Mackay (est. 1882), a rich, rounded Scotch with a long export history and multiple age statements.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "33ab540d-6278-4fe3-b707-83bfdc7addae",
+    "Name": "Wildmoor",
+    "Description": "Luxury blended Scotch collection from William Grant & Sons, showcasing bold, cask-driven profiles and launched initially for travel retail.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "c99674f1-e438-4124-8def-7fa2acd33b1c",
+    "Name": "William Lawson's",
+    "Description": "Popular blended Scotch brand (Bacardi) known for a malty, easy-drinking style and strong presence in European and CIS markets.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "8822052a-beed-4590-814a-7be206cff6d9",
+    "Name": "Wm. Maxwell",
+    "Description": "Vintage blended Scotch label (‘William Maxwell’) from UK wine & spirit merchants, seen on mid-20th-century export bottlings.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "84af662f-de3c-442f-8575-0c4e2b856e82",
+    "Name": "Woven",
+    "Description": "Leith-based blending house crafting small-batch Scotch whiskies and creative blended malts, focused on flavour-first releases and experiences.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "fc076357-72a8-49f4-8141-4d2f259d7adc",
+    "Name": "Wright & Greigs",
+    "Description": "Historic Glasgow whisky merchant and blended Scotch label, once owners of Dallas Dhu; vintage bottlings remain in circulation.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "f48cb5d6-689a-4aeb-8368-e7433ccc3358",
+    "Name": "Writers Tears",
+    "Description": "Irish whiskey brand from Walsh Whiskey—typically a marriage of single pot still and single malt styles, noted for approachable, honeyed character.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "b511028f-7421-441e-8762-8d222e8d190a",
+    "Name": "Yellow Spot",
+    "Description": "12-year-old single pot still Irish whiskey matured in bourbon, sherry and Málaga wine casks, bottled at 46% ABV.",
+    "CountryId": "0f70d6cd-6879-4c14-a2b8-7b7c60192105"
+  },
+  {
+    "Id": "edd80a89-99ed-48fc-bb7d-1e4ff77054d3",
+    "Name": "Yula",
+    "Description": "Douglas Laing limited-edition island-style blended malt trilogy (20–22 years), featuring peated malts from Islay and other islands.",
+    "CountryId": "e1a604b5-8aa5-4eac-89f0-64f37a3a3290"
+  },
+  {
+    "Id": "d98bcd04-5c69-4c7e-85d3-24426cf26bae",
+    "Name": "Angel's Envy",
+    "Description": "Louisville-based bourbon and rye finished in specialty barrels (notably Port for the flagship bourbon), founded by Lincoln & Wes Henderson.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "838c8ac7-0e83-4724-b761-d11179d27de8",
+    "Name": "Antique",
+    "Description": "Common shorthand for Old Weller Antique 107—Buffalo Trace’s high-proof wheated bourbon within the Weller line, prized for rich caramel and spice.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "c5500cee-c89f-4e83-aaff-d12447db8349",
+    "Name": "Balcones",
+    "Description": "Waco, Texas distiller known for bold, grain-forward American single malts and blue-corn whiskeys, often matured in Texas heat for intensity.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "1697d042-c90e-4178-9fe3-83f10a621083",
+    "Name": "Bardstown",
+    "Description": "Bardstown Bourbon Company—Kentucky blender/distiller celebrated for custom blends, collaborative finishes, and sourced-plus-house bourbon releases.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "ca538661-5400-401f-a698-7797541f0644",
+    "Name": "Barrell",
+    "Description": "Barrell Craft Spirits—independent blender bottling cask-strength American whiskeys (bourbon, rye, American whiskey) from multiple distilleries.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "45bba274-5307-4ce8-a2c8-e2d7f9fd81d2",
+    "Name": "Barton",
+    "Description": "Barton 1792 Distillery’s house label behind classics like Very Old Barton; producer of 1792 Bourbon and other Kentucky straight whiskies.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "cba685c4-2f3e-4f74-9aa9-cf78e4084e10",
+    "Name": "Basil Hayden",
+    "Description": "Jim Beam’s lighter-proof, high-rye Kentucky straight bourbon (formerly “Basil Hayden’s”), known for approachable spice and oak sweetness.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "af4eee40-94d3-4c80-8521-2e36a984b7c9",
+    "Name": "Ben Holladay",
+    "Description": "Historic Missouri label revived by Holladay Distillery; bottled-in-bond straight bourbon distilled and aged on-site in Weston.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "53dd24f5-e912-4eb7-aaf3-58bc29a3e5a3",
+    "Name": "Benchmark",
+    "Description": "Buffalo Trace bourbon line expanded into multiple expressions (e.g., Top Floor, Bonded, Full Proof) offering varied proofs and profiles.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "6b0f7380-547c-494c-b815-71b4023ab0d4",
+    "Name": "Bernheim",
+    "Description": "Heaven Hill’s Bernheim Original—America’s flagship straight wheat whiskey—distilled in Louisville and known for soft vanilla-honey notes.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "4c6f712d-6bcf-4a88-a826-168c45e10530",
+    "Name": "Blade & Bow",
+    "Description": "Diageo’s Louisville bourbon honoring Stitzel-Weller’s ‘five keys’; a Kentucky straight bourbon built via a solera-style mingling of aged stocks.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "58cfda3e-0a1a-476c-b4f4-fcd1dde2b3b5",
+    "Name": "Blanton's",
+    "Description": "Buffalo Trace’s single-barrel Kentucky straight bourbon (launched 1984), traditionally dumped from metal-clad Warehouse H and famed for collectible toppers.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "1d0bffb5-902d-4f9d-8c55-947df8b4aec1",
+    "Name": "Bond & Lillard",
+    "Description": "Historic Kentucky label revived in Campari’s Whiskey Barons Collection, produced at Wild Turkey as a lighter, Old-style Kentucky straight bourbon.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "342f37da-cd8a-46eb-b8f0-bda7f2cb6d39",
+    "Name": "Booker's",
+    "Description": "Beam’s cask-strength, uncut & unfiltered small-batch bourbon created by Booker Noe; released in named batches each year.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "9685a744-0785-48ed-bc7f-5914f443111a",
+    "Name": "Boondocks",
+    "Description": "American whiskey brand from master distiller Dave Scheurich, known for mature straight American whiskey and cask-finished expressions.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "7b93474e-2422-432d-a959-f5d00da1c528",
+    "Name": "Boulder",
+    "Description": "Colorado label (Vapor Distillery) producing American single malt and bourbon in Boulder with Rocky Mountain maturation.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "be7ece50-1dc9-402c-a1a0-f337c211173f",
+    "Name": "Bourbon de Luxe",
+    "Description": "Long-running Kentucky straight bourbon value label in the Heaven Hill portfolio with roots in the mid-20th century.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "ee0e4f52-96d1-4d1f-be98-2f2dad59b8bd",
+    "Name": "Bowsaw",
+    "Description": "Irish-owned brand that bottles American whiskey/bourbon (often sourced from the U.S.) in Northern Ireland under the Kirker & Greer stable.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "01f3ac42-3135-4ee5-bf6a-0bf898342e06",
+    "Name": "Buffalo Trace",
+    "Description": "Flagship Kentucky straight bourbon from Buffalo Trace Distillery in Frankfort; a benchmark, well-balanced house style.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "170b9808-fc67-49c4-a876-67e14f4a84d0",
+    "Name": "Bulleit",
+    "Description": "High-rye Kentucky straight bourbon and rye brand from Diageo, styled as ‘Frontier Whiskey’ and popular in cocktail culture.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "e9652c9c-49cf-4a30-b2dc-cd7534a40305",
+    "Name": "Castle & Key",
+    "Description": "Frankfort, Kentucky distillery restoring the historic Old Taylor site; produces bourbon, rye, and gin with a blend- and batch-driven approach.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "bdf10580-d6c5-46d9-911a-b25a1cdc8308",
+    "Name": "Catoctin Creek",
+    "Description": "Purcellville, Virginia rye specialist (organic grains, pot stills), known for Roundstone Rye and cask-finished variations.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "c8fb0475-cb61-47fa-8b75-d97a64ac712b",
+    "Name": "Cedar Ridge",
+    "Description": "Iowa’s first post-Prohibition distillery; produces bourbon and American single malt with Midwest grain and on-site maturation.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "92b7bc02-b6be-4e2f-9ed2-5ffe8082b444",
+    "Name": "Charlie Parry's",
+    "Description": "Bourbon label associated with a Welsh drinks company but bottled as straight bourbon; approachable vanilla, caramel, and spice profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "081df57b-d7b3-464d-9692-f3e4775e4535",
+    "Name": "Clyde May's",
+    "Description": "Alabama-born brand famous for ‘Alabama Style’ whiskey and straight bourbon/rye, often finished with apple-influenced aging cues.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "5e3055cc-2355-4afe-8ec6-c03364f40523",
+    "Name": "Coppersea",
+    "Description": "Hudson Valley, New York distillery using floor-malted grain and direct-fire copper stills; robust, grain-forward whiskies.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "3c8ca418-4304-4aef-afcb-e6ebc4eabf6a",
+    "Name": "Copperworks",
+    "Description": "Seattle, Washington producer focused on American Single Malt, with diverse malt bills and cask finishes highlighting Pacific Northwest terroir.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "6ae93e44-0b28-4337-86e3-cc3d1bf25bfe",
+    "Name": "Daddy Rack",
+    "Description": "Tennessee straight small-batch bourbon filtered through maple charcoal (Lincoln County Process) for a smooth, sweet-spice character.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "f57c6427-52c8-42ed-9d14-fbb824002cc8",
+    "Name": "Distillery 291",
+    "Description": "Colorado craft distiller in Colorado Springs; bold rye and bourbon often finished with toasted aspen staves for a signature profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "206532b7-f300-4f44-bbe3-4b6178d58393",
+    "Name": "Driftless Glen",
+    "Description": "Baraboo, Wisconsin distillery distilling and aging on-site; straight bourbon and rye featuring sweet corn, baking spice, and oak tones.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "402a0006-9d59-442c-b882-d05a6fa02f16",
+    "Name": "E.H. Taylor",
+    "Description": "Buffalo Trace’s heritage line honoring Col. E.H. Taylor Jr.; bottled-in-bond small batch and single barrel bourbons noted for classic sweet spice and oak.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "d750accd-13c2-4bad-a1dd-a7a61d4264a6",
+    "Name": "Eagle Rare",
+    "Description": "Kentucky straight bourbon from Buffalo Trace, famed for its age-stated 10-year releases and a rich, toffee-vanilla profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "9a983f17-a63b-49e8-9f23-f2cdd7a05422",
+    "Name": "Early Times",
+    "Description": "Historic Kentucky brand (est. 1860) known for approachable bourbon and bottled-in-bond expressions with mellow grain and caramel notes.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "7ffe80f5-1f27-455e-9299-1ae93cc47ad6",
+    "Name": "Elijah Craig",
+    "Description": "Heaven Hill’s flagship small batch and barrel proof bourbons—caramel, baking spice, toasted oak—named after the reverend often linked to charred barrels.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "52cb5929-7908-435f-8a8b-c65b2031f785",
+    "Name": "Elmer T. Lee",
+    "Description": "Buffalo Trace single-barrel bourbon created by master distiller Elmer T. Lee; elegant, honeyed, and highly allocated.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "d4da5fa6-b862-4c53-a289-c288ef10b56e",
+    "Name": "Evan Williams",
+    "Description": "Heaven Hill’s best-selling Kentucky straight bourbons (Black Label, Bottled-in-Bond), offering classic corn sweetness and oak spice at approachable proofs.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "a312fe38-6e13-4f64-abff-5cc4bce27219",
+    "Name": "Ezra Brooks",
+    "Description": "Lux Row’s Kentucky straight bourbon range (e.g., 99 Proof, Old Ezra 7) known for bold spice, charcoal mellowing, and value-driven releases.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "84cdce94-5bae-4644-9c72-da03b263937f",
+    "Name": "FEW",
+    "Description": "Evanston, Illinois craft distillery producing grain-to-glass bourbon, rye, and American single malt with assertive, spice-forward profiles.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "f509a829-3735-4ed7-b021-fc5a2df2fdf4",
+    "Name": "Four Roses",
+    "Description": "Kentucky distillery and brand famed for ten unique bourbon recipes (2 mashbills × 5 yeasts) underpinning its Small Batch and Single Barrel expressions.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "84ecfa85-82b1-42ad-ab51-5fdb6068014d",
+    "Name": "Frey Ranch",
+    "Description": "Nevada grain-to-glass distillery growing, malting, distilling, and aging on a Fallon farm; notable for straight bourbon and rye bottled in bond.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "4ad51fc7-2885-4698-8ab7-486fcfefd05c",
+    "Name": "Gentleman's Cut",
+    "Description": "Kentucky straight bourbon launched by Stephen Curry; a high-rye recipe crafted and aged in Kentucky with a vanilla, baking-spice profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "dd29fd59-bcfc-46a7-8a1f-c0d42acfff95",
+    "Name": "George Dickel",
+    "Description": "Tennessee whisky from Cascade Hollow Distilling Co.; charcoal mellowed and known for classic No. 12, Bottled-in-Bond, and rye releases.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "6e440910-b517-4d1d-a16a-58ba9c12efbb",
+    "Name": "George T",
+    "Description": "Shorthand used for the BTAC ‘George T. Stagg’ releases; see the full ‘George T. Stagg’ entry for the barrel-proof Buffalo Trace bourbon.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "1de65597-7387-4010-abc1-faecaa270c3f",
+    "Name": "George T. Stagg",
+    "Description": "Buffalo Trace Antique Collection barrel-proof Kentucky straight bourbon—unfiltered, robust, and highly allocated.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "5a9c0e50-df26-41d5-8baa-c849fd31189c",
+    "Name": "Green River",
+    "Description": "Owensboro, Kentucky distillery brand (DSP-KY-10) revived with straight bourbon showcasing sweet corn, caramel, and oak spice.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "8f06c8b6-48cf-4bff-b22b-1a9d476087c9",
+    "Name": "Heaven Hill",
+    "Description": "Flagship label from Heaven Hill Distillery, including Bottled-in-Bond and heritage expressions alongside broader portfolio stalwarts.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "5ed609da-701a-4c4f-a483-e490734a3c71",
+    "Name": "Heaven's Door",
+    "Description": "Bob Dylan’s American whiskey brand featuring Tennessee straight bourbon, double barrel, and rye with creative cask finishes.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "2a9fd902-c3f9-4a60-92cd-c68037cf4497",
+    "Name": "Henebery",
+    "Description": "San Diego–born whiskey label reviving ‘Henebery Celebrated Whiskey’; rye-led releases finished for a smooth, spice-forward profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "2d4cbd21-fb3f-40eb-91c7-330d5fb27d7e",
+    "Name": "High West",
+    "Description": "Utah distillery and blender known for marrying own-distilled and sourced stocks; standouts include Rendezvous Rye, Double Rye!, and A Midwinter Night’s Dram.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "467442e2-7844-4239-97d0-daebf062e372",
+    "Name": "Hirsch",
+    "Description": "Modern HIRSCH Selected Whiskeys inspired by the A.H. Hirsch legacy—sourced bourbons (e.g., The Horizon, The Bivouac) bottled at approachable to higher proofs.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "147330e5-ab6c-4c97-ab97-c6d37b0b214b",
+    "Name": "Horse With No Name",
+    "Description": "American bourbon infused with habanero essence for a spicy, peppery finish; designed for bold cocktails and sipping with heat.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "c9cef541-70dd-4baf-8ed2-ec4497afec77",
+    "Name": "I.W. Harper",
+    "Description": "Historic Kentucky bourbon brand dating to the 19th century; elegant, vanilla-forward profile with age-stated special releases.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "0ba85c42-1059-4822-b732-c5e8c4b31452",
+    "Name": "J.W. Dant",
+    "Description": "Classic Kentucky straight bourbon with sour-mash heritage and bottled-in-bond expressions valued for old-school, corn-sweet character.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "935cdc03-e0ac-453b-a9be-e4621a7528bd",
+    "Name": "Jack Daniel's",
+    "Description": "Tennessee whiskey charcoal mellowed via the Lincoln County Process; iconic Old No. 7 plus Single Barrel, Bonded, and rye variants.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "2f3bf4f8-b9d8-458e-b88b-2f6e6a6065cb",
+    "Name": "James E. Pepper",
+    "Description": "Revived historic Lexington brand/distillery producing rye and bourbon (e.g., 1776 line) with robust spice and heritage-driven branding.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "c0cb8e63-c5f7-4314-90aa-2f2741692273",
+    "Name": "Jeptha Creed",
+    "Description": "Family-run Kentucky distillery using heirloom Bloody Butcher corn; grain-to-glass straight bourbon and rye with rich, earthy sweetness.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "82eeb4b8-6e9c-47e1-a866-8b37468c20db",
+    "Name": "Jim Beam",
+    "Description": "Flagship Kentucky straight bourbon from Beam, offering a classic peanut brittle, vanilla, and oak profile across a wide range of proofs.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "5f19a985-4c82-42f1-a2e3-b4c37e005a86",
+    "Name": "Johnny Drum",
+    "Description": "Willett Distillery Kentucky straight bourbon (e.g., Private Stock) known for mature oak, brown sugar, and baking-spice complexity.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "922e0c52-d83e-4868-b7f7-d921c1c1d9b9",
+    "Name": "Kentucky Gentleman",
+    "Description": "Value Kentucky blended whiskey traditionally combining straight bourbon with grain neutral spirits for an easy, light-bodied profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "97492b89-d298-4cae-91cc-21529e45cb7b",
+    "Name": "Kentucky Owl",
+    "Description": "Revived Kentucky bourbon brand known for small-batch, high-proof releases and limited-edition blends crafted in a rich, oak-forward style.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "c73e96b9-dc9d-4905-85d3-87af141c9ff7",
+    "Name": "Kentucky Vintage",
+    "Description": "Willett/Kentucky Bourbon Distillers small-batch Kentucky straight bourbon, a classic, well-rounded house blend from Bardstown.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "7bede09f-c04e-414f-a92c-6ce08a6e4120",
+    "Name": "Kings County",
+    "Description": "Brooklyn, New York distillery producing pot-distilled bourbons and ryes (including unique single-malt and peated variants) from organic grains.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "8d81cc2b-06d3-4f1b-9c70-d41a8b34e9e3",
+    "Name": "Knob Creek",
+    "Description": "Beam Suntory small-batch Kentucky straight bourbon and rye; robust, high-flavor profiles with age-stated and single-barrel expressions.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "2dea83c1-733b-480c-aae7-c7866322b140",
+    "Name": "Kopper Kettle",
+    "Description": "Belmont Farm Distillery (Virginia) brand producing Virginia straight bourbon and other whiskeys on traditional copper pot stills.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "fe02783c-0101-4db0-9955-5baf94c9228f",
+    "Name": "Koval",
+    "Description": "Chicago craft distillery specializing in organic, single-grain American whiskeys (millet, rye, bourbon) with a clean, fruit-forward profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "7e99e297-397d-4882-968e-bf144a4d6493",
+    "Name": "Leiper's Fork",
+    "Description": "Tennessee distillery crafting small-batch bourbon and Tennessee whiskey with heritage mashbills and slow, pot-distilled character.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "896757a6-9fd0-4021-ad95-907f656da4b0",
+    "Name": "Maker's Mark",
+    "Description": "Loretto, Kentucky wheated bourbon famous for its red wax seal; soft, vanilla-caramel profile across classic and cask-strength releases.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "3a4bb8a0-5e9e-4d6a-8129-65d0297ce570",
+    "Name": "MB Roland",
+    "Description": "Pembroke, Kentucky grain-to-glass distillery producing cask-strength bourbons and ryes from locally sourced corn and small-barrel aging.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "6807f1be-f33d-48f3-a133-60f1549c9c2d",
+    "Name": "McKenzie",
+    "Description": "Finger Lakes Distilling’s New York whiskey line (bourbon, rye, and single malt) distilled on-site with a balanced spice-and-vanilla house style.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "52179c32-4a88-457b-a15b-dd9be0d126e8",
+    "Name": "Mellow Corn",
+    "Description": "Heaven Hill’s classic Bottled-in-Bond straight corn whiskey—80%+ corn mashbill with vanilla, corn sweetness, and light oak.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "5fb16a24-e1fe-42b7-8a93-02b99beb07ef",
+    "Name": "Michter's",
+    "Description": "Prestige American whiskey house producing small-batch and single-barrel bourbon, rye, and American whiskey with careful barrel selection.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "f4001376-8ee2-461f-bd74-80d6324800a3",
+    "Name": "Never Say Die",
+    "Description": "Kentucky straight bourbon brand with transatlantic roots; high-rye recipe noted for spice and citrus over sweet oak.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "bc84f70d-4962-4863-8d03-adf04b5952a2",
+    "Name": "New Riff",
+    "Description": "Newport, Kentucky distillery known for Bottled-in-Bond bourbon and rye, often high-rye mashbills and single barrel selections.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "812dab60-4a16-44c3-a2ca-b75e15ec06fa",
+    "Name": "New York Distilling",
+    "Description": "Brooklyn producer releasing Ragtime Rye and other grain-to-glass American whiskeys with New York–grown grain.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "eae9360a-87fe-4b3d-b297-41caf4408f39",
+    "Name": "Noah's Mill",
+    "Description": "Willett/Kentucky Bourbon Distillers small-batch Kentucky straight bourbon—rich, oak-forward and bottled at higher proof.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "e7fc90c6-c6cb-4f30-8454-0f7f64403ae8",
+    "Name": "OFC",
+    "Description": "Buffalo Trace’s vintage-dated, ultra-rare Kentucky straight bourbon honoring the historic Old Fire Copper distillery name.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "d6ce4709-31ba-4e24-828a-c5826895b47e",
+    "Name": "Old Fitzgerald",
+    "Description": "Heaven Hill’s wheated bourbon line, including Bottled-in-Bond decanter series and classic, buttery vanilla-caramel profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "ad069231-ca2d-45d9-b961-690d02c188fd",
+    "Name": "Old Forester",
+    "Description": "Brown-Forman’s Louisville bourbon—continuous since 1870—spanning 86 Proof to 1920 Prohibition Style and Single Barrel offerings.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "eab72f02-529f-4121-9e61-d0c019ba73d8",
+    "Name": "Old Grand-Dad",
+    "Description": "Beam Suntory high-rye Kentucky straight bourbon range (Bonded, 114) delivering bold spice, orange peel, and toasty oak.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "8b961b99-ad2e-4b9a-9c80-582e424a122e",
+    "Name": "Old Line",
+    "Description": "Baltimore distillery known for American Single Malt and rye, matured in Maryland’s climate for a robust, malty profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "a03dee9b-b035-4686-bda8-c0ddae0581d1",
+    "Name": "Old Medley",
+    "Description": "Kentucky straight bourbon from the Medley family lineage, released in small batches with classic caramel, oak, and spice notes.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "c956409d-a966-42f9-8f3f-7d5826cddf61",
+    "Name": "Old Potrero",
+    "Description": "San Francisco rye from Hotaling & Co.; 100% malted rye mashbill showcasing pepper, cocoa, and toasted oak.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "3944d2df-e763-4f02-bd64-b10736c13b5a",
+    "Name": "Old Williamsburg",
+    "Description": "Kentucky straight bourbon label long bottled for export/retail partners—vanilla-corn sweetness with gentle oak spice.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "65728aaf-95b3-49ba-b1bf-fbbcca058bdb",
+    "Name": "Peerless",
+    "Description": "Louisville distillery reviving the 19th-century brand; bottled-in-bond bourbon and rye distilled and aged on site.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "9d11e222-c24b-4922-8a23-499410cdf36d",
+    "Name": "Penelope",
+    "Description": "Modern bourbon house blending multiple mashbills (including toasted and cask-finished expressions) for a balanced, fruit-forward style.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "52dc86db-e96c-4d72-871d-021b5ef2ee32",
+    "Name": "Pikesville",
+    "Description": "Heaven Hill’s rye with Maryland roots—now Kentucky-made—offering dark chocolate, rye spice, and charred oak richness.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "764373b1-9871-4585-8f81-ccee06b27ad0",
+    "Name": "Platte Valley",
+    "Description": "Missouri-made straight corn whiskey from McCormick Distilling, often bottled in stoneware jugs with sweet corn and vanilla notes.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "b785eac6-9c65-4499-a003-7ab3923a6fad",
+    "Name": "Pure Kentucky",
+    "Description": "Willett/Kentucky Bourbon Distillers small-batch straight bourbon (XO) known for rich toffee, baking spice, and oak depth.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "070f64a9-b447-4bdd-b6ff-6c43771cb78a",
+    "Name": "Pursuit",
+    "Description": "Pursuit Spirits’ small-batch bourbons and ryes (e.g., Pursuit United), blending selected barrels for layered fruit, spice, and oak.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "f59403e4-e901-4096-ae05-114e799be21e",
+    "Name": "Rabbit Hole",
+    "Description": "Louisville craft distillery producing distinctive-mashbill straight bourbons and rye (e.g., Cavehill, Heigold, Boxergrail) with modern cask finishes.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "501bccd4-37a0-48f1-8e78-31c2dad9c89c",
+    "Name": "Rebel",
+    "Description": "Wheated Kentucky straight bourbon (formerly Rebel Yell) from Lux Row, offering soft vanilla, caramel, and spice across multiple proofs.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "5c6d8199-e97c-49a8-869c-b93a67d68cd8",
+    "Name": "Redwood Empire",
+    "Description": "Sonoma, California whiskey house blending own-distilled and sourced stocks; bourbon, rye, and American whiskey named after coastal redwoods.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "466c91be-d31d-4ed8-9bd2-d2179d0bd1c7",
+    "Name": "Remus",
+    "Description": "George Remus Bourbon from Ross & Squibb (Indiana)—high-rye Kentucky-style bourbon highlighted by annual Repeal Reserve releases.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "6dd29969-a33c-4648-8198-1cbe16fd38e3",
+    "Name": "Reservoir",
+    "Description": "Richmond, Virginia distillery known for 100% single-grain whiskeys (corn, wheat, rye) bottled small-batch and blended into proprietary bourbons.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "dbfac3dd-ce8e-486e-9c8a-43a7cbcec154",
+    "Name": "RI1",
+    "Description": "Beam’s modern rye (styled rī¹): a lighter, cocktail-friendly straight rye that helped spark interest in contemporary rye expressions.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "f29fb41b-ce09-4caf-8087-21bfe6d33ef8",
+    "Name": "Rittenhouse",
+    "Description": "Heaven Hill straight rye with Pennsylvania heritage; the Bottled-in-Bond expression is prized for robust spice and dark chocolate notes.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "240073a3-3a52-47c8-9d66-13cd21d3edc5",
+    "Name": "Rossville Union",
+    "Description": "MGP’s house rye brand from Lawrenceburg, Indiana—blends of high-rye mashbills released in ‘Master Crafted’ and barrel-proof editions.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "3cc48c0d-c27e-4663-a85c-08a198d8f3af",
+    "Name": "Rowan's Creek",
+    "Description": "Willett/Kentucky Bourbon Distillers small-batch straight bourbon, traditionally bottled just over 100 proof with rich toffee and oak depth.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "fdee1291-07ad-4aba-8a73-c490baf522c6",
+    "Name": "Sagamore",
+    "Description": "Baltimore rye brand blending high- and low-rye mashbills; Maryland-inspired style with core, cask-strength, and finished expressions.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "794accf0-a529-48a5-a9ce-757497629599",
+    "Name": "Santa Fe Spirits",
+    "Description": "New Mexico craft distiller known for mesquite-smoked American single malt and other Southwest-inspired whiskies.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "f28a8511-6d91-4b08-bb22-a7aec3c81140",
+    "Name": "Sazerac",
+    "Description": "Rye whiskey line from Buffalo Trace (e.g., Sazerac Rye, 18 Year, Thomas H. Handy) with a spicy, citrus-led profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "59b4772c-377f-4c4c-b142-edfbabeb397a",
+    "Name": "SirDavis",
+    "Description": "American whisky launched in 2024 as a Moët Hennessy × Beyoncé collaboration, blended/finished and bottled in Texas.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "f900f42f-491f-4265-8a22-92f7c77da907",
+    "Name": "Smooth Ambler",
+    "Description": "West Virginia producer and blender behind Old Scout and Contradiction, bottling straight bourbons and ryes at characterful proofs.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "fc893c32-696b-42cd-9f34-37e494373d51",
+    "Name": "St George",
+    "Description": "Alameda, California distillery (St. George Spirits) releasing American single malts (e.g., Baller) and other grain-led whiskies.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "1a3e8ed9-ca92-411d-8629-962d0fb16cb0",
+    "Name": "Star Hill Farm",
+    "Description": "Maker’s Mark’s estate wheat-whisky line—non-bourbon annual releases spotlighting regeneratively grown soft red winter wheat.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "9537ccf8-a643-4d64-a5b6-bc4ffb980063",
+    "Name": "Stoll & Wolfe",
+    "Description": "Pennsylvania distillery reviving local rye traditions, bottling straight rye and single-barrel bourbons from Lititz, PA.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "6ae2ec8f-57c3-46a1-9efd-813795755796",
+    "Name": "Templeton",
+    "Description": "Iowa rye brand with Prohibition-era roots, now known for age-stated straight rye and finished expressions.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "45c70560-bb30-4f0a-8445-2eccb82fe208",
+    "Name": "The Old Oscar Pepper Distillery",
+    "Description": "Heritage Kentucky name associated with today’s Woodford Reserve site; used on select American whiskey releases referencing the historic distillery.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "3bc00dde-a6ef-410a-a213-67002df68f1d",
+    "Name": "The Story Of",
+    "Description": "Independent label for American whiskies (e.g., ‘The Story of Bourbon’), releasing selected Kentucky straight bourbon at robust proofs.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "40351f07-1910-48d3-91dc-57116f18ce53",
+    "Name": "Thomas H. Handy",
+    "Description": "Part of Buffalo Trace’s Antique Collection—a cask-strength straight rye famed for bold spice, citrus, and robust proof.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "7acc6369-d0c3-4777-a5bc-eb845fa8252a",
+    "Name": "Tincup",
+    "Description": "Colorado-styled American whiskey and bourbons proofed with Rocky Mountain water; approachable rye-spice and vanilla profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "7822a629-d555-4b0f-871e-4ea6a0077c7a",
+    "Name": "Traveller",
+    "Description": "Buffalo Trace collaboration with Chris Stapleton—Blend No. 40—crafted to be easy-drinking with balanced fruit, oak, and spice.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "cee2f075-d1f1-41e5-97dd-d9f1066f379d",
+    "Name": "Uncle Nearest",
+    "Description": "Tennessee whiskey honoring Nearest Green; award-winning portfolio highlighting charcoal-mellowed, vanilla-caramel richness.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "23fd8346-b894-44fc-a93c-7f2c24429e1c",
+    "Name": "Van Brunt",
+    "Description": "Brooklyn’s Van Brunt Stillhouse—American whiskey lineup (bourbon, single malt, rye) distilled on-site with a grain-forward style.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "02584bc6-1346-4d13-8615-b3bca01ce86c",
+    "Name": "W.L. Weller",
+    "Description": "Buffalo Trace’s wheated bourbon family (Special Reserve, Antique 107, Full Proof, etc.) known for soft sweetness and baking spice.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "c12d27d7-5a04-4a57-bc40-f682497a6432",
+    "Name": "Walker’s",
+    "Description": "Historic American bourbon label (e.g., Walker’s De Luxe/8-year) linked to Hiram Walker with vintage U.S. bottlings still found today.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "476c21e2-b5cc-497e-9e65-0ec49fa1ff46",
+    "Name": "War Eagle",
+    "Description": "Kentucky straight bourbon brand—vanilla, peach, and oak-spice notes—bottled at approachable proof for cocktails or sipping.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "c2aef85b-d2f0-444d-a7c0-ddb858f4e792",
+    "Name": "Wasmund's",
+    "Description": "Copper Fox Distillery’s Virginia American single malts and ryes—fruitwood-smoked malt and innovative chip-and-barrel aging.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "689e17c1-f2e4-4e33-8e71-bb0ee367b276",
+    "Name": "Wathen's",
+    "Description": "Heritage Kentucky straight bourbon from the Medley family, typically single-barrel releases with classic vanilla, caramel, and oak spice.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "93a9cc1f-c001-4365-a1d2-519fa98af932",
+    "Name": "Weller",
+    "Description": "Buffalo Trace’s wheated-bourbon line (e.g., Special Reserve, Antique 107, Full Proof), prized for soft sweetness and baking-spice depth.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "536f9e1e-7e9a-492c-b392-0e598c172fb3",
+    "Name": "Westland",
+    "Description": "Seattle distillery pioneering American Single Malt with Pacific Northwest barley, varied malt bills, and distinctive cask programs.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "cc0a0abd-6223-4eda-88ed-0035c371dc16",
+    "Name": "Westward",
+    "Description": "Portland, Oregon American Single Malt matured in new oak and finished in select casks; fruit-forward, robust malt profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "2aabeca8-524a-4b5f-8290-a826eb70bd15",
+    "Name": "WhistlePig",
+    "Description": "Vermont-based rye specialist blending estate and sourced stocks; known for bold, cask-finished ryes and limited farm-to-bottle releases.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "ca29e05d-cac0-4e6e-bcdd-1400608203a5",
+    "Name": "Widow Jane",
+    "Description": "Brooklyn whiskey house blending sourced and house-distilled bourbons; limestone-rich proofing water and single-barrel releases are hallmarks.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "501c7a20-acd4-4c75-b5d7-1942724bddbb",
+    "Name": "Wild Turkey",
+    "Description": "Lawrenceburg, Kentucky distillery and brand—high-rye bourbons and ryes across 101, Rare Breed, and Russell’s Reserve lines.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "31f78fe4-f0a8-4053-a89b-82b6de589450",
+    "Name": "Wildcatter",
+    "Description": "American straight bourbon with an oil-boom heritage theme; approachable caramel, vanilla, and spice at cocktail-friendly proof.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "6abecaef-0664-4107-bab4-ca5aa8154f06",
+    "Name": "Wilderness",
+    "Description": "Legacy American whiskey label appearing on mid-to-late 20th-century bottlings; typically an easy-drinking, vanilla-led profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "3d65c5e3-b386-443e-b094-643988d226ae",
+    "Name": "Wilderness Trail",
+    "Description": "Danville, Kentucky grain-to-glass distillery—sweet mash, low barrel-entry proofs—releasing well-aged bourbon and rye at robust proofs.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "2248c84c-40a4-4001-9d39-2cb6cebc7722",
+    "Name": "Willett",
+    "Description": "Bardstown distillery and independent bottler (Kentucky Bourbon Distillers) known for single barrel and small-batch bourbons and ryes.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "cfb26029-465a-49c1-8ee4-2b6be59d258b",
+    "Name": "Willett's",
+    "Description": "Label variant seen on select Willett Family Estate and historic bottlings; small-batch and single-barrel Kentucky straight whiskies.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "a42a0034-2148-442b-89dd-9dedeadad16e",
+    "Name": "WL Weller",
+    "Description": "Buffalo Trace’s wheated bourbon line (Special Reserve, Antique 107, Full Proof, etc.), noted for soft sweetness and baking-spice depth.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "d385ee6c-af14-4550-8ea4-796cbef3e98c",
+    "Name": "Woodford",
+    "Description": "Shorthand label used for Woodford Reserve family releases—Kentucky straight bourbons and ryes distilled in copper pot stills and column stills.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "11dbb963-30d3-4127-9ebd-a6c221042f51",
+    "Name": "Woodford Reserve",
+    "Description": "Brown-Forman’s Versailles, KY brand (since 1996), known for classic Straight Bourbon plus Double Oaked, Rye, and Master’s Collection releases.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "43852e83-56c5-4348-bcbc-2d1eb3a23096",
+    "Name": "Wyoming",
+    "Description": "Wyoming Whiskey—Kirby, WY distillery producing straight bourbon and limited finishes with high plains maturation character.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "f3c1cd63-7db9-4952-a1ca-0847b93c9c3f",
+    "Name": "Yellow Rose",
+    "Description": "Houston, Texas brand releasing straight bourbon and rye, including high-proof single barrels with rich caramel and oak spice.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  },
+  {
+    "Id": "c74fce14-b7f3-4a23-b449-4130a04fb878",
+    "Name": "Yellowstone",
+    "Description": "Limestone Branch’s Kentucky straight bourbon line (e.g., Select, Limited Edition), blending well-aged stocks for a balanced profile.",
+    "CountryId": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f"
+  }
+]
