@@ -105,5 +105,19 @@
         "CountryId": "f5712c32-1d89-444d-8cf7-9c444c55ce61"
       }
     ]
+  },
+  {
+    "Id": "0f70d6cd-6879-4c14-a2b8-7b7c60192105",
+    "Name": "Ireland",
+    "Slug": "Ireland",
+    "IsActive": true,
+    "Regions": []
+  },
+  {
+    "Id": "e49f64c8-dffa-4d4d-beaf-0dde8d8f760f",
+    "Name": "USA",
+    "Slug": "USA",
+    "IsActive": true,
+    "Regions": []
   }
 ]

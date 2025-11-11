@@ -11,17 +11,20 @@ public static class BrandEntityMapping
         {
             Id = entity.Id,
             Name = entity.Name,
-            Description = entity.Description
+            Description = entity.Description,
+            CountryId = entity.CountryId,
+            CountryName = entity.Country?.Name
         };
     }
 
-    public static BrandEntity ToEntity(this Brand country)
+    public static BrandEntity ToEntity(this Brand brand)
     {
         return new BrandEntity
         {
-            Id = country.Id,
-            Name = country.Name.Trim(),
-            Description =  country.Description?.Trim()
+            Id = brand.Id,
+            Name = brand.Name.Trim(),
+            Description =  brand.Description?.Trim(),
+            CountryId =  brand.CountryId
         };
     }
 }

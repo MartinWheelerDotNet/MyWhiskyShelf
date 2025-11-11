@@ -23,5 +23,10 @@ public sealed class BrandEntityConfiguration : IEntityTypeConfiguration<BrandEnt
 
         b.HasIndex(e => e.Name)
             .IsUnique();
+        
+        b.HasOne(e => e.Country)
+            .WithMany()
+            .HasForeignKey(e => e.CountryId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

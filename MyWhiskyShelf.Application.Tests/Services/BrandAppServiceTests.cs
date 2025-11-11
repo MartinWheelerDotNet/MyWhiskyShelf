@@ -23,8 +23,21 @@ public class BrandAppServiceTests
     {
         List<Brand> expectedBrands =
         [
-            new() { Id = Guid.NewGuid(), Name = "First Name", Description = "First Description" },
-            new() { Id = Guid.NewGuid(), Name = "Second Name", Description = "Second Description" }
+            new()
+            {
+                Id = Guid.NewGuid(), 
+                Name = "First Name",
+                Description = "First Description",
+                CountryId = Guid.NewGuid(),CountryName = "CountryName"
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Second Name",
+                Description = "Second Description",
+                CountryId = Guid.NewGuid(),
+                CountryName = "CountryName"
+            }
         ];
         _readMock.Setup(read => read.GetBrands(It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedBrands);

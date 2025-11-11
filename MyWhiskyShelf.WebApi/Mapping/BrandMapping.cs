@@ -11,7 +11,9 @@ public static class BrandMapping
         {
             Id = brand.Id,
             Name = brand.Name,
-            Description = brand.Description
+            Description = brand.Description,
+            CountryId = brand.CountryId,
+            CountryName = brand.CountryName
         };
     }
 }

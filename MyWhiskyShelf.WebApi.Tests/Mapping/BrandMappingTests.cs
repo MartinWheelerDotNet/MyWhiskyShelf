@@ -12,7 +12,9 @@ public class BrandMappingTests
         {
             Id = Guid.NewGuid(),
             Name = "Name",
-            Description = "Description"
+            Description = "Description",
+            CountryId = Guid.NewGuid(),
+            CountryName = "CountryName"
         };
 
         var response = brand.ToResponse();
@@ -20,6 +22,8 @@ public class BrandMappingTests
         Assert.Multiple(
             () => Assert.Equal(brand.Id, response.Id),
             () => Assert.Equal(brand.Name, response.Name),
-            () => Assert.Equal(brand.Description, response.Description));
+            () => Assert.Equal(brand.Description, response.Description),
+            () => Assert.Equal(brand.CountryId, response.CountryId),
+            () => Assert.Equal(brand.CountryName, response.CountryName));
     }
 }

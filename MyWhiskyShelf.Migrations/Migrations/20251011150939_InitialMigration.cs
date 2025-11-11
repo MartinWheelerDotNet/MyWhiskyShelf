@@ -53,12 +53,6 @@ namespace MyWhiskyShelf.Migrations.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-            
-            migrationBuilder.CreateIndex(
-                name: "IX_Regions_CountryId_Name",
-                table: "Regions",
-                columns: new[] { "CountryId", "Name" },
-                unique: true);
 
             migrationBuilder.CreateTable(
                 name: "Brands",
@@ -67,10 +61,17 @@ namespace MyWhiskyShelf.Migrations.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "citext", maxLength: 75, nullable: false),
                     Description = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    CountryId =  table.Column<Guid>(type: "uuid", nullable: true),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Brands", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Brands_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
             
             migrationBuilder.CreateIndex(

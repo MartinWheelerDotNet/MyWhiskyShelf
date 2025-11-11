@@ -10,6 +10,8 @@ public static class BrandProjections
     {
         Id = distilleryEntity.Id,
         Name = distilleryEntity.Name,
-        Description = distilleryEntity.Description
+        Description = distilleryEntity.Description,
+        CountryId = distilleryEntity.CountryId,
+        CountryName = distilleryEntity.Country == null ? null: distilleryEntity.Country.Name
     };
 }
