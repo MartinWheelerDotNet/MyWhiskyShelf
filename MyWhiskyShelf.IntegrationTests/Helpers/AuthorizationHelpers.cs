@@ -6,24 +6,27 @@ namespace MyWhiskyShelf.IntegrationTests.Helpers;
 
 public static class AuthorizationHelpers
 {
-    public static async Task<HttpClient> CreateAdminHttpsClientAsync(this DistributedApplication application)
+    extension(DistributedApplication application)
     {
-        return await application.CreateHttpsClientWithRole(Roles.Admin);
-    }
+        public async Task<HttpClient> CreateAdminHttpsClientAsync()
+        {
+            return await application.CreateHttpsClientWithRole(Roles.Admin);
+        }
 
-    public static async Task<HttpClient> CreateHttpsClientWithRole(this DistributedApplication application, string role)
-    {
-        var keycloakUri = application.GetEndpoint("keycloak", "http");
-        var userJwt = await KeycloakTokenClient.GetAccessTokenAsync(
-            keycloakUri,
-            "mywhiskyshelf",
-            $"mywhiskyshelf-{role}-client",
-            $"{role}-secret");
+        public async Task<HttpClient> CreateHttpsClientWithRole(string role)
+        {
+            var keycloakUri = application.GetEndpoint("keycloak", "http");
+            var userJwt = await KeycloakTokenClient.GetAccessTokenAsync(
+                keycloakUri,
+                "mywhiskyshelf",
+                $"mywhiskyshelf-{role}-client",
+                $"{role}-secret");
 
-        var client = application.CreateHttpClient("WebApi");
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userJwt);
-        client.BaseAddress = application.GetEndpoint("WebApi", "https");
+            var client = application.CreateHttpClient("WebApi");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", userJwt);
+            client.BaseAddress = application.GetEndpoint("WebApi", "https");
 
-        return client;
+            return client;
+        }
     }
 }

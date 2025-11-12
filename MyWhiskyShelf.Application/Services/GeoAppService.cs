@@ -7,7 +7,7 @@ using MyWhiskyShelf.Core.Aggregates;
 
 namespace MyWhiskyShelf.Application.Services;
 
-public sealed class GeoAppService(
+public sealed partial class GeoAppService(
     IGeoReadRepository read,
     IGeoWriteRepository write,
     ILogger<GeoAppService> logger) : IGeoAppService
@@ -21,7 +21,7 @@ public sealed class GeoAppService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error retrieving country and region information");
+            LogErrorRetrievingCountryAndRegionInformation(logger);
             return new GetCountryGeoResult(GetCountryGeoOutcome.Error, Error: ex.Message);
         }
     }
@@ -35,15 +35,12 @@ public sealed class GeoAppService(
 
             var createdCountry = await write.AddCountryAsync(country, ct);
 
-            logger.LogInformation("Country created with [Name: {Name}]", createdCountry.Name.SanitizeForLog());
+            LogCountryCreated(logger, createdCountry.Name.SanitizeForLog());
             return new CreateCountryResult(CreateCountryOutcome.Created, createdCountry);
         }
         catch (Exception ex)
         {
-            logger.LogError(
-                ex,
-                "Error creating country with [Name: {Name}]",
-                country.Name.SanitizeForLog());
+            LogErrorCreatingCountry(logger, country.Name.SanitizeForLog());
             return new CreateCountryResult(CreateCountryOutcome.Error, Error: ex.Message);
         }
     }
@@ -59,24 +56,16 @@ public sealed class GeoAppService(
             if (await DoesNameExist(region, ct))
                 return new CreateRegionResult(CreateRegionOutcome.NameConflict);
             
-            logger.LogError("{Id}, {CountryId}", region.Id, region.CountryId);
             var createdRegion = await write.AddRegionAsync(countryId, region, ct);
             if (createdRegion is null)
                 return new CreateRegionResult(CreateRegionOutcome.CountryNotFound);
 
-            logger.LogInformation(
-                "Region created with [CountryId: {CountryId}, Name: {Name}]",
-                countryId,
-                createdRegion.Name.SanitizeForLog());
+            LogRegionCreated(logger, countryId, createdRegion.Name.SanitizeForLog());
             return new CreateRegionResult(CreateRegionOutcome.Created, createdRegion);
         }
         catch (Exception ex)
         {
-            logger.LogError(
-                ex,
-                "Error creating region [CountryId: {CountryId}, Name: {Name}]",
-                countryId,
-                region.Name.SanitizeForLog());
+            LogErrorCreatingRegion(logger, countryId, region.Name.SanitizeForLog());
             return new CreateRegionResult(CreateRegionOutcome.Error, Error: ex.Message);
         }
     }
@@ -97,15 +86,12 @@ public sealed class GeoAppService(
             if (!await write.UpdateCountryAsync(id, updatedCountry, ct))
                 return new UpdateCountryResult(UpdateCountryOutcome.NotFound);
 
-            logger.LogInformation(
-                "Country updated with [Id: {Id}, Name: {Name}]",
-                id,
-                updatedCountry.Name.SanitizeForLog());
+            LogCountryUpdated(logger, id, updatedCountry.Name.SanitizeForLog());
             return new UpdateCountryResult(UpdateCountryOutcome.Updated, updatedCountry);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error updating Country with [Id: {Id}]", id);
+            LogErrorUpdatingCountry(logger, id);
             return new UpdateCountryResult(UpdateCountryOutcome.Error, Error: ex.Message);
         }
     }
@@ -118,12 +104,12 @@ public sealed class GeoAppService(
             if (!await write.SetCountryActiveAsync(id, isActive, ct))
                 return new SetCountryActiveResult(SetCountryActiveOutcome.NotFound);
 
-            logger.LogInformation("Country active flag updated for [Id: {Id}, IsActive: {IsActive}]", id, isActive);
+            LogCountryActiveFlagUpdated(logger, id, isActive);
             return new SetCountryActiveResult(SetCountryActiveOutcome.Updated);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error setting country active flag for [Id: {Id}]", id);
+            LogErrorSettingCountryActiveFlag(logger, id);
             return new SetCountryActiveResult(SetCountryActiveOutcome.Error, ex.Message);
         }
     }
@@ -147,20 +133,13 @@ public sealed class GeoAppService(
             if (!await write.UpdateRegionAsync(id, updatedRegion, ct))
                 return new UpdateRegionResult(UpdateRegionOutcome.NotFound);
 
-            logger.LogInformation(
-                "Region updated with [CountryId: {Id}, Name: {Name}]",
-                updatedRegion.CountryId,
-                updatedRegion.Name.SanitizeForLog());
+            LogRegionUpdated(logger, updatedRegion.CountryId, updatedRegion.Name.SanitizeForLog());
 
             return new UpdateRegionResult(UpdateRegionOutcome.Updated, updatedRegion);
         }
         catch (Exception ex)
         {
-            logger.LogError(
-                ex,
-                "Error updating Region with [Id: {Id}, Name: {Name}]",
-                id,
-                updatedRegion.Name.SanitizeForLog());
+            LogErrorUpdatingRegion(logger, id, updatedRegion.Name.SanitizeForLog());
             return new UpdateRegionResult(UpdateRegionOutcome.Error, Error: ex.Message);
         }
     }
@@ -173,12 +152,12 @@ public sealed class GeoAppService(
             if (!await write.SetRegionActiveAsync(id, isActive, ct))
                 return new SetRegionActiveResult(SetRegionActiveOutcome.NotFound);
 
-            logger.LogInformation("Region active flag updated for [Id: {Id}, IsActive: {IsActive}]", id, isActive);
+            LogRegionActiveFlagUpdated(logger, id, isActive);
             return new SetRegionActiveResult(SetRegionActiveOutcome.Updated);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error setting region active flag for [Id: {Id}]", id);
+            LogErrorSettingRegionActiveFlag(logger, id);
             return new SetRegionActiveResult(SetRegionActiveOutcome.Error, ex.Message);
         }
     }

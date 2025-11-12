@@ -1,12 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
 using MyWhiskyShelf.Infrastructure.Interfaces;
 
 namespace MyWhiskyShelf.Infrastructure.Seeding;
 
 [ExcludeFromCodeCoverage]
-public class JsonFileLoader(ILogger<JsonFileLoader> logger) : IJsonFileLoader
+public class JsonFileLoader : IJsonFileLoader
 {
     public async Task<List<TOut>> FetchFromJsonAsync<TOut>(string filePath, CancellationToken ct = default)
     {
@@ -16,7 +15,6 @@ public class JsonFileLoader(ILogger<JsonFileLoader> logger) : IJsonFileLoader
         await using var fileStream = File.OpenRead(filePath);
         var result = await DeserializeFromStreamAsync<TOut>(fileStream, filePath, ct);
 
-        logger.LogInformation("{Count} records loaded", result.Count);
         return result;
     }
 

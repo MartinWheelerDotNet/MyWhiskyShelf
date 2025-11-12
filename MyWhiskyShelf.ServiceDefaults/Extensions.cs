@@ -21,71 +21,71 @@ public static class Extensions
     private const string AlivenessEndpointPath = "/alive";
     private const string OtlpExporter = "OTEL_EXPORTER_OTLP_ENDPOINT";
 
-    public static void AddServiceDefaults<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
+    extension<TBuilder>(TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        builder.ConfigureOpenTelemetry();
-
-        builder.AddDefaultHealthChecks();
-
-        builder.Services.AddServiceDiscovery();
-
-        builder.Services.ConfigureHttpClientDefaults(http =>
+        public void AddServiceDefaults()
         {
-            // Turn on resilience by default
-            http.AddStandardResilienceHandler();
+            builder.ConfigureOpenTelemetry();
 
-            // Turn on service discovery by default
-            http.AddServiceDiscovery();
-        });
-    }
+            builder.AddDefaultHealthChecks();
 
-    private static void ConfigureOpenTelemetry<TBuilder>(this TBuilder builder)
-        where TBuilder : IHostApplicationBuilder
-    {
-        builder.Logging.AddOpenTelemetry(logging =>
+            builder.Services.AddServiceDiscovery();
+
+            builder.Services.ConfigureHttpClientDefaults(http =>
+            {
+                // Turn on resilience by default
+                http.AddStandardResilienceHandler();
+
+                // Turn on service discovery by default
+                http.AddServiceDiscovery();
+            });
+        }
+
+        private void ConfigureOpenTelemetry()
         {
-            logging.IncludeFormattedMessage = true;
-            logging.IncludeScopes = true;
-        });
-
-        builder.Services.AddOpenTelemetry()
-            .WithMetrics(metrics =>
+            builder.Logging.AddOpenTelemetry(logging =>
             {
-                metrics.AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation();
-            })
-            .WithTracing(tracing =>
-            {
-                tracing.AddSource(builder.Environment.ApplicationName)
-                    .AddAspNetCoreInstrumentation(instrumentationTracing =>
-                        // Exclude health check requests from tracing
-                        instrumentationTracing.Filter = context =>
-                            !context.Request.Path.StartsWithSegments(HealthEndpointPath)
-                            && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath)
-                    )
-                    // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
-                    //.AddGrpcClientInstrumentation()
-                    .AddHttpClientInstrumentation();
+                logging.IncludeFormattedMessage = true;
+                logging.IncludeScopes = true;
             });
 
-        builder.AddOpenTelemetryExporters();
-    }
+            builder.Services.AddOpenTelemetry()
+                .WithMetrics(metrics =>
+                {
+                    metrics.AddAspNetCoreInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddRuntimeInstrumentation();
+                })
+                .WithTracing(tracing =>
+                {
+                    tracing.AddSource(builder.Environment.ApplicationName)
+                        .AddAspNetCoreInstrumentation(instrumentationTracing =>
+                            // Exclude health check requests from tracing
+                            instrumentationTracing.Filter = context =>
+                                !context.Request.Path.StartsWithSegments(HealthEndpointPath)
+                                && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath)
+                        )
+                        // Uncomment the following line to enable gRPC instrumentation (requires the OpenTelemetry.Instrumentation.GrpcNetClient package)
+                        //.AddGrpcClientInstrumentation()
+                        .AddHttpClientInstrumentation();
+                });
 
-    private static void AddOpenTelemetryExporters<TBuilder>(this TBuilder builder)
-        where TBuilder : IHostApplicationBuilder
-    {
-        var useExporter = !string.IsNullOrWhiteSpace(builder.Configuration[OtlpExporter]);
+            builder.AddOpenTelemetryExporters();
+        }
 
-        if (useExporter) builder.Services.AddOpenTelemetry().UseOtlpExporter();
-    }
+        private void AddOpenTelemetryExporters()
+        {
+            var useExporter = !string.IsNullOrWhiteSpace(builder.Configuration[OtlpExporter]);
 
-    private static void AddDefaultHealthChecks<TBuilder>(this TBuilder builder)
-        where TBuilder : IHostApplicationBuilder
-    {
-        builder.Services.AddHealthChecks()
-            // Add a default liveness check to ensure app is responsive
-            .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
+            if (useExporter) builder.Services.AddOpenTelemetry().UseOtlpExporter();
+        }
+
+        private void AddDefaultHealthChecks()
+        {
+            builder.Services.AddHealthChecks()
+                // Add a default liveness check to ensure app is responsive
+                .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
+        }
     }
 
     public static void MapDefaultEndpoints(this WebApplication app)
