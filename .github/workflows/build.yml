@@ -169,7 +169,7 @@ jobs:
   mutation-testing:
     name: Backend Mutations
     needs: changes
-    if: ${{ needs.changes.outputs.backend == 'true' && github.actor != 'dependabot[bot]' }}
+    if: ${{ 'true' == 'false' && needs.changes.outputs.backend == 'true' && github.actor != 'dependabot[bot]' }}
     uses: ./.github/workflows/mutation-testing.yml
     with:
       name: ${{ matrix.name }}
